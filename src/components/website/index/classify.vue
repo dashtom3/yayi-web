@@ -160,9 +160,11 @@
       z-index: 999;
       background: white;
       margin: 30px auto;
-      padding: 29px  0 39px  0;
-      min-height: 630px;
+      padding: 30px  0 0  0;
+      min-height: 600px;
       left: 0;
+      border: 1px solid #cccccc;
+      border-top: none;
   }
   .brandLib .imgWrap img{
     max-width: 100%;

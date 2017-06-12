@@ -1,6 +1,7 @@
 <template>
     <span  class="score">
-      <img src="../../../images/details/score.png" alt="" v-for="item in thisscore">
+      <img src="../../../images/details/score1.jpg" alt="" v-for="item in thisscore">
+      <img v-if="computedblackStar>0" src="../../../images/details/score2.jpg" alt="" v-for="item2 in computedblackStar">
     </span>
 </template>
 
@@ -10,7 +11,12 @@
     name: 'score',
     data () {
       return {
-
+        blackStar:0
+      }
+    },
+    computed:{
+      computedblackStar:function(){
+        return 5-this.thisscore;
       }
     },
     props:['thisscore']
