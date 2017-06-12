@@ -4,8 +4,8 @@ import Index from '@/components/website/index/index'
 import details from '@/components/website/details/details'
 import brandLib from '@/components/website/brandLib/brandLib'
 import center from '@/components/website/center/center'
-
 import gwc from '@/components/website/gwc/gwc'
+import suborder from '@/components/website/gwc/suborder'
 
 Vue.use(Router)
 
@@ -37,6 +37,11 @@ export default new Router({
 		path: '/gwc',
 		name: 'gwc',
 		component: gwc,
+	},
+	{
+		path: '/suborder',
+		name: 'suborder',
+		component: suborder,
 	}
 	],
     scrollBehavior (to, from, savedPosition) {

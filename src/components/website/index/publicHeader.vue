@@ -8,7 +8,7 @@
       <div class="my_order right" @click="myOrder">我的订单</div>
       <div class="shopping_car right">
         <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-        <p class="right">购物车 <span class="car_num">0</span></p>
+        <p class="right" @click="gotocar">购物车 <span class="car_num">0</span></p>
         <div class="whiteLine"></div>
         <div class="car_hover">
           <p class="cargo_title">最近加入的产品：</p>
@@ -22,7 +22,7 @@
           <div class="total_box">
             <p class="fir left">共<span style="color: #D81E06;">3</span>件商品</p>
             <p class="sec left">总计: <span style="color: #D81E06;">￥3267</span></p>
-            <div class="gotocar right">去购物车</div>
+            <div class="gotocar right" @click="gotocar">去购物车</div>
           </div>
         </div>
       </div>
@@ -359,6 +359,11 @@
       },
     },
     methods: {
+      // 去购物车
+      gotocar: function() {
+        var that = this;
+        that.$router.push({ path: '/gwc' });
+      },
       // logo跳转
       logo: function() {
         var that = this;

@@ -24,7 +24,7 @@
 <style scoped>
 .publicFooter {
   width: 100%;
-  height: 150px;
+  height: 110px;
   background-color: #F2F2F2;
   text-align: center;
   padding-top: 35px;
