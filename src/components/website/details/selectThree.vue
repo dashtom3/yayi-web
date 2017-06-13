@@ -3640,8 +3640,8 @@ export default {
 .childrenSelectedThree{
   font-size: 14px;
   display: inline-block;
-  wvalueth: 180px;
-  border: 1px solvalue #eeeeee;
+  width: 180px;
+  border: 1px solid #eeeeee;
   height: 42px ;
   line-height: 42px;
   position: absolute;
@@ -3654,11 +3654,11 @@ export default {
   color: red ;
 }
 .childrenSelectedThree .provinceDetail{
-  wvalueth: 500px;
-    height: 200px;
+  width: 500px;
+  height: 200px;
   background: white;
   margin-top: 20px;
-  border: 1px solvalue #eeeeee;
+  border: 1px solid #eeeeee;
   padding: 20px;
   margin-left: -20px;
 }
@@ -3673,11 +3673,11 @@ export default {
 
 
 .childrenSelectedThree .childrenDetail{
-  wvalueth: 500px;
-    height: 200px;
+  width: 500px;
+  height: 200px;
   background: white;
   margin-top: 20px;
-  border: 1px solvalue #eeeeee;
+  border: 1px solid #eeeeee;
   margin-left: -20px;
   padding: 20px;
 }
@@ -3693,11 +3693,11 @@ export default {
 .childrenSelectedThree .areaDetail{
   margin-left: -20px;
   padding: 20px;
-  wvalueth: 500px;
+  width: 500px;
   height: 200px;
   background: white;
   margin-top: 20px;
-  border: 1px solvalue #eeeeee;
+  border: 1px solid #eeeeee;
 }
 .childrenSelectedThree .areaDetail li{
   display: inline-block;

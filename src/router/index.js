@@ -6,11 +6,12 @@ import brandLib from '@/components/website/brandLib/brandLib'
 import center from '@/components/website/center/center'
 import gwc from '@/components/website/gwc/gwc'
 import suborder from '@/components/website/gwc/suborder'
+import pay from '@/components/website/gwc/pay'
 
 Vue.use(Router)
 
 export default new Router({
-	// mode: 'history',
+	mode: 'history',
 	routes: [
 	{ path: '/', redirect: { name: 'index' }},
 	{
@@ -42,6 +43,11 @@ export default new Router({
 		path: '/suborder',
 		name: 'suborder',
 		component: suborder,
+	},
+	{
+		path: '/pay',
+		name: 'pay',
+		component: pay,
 	}
 	],
     scrollBehavior (to, from, savedPosition) {
