@@ -79,8 +79,8 @@
 .paging0 span{
   border: 1px solid #5db7e8;
   border-radius: 3px;
-  height: 40px;
-  width:40px;
+  height: 38px;
+  width:38px;
   margin-left: 5px;
   display: inline-block;
   cursor: pointer;
@@ -88,8 +88,8 @@
   text-align: center;
 }
 .paging0 input{
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border: 1px solid #5db7e8;
   border-radius: 3px;
   position: relative;
@@ -117,6 +117,6 @@
 }
 .paging0 .sure{
   width: 60px;
-  height: 40px;
+  height: 38px;
 }
 </style>

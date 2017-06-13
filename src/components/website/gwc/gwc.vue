@@ -1,9 +1,9 @@
 <template>
   <div class="">
     <publicHeader></publicHeader>
-    <img class="notLogin" v-if="!islogin" src="../../../images/gwc/4.png" alt="">
+    <img class="notLogin" v-if="gwcGoods.length<=0" src="../../../images/gwc/4.png" alt="">
     <div v-else class="gwcWrap">
-      <div class="lgoinConfirm">
+      <div class="lgoinConfirm" v-if="isLogin==false">
         您还没有登陆，登录后购物车的商品将保存到您账户中!
         <img src="../../../images/gwc/gwc3.png" alt="">
       </div>
@@ -85,7 +85,7 @@
     name: 'gwc',
     data () {
       return {
-        islogin:true,
+        isLogin:true,
         addBlueColor:null,
         allMoeny:0,
         haveSelectedGoodNum:0,
@@ -510,5 +510,8 @@ margin-right: 16px;
   background: #d81e06;
   margin-top: -10px;
   cursor: pointer;
+}
+.selectaLLFooter .el-checkbox .el-checkbox__label{
+  padding-left: 20px !important;
 }
 </style>

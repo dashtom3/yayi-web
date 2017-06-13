@@ -26,15 +26,19 @@
   import publicHeader from '../index/publicHeader'
   import myOrder from './myOrder/myOrder'
   import publicFooter from '../index/publicFooter'
-  var tab02 = Vue.extend({
-    template: '<div>this is 待评价02</div>',
-  });
-  var tab03 = Vue.extend({
-    template: '<div>this is 待评价03</div>',
-  });
-  var tab04 = Vue.extend({
-    template: '<div>this is 待评价04</div>',
-  });
+
+  import myMoney from './myMoney/myMoney'
+  import myCollection from './myCollection/myCollection'
+  import personal from './personalData/personal'
+  // var tab02 = Vue.extend({
+  //   template: '<div>this is 待评价02</div>',
+  // });
+  // var tab03 = Vue.extend({
+  //   template: '<div>this is 待评价03</div>',
+  // });
+  // var tab04 = Vue.extend({
+  //   template: '<div>this is 待评价04</div>',
+  // });
   var tab05 = Vue.extend({
     template: '<div>this is 待评价05</div>',
   });
@@ -59,9 +63,9 @@
       publicHeader,
       publicFooter,
       tab01: myOrder,
-      tab02: tab02,
-      tab03: tab03,
-      tab04: tab04,
+      tab02: myMoney,
+      tab03: myCollection,
+      tab04: personal,
       tab05: tab05,
     },
     methods: {
