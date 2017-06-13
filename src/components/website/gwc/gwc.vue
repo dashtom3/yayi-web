@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <publicHeader></publicHeader>
-    <img class="notLogin" v-if="islogin" src="../../../images/gwc/4.png" alt="">
+    <img class="notLogin" v-if="!islogin" src="../../../images/gwc/4.png" alt="">
     <div v-else class="gwcWrap">
       <div class="lgoinConfirm">
         登录后购物车的商品将保存到您账户中!
@@ -69,7 +69,7 @@
           <span class="asdg">总计:<span class="colorRed">￥{{allMoeny}}</span></span>
         </div>
         <div class="jiesuanbtn">
-          <span>结算</span>
+          <span v-on:click="goToSuborder()">结算</span>
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@
     name: 'gwc',
     data () {
       return {
-        islogin:false,
+        islogin:true,
         addBlueColor:null,
         allMoeny:0,
         haveSelectedGoodNum:0,
@@ -178,6 +178,9 @@
       }
     },
     methods: {
+      goToSuborder:function(){
+      this.$router.push({path: '/suborder'})
+      },
       deleteAll:function(){
         if(this.selectaLL==false){
             this.$alert("请点击全选按钮", {confirmButtonText: '确定'});
@@ -292,8 +295,8 @@
 .notLogin{
   display: block;
   margin: auto;
-  margin-bottom: 230px;
-  margin-top: 240px;
+  margin-bottom: 330px;
+  margin-top: 187px;
 }
 .cursorPointer{
   cursor: pointer;
