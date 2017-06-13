@@ -4,7 +4,7 @@
     <img class="notLogin" v-if="!islogin" src="../../../images/gwc/4.png" alt="">
     <div v-else class="gwcWrap">
       <div class="lgoinConfirm">
-        登录后购物车的商品将保存到您账户中!
+        您还没有登陆，登录后购物车的商品将保存到您账户中!
         <img src="../../../images/gwc/gwc3.png" alt="">
       </div>
       <div class="allGoods">
