@@ -49,7 +49,7 @@
             ￥{{good.goodPrice*good.goodSureNum}}
         </div>
         <div class="operas">
-          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:click="saveOne(index)">收藏</span>
+          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index)">收藏</span>
             <span class="colorRed" v-on:click="deleteOne(index)">删除</span>
         </div>
         <div style="clear:both"> </div>
@@ -249,6 +249,9 @@
       },
       showBlue:function(index){
         this.addBlueColor = index;
+      },
+      hideBlue:function(index){
+        this.addBlueColor = null;
       },
       saveOne:function(index){
         this.$confirm('添加至收藏夹后，该商品将不在购物车显示!', '添加至收藏夹', {

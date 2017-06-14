@@ -4,6 +4,9 @@
       <span :class="{nowTabActive:1==currentTabs}" v-on:click="changeTabs(1)">个人信息</span>
       <span :class="{nowTabActive:2==currentTabs}" v-on:click="changeTabs(2)">资质认证</span>
       <span :class="{nowTabActive:3==currentTabs}" v-on:click="changeTabs(3)">绑定销售员</span>
+      <div style="clear:both" class="">
+
+      </div>
     </div>
     <personalData v-show="1==currentTabs"></personalData>
     <certification v-bind:state="currentTabs" v-show="2==currentTabs"></certification>
@@ -49,6 +52,7 @@
   cursor: pointer;
   text-align: center;
   display: inline-block;
+  float: left;
 }
 .head span:hover{
   color: white;
@@ -57,6 +61,23 @@
 .head .nowTabActive{
   color: white;
   background: #5db7e8;
+}
+</style>
+<style >
+.personal form input{
+  border-color: #e9e9e9;
+}
+.personal input:hover{
+  border-color: #e9e9e9;
+}
+.personal input:focus{
+  border-color: #e9e9e9;
+}
+.personal .el-form-item input:focus{
+  border-color: #e9e9e9;
+}
+.personal .el-form-item input:hover{
+  border-color: #e9e9e9;
 }
 
 </style>

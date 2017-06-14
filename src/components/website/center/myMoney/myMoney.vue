@@ -142,7 +142,7 @@
 <style scoped>
 .moneyHaed{
   border-bottom: 1px solid #eeeeee;
-  line-height: 50px;
+  line-height: 40px;
   padding-left: 38px;
   margin-bottom: 30px;
 }

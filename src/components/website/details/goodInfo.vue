@@ -22,20 +22,20 @@
     </div>
   	<div class="infoRight">
       <h3>爱丽丝 标准直丝带环(4*1) 【39#】       <span class="ifdikou"><img src="../../../images/details/1.png" alt="">支持钱币抵扣</span></h3>
-      <div>价格：<span class="fontRed">￥400</span></div>
-      <div style="margin:5px 0;margin-bottom15px;">
-        配送至：
-            <myAddress></myAddress>
-        <span class="fullCut">运费：8.00元，店铺满99.00免运费</span>
-      </div>
       <div>
-        注册证号：浙械注准20152630745
+        价格：<span class="fontRed">￥400</span>
+        <span style="float:right">销售量：123</span>
       </div>
       <div>
         品牌：武汉金光
       </div>
-      <div style="height:30px">
-        规格：1盒
+      <div style="margin:6px 0 22px 0;">
+        配送至：
+            <myAddress></myAddress>
+        <span class="fullCut">运费：8.00元，店铺满99.00免运费</span>
+      </div>
+      <div style="height:35px;">
+        注册证号：浙械注准20152630745
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
       <div class="shuxingWrap" style="height:auto">
@@ -46,7 +46,7 @@
         </div>
         <div class="clearFloat"></div>
       </div>
-      <div style="line-height:40px;">
+      <div style="line-height:40px;margin-top:20px;">
         数量：
         <div class="calculator">
           <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
@@ -138,7 +138,7 @@ import myAddress from './selectThree'
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .onePxLine{
-  border: none;border-top: 1px solid #e5e5e5;margin-top:5px;background:#e5e5e5;border-color:#e5e5e5;
+  border: none;border-top: 1px solid #e5e5e5;background:#e5e5e5;border-color:#e5e5e5;
 }
 .btnDef{
   background: #e5e5e5;
@@ -148,14 +148,15 @@ import myAddress from './selectThree'
 .fullCut{
   color: #8d8d8d;
   font-size: 14px;
-  margin-left: 70px;
+  /*margin-left: 70px;*/
+  float: right;
 }
 .infoRight h3{
   position: relative;
 }
 .infoRight .shuxingWrap{
   min-height:30px;
-  padding-top: 25px;
+  padding-top: 30px;
 
 }
 .infoRight .shuxing{
@@ -208,11 +209,11 @@ font-size: 14px;
   height:50px
 }
 .infoRight div{
-  height:40px;
+  height:50px;
 }
 .infoRight .attSty1{
 display:inline-block;
-  width:152px;
+  width:118px;
   line-height:38px;
   text-align: center;
   margin-left:38px;
@@ -309,7 +310,7 @@ max-height: 100%;
 }
 
 .goodBtn{
-  margin-top: 40px;
+  margin-top: 32px;
   padding-left: 63px;
 }
 .goodBtn span{

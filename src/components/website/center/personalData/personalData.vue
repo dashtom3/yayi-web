@@ -76,10 +76,10 @@ border-radius: 3px;
 .personalData .mainContent  form{
   margin: 0 310px;
 }
-.personalData .mainContent  form input{
+.personalData .mainContent  form .el-input{
   width: 260px;
   height: 40px;
-      margin-left: 28px;
+      margin-left: 12px;
 }
 .personalData .mainContent .el-form-item{
   margin-bottom: 40px;
@@ -88,10 +88,10 @@ border-radius: 3px;
   /*padding-right: 32px;*/
 }
 .personalData .mainContent .el-radio-group{
-  padding-left: 28px;
+  padding-left: 12px;
 }
 .personalData .mainContent .el-button--primary{
-  margin-left: 28px ;
+  margin-left: 12px ;
   background-color: #5db7e8;
   border-color: #5db7e8;
   width: 160px;

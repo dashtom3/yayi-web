@@ -2,16 +2,16 @@
   <div class="certification">
     <div class="content">
       <el-form ref="userData" :model="userData" label-width="166px">
-        <el-form-item label="类型:">
+        <el-form-item label="类型：">
           <el-select v-model="userData.type" placeholder="">
             <el-option label="个人" value="shanghai"></el-option>
             <el-option label="企业" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单位名称:">
+        <el-form-item label="单位名称：">
           <el-input v-model="userData.compony"></el-input>
         </el-form-item>
-        <el-form-item label="单位所在地:">
+        <el-form-item label="单位所在地：">
           <!-- <el-select v-model="userData.type" placeholder="请选择省份">
             <el-option label="个人" value="shanghai"></el-option>
             <el-option label="企业" value="beijing"></el-option>
@@ -26,10 +26,10 @@
           </el-select> -->
           <selectThree></selectThree>
         </el-form-item>
-        <el-form-item label="详细地址:">
+        <el-form-item label="详细地址：">
           <el-input v-model="userData.detailPlace"></el-input>
         </el-form-item>
-        <el-form-item label="口腔执业医师资格证:">
+        <el-form-item label="口腔执业医师资格证：">
           <el-upload
           class="avatar-uploader"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -145,10 +145,10 @@ border-radius: 3px;
 <style>
 .certification  form{
 }
-.certification  form input{
+.certification  form .el-input{
   width: 240px;
   height: 40px;
-  margin-left: 18px;
+  margin-left: 12px;
 }
 .certification .el-form-item{
   margin-bottom: 40px;
@@ -172,9 +172,6 @@ border-radius: 3px;
 .certification  form .el-form-item:nth-child(4) input{
   width: 549px;
 }
-
-
-
 .certification  .avatar-uploader-icon{
   border: 1px solid #bfcbd9;
   width: 120px;
@@ -184,16 +181,10 @@ line-height: 120px;
 .certification  .avatar-uploader{
   padding-left: 18px;
 }
-
  .certification .el-cascader__label{
   margin-left: 15px;
 }
-
-
-
-
-
-
-
-
+.el-select-dropdown{
+  min-width: 240px !important;
+}
 </style>

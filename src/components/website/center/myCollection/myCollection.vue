@@ -91,7 +91,6 @@
 <style scoped>
 .myCollection{
   font-size: 14px;
-
   min-height: 440px;
 }
 .myCollection .colorRed{
@@ -101,7 +100,8 @@ color:  #D81E06;
 color:  #5db7e8;
 }
 .head{
-  padding: 0 20px 14px 38px;
+  padding-left: 38px;
+    line-height: 40px;
   border-bottom: 1px solid #eeeeee;
 }
 

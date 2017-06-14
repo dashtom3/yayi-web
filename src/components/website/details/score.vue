@@ -1,6 +1,6 @@
 <template>
     <span  class="score">
-      <img src="../../../images/details/score1.jpg" alt="" v-for="item in thisscore">
+      <img src="../../../images/details/score1.png" alt="" v-for="item in thisscore">
       <img v-if="computedblackStar>0" src="../../../images/details/score2.jpg" alt="" v-for="item2 in computedblackStar">
     </span>
 </template>
