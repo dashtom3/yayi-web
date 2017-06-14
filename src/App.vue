@@ -39,4 +39,51 @@ export default {
     border: none;
     list-style-type:none;
   }
+  /*过渡动画开始*/
+  .shake-enter-active {
+    animation: shake .5s;
+  }
+  .shake-leave-active {
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+  @-webkit-keyframes shake {
+    from, to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+      -webkit-transform: translate3d(-7px, 0, 0);
+      transform: translate3d(-7px, 0, 0);
+    }
+
+    20%, 40%, 60%, 80% {
+      -webkit-transform: translate3d(7px, 0, 0);
+      transform: translate3d(7px, 0, 0);
+    }
+  }
+
+  @keyframes shake {
+    from, to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+      -webkit-transform: translate3d(-7px, 0, 0);
+      transform: translate3d(-7px, 0, 0);
+    }
+
+    20%, 40%, 60%, 80% {
+      -webkit-transform: translate3d(7px, 0, 0);
+      transform: translate3d(7px, 0, 0);
+    }
+  }
+
+  .shake {
+    -webkit-animation-name: shake;
+    animation-name: shake;
+  }
+  /*过渡动画结束*/
 </style>

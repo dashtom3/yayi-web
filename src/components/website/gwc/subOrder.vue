@@ -86,7 +86,7 @@
           <el-form-item label="收货人" :label-width="formLabelWidth">
             <el-input v-model="form.name" auto-complete="off" style="width:180px;"></el-input>
             <transition name="shake">
-              <span v-show="realAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人！</span>
+              <span v-show="realAlert" style="margin-left: 20px; color: #D0011B;">请填写收货人！</span>
             </transition>
           </el-form-item>
           <el-form-item label="所在区域" :label-width="formLabelWidth">
@@ -467,53 +467,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  /*过渡动画开始*/
-  .shake-enter-active {
-    animation: shake .5s;
-  }
-  .shake-leave-active {
-    transition: all 0.3s ease;
-    opacity: 0;
-  }
-  @-webkit-keyframes shake {
-    from, to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-      -webkit-transform: translate3d(-7px, 0, 0);
-      transform: translate3d(-7px, 0, 0);
-    }
-
-    20%, 40%, 60%, 80% {
-      -webkit-transform: translate3d(7px, 0, 0);
-      transform: translate3d(7px, 0, 0);
-    }
-  }
-
-  @keyframes shake {
-    from, to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-      -webkit-transform: translate3d(-7px, 0, 0);
-      transform: translate3d(-7px, 0, 0);
-    }
-
-    20%, 40%, 60%, 80% {
-      -webkit-transform: translate3d(7px, 0, 0);
-      transform: translate3d(7px, 0, 0);
-    }
-  }
-
-  .shake {
-    -webkit-animation-name: shake;
-    animation-name: shake;
-  }
-  /*过渡动画结束*/
 input {
   border: 1px solid #e9e9e9;
   outline:medium;

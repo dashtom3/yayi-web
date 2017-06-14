@@ -26,22 +26,13 @@
   import publicHeader from '../index/publicHeader'
   import myOrder from './myOrder/myOrder'
   import publicFooter from '../index/publicFooter'
-
   import myMoney from './myMoney/myMoney'
   import myCollection from './myCollection/myCollection'
   import personal from './personalData/personal'
+  import myAdd from './myAdd/myAdd'
   // var tab02 = Vue.extend({
   //   template: '<div>this is 待评价02</div>',
   // });
-  // var tab03 = Vue.extend({
-  //   template: '<div>this is 待评价03</div>',
-  // });
-  // var tab04 = Vue.extend({
-  //   template: '<div>this is 待评价04</div>',
-  // });
-  var tab05 = Vue.extend({
-    template: '<div>this is 待评价05</div>',
-  });
   export default {
     name: 'center',
     data () {
@@ -66,7 +57,7 @@
       tab02: myMoney,
       tab03: myCollection,
       tab04: personal,
-      tab05: tab05,
+      tab05: myAdd,
     },
     methods: {
       changeActive1: function(tabText) {
