@@ -1,9 +1,5 @@
 <template>
   <div class="allOrder">
-    <div class="search_box right">
-      <input class="search_word" placeholder="请输入商品名称或订单号进行检索" type="text">
-      <img class="search_img" src="../../../../images/index/search.png" alt="img">
-    </div>
     <div class="order_table" v-show="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>

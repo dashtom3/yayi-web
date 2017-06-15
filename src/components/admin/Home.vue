@@ -6,7 +6,7 @@
         <a href="/"><img src="../assets/logo.png" style="width:42px;margin-top: 5px;"></a>
       </div>
       <div class="topbar-title topbar-btn">
-        <span>风车车的枫叶</span>
+        <span>admin</span>
       </div>
       <div class="topbar-account topbar-btn">
         <el-dropdown trigger="click">
@@ -214,8 +214,8 @@
       overflow: hidden;
     }
     aside {
-      flex: 0 0 180px;
-      width: 180px;
+      // flex: 0 0 180px;
+      width: 200px;
       .el-menu {
         height: 100%;
         border-radius: 0px;
@@ -237,10 +237,10 @@
       flex: 0 0 50px;
       width: 50px;
     }
-    .menu-expanded {
-      flex: 0 0 180px;
-      width: 180px;
-    }
+    // .menu-expanded {
+    //   flex: 0 0 180px;
+    //   width: 200px;
+    // }
     .menu-toggle {
       background: #4A5064;
       text-align: center;
