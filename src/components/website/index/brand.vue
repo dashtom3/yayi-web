@@ -56,7 +56,7 @@
       },
       next() {
         var that = this;
-        this.$refs.carousel.next();
+        that.$refs.carousel.next();
       },
     }
   }
