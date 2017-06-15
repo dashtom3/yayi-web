@@ -27,6 +27,9 @@ import bsseInfoManner_attr from '@/components/admin/bsseInfoManner/attr'
 import bsseInfoManner_brand from '@/components/admin/bsseInfoManner/brand'
 import bsseInfoManner_classfy from '@/components/admin/bsseInfoManner/classfy'
 
+// 商品信息管理
+import merchantMessage from '@/components/admin/merchantMessage/merchantMessage'
+
 //交易管理
 import tradeManner_order from '@/components/admin/tradeManner/order'
 import tradeManner_evaluate from '@/components/admin/tradeManner/evaluate'
@@ -141,6 +144,17 @@ let router = new Router({
       ]
     },
     {
+      path: '/admin',
+      component: Home,
+      name: '商品信息管理',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-setting1', // 图标样式class
+      children: [
+        {path: '/admin/merchantMessage', component: merchantMessage, name: '商品信息管理', menuShow: true}
+      ]
+    },
+    {
       path: '/tradeManner',
       component: Home,
       name: '交易管理',
@@ -151,8 +165,8 @@ let router = new Router({
         {path: '/admin/tradeManner/order', component: tradeManner_order, name: '订单管理', menuShow: true},
         {path: '/admin/tradeManner/evaluate', component: tradeManner_evaluate, name: '评价管理', menuShow: true}
       ]
-    }
-	]
+    },
+	],
 })
 
 // router.beforeEach((to, from, next) => {
