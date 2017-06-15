@@ -1,35 +1,37 @@
 <template>
   <div class="publicHeader">
-    <div class="headerFirst">
-      <div class="system_enter left">创客系统入口</div>
-      <div class="log right">
-        <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
-      </div>
-      <div class="my_order right" @click="myOrder">我的订单</div>
-      <div class="shopping_car right">
-        <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-        <p class="right" @click="gotocar">购物车 <span class="car_num">0</span></p>
-        <div class="whiteLine"></div>
-        <div class="car_hover">
-          <p class="cargo_title">最近加入的产品：</p>
-          <div class="cargo_box" v-for="item in items" :key="item">
-            <img class="cargo_sm" src="../../../images/index/demo_sm.png" alt="img">
-            <div class="cargo_des">{{item.des}}</div>
-            <div class="cargo_price">￥{{item.price}}</div>
-            <div class="cargo_num">{{item.num}}盒</div>
-            <div class="cargo_rm">删除</div>   
-          </div>
-          <div class="total_box">
-            <p class="fir left">共<span style="color: #D81E06;">3</span>件商品</p>
-            <p class="sec left">总计: <span style="color: #D81E06;">￥3267</span></p>
-            <div class="gotocar right" @click="gotocar">去购物车</div>
+    <div class="headerBox" :class="{ speH: isActive }">
+      <div class="headerFirst">
+        <div class="system_enter left">创客系统入口</div>
+        <div class="log right">
+          <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
+        </div>
+        <div class="my_order right" @click="myOrder">我的订单</div>
+        <div class="shopping_car right">
+          <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
+          <p class="right" @click="gotocar">购物车 <span class="car_num">0</span></p>
+          <div class="whiteLine"></div>
+          <div class="car_hover">
+            <p class="cargo_title">最近加入的产品：</p>
+            <div class="cargo_box" v-for="item in items" :key="item">
+              <img class="cargo_sm" src="../../../images/index/demo_sm.png" alt="img">
+              <div class="cargo_des">{{item.des}}</div>
+              <div class="cargo_price">￥{{item.price}}</div>
+              <div class="cargo_num">{{item.num}}盒</div>
+              <div class="cargo_rm">删除</div>   
+            </div>
+            <div class="total_box">
+              <p class="fir left">共<span style="color: #D81E06;">3</span>件商品</p>
+              <p class="sec left">总计: <span style="color: #D81E06;">￥3267</span></p>
+              <div class="gotocar right" @click="gotocar">去购物车</div>
+            </div>
           </div>
         </div>
+        <div class="clearfix"></div>
       </div>
-      <div class="clearfix"></div>
     </div>
     <!--     短信密码登录 start    -->
-    <div class="log_box" :class="{ spe: isNum }" v-show="changeForget1">
+    <div class="log_box" v-show="changeForget1"> 
       <el-collapse-transition>
         <div v-show="showLogin">
           <div class="transition-box">
@@ -87,7 +89,7 @@
     </div>
     <!--     短信密码登录 end    -->
     <!--     忘记密码 start    -->
-    <div class="log_box" :class="{ spe: isNum }" v-show="changeForget2">
+    <div class="log_box2" v-show="changeForget2">
       <el-collapse-transition>
         <div v-show="showLogin">
           <div class="transition-box">
@@ -133,7 +135,7 @@
     </div>
     <!--     忘记密码 end    -->
     <!--     注册页 start    -->
-    <div class="log_box" :class="{ spe: isNum }" v-show="changeForget3">
+    <div class="log_box" v-show="changeForget3">
       <el-collapse-transition>
         <div v-show="showLogin">
           <div class="transition-box">
@@ -186,14 +188,14 @@
       </el-collapse-transition>
     </div>
     <!--     注册页 end    -->
-    <div class="headerSecond">
+    <div class="headerSecond" v-show="Second">
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
       <div class="search_box right">
         <input class="search_word" type="text">
         <img class="search_img" src="../../../images/index/search.png" alt="img">
       </div>
     </div>
-      <div class="clearfix"></div>
+    <div class="clearfix"></div>
   </div>
 </template>
 
@@ -259,7 +261,14 @@
         rgPwd_alert: false,
         rgConfirmPwd_alert: false,
         rgAgree_alert: false,
+        Second: true,
+        isActive: false,
+        line: false,
       }
+    },
+    created: function() {
+      var that = this;
+      window.addEventListener('scroll', that.menu);
     },
     watch: {
       //监听短信登录手机号验证
@@ -359,6 +368,16 @@
       },
     },
     methods: {
+      menu: function() {
+        var that = this;
+        var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+        if(scroll >= 30) {
+          that.isActive = true;
+        } else {
+          that.isActive = false;
+        }
+        // console.log(scroll, 'frisco')
+      },
       // 去购物车
       gotocar: function() {
         var that = this;
@@ -615,60 +634,26 @@
     font-size: 12px;
     color: #D81E06;
   }
+  .speH {
+    width: 100%;
+    position: fixed;
+    right: 0;
+    left: 0;
+    margin: auto;
+    z-index: 99;
+    background-color: #fff;
+  }
   .spe {
-    display: none;
 /*    z-index: -5 !important;*/
   }
-  /*-------animation start------*/
-  .shake-enter-active {
-    animation: shake .5s;
-  }
-  .shake-leave-active {
-    transition: all 0.3s ease;
-    opacity: 0;
-  }
-  @-webkit-keyframes shake {
-    from, to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-      -webkit-transform: translate3d(-7px, 0, 0);
-      transform: translate3d(-7px, 0, 0);
-    }
-
-    20%, 40%, 60%, 80% {
-      -webkit-transform: translate3d(7px, 0, 0);
-      transform: translate3d(7px, 0, 0);
-    }
-  }
-
-  @keyframes shake {
-    from, to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-      -webkit-transform: translate3d(-7px, 0, 0);
-      transform: translate3d(-7px, 0, 0);
-    }
-
-    20%, 40%, 60%, 80% {
-      -webkit-transform: translate3d(7px, 0, 0);
-      transform: translate3d(7px, 0, 0);
-    }
-  }
-
-  .shake {
-    -webkit-animation-name: shake;
-    animation-name: shake;
+  .headerBox {
+    width: 100%;
+    height: 28px;
   }
   .headerFirst {
     width: 1200px;
-    height: 24px;
-    line-height: 24px;
+    height: 28px;
+    line-height: 28px;
     margin: 0 auto;
     margin-bottom: 22px;
     font-size: 14px;
@@ -681,6 +666,8 @@
     margin-left: 60px;
   }
   .shopping_car {
+    width: 90px;
+    height: 26px;
     position: relative;
     cursor: pointer;
     border: 1px solid #fff;
@@ -689,8 +676,8 @@
     z-index: 1000;
   }
   .shopping_car .car_img {
-    margin-top: 2px;
-    margin-right: 19px;
+    position: absolute;
+    top: 4px;
   }
   .shopping_car .car_num {
     color: #D81E06;
@@ -702,11 +689,114 @@
   }
   .log_box {
     width: 100%;
-    height: 600px;
+/*    height: 600px;*/
     z-index: 999;
-    position: absolute;
-/*    background-color: #EECE7C;*/
+    position: fixed;
+    top: 28px;
   }
+/*------------页面购物车hover样式 start----------------*/
+  .whiteLine {
+    display: none;
+    position: absolute;
+    top: 26px;
+    left: 101px;
+    width: 320px;
+    height: 1px;
+    background-color: #e9e9e9;
+    z-index: 9999;
+  }
+  .shopping_car:hover .whiteLine{
+    display: block;
+  }
+  .shopping_car:hover {
+    border-top: 1px solid #e9e9e9;
+    border-left: 1px solid #e9e9e9;
+    border-right: 1px solid #e9e9e9;
+  }
+  .shopping_car:hover .car_hover{
+    display: block;
+  }
+  .shopping_car .car_hover {
+    display: none;
+    width: 380px;
+    position: absolute;
+    top: 27px;
+    left: -1px;
+    border-left: 1px solid #e9e9e9;
+    border-right: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 999;
+  }
+  .cargo_title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 12px;
+  }
+  .cargo_box {
+    width: 380px;
+    height: 70px;
+    margin-top: 20px;
+    position: relative;
+    border-bottom: 1px solid #e9e9e9;
+  }
+/*  .cargo_box:hover {
+    background-color: #e9e9e9;
+    transition: all ease 0.5s
+  }*/
+  .cargo_sm {
+    margin-top: 10px;
+    border: 1px solid #e9e9e9;
+  }
+  .cargo_des {
+    position: absolute;
+    top: 3px;
+    left: 50px;
+  }
+  .cargo_price {
+    position: absolute;
+    top: 3px;
+    right: 0px;
+    color: #D81E06;
+  }
+  .cargo_num {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+  }
+  .cargo_rm {
+    position: absolute;
+    top: 30px;
+    right: 8px;
+  }
+  .cargo_rm:hover {
+    color: #5DB7E8;
+    transition: all ease 0.5s;
+  }
+  .total_box {
+    width: 100%;
+    height: 100%;
+  }
+  .fir {
+    margin-top: 15px;
+    margin-right: 20px;
+  }
+  .sec {
+    margin-top: 15px;
+  }
+  .gotocar {
+    width: 70px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #5DB7E7;
+    text-align: center;
+    border-radius: 6px;
+    margin-top: 10px;
+    color: #fff;
+  }
+/*------------页面购物车hover样式 end----------------*/
 /*-------------------短信密码登录 start----------------------*/
   .transition-box {
     width: 100%;
@@ -1033,104 +1123,6 @@
     margin-top: 2px;
   }
 /*-------------------注册页 end----------------------*/
-/*------------页面购物车hover样式 start----------------*/
-  .whiteLine {
-    position: absolute;
-    top: 28px;
-    left: -1px;
-    width: 104px;
-    height: 1px;
-    background-color: #fff;
-    z-index: 9999;
-  }
-  .shopping_car:hover {
-    border-top: 1px solid #e9e9e9;
-    border-left: 1px solid #e9e9e9;
-    border-right: 1px solid #e9e9e9;
-    border-bottom: 10px solid #000;
-  }
-  .shopping_car:hover .car_hover{
-    display: block;
-  }
-  .shopping_car .car_hover {
-    display: none;
-    width: 380px;
-    position: absolute;
-    top: 28px;
-    left: -1px;
-    border: 1px solid #e9e9e9;
-    padding: 20px;
-    background-color: #fff;
-    z-index: 999;
-  }
-  .cargo_title {
-    font-size: 14px;
-    font-weight: bold;
-    color: #000;
-    margin-top: 12px;
-  }
-  .cargo_box {
-    width: 380px;
-    height: 70px;
-    margin-top: 20px;
-    position: relative;
-    border-bottom: 1px solid #e9e9e9;
-  }
-/*  .cargo_box:hover {
-    background-color: #e9e9e9;
-    transition: all ease 0.5s
-  }*/
-  .cargo_sm {
-    margin-top: 10px;
-    border: 1px solid #e9e9e9;
-  }
-  .cargo_des {
-    position: absolute;
-    top: 3px;
-    left: 50px;
-  }
-  .cargo_price {
-    position: absolute;
-    top: 3px;
-    right: 0px;
-    color: #D81E06;
-  }
-  .cargo_num {
-    position: absolute;
-    top: 30px;
-    left: 50px;
-  }
-  .cargo_rm {
-    position: absolute;
-    top: 30px;
-    right: 8px;
-  }
-  .cargo_rm:hover {
-    color: #5DB7E8;
-    transition: all ease 0.5s;
-  }
-  .total_box {
-    width: 100%;
-    height: 100%;
-  }
-  .fir {
-    margin-top: 15px;
-    margin-right: 20px;
-  }
-  .sec {
-    margin-top: 15px;
-  }
-  .gotocar {
-    width: 70px;
-    height: 30px;
-    line-height: 30px;
-    background-color: #5DB7E7;
-    text-align: center;
-    border-radius: 6px;
-    margin-top: 10px;
-    color: #fff;
-  }
-/*------------页面购物车hover样式 end----------------*/
   .headerSecond {
     width: 1200px;
     height: 63px;

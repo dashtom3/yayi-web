@@ -75,12 +75,12 @@
   .prev {
     position: absolute;
     left: 0;
-    z-index: 999;
+/*    z-index: 998;*/
   }
   .next {
     position: absolute;
     right: 0;
-    z-index: 999;
+/*    z-index: 998;*/
   }
   .prev:hover, .next:hover{
     opacity: 0.8;
