@@ -25,7 +25,7 @@ export default new Router({
 		component: center,
 	},
 	{
-		path: '/details',
+		path: '/details/:id',
 		name: 'details',
 		component: details,
 	},

@@ -1,7 +1,7 @@
 <template>
   <div class="bindSale">
     <div class="content">
-      <el-form v-if="!saleData.saleId" ref="userData" :model="saleData" label-width="80px">
+      <el-form v-if="saleData.saleId" ref="userData" :model="saleData" label-width="80px">
         <el-form-item label="销售员ID：" label-width="100px">
           <el-input v-model="willBindSale"></el-input>
           <div v-show="showSearchInfo" class="showSearchInfoClass">

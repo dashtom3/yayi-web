@@ -1,7 +1,7 @@
 <template>
   <div class="myMoney">
     <div class="moneyHaed">
-      <span>当前钱币：{{myAllMoney.currentMoney}}</span>
+      <span>当前乾币：{{myAllMoney.currentMoney}}</span>
     </div>
     <el-table
     :data="myAllMoney.details"
