@@ -1,98 +1,12 @@
-<template>
-  <el-row class="warp classfy">
-    <el-col :span="24" class="warp-breadcrum">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>商品基础资料管理</el-breadcrumb-item>
-        <el-breadcrumb-item>商品分类管理</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-col>
-
-    <el-col :span="24" class="warp-main">
-      <!--工具条-->
-      <el-col  class="toolbar" style="padding-bottom: 0px;">
-        <el-form :inline="true" :model="filters">
-          <el-form-item>
-            <el-input v-model="filters.name" placeholder="请输入属性名称"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-on:click="search">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-      <el-col style="text-align:right;line-height:40px;">
-        <el-button type="text" @click="dialogFormVisible = true">+添加商品分类</el-button>
-      </el-col>
-
-
-      <!--列表-->
-      <el-table
-          :data="tableData"
-          border
-          style="width: 100%">
-
-          <el-table-column
-            prop="shuxingname"
-            align="center"
-            label="分类名称"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shuxingzhi"
-            align="center"
-            label="上级分类">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="操作">
-            <template scope="scope">
-            <el-button
-              type="text"
-              v-on:click="changeOneAttr(scope.$index)"
-              >修改</el-button>
-            <el-button
-              type="text"
-              v-on:click="DELEONE(scope.$index)"
-              >删除</el-button>
-          </template>
-          </el-table-column>
-    </el-table>
-    </el-col>
-
-    <!-- Form -->
-
-
-    <el-dialog title="添加商品分类" :visible.sync="dialogFormVisible">
-      <el-form>
-
-        <el-form-item label="上级分类：" :label-width="formLabelWidth">
-          <el-cascader
-      :options="options"
-      :clearable="true"
-      :show-all-levels="false"
-      v-model="aad"
-        ><el-button slot="append" icon="search"></el-button>
-      </el-cascader>
-        </el-form-item>
-        <el-form-item label="分类名称：" :label-width="formLabelWidth">
-          <el-input v-model="aad1" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveOneAttrs">保存</el-button>
-      </div>
-    </el-dialog>
-  </el-row>
-
-
-</template>
+<el-cascader
+  :options="options"
+  v-model="selectedOptions3"
+></el-cascader>
 <script>
-  import abc from "./abc"
-  export default{
-    data(){
+  export default {
+    name:"abc",
+    data() {
       return {
-        aad:null,
-        aad1:null,
         options: [{
             value: 'zhinan',
             label: '指南',
@@ -288,107 +202,8 @@
             label: '组件交互文档'
           }]
         }],
-        selectedOptions3: ['zujian', 'data', 'tag'],
-        filters: {
-          name: ''
-        },
-        dialogFormVisible: false,
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formLabelWidth: '120px',
-        // -----------------------------
-        wantAddAttr:{
-          addName:null,
-          willname:null,
-          addAttrValues:[],
-        },
-        // wantAddAttrName:null,
-        addAttrShow:[],
-        gridData:[],
-        tableData:[
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"}
-        ],
-        dialogFormVisible: false,
-        // formLabelWidth: '120px'
-        // -----------------------------------
-      }
-    },
-    watch:{
-
-    },
-    components:{
-      abc
-    },
-    methods: {
-      search:function(){
-        this.filters.name;
-      },
-      DELEONE:function(index){
-        this.$confirm('确定删除该属性吗, 是否继续?', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          this.tableData.splice(index,1);
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-
-      },
-      changeOneAttr:function(index){
-        this.dialogFormVisible = true;
-        var thisData = this.tableData[index];
-        console.log(thisData);
-        this.aad = thisData.shuxingzhi;
-        this.aad1 = thisData.shuxingname;
-      },
-      saveOneAttrs:function(){
-        var obj = {};
-        obj.shuxingname = this.aad1;
-        obj.shuxingzhi = this.aad[2];
-        this.tableData.push(obj);
-        this.dialogFormVisible  = false;
-        this.aad = null;
-        this.aad1 = null;
-      },
-      deleOneAttr:function(index){
-         this.addAttrShow.splice(index, 1);
-         this.wantAddAttr.addAttrValues.splice(index,1)
-      },
-      addOneAttr:function(name){
-        var aa= {};
-        aa.id="1",
-        aa.name = name;
-        this.wantAddAttr.addAttrValues.push(aa);
-        this.addAttrShow.push({id:"1",name:name});
-      },
-      // -----------------------------
-    },
-  }
+        selectedOptions3: ['zujian', 'data', 'tag']
+      };
+    }
+  };
 </script>
-
-<style>
-.classfy  .el-dialog__footer{
-  margin-left: 120px;
-  text-align: left;
-  }
-</style>
