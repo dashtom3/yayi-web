@@ -95,7 +95,7 @@ let router = new Router({
     {
       path: '/admin',
       component: Home,
-      name: '图书管理',
+      name: '商品基础资料管理',
       menuShow: true,
       iconCls: 'iconfont icon-books',
       children: [

@@ -1110,7 +1110,7 @@
     transition: all ease 0.5s;
   }
   .rg_choose_box {
-    margin-top: 5px;
+    margin-top: 15px;
     font-size: 12px;
   }
   .rg_choose_word {
