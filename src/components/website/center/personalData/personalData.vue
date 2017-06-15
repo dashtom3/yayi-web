@@ -8,7 +8,7 @@
       <div class="mainContent">
         <el-form ref="userData" :model="userData" label-width="90px">
           <el-form-item label="用户名：">
-            <el-input  v-model="userData.name"></el-input>
+            <el-input :disabled="true"  v-model="userData.name"></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
             <el-input v-model="userData.realyName"></el-input>
@@ -40,7 +40,7 @@
       return {
         currentTabs:1,
         userData:{
-          name:"",
+          name:"adsfasdg",
           realyName:"",
           sex:"男",
           birthday:"",

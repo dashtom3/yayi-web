@@ -139,9 +139,17 @@ display: -webkit-box;
 overflow: hidden;
 }
 .goodDetail .imgwrap{
-width: 148px;
-height: 148px;
+width: 140px;
+height: 140px;
 text-align: center;
+margin: auto;
+margin-top: 4px;
+}
+.imgwrap img:hover{
+
+box-shadow: 7px 7px 28px #bcbcbc;
+transition: all 0.5s ease;
+cursor: pointer;
 }
 .goodDetail .imgwrap img{
 max-width: 100%;
@@ -158,6 +166,10 @@ vertical-align: middle;
   padding-left: 8px;
   padding-right: 10px;
 }
+.goodDetail .title:hover{
+  color: #5db7e8;
+  cursor: pointer;
+}
 .goodDetail .goodFooter{
 margin-top: 18px;
 padding-left: 8px;
@@ -165,6 +177,7 @@ padding-right: 10px;
 }
 .goodDetail .goodFooter img{
   float: right;
+  cursor: pointer;
 }
 
 .nogood{

@@ -8,7 +8,7 @@
       </div>
       <div class="classifyLine">
         分类：
-        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy">不限</span>
+        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:mouseenter="clearAllClassfy">不限</span>
           <span class="fenlei1" v-bind:class="{fenlieselect: classifyIndex===index}" v-on:mouseenter="selectClassfy(index)"  v-for="(item,index) in brandClassfy">
             {{item.oneName}}
           </span>
@@ -59,17 +59,19 @@
 
       <div class="allGoods">
         <ul>
-          <li  v-for="(item,index) in allGoods">
+          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index)">
+            <!-- <router-link to="/details/index"> -->
             <img  class="ifGold" v-if="item.ifGold" src="../../../images/brandLib/3.png" alt="">
             <div class="imgWrap">
-<img class="goodImg" src="../../../images/brandLib/4.png" alt="">
-<span></span>
+              <img class="goodImg" src="../../../images/brandLib/4.png" alt="">
+              <span></span>
             </div>
             <p class="goodTitle">{{item.goodTitle}}</p>
             <div class="goodBottom">
               <span>￥{{item.goodPrice}}</span>
               <span><img src="../../../images/brandLib/5.png" alt="购物车"></span>
             </div>
+            <!-- </router-link> -->
           </li>
         </ul>
       </div>
@@ -198,6 +200,11 @@
       }
     },
     methods: {
+      goToThisDetail:function(id){
+        this.$router.push({
+          path:"/details/"+id,
+        });
+      },
       selectClassfy:function(index){
         this.classifyIndex=index;
         this.noLimitClassfy = false;
@@ -242,6 +249,8 @@
         this.noLimitClassfy = true;
         this.selectedTwo = null;
         this.selectedThree = null;
+        this.fenlie2 = [];
+        this.classifyIndex = null;
       }
     }
   }
@@ -249,6 +258,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .classifyLine .defaultClassfy{
   display: inline-block;
   width: 52px;

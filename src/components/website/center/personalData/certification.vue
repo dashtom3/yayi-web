@@ -1,11 +1,11 @@
 <template>
   <div class="certification">
     <div class="content">
-      <el-form ref="userData" :model="userData" label-width="166px">
+      <el-form ref="userData" :model="userData" label-width="250px">
         <el-form-item label="类型：">
-          <el-select v-model="userData.type" placeholder="">
-            <el-option label="个人" value="shanghai"></el-option>
-            <el-option label="企业" value="beijing"></el-option>
+          <el-select v-model="userData.type" placeholder="" :change="adsf(userData.type)">
+            <el-option label="个人" value="个人"></el-option>
+            <el-option label="企业" value="企业"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单位名称：">
@@ -29,7 +29,7 @@
         <el-form-item label="详细地址：">
           <el-input v-model="userData.detailPlace"></el-input>
         </el-form-item>
-        <el-form-item label="口腔执业医师资格证：">
+        <el-form-item :label="sczgz">
           <el-upload
           class="avatar-uploader"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -56,10 +56,11 @@
       return {
         // 1,ing-----2,false
         certificateState:0,
+        sczgz:"口腔执业医师资格证：",
         imageUrl: '',
         userData:{
           place:"",
-          type:null,
+          type:"个人",
           compony:"",
           detailPlace:"",
           zgz:null,
@@ -78,6 +79,13 @@
       }
     },
     methods:{
+      adsf:function(aa){
+        if(aa=="个人"){
+          this.sczgz = "口腔执业医师资格证：";
+        }else{
+          this.sczgz = "营利性医疗机构执业许可证：";
+        }
+      },
       ert:function(){
         if(this.certificateState==1){
           this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
