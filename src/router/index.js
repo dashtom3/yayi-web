@@ -19,6 +19,14 @@ import UserList from '@/components/admin/user/list'
 import UserChangePwd from '@/components/admin/user/changepwd'
 import UserProfile from '@/components/admin/user/profile'
 
+
+
+// 商品基础资料管理
+
+import bsseInfoManner_attr from '@/components/admin/bsseInfoManner/attr'
+import bsseInfoManner_brand from '@/components/admin/bsseInfoManner/brand'
+import bsseInfoManner_classfy from '@/components/admin/bsseInfoManner/classfy'
+
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
 
@@ -81,6 +89,7 @@ let router = new Router({
         {path: '/admin/dashboard', component: Dashboard, name: '首页', menuShow: true}
       ]
     },
+
     {
       path: '/admin',
       component: Home,
@@ -113,7 +122,20 @@ let router = new Router({
         {path: '/admin/user/profile', component: UserProfile, name: '个人信息', menuShow: true},
         {path: '/admin/user/changepwd', component: UserChangePwd, name: '修改密码', menuShow: true}
       ]
-    }
+    },
+		{
+      path: '/bsseInfoManner',
+      component: Home,
+      name: '商品基础资料管理',
+      menuShow: true,
+      //leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/bsseInfoManner/attr', component: bsseInfoManner_attr, name: '商品属性管理', menuShow: true},
+				{path: '/admin/bsseInfoManner/classfy', component: bsseInfoManner_classfy, name: '商品分类管理', menuShow: true},
+				{path: '/admin/bsseInfoManner/brand', component: bsseInfoManner_brand, name: '商品品牌管理', menuShow: true}
+      ]
+    },
 	],
 })
 
