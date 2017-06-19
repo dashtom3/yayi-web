@@ -7,12 +7,12 @@
       </el-breadcrumb>
     </el-col>
     <el-col class="warp-main">
-      <el-form label-width="80px">
+      <el-form label-width="80px" class="clearfix">
         <el-form-item label="订单编号" class="fl t_input_width">
-          <el-input v-model="input"></el-input>
+          <el-input v-model="orderCode"></el-input>
         </el-form-item>
         <el-form-item label="买家信息" class="fl t_input_width">
-          <el-input v-model="input" placeholder="输入收件人姓名或手机号"></el-input>
+          <el-input v-model="buyerInfo" placeholder="输入收件人姓名或手机号"></el-input>
         </el-form-item>
         <el-form-item label="订单状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
@@ -47,7 +47,7 @@
       </el-form>
 
       <!--列表-->
-      <el-table :data="orderList" style="width: 100%;text-align:center;" border>
+      <el-table :data="orderList" style="text-align:center;" border>
         <el-table-column prop="orderCode" label="订单编号" width="120" >
         </el-table-column>
         <el-table-column prop="totalPrice" label="总价（元）" width="120" >
@@ -155,8 +155,8 @@
           </div>
           <div class="order_sum fl">
             <div class="order_h">{{'￥'+orderInfo.totalPrice.toFixed(2)}}</div>
-            <div class="order_h">（含运费:￥68.00）</div>
-            <div class="order_h">（乾币已抵扣:￥2.00）</div>
+            <div class="order_h">{{'（含运费: '+orderInfo.freight.toFixed(2)+ '）'}}</div>
+            <div class="order_h">{{'（乾币已抵扣: '+orderInfo.deductible.toFixed(2)+ '）'}}</div>
           </div>
         </div>
         <div class="pay_info clearfix">
@@ -188,7 +188,7 @@
               <td colspan="7" style="text-align:left;">
                 <span style="padding-left:10px;">实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</span>
                 <span style="padding-left:90px;">运费：包邮</span>
-                <span style="padding-left:90px;">乾币抵扣：20</span>
+                <span style="padding-left:90px;">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</span>
               </td>
             </tr>
             <tr style="background:#ddd;">
@@ -204,10 +204,10 @@
               <td></td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>1</td>
-              <td><i class="i_col_red">0</i></td>
-              <td><i class="i_col_red">20</i></td>
-              <td><i class="i_col_red">0</i></td>
+              <td>{{item.backNo}}</td>
+              <td><i class="i_col_red">{{item.price * item.backNo}}</i></td>
+              <td><i class="i_col_red">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
+              <td><i class="i_col_red">{{orderInfo.deductible}}</i></td>
             </tr>
           </table>
         </div>
@@ -278,18 +278,24 @@
               <td>退回的乾币数</td>
               <td>扣除的乾币数</td>
             </tr>
-            <tr v-for="item in orderInfo.goodsInfo">
+            <tr v-for="item in orderInfo.goodsInfo" style="height:46px;">
               <td>
                 <template>
-                  <el-checkbox v-model="checked" size="small"></el-checkbox>
+                  <el-checkbox v-model="item.checked" size="small"></el-checkbox>
                 </template>
               </td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>1</td>
-              <td><i class="i_col_red">0</i></td>
-              <td><i class="i_col_red">20</i></td>
-              <td><i class="i_col_red">0</i></td>
+              <td>
+                <div v-show="item.goodsNum !== 0">
+                  <i class="icon_i_l" @click="item.count -= 1" v-if="item.count > 0">-</i>
+                  <el-input v-model="item.count"  style="width:88px;"></el-input>
+                  <i class="icon_i_r" @click="item.count += 1" v-if="item.count < item.goodsNum">+</i>
+                </div>
+              </td>
+              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{item.count * item.price}}</i></td>
+              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
+              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{orderInfo.deductible}}</i></td>
             </tr>
           </table>
           <div class="btn_box">
@@ -305,6 +311,7 @@
   export default {
     data() {
       return {
+        //订单状态
         orderStat: [{
           value: '0',
           label: '全部'
@@ -327,6 +334,7 @@
           value: '6',
           label: '交易关闭'
         }],
+        //是否退款
         drawback: [{
           value1: '0',
           label1: '全部'
@@ -337,15 +345,12 @@
           value1: '2',
           label1: '否'
         }],
-        input: '',
-        value: '',
-        value1: '',
-        value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],
-        pickerOptions0: {
-          disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
-          }
-        },
+        orderCode: '',//订单编号
+        buyerInfo: '',//买家信息
+        value: '',//订单状态的value
+        value1: '',//是否退款的value
+        value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
+        //订单列表
         orderList: [{
           "orderCode": "ddbh2017053100001",
           "totalPrice": 500,
@@ -417,29 +422,42 @@
         dialogVisible: false,//关闭开关
         deliveryVisible: false,//仓库发货开关
         refundVisible: false,//退款处理开关
+        
+        
+        //收货信息
         receivingInfo: [{
           userCode: 'xxxxxx',
           userName: '张三',
           localtion: '上海市静安区',
           detailAddr: '共和新路街道洛川中路1100弄31号103（居委会）'
         }],
+        //订单信息
         orderInfo: {
           orderDate: '2017-05-27',
           orderNo: '173828478CSJHC',
           orderTime: 'xxxxxxxxxxx',
           totalPrice: 156,
+          freight: 68,
+          deductible: 2,
+          //商品信息
           goodsInfo:[{
             goodsSrc: '',
             goodsName: '商品名称1',
             SKUCode: 'xxxxxxxxx',
             price: 39,
-            goodsNum: 2
+            goodsNum: 2,
+            checked: false,
+            backNo: 1,
+            count: 1//退款数量
           },{
             goodsSrc: '',
             goodsName: '商品名称2',
             SKUCode: 'xxxxxxxxx',
             price: 39,
-            goodsNum: 2
+            goodsNum: 0,
+            checked: false,
+            backNo: 1,
+            count: 0//退款数量
           }]
         }
       }
@@ -448,6 +466,7 @@
       //详情
       handleDetail(index, row) {
         this.detailVisible = true;
+        console.log(row);
       },
       //关闭交易
       handleClose(index, row) {
@@ -478,6 +497,9 @@
 </script>
 
 <style>
+.el-table th>.cell{
+  text-align: center;
+}
 .fl{
 	float:left;
 }
@@ -514,12 +536,13 @@
 }
 .order_box{
   position: relative;
+  border: 1px solid #eee;
 }
 .order_content{
   width: 70%;
   padding: 20px 0;
-  border: 1px solid #eee;
-  border-top: none;
+  border-right: 1px solid #eee;
+  border-top:1px solid #eee;
   box-sizing:border-box;
 }
 .order_sum{
@@ -527,11 +550,12 @@
   right: 0;
   top: -1px;
   width: 30%;
-  height: 257px;
-  border: 1px solid #eee;
   border-left: none;
   text-align: center;
   box-sizing:border-box;
+}
+.order_content:nth-of-type(1){
+  border-top: none;
 }
 .order_h{
   padding-top: 18px;
@@ -557,7 +581,7 @@
   width: 140px;
 }
 .goodsNum{
-  width: 96px;
+  width: 95px;
 }
 .i_col_red{
   color: red;
@@ -602,6 +626,16 @@
   text-align: center;
   padding: 4px 2px;
   border: 1px solid #ccc;
+}
+.icon_i_l{
+  font-style:normal;
+  font-size:20px;
+  padding-right:12px;
+}
+.icon_i_r{
+  font-style:normal;
+  font-size:20px;
+  padding-left:12px;
 }
 /* 仓库发货 */
 .btn_{

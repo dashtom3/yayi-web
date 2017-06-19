@@ -37,6 +37,10 @@ import tradeManner_evaluate from '@/components/admin/tradeManner/evaluate'
 import userManner_userList from '@/components/admin/userManner/userList'
 import userManner_moneyList from '@/components/admin/userManner/moneyList'
 import userManner_certificationList from '@/components/admin/userManner/certificationList'
+
+//管理员列表
+import adminManner_admin from '@/components/admin/adminManner/admin'
+
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
 
@@ -182,6 +186,17 @@ let router = new Router({
 				{path: '/admin/userManner/certificationList', component: userManner_certificationList, name: '资质列表', menuShow: true}
       ]
     },
+    {
+      path: '/adminManner',
+      component: Home,
+      name: '管理员列表',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
+      ]
+    }
 	],
 })
 
