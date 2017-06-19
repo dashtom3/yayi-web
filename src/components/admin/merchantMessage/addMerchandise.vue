@@ -814,8 +814,7 @@
       },
       nextToFirst: function() {
         var that = this;
-        that.secondStep = true;
-        that.firstStep = false;
+        that.$router.push({ path: '/admin/secondStep' });
       }
     },
   }

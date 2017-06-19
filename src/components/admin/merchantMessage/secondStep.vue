@@ -66,8 +66,7 @@
       },
       returnFrist: function() {
         var that = this;
-        that.secondStep = false;
-        that.$emit('listenToChildEvent',that.secondStep);
+        that.$router.push({ name: '商品信息管理', params:{ list: false, addMerchandise: true}});
       },
       showMsgFromThirdStep: function(data) {
         var that = this;

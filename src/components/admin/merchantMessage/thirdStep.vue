@@ -64,11 +64,8 @@
         console.log(file)
       },
       save: function() {
-        console.log('23')
-      },
-      fanhui: function() {
         var that = this;
-        console.log('22')
+        that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
       },
       returnSecond: function(){
         var that = this;

@@ -140,6 +140,15 @@
     components: {
       addMerchandise,
     },
+    mounted: function() {
+      var that = this;
+      if (that.$route.params.list == undefined || that.$route.params.addMerchandise == undefined) {
+        return false
+      } else {
+        that.list = that.$route.params.list;
+        that.addMerchandise = that.$route.params.addMerchandise;
+      }
+    },
     methods: {
       // 组件传值
       showMsgFromChild: function(data) {
