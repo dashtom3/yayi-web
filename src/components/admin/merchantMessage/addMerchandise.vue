@@ -10,7 +10,7 @@
       </el-breadcrumb>
     </el-col>
     <div class="clearfix"></div>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-top: 20px;">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-top: 20px;" v-show="firstStep">
       <el-form-item label="商品编号" prop="cargoId">
         <el-input v-model="ruleForm.cargoId" placeholder="默认的，不需要修改" style="width: 300px !important;"></el-input>
       </el-form-item>
@@ -49,9 +49,9 @@
       <!--  添加属性变换表格 开始 -->
       <table class="activeTable_box" v-show="active">
         <tr class="activeTable_title">
-          <th class="type1">属性1</th>
-          <th class="type2">属性2</th>
-          <th class="type3">属性3</th>
+          <th class="type1" v-show="num[0].num1!==0">{{property1}}</th>
+          <th class="type2" v-show="num[1].num2!==0">{{property2}}</th>
+          <th class="type3" v-show="num[2].num3!==0">{{property3}}</th>
           <th class="skuCode">SKU代码</th>
           <th class="price">价格</th>
           <th class="percent">提成（%）</th>
@@ -59,10 +59,10 @@
           <th class="stock">库存</th>
           <th class="enable">是否启用</th>
         </tr>
-        <tr class="activeTable_des" v-for="(table,index) in ggId" :key="table">
-          <td v-if="index == 0 || index == 4" :rowspan="4" class="des_type1" v-show="desType1">11</td>
-          <td v-if="index == 0 || index == 2 || index ==4 || index==6" :rowspan="2" class="des_type2" v-show="desType2">22</td>
-          <td class="des_type3" v-show="desType3">33</td>
+        <tr class="activeTable_des" v-for="(table,index) in number" :key="table">
+          <td v-if="index%(num[1].num2*num[2].num3)==0" :rowspan="num[1].num2*num[2].num3" class="des_type1">{{des1[index]}}</td>
+          <td v-if="index%num[2].num3==0" :rowspan="num[2].num3" class="des_type2">{{des2[index]}}</td>
+          <td class="des_type3">{{des3[index]}}</td>
           <td class="des_skuCode">
             <el-input v-model="input_sku"></el-input>
           </td>
@@ -82,9 +82,10 @@
             <el-checkbox v-model="input_enable"></el-checkbox>
           </td>
         </tr>
-<!--         <tr class="activeTable_des" v-for="(table,index) in 8" :key="table">
-          <td v-if="index == 0 || index == 4" :rowspan="4" class="des_type1" v-show="desType1">11</td>
-          <td v-if="index == 0 || index == 2 || index ==4 || index==6" :rowspan="2" class="des_type2" v-show="desType2">22</td>
+  <!--       v-if="num[0].num1!==0&&num[1].num2!==0&&num[2].num3!==0" -->
+<!--         <tr v-else class="activeTable_des" v-for="(table,index) in number" :key="table">
+          <td :rowspan="num[0].num1" class="des_type1" v-show="desType1">11</td>
+          <td :rowspan="num[1].num2" class="des_type2" v-show="desType2">22</td>
           <td class="des_type3" v-show="desType3">33</td>
           <td class="des_skuCode">
             <el-input v-model="input_sku"></el-input>
@@ -106,79 +107,47 @@
           </td>
         </tr> -->
       </table>
-<!--       <div class="activeTable_box" v-show="active">
-        <div class="activeTable_title">
-          <div class="left type1" v-show="Type1">属性1</div>
-          <div class="left type2" v-show="Type2">属性2</div>
-          <div class="left type3" v-show="Type3">属性3</div>
-          <div class="left skuCode">SKU代码</div>
-          <div class="left price">价格</div>
-          <div class="left percent">提成（%）</div>
-          <div class="left coin">乾币（%）</div>
-          <div class="left stock">库存</div>
-          <div class="left enable">是否启用</div>
-        </div>
-        <div class="activeTable_des" v-for="table in activeTable1" :key="table">
-          <div class="left des_type1" v-show="desType1">{{table.type1}}</div>
-          <div class="left des_type2" v-show="desType2" v-for="tableSec in table.type1List" :key="tableSec">{{tableSec.type2}}</div>
-          <div class="left des_type3" v-show="desType3" v-for="tableTh in tableSec.type2List" :key="tableTh">{{tableTh.type3}}</div>
-          <div class="left des_skuCode">
-            <el-input v-model="input_sku"></el-input>
-          </div>
-          <div class="left des_price">
-            <el-input v-model="input_price"></el-input>
-          </div>
-          <div class="left des_percent">
-            <el-input v-model="input_percent"></el-input>
-          </div>
-          <div class="left des_coin">
-            <el-input v-model="input_coin"></el-input>
-          </div>
-          <div class="left des_stock">
-            <el-input v-model="input_stock"></el-input>
-          </div>
-          <div class="left des_enable">
-            <el-checkbox v-model="input_enable"></el-checkbox>
-          </div>
-        </div>
-      </div> -->
       <!--  添加属性变换表格 结束 -->
-<!--       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item> -->
+      <el-form-item style="margin-top:50px;">
+        <el-button type="primary" @click="nextToFirst()">下一步</el-button>
+<!--         <el-button @click="resetForm('ruleForm')">重置</el-button> -->
+      </el-form-item>
+      <!-- 选择属性弹出框 开始 -->
+      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
+        <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55">
+          </el-table-column>
+          <el-table-column prop="property" label="属性名称">
+          </el-table-column>
+          <el-table-column prop="type" label="规格值">
+            <template scope="scope">
+              <span v-for="type in scope.row.type" :key="type">{{type.des}}/ </span>
+            </template> 
+          </el-table-column>
+        </el-table>
+        <div class="btn_box">
+          <el-button type="primary" @click="confirm_type">确定</el-button>
+          <el-button type="primary" @click="dialogTableVisible = false">取消</el-button>
+        </div>
+      </el-dialog>
+      <!-- 选择属性弹出框 结束 -->
     </el-form>
+    <secondStep v-on:listenToChildEvent="showMsgFromSecondStep" v-show="secondStep"></secondStep>
   </el-row>
-  <!-- 选择属性弹出框 开始 -->
-  <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
-    <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
-      <el-table-column prop="property" label="属性名称">
-      </el-table-column>
-      <el-table-column prop="type" label="规格值">
-        <template scope="scope">
-          <span v-for="type in scope.row.type" :key="type">{{type.des}}/ </span>
-        </template> 
-      </el-table-column>
-    </el-table>
-    <div class="btn_box">
-      <el-button type="primary" @click="confirm_type">确定</el-button>
-      <el-button type="primary" @click="dialogTableVisible = false">取消</el-button>
-    </div>
-  </el-dialog>
-  <!-- 选择属性弹出框 结束 -->
   <!--   添加商品开始 结束  -->
   </div>
 </template>
 
 <script>
+  import secondStep from './secondStep';
   export default {
     name: 'addMerchandise',
     data () {
       return {
         list: true,
         addMerchandise: false,
+        firstStep: true,
+        secondStep: false,
         options3: [{
           label: '哈哈',
           value: '1'
@@ -610,15 +579,23 @@
         items: [],
         checkedItems: [],
         active: true,
+        num : [{
+          num1: 0
+        },{
+          num2: 0
+        },{
+          num3: 0
+        }],
         num1: 0,
         num2: 0,
-        num3: 0,       
+        num3: 0,   
+        number: null,    
         Type1: true,
         Type2: true,
         Type3: true,
-        desType1: true,
-        desType2: true,
-        desType3: true,
+        desType1: false,
+        desType2: false,
+        desType3: false,
         input_sku: '',
         input_price: '',
         input_percent: '',
@@ -645,13 +622,19 @@
             ]
           },
         ],
-        ggId: 8,
         ggId1: null,
         ggId2: null,
         ggId3: null,
+        property1: '',
+        property2: '',
+        property3: '',
+        des1: [],
+        des2: [],
+        des3: [],
       }
     },
     components: {
+      secondStep,
     },
     watch: {
       //监听属性变换表格
@@ -661,53 +644,29 @@
           that.active = false;
         }
       },
-      // ggId1: function () {
-      //   var that = this;
-      //   if (that.ggId1 == 0 ) {
-      //     that.ggId = that.ggId2 * that.ggId3;
-      //     return false
-      //   }
-      // },
-      // ggId2: function () {
-      //   var that = this;
-      //   if (that.ggId2 == 0 ) {
-      //     that.ggId = that.ggId1 * that.ggId3;
-      //     return false
-      //   }
-      // },
-      // ggId3: function () {
-      //   var that = this;
-      //   if (that.ggId3 == 0 ) {
-      //     that.ggId = that.ggId1 * that.ggId2;
-      //     return false
-      //   }
-      // },
-      // tableData2: {
-      //   handler: function() {
-      //     var that = this;
-      //     that.num1 = 0;
-      //     for (var i = 0; i < that.tableData2[0].type.length; i++) {
-      //       var a = that.tableData2[0].type;
-      //       if(a[i].checked == true) {
-      //         that.num1 += 1;
-      //       }
-      //     }
-      //     console.log(that.num1);
-      //   },
-      //   deep :true
-      // }
+      num: {
+        handler: function() {
+          var that = this;
+          var sum = 1;
+          var nn = that.num;
+          for (var i = 0; i < nn.length; i++) {
+            let aa = '';
+            for (aa in nn[i]) {
+              // console.log(aa);
+            }
+            // console.log(nn[i][aa]);
+            if (nn[i][aa] !== 0) {
+              sum *= nn[i][aa]
+            }
+            //console.log('num' + (i +1));
+          }
+          that.number = sum;
+        },
+        deep: true
+      },
     },
     created: function() {
-      // var that = this;
-      // var sum = 0;
-      // var activeTable1 = that.activeTable1;
-      // for (var i = 0; i < activeTable1.length; i++) {
-      //   var a = activeTable1[i].children1;
-      //   for (var j = 0; j < a.length; j++) {
-      //     sum += parseInt(a[i].children.length);
-      //   }
-      // }
-      // console.log(sum);
+      //console.log(this.num.num1);
     },
     methods: {
       //返回商品列表
@@ -716,6 +675,13 @@
         that.list = true;
         that.addMerchandise = false;
         that.$emit('listenToChildEvent',that.list);
+      },
+      // 组件传值
+      showMsgFromSecondStep: function(data) {
+        var that = this;
+        that.secondStep = data;
+        that.firstStep = true;
+        //console.log(data);
       },
       //选择属性
       chooseType: function() {
@@ -759,29 +725,39 @@
           } else {
             console.log('frisco');
           }
-          if (that.num1 == 0 || that.ggId1 == a[0].typeId) {
+          if (that.num[0].num1 == 0 || that.ggId1 == a[0].typeId) {
             var a1 = a.filter(function(ele,index,arr) {
               return ele.checked == true;
             })
-            that.num1 = a1.length;
+            that.num[0].num1 = a1.length;
             that.ggId1 = a[0].typeId;
+            that.desType1 == true;
+            that.property1 = item.property;
+            that.des1.push(sitem.des);
+            console.log(that.des1);
             return false
           } else {
-            if (that.num2 == 0 || that.ggId2 == a[0].typeId) {
+            if (that.num[1].num2 == 0 || that.ggId2 == a[0].typeId) {
               var a2 = a.filter(function(ele,index,arr) {
                 return ele.checked == true;
               })
-              that.num2 = a2.length;
+              that.num[1].num2 = a2.length;
               that.ggId2 = a[0].typeId;
+              that.desType2 == true;
+              that.property2 = item.property;
+              that.des2.push(sitem.des);
               return false
             } else {
-              if (that.num3 == 0 || that.ggId3 == a[0].typeId) {
+              if (that.num[2].num3 == 0 || that.ggId3 == a[0].typeId) {
                 var a3 = a.filter(function(ele,index,arr) {
                   return ele.checked == true;
                 })
-                that.num3 = a3.length;
+                that.num[2].num3 = a3.length;
                 that.ggId3 = a[0].typeId;
-                console.log(that.num1,that.num2,that.num3);
+                that.desType3 == true;
+                that.property3 = item.property;
+                that.des3.push(sitem.des);
+                console.log(that.num);
                 return false
               } else {
                 sitem.checked = false;
@@ -810,31 +786,36 @@
             var a1 = a.filter(function(ele,index,arr) {
               return ele.checked == true;
             })
-            that.num1 = a1.length;
+            that.num[0].num1 = a1.length;
             that.ggId1 = a[0].typeId;
-            console.log(that.num1,that.num2,that.num3);
+            console.log(that.num);
             return false
           }
           if (a[0].typeId == that.ggId2) {
             var a2 = a.filter(function(ele,index,arr) {
               return ele.checked == true;
             })
-            that.num2 = a2.length;
+            that.num[1].num2 = a2.length;
             that.ggId2 = a[0].typeId;
-            console.log(that.num1,that.num2,that.num3);
+            console.log(that.num);
             return false
           }
           if (a[0].typeId == that.ggId3) {
             var a3 = a.filter(function(ele,index,arr) {
               return ele.checked == true;
             })
-            that.num3 = a3.length;
+            that.num[2].num3 = a3.length;
             that.ggId3 = a[0].typeId;
-            console.log(that.num1,that.num2,that.num3);
+            console.log(that.num);
             return false
           }
           // that.active = false;
         }
+      },
+      nextToFirst: function() {
+        var that = this;
+        that.secondStep = true;
+        that.firstStep = false;
       }
     },
   }
