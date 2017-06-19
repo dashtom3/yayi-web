@@ -10,9 +10,12 @@
     <el-col :span="24" class="warp-main">
       <!--工具条-->
       <el-col  class="toolbar" style="padding-bottom: 0px;">
-        <el-form :inline="true" :model="filters">
-          <el-form-item>
-            <el-input v-model="filters.name" placeholder="请输入属性名称"></el-input>
+        <el-form :inline="true">
+          <el-form-item label="分类名称：">
+            <el-input v-model="searchClassfyName"></el-input>
+          </el-form-item>
+          <el-form-item label="上级分类：">
+            <el-input v-model="searchParentClassfyName"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" v-on:click="search">查询</el-button>
@@ -20,299 +23,249 @@
         </el-form>
       </el-col>
       <el-col style="text-align:right;line-height:40px;">
-        <el-button type="text" @click="dialogFormVisible = true">+添加商品分类</el-button>
+        <el-button type="text" @click="addClassfy">+添加商品分类</el-button>
       </el-col>
 
 
       <!--列表-->
-      <el-table
-          :data="tableData"
-          border
-          style="width: 100%">
-
-          <el-table-column
-            prop="shuxingname"
-            align="center"
-            label="分类名称"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shuxingzhi"
-            align="center"
-            label="上级分类">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="操作">
+        <el-table  :data="tableData"  border  style="width: 100%">
+          <el-table-column  prop="shuxingname"  align="center"  label="分类名称"></el-table-column>
+          <el-table-column  prop="shuxingzhi"  align="center"  label="上级分类">  </el-table-column>
+          <el-table-column  align="center" label="操作">
             <template scope="scope">
-            <el-button
-              type="text"
-              v-on:click="changeOneAttr(scope.$index)"
-              >修改</el-button>
-            <el-button
-              type="text"
-              v-on:click="DELEONE(scope.$index)"
-              >删除</el-button>
-          </template>
+              <el-button  type="text" v-on:click="changeOneAttr(scope.$index)"  >修改</el-button>
+              <el-button  type="text"  v-on:click="DELEONE(scope.$index)"  >删除</el-button>
+            </template>
           </el-table-column>
-    </el-table>
+        </el-table>
     </el-col>
-
-    <!-- Form -->
-
-
     <el-dialog title="添加商品分类" :visible.sync="dialogFormVisible">
       <el-form>
-
         <el-form-item label="上级分类：" :label-width="formLabelWidth">
-          <el-cascader
-      :options="options"
-      :clearable="true"
-      :show-all-levels="false"
-      v-model="aad"
-        ><el-button slot="append" icon="search"></el-button>
-      </el-cascader>
+          <el-cascader  :options="options"  :show-all-levels="false"  v-model="addClassfyParent">
+            <el-button slot="append" icon="search"></el-button>
+          </el-cascader>
         </el-form-item>
         <el-form-item label="分类名称：" :label-width="formLabelWidth">
-          <el-input v-model="aad1" auto-complete="off"></el-input>
+          <el-input v-model="addClassfyName" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveOneAttrs">保存</el-button>
       </div>
     </el-dialog>
   </el-row>
-
-
 </template>
 <script>
-  import abc from "./abc"
+  // import abc from "./abc"
   export default{
     data(){
       return {
-        aad:null,
-        aad1:null,
+        searchClassfyName:null,
+        searchParentClassfyName:null,
+        // 1是增加，2是修改
+        classfyOperaType:1,
+        classfyChangeIndex:null,
+        addClassfyParent:['', '', ''],
+        addClassfyName:null,
         options: [{
             value: 'zhinan',
-            label: '指南',
-            children: [{
-              value: 'shejiyuanze',
-              label: '设计原则',
+              label: '指南',
               children: [{
-                value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
+                value: 'shejiyuanze',
+                label: '设计原则',
+                children: [{
+                  value: 'yizhi',
+                label: '一致'
+              }, {
+                value: 'fankui',
+                label: '反馈'
             }, {
               value: 'xiaolv',
               label: '效率'
+              }, {
+                value: 'kekong',
+                label: '可控'
+              }]
             }, {
-              value: 'kekong',
-              label: '可控'
+              value: 'daohang',
+              label: '导航',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
             }]
           }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, {
-          value: 'zujian',
-          label: '组件',
-          children: [{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-          }, {
-            value: 'form',
-            label: 'Form',
-            children: [{
-              value: 'radio',
-              label: 'Radio 单选框'
-            }, {
-              value: 'checkbox',
-              label: 'Checkbox 多选框'
-            }, {
-              value: 'input',
-              label: 'Input 输入框'
-            }, {
-              value: 'input-number',
-              label: 'InputNumber 计数器'
-            }, {
-              value: 'select',
-              label: 'Select 选择器'
-            }, {
-              value: 'cascader',
-              label: 'Cascader 级联选择器'
-            }, {
-              value: 'switch',
-              label: 'Switch 开关'
-            }, {
-              value: 'slider',
-              label: 'Slider 滑块'
-            }, {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器'
-            }, {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器'
-            }, {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器'
-            }, {
-              value: 'upload',
-              label: 'Upload 上传'
-            }, {
-              value: 'rate',
-              label: 'Rate 评分'
+              value: 'zujian',
+              label: '组件',
+              children: [{
+                value: 'basic',
+                label: 'Basic',
+                children: [{
+                  value: 'layout',
+                  label: 'Layout 布局'
+                }, {
+                    value: 'color',
+                label: 'Color 色彩'
+              }, {
+                value: 'typography',
+                label: 'Typography 字体'
+              }, {
+                value: 'icon',
+                label: 'Icon 图标'
+              }, {
+                value: 'button',
+                label: 'Button 按钮'
+              }]
             }, {
               value: 'form',
-              label: 'Form 表单'
+              label: 'Form',
+              children: [{
+                value: 'radio',
+                label: 'Radio 单选框'
+              }, {
+                value: 'checkbox',
+                label: 'Checkbox 多选框'
+              }, {
+                value: 'input',
+                label: 'Input 输入框'
+              }, {
+                value: 'input-number',
+                label: 'InputNumber 计数器'
+              }, {
+                value: 'select',
+                label: 'Select 选择器'
+              }, {
+                value: 'cascader',
+                label: 'Cascader 级联选择器'
+              }, {
+                value: 'switch',
+                label: 'Switch 开关'
+              }, {
+                value: 'slider',
+                label: 'Slider 滑块'
+              }, {
+                value: 'time-picker',
+                label: 'TimePicker 时间选择器'
+              }, {
+                value: 'date-picker',
+                label: 'DatePicker 日期选择器'
+              }, {
+                value: 'datetime-picker',
+                label: 'DateTimePicker 日期时间选择器'
+              }, {
+                value: 'upload',
+                label: 'Upload 上传'
+              }, {
+                  value: 'rate',
+                label: 'Rate 评分'
+              }, {
+                value: 'form',
+                label: 'Form 表单'
+              }]
+            }, {
+              value: 'data',
+              label: 'Data',
+              children: [{
+                value: 'table',
+                label: 'Table 表格'
+              }, {
+                value: 'tag',
+                label: 'Tag 标签'
+              }, {
+                value: 'progress',
+                label: 'Progress 进度条'
+              }, {
+                value: 'tree',
+                label: 'Tree 树形控件'
+              }, {
+                value: 'pagination',
+                label: 'Pagination 分页'
+              }, {
+                value: 'badge',
+                label: 'Badge 标记'
+              }]
+            }, {
+              value: 'notice',
+              label: 'Notice',
+              children: [{
+                value: 'alert',
+                label: 'Alert 警告'
+              }, {
+                value: 'loading',
+                label: 'Loading 加载'
+              }, {
+                value: 'message',
+                label: 'Message 消息提示'
+              }, {
+                value: 'message-box',
+                label: 'MessageBox 弹框'
+              }, {
+                value: 'notification',
+                label: 'Notification 通知'
+              }]
+            }, {
+              value: 'navigation',
+              label: 'Navigation',
+              children: [{
+                value: 'menu',
+                label: 'NavMenu 导航菜单'
+              }, {
+                value: 'tabs',
+                label: 'Tabs 标签页'
+              }, {
+                value: 'breadcrumb',
+                label: 'Breadcrumb 面包屑'
+              }, {
+                value: 'dropdown',
+                label: 'Dropdown 下拉菜单'
+              }, {
+                value: 'steps',
+                label: 'Steps 步骤条'
+              }]
+            }, {
+              value: 'others',
+              label: 'Others',
+              children: [{
+                value: 'dialog',
+                label: 'Dialog 对话框'
+              }, {
+                value: 'tooltip',
+                label: 'Tooltip 文字提示'
+              }, {
+                value: 'popover',
+                label: 'Popover 弹出框'
+              }, {
+                value: 'card',
+                label: 'Card 卡片'
+              }, {
+                value: 'carousel',
+                label: 'Carousel 走马灯'
+              }, {
+                value: 'collapse',
+                label: 'Collapse 折叠面板'
+              }]
             }]
           }, {
-            value: 'data',
-            label: 'Data',
+            value: 'ziyuan',
+            label: '资源',
             children: [{
-              value: 'table',
-              label: 'Table 表格'
+              value: 'axure',
+              label: 'Axure Components'
             }, {
-              value: 'tag',
-              label: 'Tag 标签'
+              value: 'sketch',
+              label: 'Sketch Templates'
             }, {
-              value: 'progress',
-              label: 'Progress 进度条'
-            }, {
-              value: 'tree',
-              label: 'Tree 树形控件'
-            }, {
-              value: 'pagination',
-              label: 'Pagination 分页'
-            }, {
-              value: 'badge',
-              label: 'Badge 标记'
+              value: 'jiaohu',
+              label: '组件交互文档'
             }]
-          }, {
-            value: 'notice',
-            label: 'Notice',
-            children: [{
-              value: 'alert',
-              label: 'Alert 警告'
-            }, {
-              value: 'loading',
-              label: 'Loading 加载'
-            }, {
-              value: 'message',
-              label: 'Message 消息提示'
-            }, {
-              value: 'message-box',
-              label: 'MessageBox 弹框'
-            }, {
-              value: 'notification',
-              label: 'Notification 通知'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'menu',
-              label: 'NavMenu 导航菜单'
-            }, {
-              value: 'tabs',
-              label: 'Tabs 标签页'
-            }, {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑'
-            }, {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单'
-            }, {
-              value: 'steps',
-              label: 'Steps 步骤条'
-            }]
-          }, {
-            value: 'others',
-            label: 'Others',
-            children: [{
-              value: 'dialog',
-              label: 'Dialog 对话框'
-            }, {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示'
-            }, {
-              value: 'popover',
-              label: 'Popover 弹出框'
-            }, {
-              value: 'card',
-              label: 'Card 卡片'
-            }, {
-              value: 'carousel',
-              label: 'Carousel 走马灯'
-            }, {
-              value: 'collapse',
-              label: 'Collapse 折叠面板'
-            }]
-          }]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [{
-            value: 'axure',
-            label: 'Axure Components'
-          }, {
-            value: 'sketch',
-            label: 'Sketch Templates'
-          }, {
-            value: 'jiaohu',
-            label: '组件交互文档'
-          }]
-        }],
-        selectedOptions3: ['zujian', 'data', 'tag'],
-        filters: {
-          name: ''
-        },
+          }],
         dialogFormVisible: false,
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
         formLabelWidth: '120px',
         // -----------------------------
-        wantAddAttr:{
-          addName:null,
-          willname:null,
-          addAttrValues:[],
-        },
-        // wantAddAttrName:null,
-        addAttrShow:[],
-        gridData:[],
         tableData:[
           {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
           {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
@@ -320,7 +273,6 @@
           {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
           {shuxingname:"sdfg",shuxingzhi:"qwerfqew"}
         ],
-        dialogFormVisible: false,
         // formLabelWidth: '120px'
         // -----------------------------------
       }
@@ -329,9 +281,18 @@
 
     },
     components:{
-      abc
+      // abc
     },
     methods: {
+      addClassfy:function(){
+        this.dialogFormVisible = true;
+        this.classfyOperaType = 1;
+        this.addClassfyParent = ["","",""];
+        this.addClassfyName = null;
+      },
+      aaga:function(val){
+        // console.log(val)
+      },
       search:function(){
         this.filters.name;
       },
@@ -355,31 +316,28 @@
 
       },
       changeOneAttr:function(index){
+        this.classfyOperaType = 2;
+        this.classfyChangeIndex = index;
         this.dialogFormVisible = true;
         var thisData = this.tableData[index];
-        console.log(thisData);
-        this.aad = thisData.shuxingzhi;
-        this.aad1 = thisData.shuxingname;
+        // console.log(thisData);
+        this.addClassfyParent = ["","",thisData.shuxingzhi];
+        this.addClassfyName = thisData.shuxingname;
       },
       saveOneAttrs:function(){
-        var obj = {};
-        obj.shuxingname = this.aad1;
-        obj.shuxingzhi = this.aad[2];
-        this.tableData.push(obj);
+        if(this.classfyOperaType==1){
+          var obj = {};
+          obj.shuxingname = this.addClassfyName;
+          obj.shuxingzhi = this.addClassfyParent;
+          this.tableData.push(obj);
+          this.addClassfyParent = ["","",""];
+          this.addClassfyName = null;
+        }
+        if(this.classfyOperaType==2){
+          this.tableData[this.classfyChangeIndex].shuxingname = this.addClassfyName;
+          this.tableData[this.classfyChangeIndex].shuxingzhi = this.addClassfyParent;
+        }
         this.dialogFormVisible  = false;
-        this.aad = null;
-        this.aad1 = null;
-      },
-      deleOneAttr:function(index){
-         this.addAttrShow.splice(index, 1);
-         this.wantAddAttr.addAttrValues.splice(index,1)
-      },
-      addOneAttr:function(name){
-        var aa= {};
-        aa.id="1",
-        aa.name = name;
-        this.wantAddAttr.addAttrValues.push(aa);
-        this.addAttrShow.push({id:"1",name:name});
       },
       // -----------------------------
     },
