@@ -74,7 +74,7 @@
         </el-table-column>
       </el-table>
   </el-row>
-  <addMerchandise :message="parentMsg" v-on:listenToChildEvent="showMsgFromChild" v-show="addMerchandise"></addMerchandise>
+  <addMerchandise v-on:listenToChildEvent="showMsgFromChild" v-show="addMerchandise"></addMerchandise>
 </div>
 </template>
 <script>
@@ -83,7 +83,6 @@
   export default{
     data () {
       return {
-        parentMsg: 'hello',
         cargo: {
           id: '',
           name: '',
@@ -142,6 +141,7 @@
       addMerchandise,
     },
     methods: {
+      // 组件传值
       showMsgFromChild: function(data) {
         var that = this;
         that.list = data;

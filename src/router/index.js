@@ -12,12 +12,12 @@ import pay from '@/components/website/gwc/pay'
 import Home from '@/components/admin/Home'
 import Dashboard from '@/components/admin/Dashboard'
 
-import BookList from '@/components/admin/book/list'
-import BookCategoryList from '@/components/admin/bookcategory/list'
-
-import UserList from '@/components/admin/user/list'
-import UserChangePwd from '@/components/admin/user/changepwd'
-import UserProfile from '@/components/admin/user/profile'
+// import BookList from '@/components/admin/book/list'
+// import BookCategoryList from '@/components/admin/bookcategory/list'
+//
+// import UserList from '@/components/admin/user/list'
+// import UserChangePwd from '@/components/admin/user/changepwd'
+// import UserProfile from '@/components/admin/user/profile'
 
 
 
@@ -40,6 +40,12 @@ import userManner_certificationList from '@/components/admin/userManner/certific
 
 //管理员列表
 import adminManner_admin from '@/components/admin/adminManner/admin'
+
+
+// 销售员管理
+import salesManner_salesList from '@/components/admin/salesManner/salesList'
+import salesManner_incomeList from '@/components/admin/salesManner/incomeList'
+import salesManner_getMoneyManner from '@/components/admin/salesManner/getMoneyManner'
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
@@ -104,39 +110,6 @@ let router = new Router({
       ]
     },
 
-    {
-      path: '/admin',
-      component: Home,
-      name: '用户管理',
-      menuShow: true,
-      leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
-      children: [
-        {path: '/admin/user/list', component: UserList, name: '用户列表', menuShow: true}
-      ]
-    },
-    {
-      path: '/admin',
-      component: Home,
-      name: '商品基础资料管理',
-      menuShow: true,
-      iconCls: 'iconfont icon-books',
-      children: [
-        {path: '/admin/book/list', component: BookList, name: '图书列表', menuShow: true},
-        {path: '/admin/book/category', component: BookCategoryList, name: '图书分类', menuShow: true}
-      ]
-    },
-    {
-      path: '/admin',
-      component: Home,
-      name: '设置',
-      menuShow: true,
-      iconCls: 'iconfont icon-setting1',
-      children: [
-        {path: '/admin/user/profile', component: UserProfile, name: '个人信息', menuShow: true},
-        {path: '/admin/user/changepwd', component: UserChangePwd, name: '修改密码', menuShow: true}
-      ]
-    },
 		{
       path: '/bsseInfoManner',
       component: Home,
@@ -196,21 +169,35 @@ let router = new Router({
       children: [
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
+    },
+		{
+      path: '/salesManner',
+      component: Home,
+      name: '销售员管理',
+      menuShow: true,
+      //leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/salesManner/salesList', component: salesManner_salesList, name: '销售员列表', menuShow: true},
+				{path: '/admin/salesManner/incomeList', component: salesManner_incomeList, name: '收入列表', menuShow: true},
+				{path: '/admin/salesManner/getMoneyManner', component: salesManner_getMoneyManner, name: '提现管理', menuShow: true}
+      ]
     }
 	],
 })
 
 // router.beforeEach((to, from, next) => {
-//   //NProgress.start();
-//   if (to.path == '/admin/login') {
-//     window.sessionStorage.removeItem('access-user');
-//   }
-//   let user = JSON.parse(window.sessionStorage.getItem('access-user'));
-//   if (!user) {
-//     next({ path: '/admin/login' })
-//   } else {
-//     next()
-//   }
+	// console.log(to.path)
+  //NProgress.start();
+  // if (to.path == '/admin/login') {
+  //   window.sessionStorage.removeItem('access-user');
+  // }
+  // let user = JSON.parse(window.sessionStorage.getItem('access-user'));
+  // if (!user) {
+  //   next({ path: '/admin/login' })
+  // } else {
+    // next({ path: '/admin/login' })
+  // }
 // })
 
 // router.beforeEach((to, from, next) => {

@@ -2,7 +2,7 @@
   <el-row class="userListWrap">
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item><b>用户管理</b></el-breadcrumb-item>
         <el-breadcrumb-item>用户列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>

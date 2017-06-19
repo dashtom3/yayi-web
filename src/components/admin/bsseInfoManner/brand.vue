@@ -2,7 +2,7 @@
   <el-row class="brandWarp">
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>商品基础资料管理</el-breadcrumb-item>
+        <el-breadcrumb-item><b>商品基础资料管理</b></el-breadcrumb-item>
         <el-breadcrumb-item>商品品牌管理</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
