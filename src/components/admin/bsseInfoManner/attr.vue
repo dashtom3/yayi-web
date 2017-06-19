@@ -51,7 +51,7 @@
           <el-input v-model="addGoodAttrName"></el-input>
         </el-form-item>
         <span v-if="addGoodAttrValues.length>=1">
-          <el-form-item  v-for="(value, index) in addGoodAttrValues"  :label="'属性值：'"  :property="value.name">
+          <el-form-item  v-for="(value, index) in addGoodAttrValues" :label="'属性值：'" :property="value.name" :key="value">
             <el-input v-model="value.name"></el-input>
           </el-form-item>
         </span>
