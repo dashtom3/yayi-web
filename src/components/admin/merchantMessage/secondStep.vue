@@ -40,7 +40,7 @@
       <div style="margin-left: 30px;">
         <el-button type="primary" @click="nextToThird()">下一步</el-button>
         <el-button @click="returnFrist()">返回</el-button>
-      </div>  
+      </div>
     </el-form>
     <thirdStep v-on:listenToSecond="showMsgFromThirdStep" v-show="thirdStep"></thirdStep>
   </div>

@@ -89,6 +89,7 @@
       </el-tab-pane>
     </el-tabs>
   </el-col>
+  <tableBoard :childrenState="state" v-on:listenChildren="listenChildrenFun"></tableBoard>
   </el-row >
   </div>
 </template>
@@ -98,7 +99,9 @@
     name: 'freightSet',
     data () {
       return {
+        state:false,
         tab1_allInputDisable:true,
+        tab1_editIndex:null,
         tab1_showAddFreightBtn:false,
         tab1_operaName:'',
         tab2_allInputDisable:true,
@@ -112,7 +115,19 @@
         activeName2: 'first'
       }
     },
+    components:{
+      tableBoard
+    },
     methods: {
+      listenChildrenFun:function(data){
+        var oldData =  this.tab1_tableData[this.tab1_editIndex].places;
+        if(data!="1"){
+          this.tab1_tableData[this.tab1_editIndex].places = data;
+        }else{
+          this.tab1_tableData[this.tab1_editIndex].places = oldData;
+        }
+        this.state = false;
+      },
       handleClick(tab, event) {
         console.log(tab, event);
       },
@@ -133,6 +148,8 @@
       },
       tab1_editThis:function(index){
         console.log(index)
+        this.state = true;
+        this.tab1_editIndex = index;
       },
       tab2_change:function(){
         this.tab2_allInputDisable = false;
