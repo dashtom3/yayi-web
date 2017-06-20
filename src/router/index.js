@@ -188,19 +188,26 @@ let router = new Router({
 	],
 })
 
-// router.beforeEach((to, from, next) => {
-	// console.log(to.path)
-  //NProgress.start();
-  // if (to.path == '/admin/login') {
-  //   window.sessionStorage.removeItem('access-user');
-  // }
-  // let user = JSON.parse(window.sessionStorage.getItem('access-user'));
-  // if (!user) {
-  //   next({ path: '/admin/login' })
-  // } else {
-    // next({ path: '/admin/login' })
-  // }
-// })
+router.beforeEach((to, from, next) => {
+	console.log(to.path)
+	let admin = JSON.parse(window.sessionStorage.getItem('access-user'));
+	var isIn = to.path.indexOf("/admin")<0;
+	if(isIn==false){
+		//判断是否是后台登陆 isIn==false是后台
+		if(to.path=="/admin/login"){
+			next();
+		}else{
+			if(admin){
+				// 判断管理员是否登陆
+				next();
+			}else{
+				next({ path: '/admin/login' })
+			}
+		}
+	}else{
+		next();
+	}
+})
 
 // router.beforeEach((to, from, next) => {
 //   // console.log('to:' + to.path)
