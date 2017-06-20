@@ -48,6 +48,9 @@ import salesManner_salesList from '@/components/admin/salesManner/salesList'
 import salesManner_incomeList from '@/components/admin/salesManner/incomeList'
 import salesManner_getMoneyManner from '@/components/admin/salesManner/getMoneyManner'
 
+// 运费管理
+import freightSet from '@/components/admin/freightManner/freightSet'
+
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
 
@@ -183,6 +186,17 @@ let router = new Router({
         {path: '/admin/salesManner/salesList', component: salesManner_salesList, name: '销售员列表', menuShow: true},
 				{path: '/admin/salesManner/incomeList', component: salesManner_incomeList, name: '收入列表', menuShow: true},
 				{path: '/admin/salesManner/getMoneyManner', component: salesManner_getMoneyManner, name: '提现管理', menuShow: true}
+      ]
+    },
+		{
+      path: '/freightManner',
+      component: Home,
+      name: '运费管理',
+      menuShow: true,
+      //leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/freightManner/freightSet', component: freightSet, name: '运费设置', menuShow: true}
       ]
     }
 	],
