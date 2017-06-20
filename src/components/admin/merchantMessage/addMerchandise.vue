@@ -603,25 +603,6 @@
         input_stock: '',
         input_enable: false,
         activeTable: [],
-        activeTable1: [
-          {first: '男装',
-           num: 4,
-           children1:[
-              {second:'正装',
-                children2: [
-                  {third:'T恤1'},
-                  {third:'裤衩'},
-                ],
-              },
-              {second:'童装',
-                children2: [
-                  {third:'哈伦裤'},
-                  {third:'T恤2'},
-                ],
-              },
-            ]
-          },
-        ],
         ggId1: null,
         ggId2: null,
         ggId3: null,
