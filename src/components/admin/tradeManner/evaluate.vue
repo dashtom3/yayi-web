@@ -63,7 +63,7 @@
       </el-table>
 
       <!-- 回复弹窗 -->
-      <el-dialog title="回复评价" style="width:860px;margin:auto;" v-model="replayBtn" :close-on-click-modal="false">
+      <el-dialog title="回复评价" size="tiny" v-model="replayBtn" :close-on-click-modal="true">
         <el-input
 				  type="textarea"
 				  :rows="4"
@@ -162,7 +162,7 @@
 	width:260px;
 }
 .btn_{
-  margin-left: 78px;
+  margin-left: 140px;
 }
 .btn_box{
   width: 260px;

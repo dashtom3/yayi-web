@@ -103,7 +103,7 @@
       </el-table>
 
       <!--详情界面-->
-      <el-dialog title="订单详情" v-model="detailVisible" size="large" :close-on-click-modal="false">
+      <el-dialog title="订单详情" v-model="detailVisible" size="large" :close-on-click-modal="true">
         <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">订单已确认</span></h3>
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
@@ -139,13 +139,6 @@
             <el-col :span="5" align="center">{{item.SKUCode}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{'￥'+item.price.toFixed(2)}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.goodsNum}}<div class="grid-content bg-purple"></div></el-col>
-           <!--  <div class="img_list fl">
-              <img src="../../../images/center/order.png" alt="图片无法显示">
-            </div>
-            <div class="goodsName fl goods_common">{{item.goodsName}}</div>
-            <div class="snkCode fl goods_common">{{item.SKUCode}}</div>
-            <div class="price fl goods_common">{{'￥'+item.price.toFixed(2)}}</div>
-            <div class="goodsNum fl goods_common">{{item.goodsNum}}</div> -->
           </div>
           <div class="order_sum fl">
             <div class="order_h">{{'￥'+orderInfo.totalPrice.toFixed(2)}}</div>
@@ -224,8 +217,8 @@
       </el-dialog>
 
       <!-- 仓库发货 -->
-      <el-dialog title="发货" style="width:860px;margin:auto;" v-model="deliveryVisible" :close-on-click-modal="false">
-        <div style="height:40px;">
+      <el-dialog title="发货" size="tiny" v-model="deliveryVisible" :close-on-click-modal="true">
+        <div style="height:40px;padding-left:60px;">
           <i class="i_col_red">*</i>
           <span>物流公司：</span>
           <template>
@@ -239,7 +232,7 @@
             </el-select>
           </template>
         </div>
-        <div  style="height:40px;">
+        <div  style="height:40px;padding-left:60px;">
           <i class="i_col_red">*</i>
           <span>快递单号：</span>
           <template>
@@ -248,12 +241,12 @@
         </div>
         <div>
           <el-button class="btn_">确定</el-button>
-          <el-button class="btn_" type="primary" @click="deliveryVisible = false">取消</el-button>
+          <el-button type="primary" @click="deliveryVisible = false" style="margin-left:60px;">取消</el-button>
         </div>
       </el-dialog>
 
       <!-- 退款处理 -->
-      <el-dialog title="退款处理" v-model="refundVisible" :close-on-click-modal="false">
+      <el-dialog title="退款处理" v-model="refundVisible" :close-on-click-modal="true">
         <table class="refund_tb">
             <tr style="background:#ddd;">
               <td colspan="7" style="text-align:left;">
@@ -621,7 +614,7 @@
 }
 /* 仓库发货 */
 .btn_{
-  margin-left: 84px;
+  margin-left: 154px;
 }
 .btn_box{
   width: 260px;

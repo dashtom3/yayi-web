@@ -27,7 +27,7 @@
 
     <!-- 添加视频 -->
     					 
-    <el-dialog :title="!isEdit? '添加视频':'修改视频'" style="width:860px;margin:auto;" v-model="videoVisible" :close-on-click-modal="false">
+    <el-dialog :title="!isEdit? '添加视频':'修改视频'" size="tiny" v-model="videoVisible" :close-on-click-modal="true">
 	    <ul class="video_wrap">
 		    <li class="clearfix">
 		    	<span class="fl span_nav"><span class="fr"><i class="i_col_red">*</i>视频名称：</span></span>
@@ -49,7 +49,6 @@
 					  :file-list="fileList"
 					  :auto-upload="false">
 					  <el-button slot="trigger" type="primary">选择</el-button>
-					</el-upload>
 					</el-upload>
 		    </li>
 		  </ul>

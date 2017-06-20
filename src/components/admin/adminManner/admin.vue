@@ -44,28 +44,28 @@
       </el-table>
 			
       <!-- 回复弹窗 -->
-      <el-dialog :title="!userName1? '添加管理员': '修改管理员'" style="width:860px;margin:auto;" v-model="adminAddBtn" :close-on-click-modal="false">
-        <div style="height:40px;line-height:40px;">
+      <el-dialog :title="!userName1? '添加管理员': '修改管理员'" size="tiny" v-model="adminAddBtn" :close-on-click-modal="true">
+        <div class="admin_layout">
           <span>用户名：</span>
           <template>
-            <el-input style="width:215px;margin-left:13px;" v-model="userName1" size="small"></el-input>
+            <el-input style="width:225px;margin-left:13px;" v-model="userName1" size="small"></el-input>
           </template>
         </div>
-        <div style="height:40px;line-height:40px;">
+        <div class="admin_layout">
           <span>密码：</span>
           <template>
-            <el-input style="width:215px;margin-left:27px;" v-model="pwd1" v-if="" size="small"></el-input>
+            <el-input style="width:225px;margin-left:27px;" v-model="pwd1" v-if="" size="small"></el-input>
           </template>
         </div>
-        <div style="height:40px;line-height:40px;">
+        <div class="admin_layout">
           <span>真实姓名：</span>
           <template>
-            <el-input style="width:215px;" v-model="realName1" size="small"></el-input>
+            <el-input style="width:225px;" v-model="realName1" size="small"></el-input>
           </template>
         </div>
         <div style="margin-top:30px;">
           <el-button class="btn_" >确定</el-button>
-          <el-button class="btn_" type="primary" @click="adminAddBtn = false">取消</el-button>
+          <el-button type="primary" @click="adminAddBtn = false" style="margin-left:60px;">取消</el-button>
         </div>
       </el-dialog>
     </el-col>
@@ -146,7 +146,7 @@
 		width:260px;
 	}
 	.btn_{
-	  margin-left: 78px;
+	  margin-left: 154px;
 	}
 	.btn_box{
 	  width: 260px;
@@ -156,5 +156,10 @@
 		float:right;
 		margin-right:118px;
 		margin-bottom:20px;
+	}
+	.admin_layout{
+		height:40px;
+		line-height:40px;
+		padding-left:80px;
 	}
 </style>

@@ -32,7 +32,7 @@
     </el-table>
 
     <!-- 修改设置 -->
-    <el-dialog title="修改广告" style="width:860px;margin:auto;" v-model="advertVisible" :close-on-click-modal="false">
+    <el-dialog title="修改广告" size="tiny" v-model="advertVisible" :close-on-click-modal="true">
 	    <ul class="adv_wrap">
 	    	<li class="clearfix">
 		    	<span class="fl span_nav"><span class="fr"><i class="i_col_red">*</i>序号：</span></span>
