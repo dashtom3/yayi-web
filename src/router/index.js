@@ -54,6 +54,10 @@ import advertSets_adv from '@/components/admin/advertSets/adv'
 //视频管理
 import videoManner_video from '@/components/admin/videoManner/video'
 
+// 运费管理
+import freightSet from '@/components/admin/freightManner/freightSet'
+
+
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
 
@@ -212,23 +216,41 @@ let router = new Router({
       children: [
         {path: '/admin/videoManner/video', component: videoManner_video, name: '视频管理', menuShow: true}
       ]
+    },
+		{
+      path: '/freightManner',
+      component: Home,
+      name: '运费管理',
+      menuShow: true,
+      //leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/freightManner/freightSet', component: freightSet, name: '运费设置', menuShow: true}
+      ]
     }
 	],
 })
 
-// router.beforeEach((to, from, next) => {
-	// console.log(to.path)
-  //NProgress.start();
-  // if (to.path == '/admin/login') {
-  //   window.sessionStorage.removeItem('access-user');
-  // }
-  // let user = JSON.parse(window.sessionStorage.getItem('access-user'));
-  // if (!user) {
-  //   next({ path: '/admin/login' })
-  // } else {
-    // next({ path: '/admin/login' })
-  // }
-// })
+router.beforeEach((to, from, next) => {
+	console.log(to.path)
+	let admin = JSON.parse(window.sessionStorage.getItem('access-user'));
+	var isIn = to.path.indexOf("/admin")<0;
+	if(isIn==false){
+		//判断是否是后台登陆 isIn==false是后台
+		if(to.path=="/admin/login"){
+			next();
+		}else{
+			if(admin){
+				// 判断管理员是否登陆
+				next();
+			}else{
+				next({ path: '/admin/login' })
+			}
+		}
+	}else{
+		next();
+	}
+})
 
 // router.beforeEach((to, from, next) => {
 //   // console.log('to:' + to.path)

@@ -115,7 +115,7 @@
           //type: 'warning'
         }).then(() => {
           sessionStorage.removeItem('access-user');
-          _this.$router.push('/login');
+          _this.$router.push('/admin/login');
         }).catch(() => {
 
         });
