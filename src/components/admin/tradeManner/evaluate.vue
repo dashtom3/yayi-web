@@ -14,6 +14,7 @@
         <el-form-item label="用户编号" class="fl t_input_width">
           <el-input v-model="userCode"></el-input>
         </el-form-item>
+        <div class="clearfix"></div>
         <el-form-item label="回复状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
 				    <el-option
@@ -30,31 +31,31 @@
 	    </el-form>
 
 	    <!--回复列表-->
-      <el-table :data="replayList" style="width：3000px;text-align:center;" border>
-        <el-table-column prop="SKUCode" label="sku代码" width="120" >
+      <el-table :data="replayList" border>
+        <el-table-column prop="SKUCode" label="sku代码" :span="3" align="center">
         </el-table-column>
-        <el-table-column prop="goodsInfo" label="商品名称+属性" width="140" >
+        <el-table-column prop="goodsInfo" label="商品名称+属性" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="comment" label="评论内容" width="140" >
+        <el-table-column prop="comment" label="评论内容" :span="3" align="center" >
         </el-table-column>
-        <el-table-column prop="deuce" label="评分" width="120" >
+        <el-table-column prop="deuce" label="评分" width="70" align="center" >
         </el-table-column>
-        <el-table-column prop="orderCode" label="订单编号" width="160" >
+        <el-table-column prop="orderCode" label="订单编号" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="userCode" label="用户编号" min-width="120" >
+        <el-table-column prop="userCode" label="用户编号" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="replayStat" label="回复状态" min-width="80" >
+        <el-table-column prop="replayStat" label="回复状态" :span="3" align="center" >
           <template scope="scope">
             <span v-if="scope.row.replayStat == '1'">已回复</span>
             <span v-if="scope.row.replayStat == '2'">未回复</span>
           </template>  
         </el-table-column>
-        <el-table-column prop="replayInfo" label="回复内容" min-width="120" >
+        <el-table-column prop="replayInfo" label="回复内容" :span="3" align="center" >
         </el-table-column>
-        <el-table-column prop="handle" label="操作" min-width="180" >
+        <el-table-column prop="handle" label="操作" :span="3" align="center" >
           <template scope="scope">
             <el-button
-              size="mini"
+              size="small"
               type="info"
               @click="handleReplay(scope.$index, scope.row)">回复</el-button>
           </template>
@@ -139,7 +140,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 .el-table th>.cell{
   text-align: center;
 }
@@ -161,7 +162,7 @@
 	width:260px;
 }
 .btn_{
-  margin-left: 120px;
+  margin-left: 78px;
 }
 .btn_box{
   width: 260px;

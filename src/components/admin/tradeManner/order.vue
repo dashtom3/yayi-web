@@ -47,20 +47,20 @@
       </el-form>
 
       <!--列表-->
-      <el-table :data="orderList" style="text-align:center;" border>
-        <el-table-column prop="orderCode" label="订单编号" width="120" >
+      <el-table :data="orderList" border>
+        <el-table-column prop="orderCode" label="订单编号" width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="totalPrice" label="总价（元）" width="120" >
+        <el-table-column prop="totalPrice" label="总价（元）" width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="dryCurrency" label="乾币抵扣（元）" width="140" >
+        <el-table-column prop="dryCurrency" label="乾币抵扣（元）" width="140" align="center" >
         </el-table-column>
-        <el-table-column prop="payment" label="实际付款（元）" width="140" >
+        <el-table-column prop="payment" label="实际付款（元）" width="140" align="center" >
         </el-table-column>
-        <el-table-column prop="buyerInfo" label="买家信息" width="120" >
+        <el-table-column prop="buyerInfo" label="买家信息" width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="orderTime" label="下单时间" min-width="120" >
+        <el-table-column prop="orderTime" label="下单时间" min-width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="orderStat" label="订单状态" min-width="120" >
+        <el-table-column prop="orderStat" label="订单状态" min-width="120" align="center" >
           <template scope="scope">
             <span v-if="scope.row.orderStat == '1'">等待买家付款</span>
             <span v-if="scope.row.orderStat == '2'">买家已付款</span>
@@ -70,11 +70,11 @@
             <span v-if="scope.row.orderStat == '6'">交易关闭</span>
           </template>  
         </el-table-column>
-        <el-table-column prop="logisticsInfo" label="物流信息" min-width="120" >
+        <el-table-column prop="logisticsInfo" label="物流信息" min-width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="drawback" label="是否退款" min-width="120" >
+        <el-table-column prop="drawback" label="是否退款" min-width="120" align="center" >
         </el-table-column>
-        <el-table-column prop="handle" label="操作" min-width="180" >
+        <el-table-column prop="handle" label="操作" min-width="180" align="center" >
           <template scope="scope">
             <el-button
               size="mini"
@@ -103,55 +103,49 @@
       </el-table>
 
       <!--详情界面-->
-      <el-dialog title="订单详情" v-model="detailVisible" :close-on-click-modal="false">
+      <el-dialog title="订单详情" v-model="detailVisible" size="large" :close-on-click-modal="false">
         <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">订单已确认</span></h3>
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
-          <el-table
-            :data="receivingInfo"
-            style="width: 100%">
-            <el-table-column
-              prop="userCode"
-              label="用户编号"
-              width="180">
+          <el-table :data="receivingInfo" style="width: 100%" >
+            <el-table-column prop="userCode" label="用户编号" :span="3" align="center" >
             </el-table-column>
-            <el-table-column
-              prop="userName"
-              label="收货人"
-              width="180">
+            <el-table-column prop="userName" label="收货人" :span="3" align="center">
             </el-table-column>
-            <el-table-column
-              prop="localtion"
-              label="所在地区"
-              width="180">
+            <el-table-column prop="localtion" label="所在地区" :span="3" align="center">
             </el-table-column>
-            <el-table-column
-              prop="detailAddr"
-              label="详细地址">
+            <el-table-column prop="detailAddr" label="详细地址" width="500" >
             </el-table-column>
           </el-table>
         </template>
         <h4 class="detail_h4">订单信息</h4>
+        <el-row class="order_header">
+          <el-col :span="8" align="center">{{orderInfo.orderDate}}<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="8" align="center">订单号：{{orderInfo.orderNo}}<div class="grid-content bg-purple-light"></div></el-col>
+          <el-col :span="8" align="center">下单时间：{{orderInfo.orderTime}}<div class="grid-content bg-purple"></div></el-col>
+        </el-row>
         <div class="order_header">
-          <span style="padding-left:20px;">{{orderInfo.orderDate}}</span>
-          <span style="padding-left:100px;">订单号：{{orderInfo.orderNo}}</span>
-          <span style="padding-left:120px;">下单时间：{{orderInfo.orderTime}}</span>
-        </div>
-        <div class="order_header">
-          <span style="padding-left:170px;">商品</span>
-          <span style="padding-left:100px;">SKU代码</span>
-          <span style="padding-left:90px;">单价</span>
-          <span style="padding-left:90px;">数量</span>
+          <el-col :span="3" align="center"><div class="grid-content bg-purple">&nbsp;</div></el-col>
+          <el-col :span="3" align="center">商品<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="4" align="center">SKU代码<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="3" align="center">单价<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="4" align="center">数量<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="7"><div class="grid-content bg-purple"></div></el-col>
         </div>
         <div class="order_box clearfix">
           <div class="order_content fl" v-for="item in orderInfo.goodsInfo">
-            <div class="img_list fl">
+            <el-col :span="4" align="center"><div class="grid-content bg-purple"><img src="../../../images/center/order.png" alt="图片无法显示"></div></el-col>
+            <el-col :span="5" align="center">{{item.goodsName}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.SKUCode}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{'￥'+item.price.toFixed(2)}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.goodsNum}}<div class="grid-content bg-purple"></div></el-col>
+           <!--  <div class="img_list fl">
               <img src="../../../images/center/order.png" alt="图片无法显示">
             </div>
             <div class="goodsName fl goods_common">{{item.goodsName}}</div>
             <div class="snkCode fl goods_common">{{item.SKUCode}}</div>
             <div class="price fl goods_common">{{'￥'+item.price.toFixed(2)}}</div>
-            <div class="goodsNum fl goods_common">{{item.goodsNum}}</div>
+            <div class="goodsNum fl goods_common">{{item.goodsNum}}</div> -->
           </div>
           <div class="order_sum fl">
             <div class="order_h">{{'￥'+orderInfo.totalPrice.toFixed(2)}}</div>
@@ -204,10 +198,10 @@
               <td></td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>{{item.backNo}}</td>
-              <td><i class="i_col_red">{{item.price * item.backNo}}</i></td>
-              <td><i class="i_col_red">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
-              <td><i class="i_col_red">{{orderInfo.deductible}}</i></td>
+              <td>{{item.backNo>item.goodsNum ? "" : item.backNo}}</td>
+              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :item.price * item.backNo}}</i></td>
+              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
+              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :orderInfo.deductible}}</i></td>
             </tr>
           </table>
         </div>
@@ -264,9 +258,9 @@
             <tr style="background:#ddd;">
               <td colspan="7" style="text-align:left;">
                 <span>订单编号：xxxxxxxxx</span>
-                <span style="padding-left:90px;">实付款：xxxxxxxxx</span>
-                <span style="padding-left:90px;">运费：包邮</span>
-                <span style="padding-left:90px;">乾币抵扣：20</span>
+                <span style="padding-left:32px;">实付款：xxxxxxxxx</span>
+                <span style="padding-left:59px;">运费：包邮</span>
+                <span style="padding-left:66px;">乾币抵扣：20</span>
               </td>
             </tr>
             <tr style="background:#ddd;">
@@ -289,7 +283,7 @@
               <td>
                 <div v-show="item.goodsNum !== 0">
                   <i class="icon_i_l" @click="item.count -= 1" v-if="item.count > 0">-</i>
-                  <el-input v-model="item.count"  style="width:88px;"></el-input>
+                  <el-input v-model="item.count" style="width:88px;"></el-input>
                   <i class="icon_i_r" @click="item.count += 1" v-if="item.count < item.goodsNum">+</i>
                 </div>
               </td>
@@ -496,7 +490,7 @@
   }
 </script>
 
-<style>
+<style scoped>
 .el-table th>.cell{
   text-align: center;
 }
@@ -571,18 +565,6 @@
   line-height: 80px;
   text-align: center;
 }
-.goodsName{
-  width: 160px;
-}
-.snkCode{
-  width: 132px;
-}
-.price{
-  width: 140px;
-}
-.goodsNum{
-  width: 95px;
-}
 .i_col_red{
   color: red;
   font-style: normal;
@@ -639,7 +621,7 @@
 }
 /* 仓库发货 */
 .btn_{
-  margin-left: 120px;
+  margin-left: 84px;
 }
 .btn_box{
   width: 260px;

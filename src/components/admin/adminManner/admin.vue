@@ -20,31 +20,31 @@
 			<el-button type="primary" class="add_btn" @click="adminAddHandler">+添加管理员</el-button>
 
 	    <!--回复列表-->
-      <el-table :data="adminList" style="width：3000px;text-align:center;" border>
-        <el-table-column prop="userName" label="用户名" width="160" style="text-align:center;" >
+      <el-table :data="adminList" border>
+        <el-table-column prop="userName" label="用户名" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="pwd" label="密码" width="200" >
+        <el-table-column prop="pwd" label="密码" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="realName" label="真实姓名" width="200" >
+        <el-table-column prop="realName" label="真实姓名" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="registerTime" label="注册时间" width="200" >
+        <el-table-column prop="registerTime" label="注册时间" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="handle" label="操作" min-width="200" >
+        <el-table-column prop="handle" label="操作" :span="8" align="center">
           <template scope="scope">
             <el-button
-              size="mini"
+              size="small"
               type="info"
               @click="handleEdit(scope.$index, scope.row)">修改</el-button>
               <el-button
-              size="mini"
-              type="info"
+              size="small"
+              type="danger"
               @click="handleDel(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 			
       <!-- 回复弹窗 -->
-      <el-dialog title="添加管理员" style="width:860px;margin:auto;" v-model="adminAddBtn" :close-on-click-modal="false">
+      <el-dialog :title="!userName1? '添加管理员': '修改管理员'" style="width:860px;margin:auto;" v-model="adminAddBtn" :close-on-click-modal="false">
         <div style="height:40px;line-height:40px;">
           <span>用户名：</span>
           <template>
@@ -124,7 +124,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.el-table th>.cell{
 		text-align: center;
 	}
@@ -146,18 +146,15 @@
 		width:260px;
 	}
 	.btn_{
-	  margin-left: 120px;
+	  margin-left: 78px;
 	}
 	.btn_box{
 	  width: 260px;
 	  margin: 20px auto;
 	}
-	._btn{
-	  width: 120px;
-	}
 	.add_btn{
 		float:right;
-		margin-right:400px;
+		margin-right:118px;
 		margin-bottom:20px;
 	}
 </style>

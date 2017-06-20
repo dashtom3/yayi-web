@@ -48,6 +48,12 @@ import salesManner_salesList from '@/components/admin/salesManner/salesList'
 import salesManner_incomeList from '@/components/admin/salesManner/incomeList'
 import salesManner_getMoneyManner from '@/components/admin/salesManner/getMoneyManner'
 
+//广告设置
+import advertSets_adv from '@/components/admin/advertSets/adv'
+
+//视频管理
+import videoManner_video from '@/components/admin/videoManner/video'
+
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
 
@@ -183,6 +189,28 @@ let router = new Router({
         {path: '/admin/salesManner/salesList', component: salesManner_salesList, name: '销售员列表', menuShow: true},
 				{path: '/admin/salesManner/incomeList', component: salesManner_incomeList, name: '收入列表', menuShow: true},
 				{path: '/admin/salesManner/getMoneyManner', component: salesManner_getMoneyManner, name: '提现管理', menuShow: true}
+      ]
+    },
+    {
+      path: '/advertSets',
+      component: Home,
+      name: '广告设置',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/advertSets/adv', component: advertSets_adv, name: '广告设置', menuShow: true}
+      ]
+    },
+    {
+      path: '/videoManner',
+      component: Home,
+      name: '视频管理',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/videoManner/video', component: videoManner_video, name: '视频管理', menuShow: true}
       ]
     }
 	],
