@@ -93,6 +93,7 @@
   </div>
 </template>
 <script>
+  import tableBoard from './tableBoard'
   export default {
     name: 'freightSet',
     data () {
