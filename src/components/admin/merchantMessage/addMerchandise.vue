@@ -712,6 +712,7 @@ th,td {
 td {
   height: 36px;
   line-height: 36px;
+  text-align: center;
 }
 .left {
   float: left;

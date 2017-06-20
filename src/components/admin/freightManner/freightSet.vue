@@ -32,15 +32,12 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="包邮" name="fourth">
-
-
-
     这是邮费</el-tab-pane>
     </el-tabs>
-
   </div>
 </template>
 <script>
+  import tableBoard from './tableBoard'
   export default {
     name: 'freightSet',
     data () {
@@ -55,6 +52,9 @@
       handleClick(tab, event) {
         console.log(tab, event);
       }
+    },
+    components: {
+      tableBoard,
     }
   }
 </script>
