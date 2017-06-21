@@ -200,6 +200,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+  import global from '../../global/global'
   export default {
     name: 'publicHeader',
     data () {
@@ -472,21 +474,31 @@
         var sec = 60;
         if (that.ms_mobilephone == '' || !mb.test(that.ms_mobilephone)) {
           that.msPhone_alert = true
+          return false
         } else {
-          for(let  i=0; i<=60; i++){
-           window.setTimeout(function(){
-             if (sec != 0) {
-              that.hYzm = false;
-              that.Yzm1 =   sec + "秒后重发验证" ;
-              sec--;
+          var obj = { phone: that.ms_mobilephone }
+          global.axiosPostReq('/user/getVerifyCode', obj)
+          .then((res) => {
+            // this.loading = false;
+            if (res.data.callStatus === 'SUCCEED') {
+              for(let  i=0; i<=60; i++) {
+                window.setTimeout(function(){
+                  if (sec != 0) {
+                    that.hYzm = false;
+                    that.Yzm1 =   sec + "秒后重发验证" ;
+                    sec--;
+                  } else {
+                    sec = 60;//如果倒计时结束就让  获取验证码显示出来
+                    that.hYzm = true;
+                    that.Yzm = '获取验证码';
+                  }
+                }, i * 1000)
+              }
             } else {
-             sec = 60;//如果倒计时结束就让  获取验证码显示出来
-             that.hYzm = true;
-             that.Yzm = '获取验证码';
-           }
-         }, i * 1000)
-         }
-       }
+              that.$message.error('获取验证码失败！');
+            }
+          })
+        }
       },
       fg_hasYzm: function(fg_mobilephone) {
         var that = this;
@@ -540,10 +552,24 @@
           that.msPhone_alert = true;
           return false
         }
-        if(that.ms_yzm == '' || that.ms_yzm.length < 6) {
+        if(that.ms_yzm == '' || that.ms_yzm.length < 4) {
           that.msCode_alert = true;
           return false
         }
+        var obj = {
+          phone: that.ms_mobilephone,
+          code: that.ms_yzm,
+        }
+        global.axiosPostReq('/user/noteLogin', obj).then((res) => {
+          console.log(res);
+          // if (res.data.callStatus === 'SUCCEED') {
+          //   global.setToken(res.data.token)
+          //   global.setUser(res.data.data)
+          //   global.success(this, '登录成功', '/merchant', '')
+          // } else {
+          //   global.error(this, res.data.data, '')
+          // }
+        })
       },
       // 密码登录btn
       pwd_logIn: function() {

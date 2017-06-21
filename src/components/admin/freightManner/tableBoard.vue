@@ -128,13 +128,11 @@
       confirm: function() {
         var that = this;
         var arr = that.submitCities;
-        // console.log(arr, '22222');
-        that.$emit('listenChildren',that.submitCities);
+        that.$emit('listenChildren',arr);
         that.state2 = false;
       },
       cancel: function() {
         var that = this;
-
         that.$emit('listenChildren',"1");
         that.state2 = false;
       }

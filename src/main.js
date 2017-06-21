@@ -7,8 +7,8 @@ import '@/assets/iconfont.css'
 import App from './App'
 import router from './router'
 
-import Mock from './mock'
-Mock.init()
+// import Mock from './mock'
+// Mock.init()
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
