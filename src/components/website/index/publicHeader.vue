@@ -3,8 +3,11 @@
     <div class="headerBox" :class="{ speH: isActive }">
       <div class="headerFirst">
         <div class="system_enter left">创客系统入口</div>
-        <div class="log right">
+        <div v-if="hasLogin" class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
+        </div>
+        <div v-else class="log right">
+          <span class="alreadyLog" @click="alreadyLog">欢迎您，{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
         </div>
         <div class="my_order right" @click="myOrder">我的订单</div>
         <div class="shopping_car right">
@@ -206,6 +209,8 @@
     name: 'publicHeader',
     data () {
       return {
+        hasLogin: true,
+        username: '',
         changeForget1: false,
         changeForget2: false,
         changeForget3: false,
@@ -268,9 +273,26 @@
         line: false,
       }
     },
+    //*******导航钩子*********//
+    // beforeRouteEnter (to, from, next) {
+    //   // 通过 `vm` 访问组件实例
+    //   next(vm => {
+    //     var that = vm;
+    //     var token = window.localStorage.getItem('Token');
+    //     console.log(token);
+    //   })
+    // },
     created: function() {
       var that = this;
       window.addEventListener('scroll', that.menu);
+      if (global.getToken() !== null) {
+        var username = global.getUser();
+        that.username = username.phone;
+        that.hasLogin = false;
+      } else {
+        that.hasLogin = true;
+      }
+      // console.log(global.getToken());
     },
     watch: {
       //监听短信登录手机号验证
@@ -396,6 +418,31 @@
         var that = this;
         that.$router.push({ path: '/center' });
       },
+      // 登录成功后
+      alreadyLog: function() {
+        var that = this;
+        that.$router.push({ name: 'center', params: { current: false}});
+      },
+      // 登出
+      logOut: function() {
+        var that = this;
+        var obj = {
+          token: global.getToken()
+        }
+        global.axiosPostReq('/user/reLogin', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+            global.removeMsg()
+            that.$message({
+              message: '退出成功！',
+              type: 'success'
+            });
+            that.hasLogin = true;
+          } else {
+            that.$message.error('退出失败！');
+          }
+        })
+      },
       // 页头点击登录按钮
       logIn: function() {
         var that = this;
@@ -507,19 +554,28 @@
         if (that.fg_mobilephone == '' || !mb.test(that.fg_mobilephone)) {
           that.fgPhone_alert = true
         } else {
-          for(let  i=0; i<=60; i++){
-           window.setTimeout(function(){
-             if (sec != 0) {
-              that.fg_hYzm = false;
-              that.fg_Yzm1 =   sec + "秒后重发验证" ;
-              sec--;
+          var obj = { phone: that.fg_mobilephone }
+          global.axiosPostReq('/user/getVerifyCode', obj)
+          .then((res) => {
+            // this.loading = false;
+            if (res.data.callStatus === 'SUCCEED') {
+              for(let  i=0; i<=60; i++) {
+                window.setTimeout(function(){
+                  if (sec != 0) {
+                    that.fg_hYzm = false;
+                    that.fg_Yzm1 =   sec + "秒后重发验证" ;
+                    sec--;
+                  } else {
+                    sec = 60;//如果倒计时结束就让  获取验证码显示出来
+                    that.fg_hYzm = true;
+                    that.fg_Yzm = '获取验证码';
+                  }
+                }, i * 1000)
+              }
             } else {
-             sec = 60;//如果倒计时结束就让  获取验证码显示出来
-             that.fg_hYzm = true;
-             that.fg_Yzm = '获取验证码';
-           }
-         }, i * 1000)
-         }
+              that.$message.error('获取验证码失败！');
+            }
+          })
        }
       },
       rg_hasYzm: function(rg_mobilephone) {
@@ -529,20 +585,29 @@
         if (that.rg_mobilephone == '' || !mb.test(that.rg_mobilephone)) {
           that.rgPhone_alert = true
         } else {
-          for(let  i=0; i<=60; i++){
-           window.setTimeout(function(){
-             if (sec != 0) {
-              that.rg_hYzm = false;
-              that.rg_Yzm1 =   sec + "秒后重发验证" ;
-              sec--;
+          var obj = { phone: that.rg_mobilephone }
+          global.axiosPostReq('/user/getVerifyCode', obj)
+          .then((res) => {
+            // this.loading = false;
+            if (res.data.callStatus === 'SUCCEED') {
+              for(let  i=0; i<=60; i++) {
+                window.setTimeout(function(){
+                  if (sec != 0) {
+                    that.rg_hYzm = false;
+                    that.rg_Yzm1 =   sec + "秒后重发验证" ;
+                    sec--;
+                  } else {
+                    sec = 60;//如果倒计时结束就让  获取验证码显示出来
+                    that.rg_hYzm = true;
+                    that.rg_Yzm = '获取验证码';
+                  }
+                }, i * 1000)
+              }
             } else {
-             sec = 60;//如果倒计时结束就让  获取验证码显示出来
-             that.rg_hYzm = true;
-             that.rg_Yzm = '获取验证码';
-           }
-         }, i * 1000)
-         }
-       }
+              that.$message.error('获取验证码失败！');
+            }
+          })
+        }
       },
       // 短信登录btn
       ms_logIn: function() {
@@ -561,14 +626,24 @@
           code: that.ms_yzm,
         }
         global.axiosPostReq('/user/noteLogin', obj).then((res) => {
-          console.log(res);
-          // if (res.data.callStatus === 'SUCCEED') {
-          //   global.setToken(res.data.token)
-          //   global.setUser(res.data.data)
-          //   global.success(this, '登录成功', '/merchant', '')
-          // } else {
-          //   global.error(this, res.data.data, '')
-          // }
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+            global.setToken(res.data.token)
+            global.setUser(res.data.data)
+            that.$message({
+              message: '登录成功！',
+              type: 'success'
+            });
+            that.username = res.data.data.phone;
+            that.hasLogin = false;
+            that.changeForget1 = false;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.ms_mobilephone = '';
+            that.ms_yzm = '';
+          } else {
+            that.$message.error('登录失败！');
+          }
         })
       },
       // 密码登录btn
@@ -583,6 +658,30 @@
           that.pwdpwd_alert = true;
           return false
         }
+        var obj = {
+          phone: that.pwd_mobilephone,
+          password: that.pwd_pwd,
+        }
+        global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.token);
+            global.setToken(res.data.token)
+            global.setUser(res.data.data)
+            that.$message({
+              message: '登录成功！',
+              type: 'success'
+            });
+            that.username = res.data.data.phone;
+            that.hasLogin = false;
+            that.changeForget1 = false;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.pwd_mobilephone = '';
+            that.pwd_pwd = '';
+          } else {
+            that.$message.error('登录失败！');
+          }
+        })
       },
       // 忘记密码确认btn
       fg_confirm: function() {
@@ -592,7 +691,7 @@
           that.fgPhone_alert = true;
           return false
         }
-        if(that.fg_code == '' || that.fg_code.length < 6) {
+        if(that.fg_code == '' || that.fg_code.length < 4) {
           that.fgCode_alert = true;
           return false
         }
@@ -613,7 +712,7 @@
           that.rgPhone_alert = true;
           return false
         }
-        if(that.rg_code == '' || that.rg_code.length < 6) {
+        if(that.rg_code == '' || that.rg_code.length < 4) {
           that.rgCode_alert = true;
           return false
         }
@@ -629,6 +728,29 @@
           that.rgAgree_alert = true;
           return false
         }
+        var obj = {
+          phone: that.rg_mobilephone,
+          password: that.rg_pwd,
+          code: that.rg_code,
+        }
+        global.axiosPostReq('/user/register', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res, '1');
+            console.log(res.data, '2');
+            that.$message({
+              message: '注册成功！',
+              type: 'success'
+            });
+            that.changeForget1 = true;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.rg_mobilephone = '';
+            that.rg_pwd = '';
+            that.rg_code = '';
+          } else {
+            that.$message.error('注册失败');
+          }
+        })
       }
     }
   }
@@ -1131,6 +1253,20 @@
     text-align: right;
   }
   .logIn:hover {
+    color: #5DB7E7;
+    cursor: pointer;
+    transition: all ease 0.5s;
+  }
+  .alreadyLog:hover {
+    color: #5DB7E7;
+    cursor: pointer;
+    transition: all ease 0.5s;
+  }
+  .logOut {
+    color: #666666;
+    font-size: 14px;
+  }
+  .logOut:hover {
     color: #5DB7E7;
     cursor: pointer;
     transition: all ease 0.5s;
