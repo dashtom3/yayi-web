@@ -16,8 +16,8 @@
 </template>
 
 <script>
-  import {requestLogin} from '../../api/api';
-  //import NProgress from 'nprogress'
+import axios from 'axios'
+import global from '../global/global'
   export default {
     data() {
       return {
@@ -41,32 +41,14 @@
     },
     methods: {
       handleLogin() {
-        this.$refs.AccountFrom.validate((valid) => {
-          if (valid) {
-
-            this.logining = true;
-            //NProgress.start();
-            var loginParams = { username: this.account.username, password: this.account.pwd };
-            requestLogin(loginParams).then(data => {
-              this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {
-                sessionStorage.setItem('access-user', JSON.stringify(user));
-                this.$router.push({ path: '/admin/dashboard' });
-              }
-            });
+        global.axiosPostReq('', obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
 
           } else {
-            console.log('error submit!!');
-            return false;
+            that.$message.error('账号或密码错误！');
           }
-        });
+        })
       }
     }
   }
