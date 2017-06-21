@@ -416,7 +416,19 @@
       // 我的订单
       myOrder: function() {
         var that = this;
-        that.$router.push({ path: '/center' });
+          if (global.getToken() !== null) {
+            that.$router.push({ path: '/center' });
+          } else {
+            that.changeForget1 = true;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.showLogin = !that.showLogin;
+            if (that.showLogin == false) {
+              that.isNum = true;
+            }else {
+              that.isNum = false;
+          }
+        }
       },
       // 登录成功后
       alreadyLog: function() {
@@ -703,6 +715,29 @@
           that.fgConfirmPwd_alert = true;
           return false
         }
+        var obj = {
+          phone: that.fg_mobilephone,
+          password: that.fg_pwd,
+          code: that.fg_code,
+        }
+        global.axiosPostReq('/user/register', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res, '1');
+            console.log(res.data, '2');
+            that.$message({
+              message: '重设密码成功！',
+              type: 'success'
+            });
+            that.changeForget1 = true;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.fg_mobilephone = '';
+            that.fg_pwd = '';
+            that.fg_code = '';
+          } else {
+            that.$message.error('重设密码失败');
+          }
+        })
       },
       // 注册页注册btn
       rg_register: function() {
