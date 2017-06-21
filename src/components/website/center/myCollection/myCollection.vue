@@ -1,6 +1,5 @@
 <template>
   <div class="myCollection">
-
     <div>
       <div class="head">
         全部商品(<span class="colorRed">{{allGoods.length}}</span>)
@@ -15,6 +14,7 @@
       <div  v-else class="goodDetail">
         <ul>
           <li v-for="(good,index) in allGoods">
+            <i class="el-icon-delete2 myDele" @click="deleOneCollect(index)"></i>
             <img class="gold" v-if="good.ifGold" src="../../../../images/center/glod.png" alt="">
             <div class="imgwrap">
               <img src="../../../../images/center/goods.png" alt="">
@@ -28,16 +28,12 @@
               <img src="../../../../images/center/gwc.png" alt="">
             </div>
           </li>
-          <div style="clear:both">
-
-          </div>
+          <div style="clear:both"></div>
         </ul>
       </div>
     </div>
-
   </div>
 </template>
-
 <script>
   export default {
     name: 'myCollection',
@@ -65,6 +61,9 @@
     },
 
     methods: {
+      deleOneCollect:function(index){
+        console.log(index)
+      },
       clearAllCollection:function(){
         this.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
           confirmButtonText: '确定',
@@ -104,7 +103,19 @@ color:  #5db7e8;
     line-height: 40px;
   border-bottom: 1px solid #eeeeee;
 }
-
+.myCollection .myDele{
+  display: none;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+.myCollection .myDele:hover{
+  color: #5DB7E7;
+}
+.myCollection li:hover .myDele{
+  cursor: pointer;
+  display: block;
+}
 .head .clearAll{
   float: right;
   cursor: pointer;

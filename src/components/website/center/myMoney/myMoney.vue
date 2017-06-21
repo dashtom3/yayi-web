@@ -43,6 +43,8 @@
 
 <script>
   import paging0 from "../../brandLib/paging0"
+  // import axios from 'axios'
+  // import global from '../../../global/global'
 
   export default {
     name: 'myMoney',
@@ -134,6 +136,23 @@
     },
     methods: {
 
+    },
+    created:function(){
+      var that = this;
+      console.log(this.global)
+      // var obj = {
+      //   phone:that.global.getUser().phone,
+      //   type:1,
+      //   token:that.global.getToken()
+      // };
+      // that.global.axiosPostReq('/userMyQb/query', obj)
+      // .then((res) => {
+      //   if (res.data.callStatus === 'SUCCEED') {
+      //     console.log(res)
+      //   } else {
+      //     that.$message.error('账号或密码错误！');
+      //   }
+      // })
     }
   }
 </script>

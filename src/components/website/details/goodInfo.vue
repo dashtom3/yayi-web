@@ -41,7 +41,7 @@
       <div class="shuxingWrap" style="height:auto">
         <span style="float:left">属性：</span>
         <div class="shuxing">
-          <span :class="{ attSty2: index === ite }"  class="attSty1" v-on:click="changeAttSty(index)" v-on:mouseenter="changeAttSty(index)" v-for="(item, index) in items">属性1111</span>
+          <span :class="{ attSty2: index === ite }"  class="attSty1" v-on:click="changeAttSty(index)" v-for="(item, index) in items">属性1111</span>
           <div class="clearFloat"></div>
         </div>
         <div class="clearFloat"></div>
@@ -66,7 +66,6 @@
       <span :class="{nowGoodMore:goodInforWord==1}" v-on:click="changeGoodInforWord('1')">商品介绍</span>
       <span :class="{nowGoodMore:goodInforWord==3}" v-on:click="changeGoodInforWord('3')">使用说明</span>
       <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2')">商品评论</span>
-
     </div>
     <div >
       <goodIntroduce v-if="goodInforWord==1"></goodIntroduce>
@@ -180,7 +179,11 @@ font-size: 14px;
   vertical-align: middle;
 }
 
-.goodInfo .infoRight .attSty2{
+.goodInfo .infoRight .attSty1:hover {
+  color:#5db7e8;
+  border:1px solid #5db7e8;
+}
+.goodInfo .infoRight .attSty2 {
   color:#5db7e8;
   border:1px solid #5db7e8;
 }

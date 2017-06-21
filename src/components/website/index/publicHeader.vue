@@ -21,7 +21,7 @@
               <div class="cargo_des">{{item.des}}</div>
               <div class="cargo_price">￥{{item.price}}</div>
               <div class="cargo_num">{{item.num}}盒</div>
-              <div class="cargo_rm">删除</div>   
+              <div class="cargo_rm">删除</div>
             </div>
             <div class="total_box">
               <p class="fir left">共<span style="color: #D81E06;">3</span>件商品</p>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <!--     短信密码登录 start    -->
-    <div class="log_box" v-show="changeForget1"> 
+    <div class="log_box" v-show="changeForget1">
       <el-collapse-transition>
         <div v-show="showLogin">
           <div class="transition-box">
@@ -85,7 +85,7 @@
                   <!-- <p class="logIn_error">账号不存在，请重试！</p> -->
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
       </el-collapse-transition>
@@ -131,7 +131,7 @@
                   <p class="fg_alrHave" @click="fg_alrHave">返回登录</p>
                   <div class="fg_confirm_btn" @click="fg_confirm">确认</div>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
       </el-collapse-transition>
@@ -185,7 +185,7 @@
                     <p class="rg_choose_error" v-show="rgAgree_alert">请先同意牙医ABC服务条款!</p>
                   </transition>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
       </el-collapse-transition>
@@ -235,7 +235,7 @@
         agree: false,
         hYzm: true,
         fg_hYzm: true,
-        rg_hYzm: true, 
+        rg_hYzm: true,
         Yzm1: '',
         Yzm: '获取验证码',
         fg_Yzm1: '',
@@ -316,7 +316,7 @@
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (that.pwd_mobilephone !== '' && mb.test(that.pwd_mobilephone)) {
           that.pwdPhone_alert = false;
-        } 
+        }
       },
       //监听密码登录密码验证
       pwd_pwd: function() {
@@ -411,7 +411,7 @@
       logo: function() {
         var that = this;
         console.log('hh');
-        that.$router.push({ path: '/index' });        
+        that.$router.push({ path: '/index' });
       },
       // 我的订单
       myOrder: function() {
@@ -474,7 +474,7 @@
       messageLog: function() {
         var that = this;
         that.changeLog1 = true;
-        that.changeLog2 = false;        
+        that.changeLog2 = false;
         that.isLog1 = true;
         that.isLog2 = false;
       },
@@ -512,12 +512,12 @@
         var that = this;
         that.changeForget1 = true;
         that.changeForget2 = false;
-        that.changeForget3 = false;       
+        that.changeForget3 = false;
       },
       // 获取验证码
       hasYzm: function(ms_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.ms_mobilephone == '' || !mb.test(that.ms_mobilephone)) {
           that.msPhone_alert = true
@@ -549,7 +549,7 @@
       },
       fg_hasYzm: function(fg_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.fg_mobilephone == '' || !mb.test(that.fg_mobilephone)) {
           that.fgPhone_alert = true
@@ -580,7 +580,7 @@
       },
       rg_hasYzm: function(rg_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.rg_mobilephone == '' || !mb.test(that.rg_mobilephone)) {
           that.rgPhone_alert = true
@@ -612,8 +612,8 @@
       // 短信登录btn
       ms_logIn: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
-        if(!mb.test(that.ms_mobilephone) || that.ms_mobilephone == '') { 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        if(!mb.test(that.ms_mobilephone) || that.ms_mobilephone == '') {
           that.msPhone_alert = true;
           return false
         }
@@ -649,8 +649,8 @@
       // 密码登录btn
       pwd_logIn: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
-        if(!mb.test(that.pwd_mobilephone) || that.pwd_mobilephone == '') { 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        if(!mb.test(that.pwd_mobilephone) || that.pwd_mobilephone == '') {
           that.pwdPhone_alert = true;
           return false
         }
@@ -686,8 +686,8 @@
       // 忘记密码确认btn
       fg_confirm: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
-        if(!mb.test(that.fg_mobilephone) || that.fg_mobilephone == '') { 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        if(!mb.test(that.fg_mobilephone) || that.fg_mobilephone == '') {
           that.fgPhone_alert = true;
           return false
         }
@@ -707,8 +707,8 @@
       // 注册页注册btn
       rg_register: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
-        if(!mb.test(that.rg_mobilephone) || that.rg_mobilephone == '') { 
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        if(!mb.test(that.rg_mobilephone) || that.rg_mobilephone == '') {
           that.rgPhone_alert = true;
           return false
         }
@@ -1027,7 +1027,7 @@
     margin-right: 10px;
   }
   .pwd_box {
-    margin-left: 11px; 
+    margin-left: 11px;
   }
   .pwd {
     width: 399px;
@@ -1129,7 +1129,7 @@
     text-align: center;
   }
   .fg_pwd_box {
-    margin-left: 11px; 
+    margin-left: 11px;
   }
   .fg_pwd {
     width: 399px;
@@ -1142,7 +1142,7 @@
     margin-top: 20px;
   }
   .fg_confirmPwd_box {
-    margin-right: 15px; 
+    margin-right: 15px;
   }
   .fg_confirm_btn {
     width: 250px;
@@ -1209,7 +1209,7 @@
     transition: all ease 0.5s;
   }
   .rg_pwd_box {
-    margin-left: 11px; 
+    margin-left: 11px;
   }
   .rg_pwd {
     width: 399px;
@@ -1222,7 +1222,7 @@
     margin-top: 20px;
   }
   .rg_confirmPwd_box {
-    margin-right: 15px; 
+    margin-right: 15px;
   }
   .rg_confirm_btn {
     width: 250px;

@@ -145,6 +145,7 @@
       },
       tab1_delete:function(index){
         console.log(index)
+        this.tab1_tableData.splice(index,)
       },
       tab1_editThis:function(index){
         console.log(index)

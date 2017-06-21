@@ -9,6 +9,9 @@
           <span class="time">{{comment.time}}</span>
         </div>
         <div class="commentContents">测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论</div>
+        <div class="commentReplay">
+          这是回复这是回复
+        </div>
       </li>
     </ul>
   </div>
@@ -16,7 +19,8 @@
 
 <script>
 import score from "./score"
-
+import axios from 'axios'
+import global from '../../global/global'
   export default {
     name: 'goodComment',
     data () {
@@ -33,6 +37,9 @@ import score from "./score"
     },
     components:{
       score
+    },
+    mounted:function(){
+      
     }
   }
 </script>
