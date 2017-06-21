@@ -6,15 +6,17 @@ import 'element-ui/lib/theme-default/index.css'
 import '@/assets/iconfont.css'
 import App from './App'
 import router from './router'
-  // import axios from 'axios'
-  import Global from './components/global/global'
+// import axios from 'axios'
+import Global from './components/global/global'
 
 // import Mock from './mock'
 // Mock.init()
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+//设置全局global
 Vue.prototype.global = Global
+
 Vue.filter('frisco', function (value) {
     if(value == 0) {
     	var hh = '待付款'

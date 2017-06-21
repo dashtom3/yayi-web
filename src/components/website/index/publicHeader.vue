@@ -203,8 +203,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import global from '../../global/global'
   export default {
     name: 'publicHeader',
     data () {
@@ -285,14 +283,14 @@
     created: function() {
       var that = this;
       window.addEventListener('scroll', that.menu);
-      if (global.getToken() !== null) {
-        var username = global.getUser();
+      if (that.global.getToken() !== null) {
+        var username = that.global.getUser();
         that.username = username.phone;
         that.hasLogin = false;
       } else {
         that.hasLogin = true;
       }
-      // console.log(global.getToken());
+      // console.log(that.global.getToken());
     },
     watch: {
       //监听短信登录手机号验证
@@ -416,7 +414,7 @@
       // 我的订单
       myOrder: function() {
         var that = this;
-          if (global.getToken() !== null) {
+          if (that.global.getToken() !== null) {
             that.$router.push({ path: '/center' });
           } else {
             that.changeForget1 = true;
@@ -439,12 +437,12 @@
       logOut: function() {
         var that = this;
         var obj = {
-          token: global.getToken()
+          token: that.global.getToken()
         }
-        global.axiosPostReq('/user/reLogin', obj).then((res) => {
+        that.global.axiosPostReq('/user/reLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res);
-            global.removeMsg()
+            that.global.removeMsg()
             that.$message({
               message: '退出成功！',
               type: 'success'
@@ -536,7 +534,7 @@
           return false
         } else {
           var obj = { phone: that.ms_mobilephone }
-          global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -567,7 +565,7 @@
           that.fgPhone_alert = true
         } else {
           var obj = { phone: that.fg_mobilephone }
-          global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -598,7 +596,7 @@
           that.rgPhone_alert = true
         } else {
           var obj = { phone: that.rg_mobilephone }
-          global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -637,11 +635,11 @@
           phone: that.ms_mobilephone,
           code: that.ms_yzm,
         }
-        global.axiosPostReq('/user/noteLogin', obj).then((res) => {
+        that.global.axiosPostReq('/user/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res);
-            global.setToken(res.data.token)
-            global.setUser(res.data.data)
+            that.global.setToken(res.data.token)
+            that.global.setUser(res.data.data)
             that.$message({
               message: '登录成功！',
               type: 'success'
@@ -674,11 +672,11 @@
           phone: that.pwd_mobilephone,
           password: that.pwd_pwd,
         }
-        global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
+        that.global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.token);
-            global.setToken(res.data.token)
-            global.setUser(res.data.data)
+            that.global.setToken(res.data.token)
+            that.global.setUser(res.data.data)
             that.$message({
               message: '登录成功！',
               type: 'success'
@@ -720,7 +718,7 @@
           password: that.fg_pwd,
           code: that.fg_code,
         }
-        global.axiosPostReq('/user/register', obj).then((res) => {
+        that.global.axiosPostReq('/user/register', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res, '1');
             console.log(res.data, '2');
@@ -768,7 +766,7 @@
           password: that.rg_pwd,
           code: that.rg_code,
         }
-        global.axiosPostReq('/user/register', obj).then((res) => {
+        that.global.axiosPostReq('/user/register', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res, '1');
             console.log(res.data, '2');
