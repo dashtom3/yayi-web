@@ -55,7 +55,7 @@
       <div class="qianbi_box">
         <div class="qianbi_title">发票</div>
         <div class="qianbi_des">
-          <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox>
+          <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox><input type="text" class="tax_word" v-show="tax_word" v-model="tax_des">
         </div>
       </div>
       <div class="qianbi_box">
@@ -123,7 +123,7 @@
       </el-dialog>
       <!-- 修改地址弹出框结束 -->
       <!-- 删除地址弹出框开始 -->
-      <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny" :before-close="handleClose">
+      <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny">
         <span>是否确定删除收货地址?</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="removeVisible = false">取 消</el-button>
@@ -427,6 +427,18 @@
         },
         formLabelWidth: '120px',
         setDefault2: false,
+        tax_des: '',
+        tax_word: false,
+      }
+    },
+    watch: {
+      checked2: function() {
+        var that = this;
+        if (that.checked2 == true) {
+          that.tax_word = true;
+        } else {
+          that.tax_word = false;
+        }
       }
     },
     components: {
@@ -667,6 +679,10 @@ input:focus {
   position: absolute;
   left: 150px;
   bottom: 0px;
+}
+.tax_word {
+  transform: translateY(1px); 
+  margin-left: 26px;
 }
 .leave_message {
   width: 1200px;

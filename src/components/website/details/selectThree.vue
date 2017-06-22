@@ -1,8 +1,8 @@
-
-<template >
+<template>
   <el-cascader
     :options="options"
     v-model="selectedOptions3"
+    :props="{value:'label'}"
   ></el-cascader>
 </template>
 
@@ -12,7 +12,6 @@ export default {
   name: 'myAddress',
   data () {
     return {
-
       selectedOptions3: ['zujian', 'data', 'tag'],
       options: [
           {value: 1, label: '北京', children: [
@@ -3625,11 +3624,17 @@ export default {
           {value: 34, label: '台湾', children: [
               {value: 345, label: '台湾', children: []}
           ]}
-      ]
+      ],
+    }
+  },
+  watch: {
+    selectedOptions3: function() {
+      var that = this;
+      console.log(that.selectedOptions3);
     }
   },
   methods:{
-
+    
   }
 }
 </script>

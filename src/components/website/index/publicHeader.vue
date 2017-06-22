@@ -203,6 +203,7 @@
 </template>
 
 <script>
+  var crypto = require('crypto');
   export default {
     name: 'publicHeader',
     data () {
@@ -297,7 +298,7 @@
       //监听短信登录手机号验证
       ms_mobilephone: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (that.ms_mobilephone !== '' && mb.test(that.ms_mobilephone)) {
           that.msPhone_alert = false;
         }
@@ -312,7 +313,7 @@
       //监听密码登录手机号验证
       pwd_mobilephone: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (that.pwd_mobilephone !== '' && mb.test(that.pwd_mobilephone)) {
           that.pwdPhone_alert = false;
         }
@@ -327,7 +328,7 @@
       //监听忘记密码手机号验证
       fg_mobilephone: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (that.fg_mobilephone !== '' && mb.test(that.fg_mobilephone)) {
           that.fgPhone_alert = false;
         }
@@ -356,7 +357,7 @@
       //监听注册页手机号验证
       rg_mobilephone: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (that.rg_mobilephone !== '' && mb.test(that.rg_mobilephone)) {
           that.rgPhone_alert = false;
         }
@@ -540,7 +541,7 @@
       // 获取验证码
       hasYzm: function(ms_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.ms_mobilephone == '' || !mb.test(that.ms_mobilephone)) {
           that.msPhone_alert = true
@@ -573,7 +574,7 @@
       },
       fg_hasYzm: function(fg_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.fg_mobilephone == '' || !mb.test(that.fg_mobilephone)) {
           that.fgPhone_alert = true
@@ -605,7 +606,7 @@
       },
       rg_hasYzm: function(rg_mobilephone) {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.rg_mobilephone == '' || !mb.test(that.rg_mobilephone)) {
           that.rgPhone_alert = true
@@ -638,7 +639,7 @@
       // 短信登录btn
       ms_logIn: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if(!mb.test(that.ms_mobilephone) || that.ms_mobilephone == '') {
           that.msPhone_alert = true;
           return false
@@ -689,7 +690,7 @@
       // 密码登录btn
       pwd_logIn: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if(!mb.test(that.pwd_mobilephone) || that.pwd_mobilephone == '') {
           that.pwdPhone_alert = true;
           return false
@@ -698,9 +699,12 @@
           that.pwdpwd_alert = true;
           return false
         }
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(that.pwd_pwd);
+        var str = md5sum.digest('hex');
         var obj = {
           phone: that.pwd_mobilephone,
-          password: that.pwd_pwd,
+          password: str,
         }
         that.global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -737,7 +741,7 @@
       // 忘记密码确认btn
       fg_confirm: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if(!mb.test(that.fg_mobilephone) || that.fg_mobilephone == '') {
           that.fgPhone_alert = true;
           return false
@@ -793,7 +797,7 @@
       // 注册页注册btn
       rg_register: function() {
         var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if(!mb.test(that.rg_mobilephone) || that.rg_mobilephone == '') {
           that.rgPhone_alert = true;
           return false
@@ -814,9 +818,12 @@
           that.rgAgree_alert = true;
           return false
         }
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(that.rg_pwd);
+        var str = md5sum.digest('hex');
         var obj = {
           phone: that.rg_mobilephone,
-          password: that.rg_pwd,
+          password: str,
           code: that.rg_code,
         }
         that.global.axiosPostReq('/user/register', obj).then((res) => {

@@ -103,7 +103,7 @@
               </transition>
             </el-form-item>
             <el-form-item  :label-width="formLabelWidth">
-              <el-checkbox v-model="setDefault2">设为默认地址</el-checkbox>
+              <el-checkbox v-model="setDefault1">设为默认地址</el-checkbox>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -112,7 +112,7 @@
         </el-dialog>
         <!-- 修改地址弹出框结束 -->
         <!-- 删除地址弹出框开始 -->
-        <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny" :before-close="handleClose">
+        <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny">
           <span>是否确定删除收货地址?</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="removeVisible = false">取 消</el-button>
@@ -134,11 +134,12 @@
         addAlert: false,
         placeAlert: false,
         phoneAlert: false,
+        setDefault: false,
         realAlert1: false,
         addAlert1: false,
         placeAlert1: false,
-        phoneAler1: false,
-        setDefault: false,
+        phoneAlert1: false,
+        setDefault1: false,
         hasAddress: true,
         editAddVisible: false,
         removeVisible: false,
@@ -172,6 +173,20 @@
     },
     components: {
       myAddress,
+    },
+    created: function () {
+      var that = this;
+      var obj = {
+        token:that.global.getToken()
+      };
+      // that.global.axiosGetReq('/userMyQb/query', obj)
+      // .then((res) => {
+      //   if (res.data.callStatus === 'SUCCEED') {
+      //     this.getData = res.data.data;
+      //   } else {
+      //     that.$message.error('网络出错，请稍后再试！');
+      //   }
+      // })
     },
     methods: {
       // 保存地址
