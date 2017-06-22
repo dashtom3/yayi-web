@@ -4,7 +4,7 @@
       <div class="header_box">管理收货地址</div>
         <el-form :model="form" class="form_box">
           <el-form-item label="所在区域" :label-width="formLabelWidth" class="item">
-            <myAddress style="width:260px;"></myAddress>
+            <myAddress v-on:listenToChild="showFromChild" style="width:260px;"></myAddress>
             <transition name="shake">
               <span v-show="placeAlert" class="error">请选择所在区域！</span>
             </transition>
@@ -189,6 +189,11 @@
       // })
     },
     methods: {
+      //
+      showFromChild: function(data) {
+        var that = this;
+        console.log(data,'22');
+      },
       // 保存地址
       save: function() {
         var that = this;
@@ -212,6 +217,9 @@
         var that = this;
         that.removeVisible = false;
         that.$message('删除地址成功！');
+        if (condition) {
+          expression
+        }
       },
     }
   }

@@ -3630,7 +3630,8 @@ export default {
   watch: {
     selectedOptions3: function() {
       var that = this;
-      console.log(that.selectedOptions3);
+      //console.log(that.selectedOptions3);
+      that.$emit('listenToChild',that.selectedOptions3);
     }
   },
   methods:{
