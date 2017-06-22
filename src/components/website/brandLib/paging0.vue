@@ -1,12 +1,12 @@
 <template>
-  <div class="paging0">
+  <div class="paging0" v-on:click="onClickChild()">
     <span class="pageRedue" v-on:click="prev()">上一页</span>
     <span calss="indexPage" v-show="currentPage>0" v-on:click="goIndex()">首页</span>
     <span class="noBorder" v-show="showPageBegin>0">...</span>
-    <span v-on:click="goToThisPage(index)" :class="{currentPageStyle:currentPage==index}" v-show="index >= showPageBegin && index <= showPageEnd" v-for="(item,index) in pageNum">{{item}}</span>
-    <span class="noBorder" v-show="pageNum>showPageNum && currentPage<pageNum-1">...</span>
+    <span v-on:click="goToThisPage(index)" :class="{currentPageStyle:currentPage==index}" v-show="index >= showPageBegin && index <= showPageEnd" v-for="(item,index) in childmsg.pageNum">{{item}}</span>
+    <span class="noBorder" v-show="childmsg.pageNum>showPageNum && currentPage<childmsg.pageNum-1">...</span>
     <span class="pageAdd"  v-on:click="next()">下一页</span>
-    共{{pageNum}}页，到第<input type="text" v-model="goToPage"><span class="sure" v-on:click="goToInputPage()">确定</span>
+    共{{childmsg.pageNum}}页，到第<input type="text" v-model="goToPage"><span class="sure" v-on:click="goToInputPage()">确定</span>
   </div>
 </template>
 <script>
@@ -14,7 +14,6 @@
     name:"paging0",
     data() {
       return {
-        pageNum:100,
         goToPage:1,
         showPageNum:8,
         currentPage: 0,
@@ -22,12 +21,16 @@
         showPageEnd:7
       };
     },
+    props:["childmsg"],
     watch:{
       currentPage:function(){
         this.goToPage=this.currentPage+1;
       }
     },
     methods: {
+      onClickChild:function(){
+        this.$emit('childSay',this.currentPage+1);
+      },
       prev:function(){
         if(this.currentPage==0){
           this.$alert("已经是第一页了！", {confirmButtonText: '确定'});
@@ -42,7 +45,7 @@
         }
       },
       next:function(){
-        if(this.currentPage>=this.pageNum){
+        if(this.currentPage>=this.childmsg.pageNum-1){
           this.$alert("已经是最后一页了！", {confirmButtonText: '确定'});
         }else{
           this.currentPage++;
@@ -59,13 +62,17 @@
         if(this.goToPage<8){
           this.showPageBegin=0;
           this.showPageEnd=7
-        }else if(this.goToPage>this.pageNum){
+          this.currentPage = num-1;
+        }
+        if(this.goToPage>this.childmsg.pageNum){
           this.$alert("输入页码过大，请重新输入", {confirmButtonText: '确定'});
+          this.currentPage = this.childmsg.pageNum-1;
         }else{
           this.showPageEnd = this.goToPage;
           this.showPageBegin = this.showPageEnd - 8;
+          this.currentPage = num-1;
         }
-        this.currentPage = num-1;
+
       },
       goIndex:function(){
         this.currentPage = 0;

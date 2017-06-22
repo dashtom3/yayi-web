@@ -3,131 +3,42 @@
     <div class="moneyHaed">
       <span>当前乾币：{{myAllMoney.currentMoney}}</span>
     </div>
-    <el-table
-    :data="myAllMoney.details"
-    border
-    style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8">
-    <el-table-column
-      label="收入"
-      width="142"
-      align="center">
+    <el-table  :data="myAllMoney.details"  border  style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8">
+    <el-table-column  label="收入"  width="142"  align="center">
       <template scope="scope">
-        <span class="colorRed">{{scope.row.num}}</span>
+        <span class="colorRed">{{scope.row.qbRget}}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      label="支出"
-      width="143"
-      align="center">
+    <el-table-column  label="支出"  width="143"  align="center">
       <template scope="scope">
-        <span class="colorBlue">{{scope.row.num2}}</span>
+        <span class="colorBlue">{{scope.row.qbRout}}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      prop="describe"
-      label="描述"
-      width="610"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="time"
-      label="时间"
-      align="center">
-    </el-table-column>
+    <el-table-column  prop="remark"  label="描述"  width="610"  align="center"></el-table-column>
+    <el-table-column  prop="qbTime"  label="时间"  align="center"></el-table-column>
   </el-table>
   <div class="fenyeWrap">
-    <paging0></paging0>
+    <paging0 :childmsg="childConfig" v-on:childSay="msgFromChlid"></paging0>
   </div>
   </div>
 </template>
 
 <script>
   import paging0 from "../../brandLib/paging0"
-  // import axios from 'axios'
-  // import global from '../../../global/global'
 
   export default {
     name: 'myMoney',
     data () {
       return {
+        childConfig:{
+          pageNum:2
+        },
+        getData:[],
+        currentPage:1,
+        everyPageShowNum:5,
         myAllMoney:{
-          currentMoney:1234,
-          waitMoney:433,
-          howMany:100,
-          details:[
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:null,
-              num2:45,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:12,
-              num2:null,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:12,
-              num2:null,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            },
-            {
-              num:12,
-              num2:null,
-              //1是收入，2是指出
-              type:1,
-              describe:"用来干嘛的我忘记了。。。。",
-              time:"1234-12-12 12:12"
-            }
-          ]
+          currentMoney:0,
+          details:[]
         }
       }
     },
@@ -135,24 +46,48 @@
       paging0,
     },
     methods: {
-
+      msgFromChlid:function(data){
+        this.currentPage = data;
+      },
+      getMoneyList:function(){
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+          type:1,
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/userMyQb/query', obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.getData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+    },
+    watch:{
+      getData:{
+        handler:function(){ // 计算当前钱币
+          for(var i in this.getData){
+            if(this.getData[i].qbRget!=0){
+              this.myAllMoney.currentMoney += this.getData[i].qbRget;
+            }
+            if(this.getData[i].qbRout!=0){
+              this.myAllMoney.currentMoney -= this.getData[i].qbRout;
+            }
+          }
+          this.myAllMoney.details = this.getData.slice(0,this.everyPageShowNum);
+        },
+        deep:true
+      },
+      currentPage:function(){
+        this.myAllMoney.details = this.getData.slice(this.everyPageShowNum*(this.currentPage-1),this.everyPageShowNum*this.currentPage);
+      },
     },
     created:function(){
-      var that = this;
-      var obj = {
-        phone:that.global.getUser().phone,
-        type:1,
-        token:that.global.getToken()
-      };
-      that.global.axiosGetReq('/userMyQb/query', obj)
-      .then((res) => {
-        console.log(res)
-        if (res.data.callStatus === 'SUCCEED') {
-        } else {
-          that.$message.error('账号或密码错误！');
-        }
-      })
-    }
+      this.getMoneyList();
+    },
   }
 </script>
 
