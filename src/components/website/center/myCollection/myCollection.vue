@@ -59,10 +59,39 @@
         ]
       }
     },
-
+    created:function(){
+      this.getMyCollection();
+    },
     methods: {
+      getMyCollection:function(){
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+          token:that.global.getToken()
+        };
+        that.global.axiosPostReq('/mystar/shows', obj).then((res) => {
+          console.log(res)
+          // if (res.data.callStatus === 'SUCCEED') {
+          //
+          // } else {
+          //   that.$message.error('网络出错，请稍后再试！');
+          // }
+        })
+      },
       deleOneCollect:function(index){
-        console.log(index)
+        var that = this;
+        var obj = {
+          itemId:index,
+          token:that.global.getToken()
+        };
+        that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
+          console.log(res)
+          // if (res.data.callStatus === 'SUCCEED') {
+          //
+          // } else {
+          //   that.$message.error('网络出错，请稍后再试！');
+          // }
+        })
       },
       clearAllCollection:function(){
         this.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
@@ -70,16 +99,23 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: "清除成功！"
-          });
+          var that = this;
+          var obj = {
+            phone:that.global.getUser().phone,
+            token:that.global.getToken()
+          };
+          that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
+            console.log(res)
+            // if (res.data.callStatus === 'SUCCEED') {
+            //
+            // } else {
+            //   that.$message.error('网络出错，请稍后再试！');
+            // }
+          })
+          this.$message({type: 'success',message: "清除成功！"});
           this.allGoods = [];
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
+          this.$message({type: 'info',message: '已取消'});
         });
       }
     }
