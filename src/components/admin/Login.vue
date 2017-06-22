@@ -41,14 +41,7 @@ import global from '../global/global'
     },
     methods: {
       handleLogin() {
-        global.axiosPostReq('', obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-
-          } else {
-            that.$message.error('账号或密码错误！');
-          }
-        })
+      this.$router.push({ path: '/admin/dashboard' });
       }
     }
   }
