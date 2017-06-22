@@ -65,9 +65,8 @@ export default {
     //axios.defaults.headers['token'] = this.getToken()
     return axios.post(this.baseUrl + url, this.postHttpData(data))
   },
-  axiosGetReq (url, data) {
-    //axios.defaults.headers['token'] = this.getToken()
-    return axios.get(this.baseUrl + url + this.getHttpData(data))
+  axiosGetReq (url, getParamsObj) {
+    return axios.get(this.baseUrl + url ,{params:getParamsObj})
   },
   getQiNiuToken () {
     return this.axiosGetReq('qiniu/getQiNiuToken')

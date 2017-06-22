@@ -42,7 +42,7 @@ import global from '../global/global'
     methods: {
       handleLogin() {
         var that = this;
-        that.$router.push({path: '/admin/dashboard'})
+        that.$router.push({path: '/admin/dashboard'});
       }
     }
   }
