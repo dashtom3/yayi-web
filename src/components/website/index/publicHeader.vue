@@ -12,7 +12,7 @@
         <div class="my_order right" @click="myOrder">我的订单</div>
         <div class="shopping_car right">
           <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-          <p class="right" @click="gotocar">购物车 <span class="car_num">0</span></p>
+          <p class="right" @click="gotocar">购物车 <span class="car_num">{{car_num}}</span></p>
           <div class="whiteLine"></div>
           <div class="car_hover">
             <p class="cargo_title">最近加入的产品：</p>
@@ -207,6 +207,7 @@
     name: 'publicHeader',
     data () {
       return {
+        car_num: '',
         hasLogin: true,
         username: '',
         changeForget1: false,
@@ -403,7 +404,19 @@
       // 去购物车
       gotocar: function() {
         var that = this;
-        that.$router.push({ path: '/gwc' });
+          if (that.global.getToken() !== null) {
+            that.$router.push({ path: '/gwc' });
+          } else {
+            that.changeForget1 = true;
+            that.changeForget2 = false;
+            that.changeForget3 = false;
+            that.showLogin = !that.showLogin;
+            if (that.showLogin == false) {
+              that.isNum = true;
+            }else {
+              that.isNum = false;
+          }
+        }
       },
       // logo跳转
       logo: function() {
@@ -553,6 +566,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
+              console.log(res);
             }
           })
         }
@@ -584,6 +598,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
+              console.log(res);
             }
           })
        }
@@ -615,6 +630,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
+              console.log(res);
             }
           })
         }
@@ -651,8 +667,22 @@
             that.changeForget3 = false;
             that.ms_mobilephone = '';
             that.ms_yzm = '';
+            return false
           } else {
-            that.$message.error('登录失败！');
+            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
+              that.$message.error('验证码错误或已失效！');
+
+              return false
+            } else {
+              that.$message.error('登录失败！');
+              // console.log(res);
+            }
+            if (res.data.errorCode === 'Username_NOT_Exist') {
+              that.$message.error('用户不存在！');
+              return false
+            } else {
+              that.$message.error('登录失败！');
+            }
           }
         })
       },
@@ -689,7 +719,18 @@
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
           } else {
-            that.$message.error('登录失败！');
+            if (res.data.errorCode === 'Password_error') {
+              that.$message.error('密码错误！');
+              return false
+            } else {
+              that.$message.error('登录失败！');
+            }
+            if (res.data.errorCode === 'Username_NOT_Exist') {
+              that.$message.error('用户不存在！');
+              return false
+            } else {
+              that.$message.error('登录失败！');
+            }
           }
         })
       },
@@ -718,7 +759,7 @@
           password: that.fg_pwd,
           code: that.fg_code,
         }
-        that.global.axiosPostReq('/user/register', obj).then((res) => {
+        that.global.axiosPostReq('/user/forgetPwd', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res, '1');
             console.log(res.data, '2');
@@ -733,7 +774,19 @@
             that.fg_pwd = '';
             that.fg_code = '';
           } else {
-            that.$message.error('重设密码失败');
+            console.log(res);
+            if (res.data.errorCode === 'Username_NOT_Exist') {
+              that.$message.error('用户不存在！');
+              return false
+            } else {
+              that.$message.error('重设密码失败');
+            }
+            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
+              that.$message.error('验证码错误或已失效！');
+              return false
+            } else {
+              that.$message.error('重设密码失败');
+            }
           }
         })
       },
@@ -781,7 +834,18 @@
             that.rg_pwd = '';
             that.rg_code = '';
           } else {
-            that.$message.error('注册失败');
+            if (res.data.errorCode === 'Username_Already_Exist') {
+              that.$message.error('用户已存在！');
+              return false
+            } else {
+              that.$message.error('注册失败！');
+            }
+            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
+              that.$message.error('验证码错误或已失效！');
+              return false
+            } else {
+              that.$message.error('注册失败！');
+            }
           }
         })
       }
@@ -868,7 +932,7 @@
     cursor: pointer;
     transition: all ease 0.5s;
   }
-  .log_box {
+  .log_box, .log_box2{
     width: 100%;
 /*    height: 600px;*/
     z-index: 999;

@@ -41,14 +41,8 @@ import global from '../global/global'
     },
     methods: {
       handleLogin() {
-        global.axiosPostReq('', obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-
-          } else {
-            that.$message.error('账号或密码错误！');
-          }
-        })
+        var that = this;
+        that.$router.push({path: '/admin/dashboard'})
       }
     }
   }
@@ -72,14 +66,6 @@ import global from '../global/global'
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
-
-    background: -ms-linear-gradient(top, #fff, #6495ed);        /* IE 10 */
-    background:-moz-linear-gradient(top,#b8c4cb,#f6f6f8);/*火狐*/
-    background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(#b8c4cb), to(#f6f6f8));/*谷歌*/
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#6495ed));      /* Safari 4-5, Chrome 1-9*/
-    background: -webkit-linear-gradient(top, #fff, #6495ed,#fff);   /*Safari5.1 Chrome 10+*/
-    background: -o-linear-gradient(top, #fff, #6495ed);  /*Opera 11.10+*/
-
     .title {
       margin: 0px auto 40px auto;
       text-align: center;
