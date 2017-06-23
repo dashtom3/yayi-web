@@ -10,11 +10,11 @@
           <span class="alreadyLog" @click="alreadyLog">欢迎您，{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
         </div>
         <div class="my_order right" @click="myOrder">我的订单</div>
-        <div class="shopping_car right">
+        <div class="shopping_car right" @mouseover="showCargo">
           <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-          <p class="right" @click="gotocar">购物车 <span class="car_num">{{car_num}}</span></p>
+          <p class="right">购物车<span class="car_num">{{car_num}}</span></p>
           <div class="whiteLine"></div>
-          <div class="car_hover">
+          <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
             <div class="cargo_box" v-for="item in items" :key="item">
               <img class="cargo_sm" src="../../../images/index/demo_sm.png" alt="img">
@@ -28,6 +28,9 @@
               <p class="sec left">总计: <span style="color: #D81E06;">￥3267</span></p>
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
+          </div>
+          <div class="car_hover" v-else>
+            暂无选购商品
           </div>
         </div>
         <div class="clearfix"></div>
@@ -208,13 +211,14 @@
     name: 'publicHeader',
     data () {
       return {
-        car_num: '',
+        car_num: 0,
         hasLogin: true,
         username: '',
         changeForget1: false,
         changeForget2: false,
         changeForget3: false,
         showLogin: false,
+        cargo_show: false,
         ms_mobilephone: '',
         ms_yzm: '',
         pwd_mobilephone: '',
@@ -418,6 +422,27 @@
               that.isNum = false;
           }
         }
+      },
+      // hover购物车
+      showCargo: function() {
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/cart/list', obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data);
+            if (res.data.data.length == 0) {
+              that.cargo_show = false;
+            }
+            // this.getData = res.data.data;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       // logo跳转
       logo: function() {
@@ -972,6 +997,7 @@
     display: none;
     width: 380px;
     position: absolute;
+    text-align: center;
     top: 27px;
     left: -1px;
     border-left: 1px solid #e9e9e9;
