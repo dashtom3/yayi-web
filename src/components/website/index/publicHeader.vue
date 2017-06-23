@@ -7,18 +7,18 @@
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
         <div v-else class="log right">
-          <span class="alreadyLog" @click="alreadyLog">欢迎您，{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
+          <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
         </div>
         <div class="my_order right" @click="myOrder">我的订单</div>
         <div class="shopping_car right" @mouseover="showCargo">
           <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-          <p class="right">购物车<span class="car_num">{{car_num}}</span></p>
+          <p class="left gwcHeader">购物车<span class="car_num">{{car_num}}</span></p>
           <div class="whiteLine"></div>
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
             <div class="cargo_box" v-for="item in items" :key="item">
-              <img class="cargo_sm" src="../../../images/index/demo_sm.png" alt="img">
-              <div class="cargo_des">{{item.des}}</div>
+              <img class="cargo_sm" :src=item.pic alt="img">
+              <div class="cargo_des">{{item.name}}</div>
               <div class="cargo_price">￥{{item.price}}</div>
               <div class="cargo_num">{{item.num}}盒</div>
               <div class="cargo_rm">删除</div>
@@ -29,7 +29,7 @@
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
           </div>
-          <div class="car_hover" v-else>
+          <div class="car_hover1" v-else>
             暂无选购商品
           </div>
         </div>
@@ -39,11 +39,11 @@
     <!--     短信密码登录 start    -->
     <div class="log_box" v-show="changeForget1">
       <el-collapse-transition>
-        <div v-show="showLogin">
+        <div v-show="showLogin1">
           <div class="transition-box">
             <div class="logIn_container">
               <div class="logIn_box">
-                <p class="ms_register" @click="ms_register">注册</p>
+                <p class="ms_register" @click="ms_register" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">注册</p>
                 <div class="logIn_header">
                   <div class="messageLog" :class="{ speBottom: isLog1}" @click="messageLog">短信登录</div>
                   <div class="pwdLog" :class="{ speBottom: isLog2}" @click="pwdLog">密码登录</div>
@@ -66,7 +66,6 @@
                     </transition>
                   </div>
                   <div class="logIn_btn" @click="ms_logIn">登录</div>
-<!--                   <p class="logIn_error">账号不存在，请重试！</p> -->
                 </div>
                 <div v-show="changeLog2" class="des_box">
                   <div>
@@ -97,7 +96,7 @@
     <!--     忘记密码 start    -->
     <div class="log_box2" v-show="changeForget2">
       <el-collapse-transition>
-        <div v-show="showLogin">
+        <div v-show="showLogin2">
           <div class="transition-box">
             <div class="logIn_container">
               <div class="forgetPwd_box">
@@ -143,11 +142,11 @@
     <!--     注册页 start    -->
     <div class="log_box" v-show="changeForget3">
       <el-collapse-transition>
-        <div v-show="showLogin">
+        <div v-show="showLogin3">
           <div class="transition-box">
             <div class="logIn_container">
               <div class="register_box">
-                  <p class="logIn" @click="rg_logIn">登录</p>
+                  <p class="rg_logIn" @click="rg_logIn" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">登录</p>
                   <div>
                     <span>手机号：</span>
                     <input class="rg_mobilePhone" type="text" v-model="rg_mobilephone">
@@ -212,12 +211,15 @@
     data () {
       return {
         car_num: 0,
+        arrowChange: true,
         hasLogin: true,
         username: '',
         changeForget1: false,
         changeForget2: false,
         changeForget3: false,
-        showLogin: false,
+        showLogin1: false,
+        showLogin2: false,
+        showLogin3: false,
         cargo_show: false,
         ms_mobilephone: '',
         ms_yzm: '',
@@ -275,6 +277,7 @@
         Second: true,
         isActive: false,
         line: false,
+        Gtoken: null,
       }
     },
     //*******导航钩子*********//
@@ -288,6 +291,7 @@
     // },
     created: function() {
       var that = this;
+      that.Gtoken = that.global.getToken();
       window.addEventListener('scroll', that.menu);
       if (that.global.getToken() !== null) {
         var username = that.global.getUser();
@@ -299,6 +303,26 @@
       // console.log(that.global.getToken());
     },
     watch: {
+      //购物车
+      Gtoken: function() {
+        var that = this;
+        if (that.Gtoken == null) {
+          that.car_num = 0;
+        } else {
+          var obj = {
+            phone:that.global.getUser().phone,
+            token:that.global.getToken()
+          };
+          that.global.axiosGetReq('/cart/list', obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.car_num = res.data.data.length;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
+      },
       //监听短信登录手机号验证
       ms_mobilephone: function() {
         var that = this;
@@ -426,6 +450,10 @@
       // hover购物车
       showCargo: function() {
         var that = this;
+        if (that.global.getToken() == null) {
+          that.cargo_show = false;
+          return false
+        }
         var obj = {
           phone:that.global.getUser().phone,
           token:that.global.getToken()
@@ -433,12 +461,17 @@
         that.global.axiosGetReq('/cart/list', obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data);
             if (res.data.data.length == 0) {
               that.cargo_show = false;
+              return false
             }
-            // this.getData = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+            if (res.data.data.length !== 0) {
+              that.cargo_show = true;
+              that.items = res.data.data;
+              that.car_num = res.data.data.length;
+              console.log(res.data.data);
+              return false
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -459,12 +492,7 @@
             that.changeForget1 = true;
             that.changeForget2 = false;
             that.changeForget3 = false;
-            that.showLogin = !that.showLogin;
-            if (that.showLogin == false) {
-              that.isNum = true;
-            }else {
-              that.isNum = false;
-          }
+            that.showLogin1 = !that.showLogin1;
         }
       },
       // 登录成功后
@@ -487,10 +515,20 @@
               type: 'success'
             });
             that.hasLogin = true;
+            that.car_num = 0;
           } else {
             that.$message.error('退出失败！');
           }
         })
+      },
+      // 箭头变色
+      arrow_in: function() {
+        var that = this;
+        that.arrowChange = false;
+      },
+      arrow_out: function() {
+        var that = this;
+        that.arrowChange = true;
       },
       // 页头点击登录按钮
       logIn: function() {
@@ -498,12 +536,9 @@
         that.changeForget1 = true;
         that.changeForget2 = false;
         that.changeForget3 = false;
-        that.showLogin = !that.showLogin;
-        if (that.showLogin == false) {
-          that.isNum = true;
-        }else {
-          that.isNum = false;
-        }
+        that.showLogin2 = false;
+        that.showLogin3 = false;
+        that.showLogin1 = !that.showLogin1;
       },
       // 页头点击注册按钮
       register: function() {
@@ -511,13 +546,9 @@
         that.changeForget1 = false;
         that.changeForget2 = false;
         that.changeForget3 = true;
-        that.showLogin = !that.showLogin;
-        if (that.showLogin == false) {
-          that.isNum = true;
-          console.log(that.num);
-        }else {
-          that.isNum = false;
-        }
+        that.showLogin1 = false;
+        that.showLogin2 = false;
+        that.showLogin3 = !that.showLogin3;
       },
       // 短信登录tab切换
       messageLog: function() {
@@ -541,6 +572,9 @@
         that.changeForget1 = false;
         that.changeForget2 = true;
         that.changeForget3 = false;
+        that.showLogin1 = false;
+        that.showLogin2 = true;
+        that.showLogin3 = false;
       },
       // 已有账号按钮
       fg_alrHave: function() {
@@ -548,6 +582,9 @@
         that.changeForget1 = true;
         that.changeForget2 = false;
         that.changeForget3 = false;
+        that.showLogin1 = true;
+        that.showLogin2 = false;
+        that.showLogin3 = false;
       },
       // 右上角注册按钮
       ms_register: function() {
@@ -555,6 +592,9 @@
         that.changeForget1 = false;
         that.changeForget2 = false;
         that.changeForget3 = true;
+        that.showLogin1 = false;
+        that.showLogin2 = false;
+        that.showLogin3 = true;
       },
       // 右上角登录按钮
       rg_logIn: function() {
@@ -562,6 +602,9 @@
         that.changeForget1 = true;
         that.changeForget2 = false;
         that.changeForget3 = false;
+        that.showLogin1 = true;
+        that.showLogin2 = false;
+        that.showLogin3 = false;
       },
       // 获取验证码
       hasYzm: function(ms_mobilephone) {
@@ -686,6 +729,7 @@
               message: '登录成功！',
               type: 'success'
             });
+            that.Gtoken = that.global.getToken();
             that.username = res.data.data.phone;
             that.hasLogin = false;
             that.changeForget1 = false;
@@ -695,20 +739,7 @@
             that.ms_yzm = '';
             return false
           } else {
-            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
-              that.$message.error('验证码错误或已失效！');
-
-              return false
-            } else {
-              that.$message.error('登录失败！');
-              // console.log(res);
-            }
-            if (res.data.errorCode === 'Username_NOT_Exist') {
-              that.$message.error('用户不存在！');
-              return false
-            } else {
-              that.$message.error('登录失败！');
-            }
+            that.$message.error(res.data.msg);
           }
         })
       },
@@ -740,6 +771,7 @@
               message: '登录成功！',
               type: 'success'
             });
+            that.Gtoken = that.global.getToken();
             that.username = res.data.data.phone;
             that.hasLogin = false;
             that.changeForget1 = false;
@@ -748,18 +780,7 @@
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
           } else {
-            if (res.data.errorCode === 'Password_error') {
-              that.$message.error('密码错误！');
-              return false
-            } else {
-              that.$message.error('登录失败！');
-            }
-            if (res.data.errorCode === 'Username_NOT_Exist') {
-              that.$message.error('用户不存在！');
-              return false
-            } else {
-              that.$message.error('登录失败！');
-            }
+            that.$message.error(res.data.msg);
           }
         })
       },
@@ -783,9 +804,12 @@
           that.fgConfirmPwd_alert = true;
           return false
         }
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(that.fg_pwd);
+        var str = md5sum.digest('hex');
         var obj = {
           phone: that.fg_mobilephone,
-          password: that.fg_pwd,
+          password: str,
           code: that.fg_code,
         }
         that.global.axiosPostReq('/user/forgetPwd', obj).then((res) => {
@@ -802,20 +826,11 @@
             that.fg_mobilephone = '';
             that.fg_pwd = '';
             that.fg_code = '';
+            that.fg_confirmPwd = '';
+            that.pwd_mobilephone = '';
+            that.pwd_pwd = '';
           } else {
-            console.log(res);
-            if (res.data.errorCode === 'Username_NOT_Exist') {
-              that.$message.error('用户不存在！');
-              return false
-            } else {
-              that.$message.error('重设密码失败');
-            }
-            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
-              that.$message.error('验证码错误或已失效！');
-              return false
-            } else {
-              that.$message.error('重设密码失败');
-            }
+            that.$message.error(res.data.msg);
           }
         })
       },
@@ -853,31 +868,33 @@
         }
         that.global.axiosPostReq('/user/register', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res, '1');
-            console.log(res.data, '2');
+            that.global.setToken(res.data.token)
+            that.global.setUser(res.data.data)
             that.$message({
               message: '注册成功！',
               type: 'success'
             });
-            that.changeForget1 = true;
+            that.Gtoken = that.global.getToken();
+            that.username = res.data.data.phone;
+            that.hasLogin = false;
+            that.changeForget1 = false;
             that.changeForget2 = false;
             that.changeForget3 = false;
+            that.pwd_mobilephone = '';
+            that.pwd_pwd = '';
             that.rg_mobilephone = '';
             that.rg_pwd = '';
             that.rg_code = '';
+            // that.changeForget1 = true;
+            // that.changeForget2 = false;
+            // that.changeForget3 = false;
+            // that.rg_mobilephone = '';
+            // that.rg_pwd = '';
+            // that.rg_code = '';
+            // that.pwd_mobilephone = '';
+            // that.pwd_pwd = '';
           } else {
-            if (res.data.errorCode === 'Username_Already_Exist') {
-              that.$message.error('用户已存在！');
-              return false
-            } else {
-              that.$message.error('注册失败！');
-            }
-            if (res.data.errorCode === 'Verify_Code_5min' || res.data.errorCode === 'Verify_Code_notExist') {
-              that.$message.error('验证码错误或已失效！');
-              return false
-            } else {
-              that.$message.error('注册失败！');
-            }
+            that.$message.error(res.data.msg);
           }
         })
       }
@@ -935,6 +952,7 @@
     margin-bottom: 22px;
     font-size: 14px;
     color: #000;
+    z-index: 1000;
   }
   .log {
     margin-left: 60px;
@@ -943,7 +961,7 @@
     margin-left: 60px;
   }
   .shopping_car {
-    width: 90px;
+    width: 80px;
     height: 26px;
     position: relative;
     cursor: pointer;
@@ -958,6 +976,10 @@
   }
   .shopping_car .car_num {
     color: #D81E06;
+  }
+  .gwcHeader {
+    margin-left: 30px;
+    width: 60px;
   }
   .logIn:hover, .register:hover, .my_order:hover{
     color: #5DB7E7;
@@ -993,7 +1015,23 @@
   .shopping_car:hover .car_hover{
     display: block;
   }
+  .shopping_car:hover .car_hover1{
+    display: block;
+  }
   .shopping_car .car_hover {
+    display: none;
+    width: 380px;
+    position: absolute;
+    top: 27px;
+    left: -1px;
+    border-left: 1px solid #e9e9e9;
+    border-right: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 999;
+  }
+  .shopping_car .car_hover1 {
     display: none;
     width: 380px;
     position: absolute;
@@ -1108,8 +1146,8 @@
   .ms_register:hover {
     color: #5DB7E7;
     cursor: pointer;
-    transition: all ease 0.5s;
-  }
+/*    transition: all ease 0.5s;
+*/  }
   .logIn_header {
     width: 100%;
     height: 36px;
@@ -1379,13 +1417,13 @@
     color: #5DB7E7;
     transition: all ease 0.5s;
   }
-  .logIn {
+  .rg_logIn {
     text-align: right;
   }
-  .logIn:hover {
+  .rg_logIn:hover {
     color: #5DB7E7;
     cursor: pointer;
-    transition: all ease 0.5s;
+/*    transition: all ease 0.5s;*/
   }
   .alreadyLog:hover {
     color: #5DB7E7;

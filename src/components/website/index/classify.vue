@@ -150,14 +150,14 @@
     min-height: 630px;
     position: absolute;
     top: 0;
-    z-index: 999;
+    z-index: 5;
     background: white;
   }
   .brandLib{
       width: 1200px;
       position: absolute;
       top: 0;
-      z-index: 999;
+      z-index: 5;
       background: white;
       margin: 30px auto;
       padding: 30px  0 0  0;

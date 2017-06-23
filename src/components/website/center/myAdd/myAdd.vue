@@ -179,14 +179,14 @@
       var obj = {
         token:that.global.getToken()
       };
-      // that.global.axiosGetReq('/userMyQb/query', obj)
-      // .then((res) => {
-      //   if (res.data.callStatus === 'SUCCEED') {
-      //     this.getData = res.data.data;
-      //   } else {
-      //     that.$message.error('网络出错，请稍后再试！');
-      //   }
-      // })
+      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj)
+      .then((res) => {
+        if (res.data.callStatus === 'SUCCEED') {
+          this.getData = res.data.data;
+        } else {
+          that.$message.error('网络出错，请稍后再试！');
+        }
+      })
     },
     methods: {
       //

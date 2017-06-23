@@ -10,7 +10,7 @@ import pay from '@/components/website/gwc/pay'
 
 //后台管理
 import Home from '@/components/admin/Home'
-import Dashboard from '@/components/admin/Dashboard'
+// import Dashboard from '@/components/admin/Dashboard'
 
 // import BookList from '@/components/admin/book/list'
 // import BookCategoryList from '@/components/admin/bookcategory/list'
@@ -116,13 +116,13 @@ let router = new Router({
       leaf: true, // 只有一个节点
       menuShow: true,
       iconCls: 'iconfont icon-home', // 图标样式class
-      children: [
-        {path: '/admin/dashboard', component: Dashboard, name: '首页', menuShow: true}
-      ]
+      // children: [
+      //   {path: '/admin/dashboard', component: Dashboard, name: '首页', menuShow: true}
+      // ]
     },
 
 		{
-      path: '/bsseInfoManner',
+      path: '/admin/bsseInfoManner/attr',
       component: Home,
       name: '商品基础资料管理',
       menuShow: true,

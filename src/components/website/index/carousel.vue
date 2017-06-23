@@ -3,13 +3,13 @@
     <div class="block">
       <el-carousel height="630px">
         <el-carousel-item>
-          <img src="../../../images/index/banner.png" alt="img">    
+          <img src="../../../images/index/banner.jpg" alt="img">    
         </el-carousel-item>
         <el-carousel-item>
-          <img src="../../../images/index/banner.png" alt="img">    
+          <img src="../../../images/index/banner.jpg" alt="img">    
         </el-carousel-item>
         <el-carousel-item>
-          <img src="../../../images/index/banner.png" alt="img">    
+          <img src="../../../images/index/banner.jpg" alt="img">    
         </el-carousel-item>
 <!--         <el-carousel-item v-for="item in items" :key=item>
           <img :src=item.picture alt="img">
