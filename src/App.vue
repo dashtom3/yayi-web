@@ -86,4 +86,11 @@ export default {
     animation-name: shake;
   }
   /*过渡动画结束*/
+  .img_box_change {
+    width: 152px;
+    margin: 0 auto;
+  }
+  .img_box_change:hover{
+    cursor: pointer;
+  }
 </style>

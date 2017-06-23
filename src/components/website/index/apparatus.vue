@@ -1,7 +1,10 @@
 <template>
   <div class="medical">
     <div class="preventive_box">
-      <img class="brand_img" src="../../../images/index/apparatus.png" alt="img">
+      <div class="img_box_change" @mouseover="img_in" @mouseout="img_out">
+        <img class="brand_img" v-if="img_change" src="../../../images/index/apparatus.png" alt="img">
+        <img class="brand_img" v-else src="../../../images/index/apparatus_c.png" alt="img">
+      </div>
       <div class="preventive_container">
         <div class="preventive_item" v-for="item in items" :key="item">
           <img class="item_img" src="" alt="img">
@@ -18,6 +21,7 @@ export default {
   name: 'medical',
   data () {
     return {
+      img_change: true,
       items: [{
         des: '商品描述商品描述商品描述商品描述商品描述商品描述',
         price: '24',
@@ -44,6 +48,16 @@ export default {
         price: '24',
       }],
     }
+  },
+  methods: {
+    img_in() {
+      var that = this;
+      that.img_change = false;
+    },
+    img_out() {
+      var that = this;
+      that.img_change = true;
+    },
   }
 }
 </script>

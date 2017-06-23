@@ -1,7 +1,10 @@
 <template>
   <div class="brand">
     <div class="brand_box">
-      <img class="brand_img" src="../../../images/index/brand.png" alt="img">
+      <div class="img_box_change" @mouseover="img_in" @mouseout="img_out">
+        <img class="brand_img" v-if="img_change" src="../../../images/index/brand.png" alt="img">
+        <img class="brand_img" v-else src="../../../images/index/brand_c.png" alt="img">
+      </div>
       <div class="prev" @click="prev()">
         <img src="../../../images/index/prev.png" alt="img">
       </div>
@@ -47,6 +50,7 @@
     name: 'brand',
     data () {
       return {
+        img_change: true,
       }
     },
     methods: {
@@ -57,6 +61,14 @@
       next() {
         var that = this;
         that.$refs.carousel.next();
+      },
+      img_in() {
+        var that = this;
+        that.img_change = false;
+      },
+      img_out() {
+        var that = this;
+        that.img_change = true;
       },
     }
   }

@@ -24,8 +24,8 @@
               <div class="cargo_rm">删除</div>
             </div>
             <div class="total_box">
-              <p class="fir left">共<span style="color: #D81E06;">3</span>件商品</p>
-              <p class="sec left">总计: <span style="color: #D81E06;">￥3267</span></p>
+              <p class="fir left">共<span style="color: #D81E06;">{{total_num}}</span>件商品</p>
+              <p class="sec left">总计: <span style="color: #D81E06;">￥{{total_price}}</span></p>
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
           </div>
@@ -278,6 +278,8 @@
         isActive: false,
         line: false,
         Gtoken: null,
+        total_num: 0,
+        total_price: 0,
       }
     },
     //*******导航钩子*********//
@@ -466,9 +468,17 @@
               return false
             }
             if (res.data.data.length !== 0) {
+              var sum = 0;
+              var sumPrice = 0;
               that.cargo_show = true;
               that.items = res.data.data;
               that.car_num = res.data.data.length;
+              for (var i = 0; i < that.items.length; i++) {
+                sum += that.items[i].num
+                sumPrice += that.items[i].num*that.items[i].price
+              }
+              that.total_num = sum;
+              that.total_price = sumPrice;
               console.log(res.data.data);
               return false
             }
@@ -508,6 +518,9 @@
         }
         that.global.axiosPostReq('/user/reLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
+              that.$router.push({ path: '/'})
+            }
             console.log(res);
             that.global.removeMsg()
             that.$message({
@@ -816,19 +829,22 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res, '1');
             console.log(res.data, '2');
-            that.$message({
-              message: '重设密码成功！',
-              type: 'success'
-            });
             that.changeForget1 = true;
             that.changeForget2 = false;
             that.changeForget3 = false;
+            that.showLogin1 = true;
+            that.showLogin2 = false;
+            that.showLogin3 = false;
             that.fg_mobilephone = '';
             that.fg_pwd = '';
             that.fg_code = '';
             that.fg_confirmPwd = '';
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
+            that.$message({
+              message: '重设密码成功！',
+              type: 'success'
+            });
           } else {
             that.$message.error(res.data.msg);
           }
@@ -885,14 +901,8 @@
             that.rg_mobilephone = '';
             that.rg_pwd = '';
             that.rg_code = '';
-            // that.changeForget1 = true;
-            // that.changeForget2 = false;
-            // that.changeForget3 = false;
-            // that.rg_mobilephone = '';
-            // that.rg_pwd = '';
-            // that.rg_code = '';
-            // that.pwd_mobilephone = '';
-            // that.pwd_pwd = '';
+            that.rg_confirmPwd = '';
+            that.agree = false;
           } else {
             that.$message.error(res.data.msg);
           }
@@ -998,8 +1008,8 @@
     display: none;
     position: absolute;
     top: 26px;
-    left: 101px;
-    width: 320px;
+    left: 90px;
+    width: 298px;
     height: 1px;
     background-color: #e9e9e9;
     z-index: 9999;
@@ -1020,7 +1030,7 @@
   }
   .shopping_car .car_hover {
     display: none;
-    width: 380px;
+    width: 347px;
     position: absolute;
     top: 27px;
     left: -1px;
@@ -1033,7 +1043,7 @@
   }
   .shopping_car .car_hover1 {
     display: none;
-    width: 380px;
+    width: 347px;
     position: absolute;
     text-align: center;
     top: 27px;
@@ -1049,12 +1059,12 @@
     font-size: 14px;
     font-weight: bold;
     color: #000;
-    margin-top: 12px;
+/*    margin-top: 12px;*/
   }
   .cargo_box {
-    width: 380px;
+    width: 347px;
     height: 70px;
-    margin-top: 20px;
+    margin-top: 12px;
     position: relative;
     border-bottom: 1px solid #e9e9e9;
   }
