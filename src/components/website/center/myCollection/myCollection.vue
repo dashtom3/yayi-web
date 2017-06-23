@@ -11,21 +11,21 @@
       <div v-if="allGoods.length<=0" class="nogood">
         <img src="../../../../images/center/nogoods.png" alt="">
       </div>
-      <div  v-else class="goodDetail">
+      <div v-else class="goodDetail">
         <ul>
           <li v-for="(good,index) in allGoods">
             <i class="el-icon-delete2 myDele" @click="deleOneCollect(index)"></i>
             <img class="gold" v-if="good.ifGold" src="../../../../images/center/glod.png" alt="">
             <div class="imgwrap">
-              <img src="../../../../images/center/goods.png" alt="">
+              <img :src="good.item_pica" >
               <span></span>
             </div>
             <div class="title">
-              {{good.goodTitle}}
+              {{good.item_name}}
             </div>
             <div class="goodFooter">
-              <span class="colorRed">￥{{good.goodPrice}}</span>
-              <img src="../../../../images/center/gwc.png" alt="">
+              <span class="colorRed">￥{{good.item_price}}</span>
+              <!-- <img src="../../../../images/center/gwc.png" alt=""> -->
             </div>
           </li>
           <div style="clear:both"></div>
@@ -40,27 +40,13 @@
     data () {
       return {
         allGoods:[
-          {goodImg:"../../../../images/center/goods.png",goodTitle:"商品111111111111113333333333333333333111111111商品111111111111113333333333333333333111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false}
+          {item_pica:"../../../../images/center/goods.png",item_name:"商品11111111111111333333333333311111113333333333333333333111111111",item_price:23,ifGold:false},
         ]
       }
     },
     created:function(){
       this.getMyCollection();
+      console.log(".....")
     },
     methods: {
       getMyCollection:function(){
@@ -71,11 +57,12 @@
         };
         that.global.axiosPostReq('/mystar/shows', obj).then((res) => {
           console.log(res)
-          // if (res.data.callStatus === 'SUCCEED') {
-          //
-          // } else {
-          //   that.$message.error('网络出错，请稍后再试！');
-          // }
+          if (res.data.callStatus === 'SUCCEED') {
+            // this.allGoods = res.data.data;
+
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
         })
       },
       deleOneCollect:function(index){

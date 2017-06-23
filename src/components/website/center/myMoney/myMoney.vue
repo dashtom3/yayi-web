@@ -3,7 +3,7 @@
     <div class="moneyHaed">
       <span>当前乾币：{{myAllMoney.currentMoney}}</span>
     </div>
-    <el-table  :data="myAllMoney.details"  border  style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8">
+    <el-table  :data="myAllMoney.details"  border  style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8;">
     <el-table-column  label="收入"  width="142"  align="center">
       <template scope="scope">
         <span class="colorRed">{{scope.row.qbRget}}</span>
@@ -17,7 +17,7 @@
     <el-table-column  prop="remark"  label="描述"  width="610"  align="center"></el-table-column>
     <el-table-column  prop="qbTime"  label="时间"  align="center"></el-table-column>
   </el-table>
-  <div class="fenyeWrap">
+  <div class="fenyeWrap" v-if="childConfig.pageNum>1">
     <paging0 :childmsg="childConfig" v-on:childSay="msgFromChlid"></paging0>
   </div>
   </div>
@@ -31,11 +31,11 @@
     data () {
       return {
         childConfig:{
-          pageNum:2
+          pageNum:null
         },
         getData:[],
         currentPage:1,
-        everyPageShowNum:5,
+        everyPageShowNum:8,
         myAllMoney:{
           currentMoney:0,
           details:[]
@@ -60,6 +60,7 @@
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.getData = res.data.data;
+            this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
