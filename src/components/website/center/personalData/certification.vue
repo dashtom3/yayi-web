@@ -4,30 +4,18 @@
       <el-form ref="userData" :model="userData" label-width="250px">
         <el-form-item label="类型：">
           <el-select v-model="userData.type" placeholder="" :change="adsf(userData.type)">
-            <el-option label="个人" value="个人"></el-option>
-            <el-option label="企业" value="企业"></el-option>
+            <el-option label="个人" value="1"></el-option>
+            <el-option label="企业" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单位名称：">
-          <el-input v-model="userData.compony"></el-input>
+          <el-input v-model="userData.companyName"></el-input>
         </el-form-item>
         <el-form-item label="单位所在地：">
-          <!-- <el-select v-model="userData.type" placeholder="请选择省份">
-            <el-option label="个人" value="shanghai"></el-option>
-            <el-option label="企业" value="beijing"></el-option>
-          </el-select>
-          <el-select v-model="userData.type" placeholder="请选择市">
-            <el-option label="个人" value="shanghai"></el-option>
-            <el-option label="企业" value="beijing"></el-option>
-          </el-select>
-          <el-select v-model="userData.type" placeholder="请选择区">
-            <el-option label="个人" value="shanghai"></el-option>
-            <el-option label="企业" value="beijing"></el-option>
-          </el-select> -->
-          <selectThree></selectThree>
+          <selectThree :selectedOptions3="userData.part"></selectThree>
         </el-form-item>
         <el-form-item label="详细地址：">
-          <el-input v-model="userData.detailPlace"></el-input>
+          <el-input v-model="userData.workAddress"></el-input>
         </el-form-item>
         <el-form-item :label="sczgz">
           <el-upload
@@ -40,7 +28,7 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <el-form-item>
-          <el-button type="primary">保存</el-button>
+          <el-button type="primary" @click="savePerInfo">保存</el-button>
         </el-form-item>
         </el-form-item>
       </el-form>
@@ -49,6 +37,7 @@
 </template>
 
 <script>
+  import global from '../../../global/global'
   import selectThree from "../../details/selectThree"
   export default {
     name: 'certification',
@@ -57,17 +46,10 @@
         // 1,ing-----2,false
         certificateState:0,
         sczgz:"口腔执业医师资格证：",
-        imageUrl: '',
-        userData:{
-          place:"",
-          type:"个人",
-          compony:"",
-          detailPlace:"",
-          zgz:null,
-        }
+        imageUrl: ''
       }
     },
-    props:["state"],
+    props:["state","userData"],
     components:{
       selectThree
     },
@@ -79,6 +61,35 @@
       }
     },
     methods:{
+      //编辑个人信息
+      savePerInfo(){
+        var params = {
+          phone: global.getUser().phone,
+          token: global.getToken(),
+          trueName: this.userData.trueName,
+          sex: this.userData.sex,
+          birthday: this.userData.birthday,
+          qq: this.userData.qq,
+          userPic: '',
+          type: this.userData.type,
+          companyName: this.userData.companyName,
+          part: this.userData.part,
+          workAddress: this.userData.workAddress,
+          doctorPic: this.userData.imageUrl
+        }
+        console.log(1,this.userData.imageUrl);
+        //保存个人信息
+        global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.$message({
+              message: '个人信息修改成功！',
+              type: 'success'
+            });
+          }else{
+            this.$message.error('个人信息修改失败！');
+          }
+        })
+      },
       adsf:function(aa){
         if(aa=="个人"){
           this.sczgz = "口腔执业医师资格证：";

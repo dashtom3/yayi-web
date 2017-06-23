@@ -8,8 +8,8 @@
 
       </div>
     </div>
-    <personalData v-show="1==currentTabs"></personalData>
-    <certification v-bind:state="currentTabs" v-show="2==currentTabs"></certification>
+    <personalData :userData="personInfo" v-show="1==currentTabs"></personalData>
+    <certification :userData="personInfo" v-bind:state="currentTabs" v-show="2==currentTabs"></certification>
     <bindSale v-show="3==currentTabs"></bindSale>
   </div>
 </template>
@@ -18,12 +18,18 @@
   import personalData from "./personalData"
   import certification from "./certification"
   import bindSale from "./bindSale"
+  import global from '../../../global/global'
+  import util from '../../../../common/util'
   export default {
     name: 'personal',
     data () {
       return {
-        currentTabs:1
+        currentTabs:1,
+        personInfo: {}
       }
+    },
+    created(){
+      this.init();
     },
     components:{
       personalData,
@@ -33,6 +39,23 @@
     methods:{
       changeTabs:function(index){
         this.currentTabs = index;
+      },
+      init(){
+        var obj = {
+          phone: global.getUser().phone,
+          token: global.getToken()
+        }
+        //查询个人信息
+        global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.personInfo = res.data.data;
+            this.personInfo.birthday = util.formatDate.format(new Date(res.data.data.birthday));
+            this.personInfo.sex = res.data.data.sex.toString();
+            this.personInfo.type = res.data.data.type.toString();
+          }else{
+            this.$message.error('个人信息查询失败！');
+          }
+        })
       }
     }
   }

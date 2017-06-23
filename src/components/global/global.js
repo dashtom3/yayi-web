@@ -68,7 +68,10 @@ export default {
   axiosGetReq (url, getParamsObj) {
     return axios.get(this.baseUrl + url ,{params:getParamsObj})
   },
+  axiosGetQiNiuReq (url, getParamsObj) {
+    return axios.get(this.qiniuShUrl + url ,{params:getParamsObj})
+  },
   getQiNiuToken () {
-    return this.axiosGetReq('qiniu/getQiNiuToken')
+    return this.axiosGetQiNiuReq('qiniu/getQiNiuToken')
   }
 }

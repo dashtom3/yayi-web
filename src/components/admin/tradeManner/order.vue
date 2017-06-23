@@ -265,7 +265,7 @@
               <td>退回的乾币数</td>
               <td>扣除的乾币数</td>
             </tr>
-            <tr v-for="item in orderInfo.goodsInfo" style="height:46px;">
+            <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index" style="height:46px;">
               <td>
                 <template>
                   <el-checkbox v-model="item.checked" size="small"></el-checkbox>
@@ -273,16 +273,16 @@
               </td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>
-                <div v-show="item.goodsNum !== 0">
-                  <i class="icon_i_l" @click="item.count -= 1" v-if="item.count > 0">-</i>
-                  <el-input v-model="item.count" style="width:88px;"></el-input>
-                  <i class="icon_i_r" @click="item.count += 1" v-if="item.count < item.goodsNum">+</i>
+              <td style="width:200px;position:relative;">
+                <div v-show="item.goodsNum" style="position:absolute;top:4px;">
+                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" @click="reduceCount(index)">-</i>
+                  <el-input v-model="item.count" style="width:88px;position:absolute;left:60px;"></el-input>
+                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" @click="addCount(index)">+</i>
                 </div>
               </td>
-              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{item.count * item.price}}</i></td>
-              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
-              <td><i class="i_col_red" v-show="item.goodsNum !== 0">{{orderInfo.deductible}}</i></td>
+              <td><i class="i_col_red" v-show="item.goodsNum">{{item.count * item.price}}</i></td>
+              <td><i class="i_col_red" v-show="item.goodsNum">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
+              <td><i class="i_col_red" v-show="item.goodsNum">{{orderInfo.deductible}}</i></td> 
             </tr>
           </table>
           <div class="btn_box">
@@ -478,7 +478,19 @@
       //仓库发货
       handleDelivery(index, row) {
         this.deliveryVisible = true;
+      },
+      reduceCount(index){
+        if(this.orderInfo.goodsInfo[index].count !== 1){
+          this.orderInfo.goodsInfo[index].count -= 1;
+        }
+      },
+      addCount(index){
+        console.log(this.orderInfo.goodsInfo[index].count);
+        if(this.orderInfo.goodsInfo[index].count < this.orderInfo.goodsInfo[index].goodsNum){
+          this.orderInfo.goodsInfo[index].count += 1;
+        }
       }
+
     }
   }
 </script>
