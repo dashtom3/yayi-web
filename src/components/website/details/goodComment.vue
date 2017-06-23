@@ -1,16 +1,16 @@
 <template>
   <div class="goodComment">
     <ul>
-      <li v-for="comment in allComments">
+      <li v-for="comment in comments">
         <div >
-          <span class="name">{{comment.name}}</span>
+          <span class="name">{{comment.userName}}</span>
           <span class="phone">{{comment.phone}}</span>
-          <score :thisscore="comment.score"></score>
+          <score :thisscore="comment.commentGrade"></score>
           <span class="time">{{comment.time}}</span>
         </div>
-        <div class="commentContents">测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论测试评论</div>
+        <div class="commentContents">{{comment.commentContent}}</div>
         <div class="commentReplay">
-          这是回复这是回复
+          {{comment.replyContent}}
         </div>
       </li>
     </ul>
@@ -38,8 +38,9 @@ import global from '../../global/global'
     components:{
       score
     },
-    mounted:function(){
-      
+    props:["comments"],
+    created:function(){
+      console.log(this.comments,111111111111)
     }
   }
 </script>

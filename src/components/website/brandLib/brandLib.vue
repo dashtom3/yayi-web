@@ -29,19 +29,19 @@
         <span>品牌：</span>
         <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn">不限</span>
         <ul>
-          <li v-bind:class="{selectedClassfy:item.selected}" v-on:click="selectBrand(index)" v-for="(item,index) in brands">
-            {{item.brandNmae}}
+          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item.itemBrandId)" v-for="(item,index) in brands">
+            {{item.itemBrandLogo}}
             <img v-show="item.selected" src="../../../images/brandLib/1.png" alt="">
             <img v-show="!item.selected" src="../../../images/brandLib/2.png" alt="">
           </li>
         </ul>
       </div>
-      <div class="selectedBrand" v-show="haveSelectedBrands.length>0">
+      <!-- <div class="selectedBrand" v-show="haveSelectedBrands.length>0">
         <span v-show="haveSelectedBrands.length>0" style="float:left">已选品牌：</span>
         <ul>
           <li v-show="haveSelectedBrands.length>0"  v-for="(item,index) in haveSelectedBrands">{{item}}</li>
         </ul>
-      </div>
+      </div> -->
       <div class="orderSelect">
         <ul>
           <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}">
@@ -51,23 +51,23 @@
             <img v-if="index!=0&&index!=5" v-show="!item.orderSort" src="../../../images/brandLib/7.png" alt="">
           </li>
         </ul>
-        <div class="checkBox">
+        <!-- <div class="checkBox">
           <checkBox v-on:childsay="listenToMyBoy"></checkBox>
-        </div>
+        </div> -->
       </div>
 
       <div class="allGoods">
         <ul>
-          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index)">
+          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
             <!-- <router-link to="/details/index"> -->
             <!-- <img  class="ifGold" v-if="item.ifGold" src="../../../images/brandLib/3.png" alt=""> -->
             <div class="imgWrap">
-              <img class="goodImg" src="../../../images/brandLib/4.png" alt="">
+              <img class="goodImg" :src="item.itemDetail" alt="">
               <span></span>
             </div>
-            <p class="goodTitle">{{item.goodTitle}}</p>
+            <p class="goodTitle">{{item.itemName}}</p>
             <div class="goodBottom">
-              <span>￥{{item.goodPrice}}</span>
+              <span>￥{{item.itemPrice}}</span>
               <span><img src="../../../images/brandLib/5.png" alt="购物车"></span>
             </div>
             <!-- </router-link> -->
@@ -93,6 +93,7 @@
     name: 'brandLib',
     data () {
       return {
+        selectThisBrand:null,
         noLimitClassfy:true,
         brandNoLimit:true,
         selectedTwo:0,
@@ -137,45 +138,10 @@
         ],
         // brandClassfy:["不限","口腔护理","口腔材料","医用耗材","预备切莫","器械","仪器"],
         brands:[
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌22",selected:false},
-          {brandNmae:"品3333",selected:false},
-          {brandNmae:"品牌44",selected:false},
-          {brandNmae:"品牌55",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},{brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},{brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},{brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
-          {brandNmae:"品牌11",selected:false},
           {brandNmae:"品牌11",selected:false}
         ],
         allGoods:[
-          {goodImg:"./img/4.png",goodTitle:"商品111111111111113333333333333333333111111111商品111111111111113333333333333333333111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:true},
-          {goodImg:"./img/4.png",goodTitle:"商品11111111111111111111111",goodPrice:23,ifGold:false}
+          // {goodImg:"./img/4.png",goodTitle:"商品111111111111113333333333333333333111111111商品111111111111113333333333333333333111111111",goodPrice:23,ifGold:false},
         ]
       }
     },
@@ -186,7 +152,8 @@
       checkBox,
       paging0
     },
-    mounted: function() {
+    created: function() {
+      this.getAllBrandList();
 
     },
     watch:{
@@ -196,13 +163,52 @@
         }else{
           this.brandNoLimit = true;
         }
-      }
+      },
+      // brands:{
+      //   handler:function(){
+      //     for(let i in this.brands){
+      //       this.brands[i].selected = false;
+      //     }
+      //   },
+      //   deep:true
+      // }
     },
     methods: {
-      goToThisDetail:function(id){
-        // this.$router.push({
-        //   path:"/details/"+id,
-        // });
+      getOneBrandGoodsList:function(bradnId){
+        var that = this;
+        var obj = {
+          itemBrandId:bradnId
+        };
+        that.global.axiosGetReq('/item/brandItemList',obj)
+        .then((res) => {
+          console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            this.allGoods = res.data.data;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getAllBrandList:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/brandList')
+        .then((res) => {
+          // console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            this.brands = res.data.data;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      goToThisDetail:function(index,id){
+        // console.log(id)
+        this.$router.push({
+          path:"/details/"+id,
+
+        });
       },
       selectClassfy:function(index){
         this.classifyIndex=index;
@@ -214,18 +220,21 @@
         this.selectedTwo = index;
         this.noLimitClassfy = false;
       },
-      selectBrand:function(index){
-        this.brands[index].selected = !this.brands[index].selected;
-        if(this.brands[index].selected){
-          this.haveSelectedBrands.push(this.brands[index].brandNmae);
-        }else{
-          var nowstr = event.target.innerText.trim();
-          for(var  i = 0;i < this.haveSelectedBrands.length;i++ ){
-            if(nowstr==this.haveSelectedBrands[i]){
-              this.haveSelectedBrands.splice(i,1);
-            }
-          }
-        }
+      selectBrand:function(index,id){
+        // console.log(id)
+        // this.brands[index].selected = !this.brands[index].selected;
+        // if(this.brands[index].selected){
+        //   this.haveSelectedBrands.push(this.brands[index].brandNmae);
+        // }else{
+        //   var nowstr = event.target.innerText.trim();
+        //   for(var  i = 0;i < this.haveSelectedBrands.length;i++ ){
+        //     if(nowstr==this.haveSelectedBrands[i]){
+        //       this.haveSelectedBrands.splice(i,1);
+        //     }
+        //   }
+        // }
+        this.selectThisBrand = index;
+        this.getOneBrandGoodsList(id);
       },
       sureOrderStyle:function(index){
         this.orderState = index;

@@ -2,22 +2,22 @@
   <div class="goodIntroduce">
     <div>
       <span>品名：康特/COLTENE（金霸王）金刚砂车针5*1</span>
-      <span>单位：板</span>
+      <span>单位：{{instruction.unit}}</span>
       <span>品牌：AQUAPICK</span>
     </div>
     <div>
-      <span>注册证号：国食药监械（进）字2014第2550132号</span>
-      <span>产品包装：5根/板</span>
+      <span>注册证号：{{instruction.registerId}}</span>
+      <span>产品包装：{{instruction.itemPacking}}</span>
       <span>医械类别：</span>
     </div>
     <div>
-      <span>注册证有效期/备案日期：</span>
-      <span>商家货号：73610001</span>
-      <span>其他：</span>
+      <span>注册证有效期/备案日期：{{instruction.registerDate}}</span>
+      <span>商家货号：{{instruction.storeItemId}}</span>
+      <span>其他：{{instruction.remark}}</span>
     </div>
     <div>
-      <span>使用范围：强劲的脉冲水流，可以毫无障碍的清洁牙</span>
-      <span>生产企业名称：马尼株式会社</span>
+      <span>使用范围：{{instruction.itemRange}}</span>
+      <span>生产企业名称：{{instruction.producePompany}}</span>
     </div>
   </div>
 </template>
@@ -28,9 +28,9 @@
     name: 'goodIntroduce',
     data () {
       return {
-
       }
-    }
+    },
+    props:["instruction"]
   }
 </script>
 

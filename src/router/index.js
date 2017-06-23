@@ -78,7 +78,7 @@ let router = new Router({
 		component: center,
 	},
 	{
-		path: '/details',
+		path: '/details/:goodId',
 		name: 'details',
 		component: details,
 	},

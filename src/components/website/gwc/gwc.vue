@@ -29,11 +29,11 @@
           </div>
         </div>
         <div class="goodInfo">
-          <span>{{good.goodTitle}}</span>
+          <span>{{good.name}}</span>
           <span>{{good.goodColor}}</span>
         </div>
         <div class="onePrice">
-          <span>￥{{good.goodPrice}}</span>
+          <span>￥{{good.price}}</span>
         </div>
         <div class="jisuanqi">
           <div class="" :class="{thismargin:good.goodSureNum<good.goodLeaveNum}">
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="thisPrice">
-            ￥{{good.goodPrice*good.goodSureNum}}
+            ￥{{good.price*good.goodSureNum}}
         </div>
         <div class="operas">
           <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index)">收藏</span>
@@ -92,50 +92,50 @@
         selectaLL:false,
         gwcGoods:[
           {
-            goodImg:"1.png",
-            goodTitle:"测试标配提测试标配提测试标配提测试标配提",
+            pic:"1.png",
+            name:"测试标配提测试标配提测试标配提测试标配提",
             goodColor:"红色红色",
-            goodPrice:10,
+            price:10,
             goodSureNum:1,
             goodLeaveNum:8,
             checked:false,
             totalMoney:20
           },
           {
-            goodImg:"1.png",
-            goodTitle:"测试标配提测试标配提测试标配提测试标配提",
+            pic:"1.png",
+            name:"测试标配提测试标配提测试标配提测试标配提",
             goodColor:"红色红色",
-            goodPrice:20,
+            price:20,
             goodSureNum:1,
             goodLeaveNum:200,
             checked:false,
             totalMoney:20
           },
           {
-            goodImg:"1.png",
-            goodTitle:"测试标配提测试标配提测试标配提测试标配提",
+            pic:"1.png",
+            name:"测试标配提测试标配提测试标配提测试标配提",
             goodColor:"红色红色",
-            goodPrice:30,
+            price:30,
             goodSureNum:1,
             goodLeaveNum:200,
             checked:false,
             totalMoney:20
           },
           {
-            goodImg:"1.png",
-            goodTitle:"测试标配提测试标配提测试标配提测试标配提",
+            pic:"1.png",
+            name:"测试标配提测试标配提测试标配提测试标配提",
             goodColor:"红色红色",
-            goodPrice:40,
+            price:40,
             goodSureNum:1,
             goodLeaveNum:200,
             checked:false,
             totalMoney:20
           },
           {
-            goodImg:"1.png",
-            goodTitle:"测试标配提测试标配提测试标配提测试标配提",
+            pic:"1.png",
+            name:"测试标配提测试标配提测试标配提测试标配提",
             goodColor:"红色红色",
-            goodPrice:50,
+            price:50,
             goodSureNum:1,
             checked:false,
             goodLeaveNum:200,
@@ -167,7 +167,7 @@
           this.haveSelectedGoodNum = 0;
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
-              this.allMoeny+=this.gwcGoods[a].goodPrice*this.gwcGoods[a].goodSureNum;
+              this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].goodSureNum;
               this.haveSelectedGoodNum+= this.gwcGoods[a].goodSureNum;
             }else{
               this.selectaLL = false;
@@ -177,7 +177,28 @@
         deep:true
       }
     },
+
+    created:function(){
+      this.getGwcList();
+    },
     methods: {
+      getGwcList:function(){
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/cart/list', obj)
+        .then((res) => {
+          console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            // this.getData = res.data.data;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       goToSuborder:function(){
       this.$router.push({path: '/suborder'})
       },
@@ -259,16 +280,26 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.gwcGoods.splice(index,1);
-          this.$message({
-            type: 'success',
-            message: '商品收藏成功!'
-          });
+          var that = this;
+          var obj = {
+            phone:that.global.getUser().phone,
+            itemId:"",
+            token:that.global.getToken()
+          };
+          that.global.axiosPostReq('/cart/star', obj)
+          .then((res) => {
+            console.log(res)
+            if (res.data.callStatus === 'SUCCEED') {
+              // this.getData = res.data.data;
+              // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+              this.gwcGoods.splice(index,1);
+              this.$message({type: 'success',  message: '商品收藏成功!' });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
+          this.$message({  type: 'info',  message: '已取消'});
         });
       },
       deleteOne:function(index){
@@ -277,19 +308,29 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.gwcGoods.splice(index,1);
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          var that = this;
+          var obj = {
+            phone:that.global.getUser().phone,
+            itemId:"",
+            token:that.global.getToken()
+          };
+          that.global.axiosPostReq('/cart/star', obj)
+          .then((res) => {
+            console.log(res)
+            if (res.data.callStatus === 'SUCCEED') {
+              // this.getData = res.data.data;
+              // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+              this.gwcGoods.splice(index,1);
+              this.$message({  type: 'success',  message: '删除成功!'});
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          this.$message({  type: 'info',message: '已取消删除'});
         });
-      }
+      })
     }
+  }
   }
 </script>
 

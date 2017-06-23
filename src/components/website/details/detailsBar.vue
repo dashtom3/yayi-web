@@ -13,13 +13,34 @@
     data () {
       return {
         has:null,
-        fenlei:["首页","预防护理","义齿用品","咬合纸","爱丽丝 标准直丝带环(4*1)"]
+        fenlei:[]
       }
     },
-    mounted: function() {
-
+    created: function() {
+      this.getNowGoodDetail();
     },
     methods: {
+      getNowGoodDetail:function(){
+        var that = this;
+        var obj = {
+          itemId:that.$route.params.goodId
+        };
+        that.global.axiosGetReq('/item/itemDetailDes',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
+            var arr = [];
+            arr[0] ="首页";
+            arr[1] = res.data.data.oneClassify;
+            arr[2] = res.data.data.twoClassify;
+            arr[3] = res.data.data.threeClassify;
+            arr[4] = res.data.data.itemName;
+            this.fenlei = arr;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       hover:function(indexs){
         this.has = indexs;
       },
