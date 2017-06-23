@@ -50,8 +50,9 @@
           if (res.data.callStatus === 'SUCCEED') { 
             this.personInfo = res.data.data;
             this.personInfo.birthday = util.formatDate.format(new Date(res.data.data.birthday));
-            this.personInfo.sex = res.data.data.sex.toString();
-            this.personInfo.type = res.data.data.type.toString();
+            this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString();
+            this.personInfo.type = res.data.data.sex && res.data.data.type.toString();
+            this.personInfo.part = res.data.data.part && res.data.data.part.split(",");
           }else{
             this.$message.error('个人信息查询失败！');
           }

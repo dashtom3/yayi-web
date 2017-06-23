@@ -3627,11 +3627,14 @@ export default {
       ],
     }
   },
+  props: ['selected'],
   watch: {
     selectedOptions3: function() {
       var that = this;
-      //console.log(that.selectedOptions3);
       that.$emit('listenToChild',that.selectedOptions3);
+    },
+    selected: function(){
+      this.selectedOptions3 = this.selected;
     }
   },
   methods:{

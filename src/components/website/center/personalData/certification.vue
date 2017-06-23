@@ -12,7 +12,7 @@
           <el-input v-model="userData.companyName"></el-input>
         </el-form-item>
         <el-form-item label="单位所在地：">
-          <selectThree :selectedOptions3="userData.part"></selectThree>
+          <selectThree @listenToChild="showFromChild" :selected="userData.part"></selectThree>
         </el-form-item>
         <el-form-item label="详细地址：">
           <el-input v-model="userData.workAddress"></el-input>
@@ -77,7 +77,6 @@
           workAddress: this.userData.workAddress,
           doctorPic: this.userData.imageUrl
         }
-        console.log(1,this.userData.imageUrl);
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -89,6 +88,9 @@
             this.$message.error('个人信息修改失败！');
           }
         })
+      },
+      showFromChild(data){
+        this.userData.part =  data;
       },
       adsf:function(aa){
         if(aa=="个人"){

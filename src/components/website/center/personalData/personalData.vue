@@ -8,10 +8,13 @@
       <div class="mainContent">
         <el-form ref="userData" :model="userData" label-width="90px">
           <el-form-item label="用户名：">
-            <el-input :disabled="true"  v-model="userData.phone"></el-input>
+            <el-input :disabled="true" v-model="userData.phone"></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
             <el-input v-model="userData.trueName"></el-input>
+            <transition name="shake">
+              <p v-show="trueName_validate" class="error">请输入真实的姓名</p>
+            </transition>
           </el-form-item>
           <el-form-item label="性别：">
             <el-radio-group v-model="userData.sex">
@@ -41,7 +44,8 @@
     data () {
       return {
         currentTabs:1,
-        qiNiuToken: ''
+        qiNiuToken: '',
+        trueName_validate: false
       }
     },
     props: ["userData"],
@@ -74,6 +78,14 @@
           reader.readAsDataURL(file);
       };
     },
+    watch: {
+      userData: function(){
+        var that = this;
+        if(that.userData.trueName !== ''){
+          that.trueName_validate = false;
+        }
+      }
+    },
     methods: {
       //编辑个人信息
       savePerInfo(){
@@ -91,6 +103,11 @@
           workAddress: '',
           doctorPic: ''
         }
+        //验证表单
+        if(this.userData.trueName == ''){
+          this.trueName_validate = true;
+          return false;
+        }
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -98,6 +115,7 @@
               message: '个人信息修改成功！',
               type: 'success'
             });
+            this.trueName_validate = false;
           }else{
             this.$message.error('个人信息修改失败！');
           }
@@ -125,6 +143,12 @@ border-radius: 3px;
   margin-bottom: 53px;
   text-align: center;
   position: relative;
+}
+.error {
+  position: absolute;
+  left: 20px;
+  font-size: 14px;
+  color: #D81E06;
 }
 
 </style>

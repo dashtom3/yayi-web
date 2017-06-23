@@ -125,9 +125,6 @@
 </script>
 
 <style scoped>
-	.el-table th>.cell{
-		text-align: center;
-	}
 	.fl{
 		float:left;
 	}
