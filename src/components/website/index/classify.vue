@@ -29,45 +29,12 @@
       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
       <img v-else src="../../../images/index/down.png" alt="img">
       <div class="brandLib" v-show="!change2" >
-        <div class="imgWrap" v-on:click="goToBrandLib()">
-          <img src="../../../images/index/sfdadf.png" alt="">
+        <div class="imgWrap" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
+          <img :src="oneBrand.itemBrandLogo" alt="img">
           <div class=""></div>
         </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-        <div class="imgWrap">
-          <img src="" alt="">
-          <div class=""></div>
-        </div>
-      </div>
     </div>
-
+  </div>
   </div>
 </template>
 
@@ -76,6 +43,7 @@
     name: 'classify',
     data () {
       return {
+        brandListData:null,
         defaultOne:0,
         change1: true,
         change2: true,
@@ -109,7 +77,29 @@
         ]
       }
     },
+    created:function(){
+      var that = this;
+      that.getAllBrandList();
+    },
     methods: {
+      goToThisBrand:function(id){
+        var that = this;
+        that.$router.push({
+          path:"/brandLib/1AND"+id,
+        });
+      },
+        getAllBrandList:function(){
+          var that = this;
+          that.global.axiosGetReq('/item/brandList')
+          .then((res) => {
+            console.log(res.data.data)
+            if (res.data.callStatus === 'SUCCEED') {
+              that.brandListData = res.data.data;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        },
       cargo() {
         var that = this;
         that.change1 = false;
@@ -152,6 +142,7 @@
     top: 0;
     z-index: 5;
     background: white;
+    box-shadow: 0 0 5px #e1e1e1;
   }
   .brandLib{
       width: 1200px;
@@ -163,8 +154,9 @@
       padding: 30px  0 0  0;
       min-height: 600px;
       left: 0;
-      border: 1px solid #cccccc;
-      border-top: none;
+      /*border: 1px solid #cccccc;*/
+      /*border-top: none;*/
+      box-shadow: 0 0 5px #e1e1e1;
   }
   .brandLib .imgWrap img{
     max-width: 100%;
@@ -263,6 +255,7 @@
     line-height: 30px;
     float: left;
     margin-right: 85px;
+
   }
   .cargo:hover {
     cursor: pointer;

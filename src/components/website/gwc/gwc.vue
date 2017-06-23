@@ -30,27 +30,27 @@
         </div>
         <div class="goodInfo">
           <span>{{good.name}}</span>
-          <span>{{good.goodColor}}</span>
+          <span>{{good.itemPropertyNamea}}</span>
         </div>
         <div class="onePrice">
           <span>￥{{good.price}}</span>
         </div>
         <div class="jisuanqi">
-          <div class="" :class="{thismargin:good.goodSureNum<good.goodLeaveNum}">
-            <span :class="{colorBlue:good.goodSureNum>1}" v-on:click="reduceGood(index)">-</span>
-            <span>{{good.goodSureNum}}</span>
-            <span :class="{colorBlue:good.goodSureNum<good.goodLeaveNum-1}" v-on:click="addGood(index)">+</span>
+          <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
+            <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index)">-</span>
+            <span>{{good.num}}</span>
+            <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index)">+</span>
           </div>
-          <div class=""  v-show="good.goodSureNum>=good.goodLeaveNum">
+          <div class=""  v-show="good.num>=good.goodLeaveNum">
             （库存不足）
           </div>
         </div>
         <div class="thisPrice">
-            ￥{{good.price*good.goodSureNum}}
+            ￥{{good.price*good.num}}
         </div>
         <div class="operas">
-          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index)">收藏</span>
-            <span class="colorRed" v-on:click="deleteOne(index)">删除</span>
+          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good.itemId)">收藏</span>
+          <span class="colorRed" v-on:click="deleteOne(index,good.itemId)">删除</span>
         </div>
         <div style="clear:both"> </div>
       </div>
@@ -91,56 +91,16 @@
         haveSelectedGoodNum:0,
         selectaLL:false,
         gwcGoods:[
-          {
-            pic:"1.png",
-            name:"测试标配提测试标配提测试标配提测试标配提",
-            goodColor:"红色红色",
-            price:10,
-            goodSureNum:1,
-            goodLeaveNum:8,
-            checked:false,
-            totalMoney:20
-          },
-          {
-            pic:"1.png",
-            name:"测试标配提测试标配提测试标配提测试标配提",
-            goodColor:"红色红色",
-            price:20,
-            goodSureNum:1,
-            goodLeaveNum:200,
-            checked:false,
-            totalMoney:20
-          },
-          {
-            pic:"1.png",
-            name:"测试标配提测试标配提测试标配提测试标配提",
-            goodColor:"红色红色",
-            price:30,
-            goodSureNum:1,
-            goodLeaveNum:200,
-            checked:false,
-            totalMoney:20
-          },
-          {
-            pic:"1.png",
-            name:"测试标配提测试标配提测试标配提测试标配提",
-            goodColor:"红色红色",
-            price:40,
-            goodSureNum:1,
-            goodLeaveNum:200,
-            checked:false,
-            totalMoney:20
-          },
-          {
-            pic:"1.png",
-            name:"测试标配提测试标配提测试标配提测试标配提",
-            goodColor:"红色红色",
-            price:50,
-            goodSureNum:1,
-            checked:false,
-            goodLeaveNum:200,
-            totalMoney:20
-          },
+          // {
+          //   pic:"1.png",
+          //   name:"测试标配提测试标配提测试标配提测试标配提",
+          //   itemPropertyNamea:"红色红色",
+          //   price:50,
+          //   num:1,
+          //   checked:false,
+          //   goodLeaveNum:200,
+          //   totalMoney:20
+          // },
         ]
       }
     },
@@ -167,8 +127,8 @@
           this.haveSelectedGoodNum = 0;
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
-              this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].goodSureNum;
-              this.haveSelectedGoodNum+= this.gwcGoods[a].goodSureNum;
+              this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
+              this.haveSelectedGoodNum+= this.gwcGoods[a].num;
             }else{
               this.selectaLL = false;
             }
@@ -192,8 +152,13 @@
         .then((res) => {
           console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            // this.getData = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+            var data = res.data.data;
+            for(let i in data){
+              data[i].checked = false;
+              data[i].totalMoney = data[i].num*data[i].price;
+              data[i].goodLeaveNum = 200;
+            }
+            this.gwcGoods = data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -203,46 +168,64 @@
       this.$router.push({path: '/suborder'})
       },
       deleteAll:function(){
-        if(this.selectaLL==false){
-            this.$alert("请点击全选按钮", {confirmButtonText: '确定'});
+        var that = this;
+        if(that.selectaLL==false){
+            that.$alert("请点击全选按钮", {confirmButtonText: '确定'});
         }else{
-          this.$confirm('此操作将移除所有商品, 是否继续?', '删除所有商品', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
+          that.$confirm('此操作将移除所有商品, 是否继续?', '删除所有商品', {
+            confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
           }).then(() => {
-            this.gwcGoods = [];
-            this.$message({
-              type: 'success',
-              message: '商品收藏成功!'
-            });
+            for(let i in that.gwcGoods){
+              var obj = {
+                phone:that.global.getUser().phone,
+                itemId:that.gwcGoods[i].itemId,
+                token:that.global.getToken()
+              };
+              // that.global.axiosPostReq('/cart/delete', obj)
+              // .then((res) => {
+              //   if (res.data.callStatus === 'SUCCEED') {
+              //     // that.gwcGoods.splice(index,1);
+              //     // that.$message({  type: 'success',  message: '删除成功!'});
+              //   } else {
+              //     that.$message.error('网络出错，请稍后再试！');
+              //   }
+              // })
+            }
+            // that.gwcGoods = [];
+            // that.$message({type: 'success',  message: '商品收藏成功!'});
           }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
+            that.$message({type: 'info',message: '已取消'});
           });
         }
       },
       saveAll:function(){
-        if(this.selectaLL==false){
-            this.$alert("请点击全选按钮", {confirmButtonText: '确定'});
+        var that = this;
+        if(that.selectaLL==false){
+            that.$alert("请点击全选按钮", {confirmButtonText: '确定'});
         }else{
-          this.$confirm('添加至收藏夹后，商品将不在购物车显示，是否全部添加到收藏夹', '全部添加至收藏夹', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
+          that.$confirm('添加至收藏夹后，商品将不在购物车显示，是否全部添加到收藏夹', '全部添加至收藏夹', {
+            confirmButtonText: '确定',cancelButtonText: '取消', type: 'warning'
           }).then(() => {
-            this.gwcGoods = [];
-            this.$message({
-              type: 'success',
-              message: '商品收藏成功!'
-            });
+            for(let i in that.gwcGoods){
+              var obj = {
+                phone:that.global.getUser().phone,
+                itemId:that.gwcGoods[i].itemId,
+                token:that.global.getToken()
+              };
+              // that.global.axiosPostReq('/cart/star', obj)
+              // .then((res) => {
+              //   if (res.data.callStatus === 'SUCCEED') {
+              //     // this.gwcGoods.splice(index,1);
+              //     // this.$message({type: 'success',  message: '商品收藏成功!' });
+              //   } else {
+              //     that.$message.error('网络出错，请稍后再试！');
+              //   }
+              // })
+            }
+            // this.gwcGoods = [];
+            // this.$message({type: 'success',message: '商品收藏成功!'});
           }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
+            that.$message({type: 'info',message: '已取消'});
           });
         }
       },
@@ -259,13 +242,13 @@
         this.selectaLL = !this.selectaLL;
       },
       reduceGood:function (index) {
-        if(this.gwcGoods[index].goodSureNum!=1){
-          this.gwcGoods[index].goodSureNum--;
+        if(this.gwcGoods[index].num!=1){
+          this.gwcGoods[index].num--;
         }
       },
       addGood:function(index){
-        if(this.gwcGoods[index].goodSureNum<this.gwcGoods[index].goodLeaveNum){
-          this.gwcGoods[index].goodSureNum++;
+        if(this.gwcGoods[index].num<this.gwcGoods[index].goodLeaveNum){
+          this.gwcGoods[index].num++;
         }
       },
       showBlue:function(index){
@@ -274,59 +257,51 @@
       hideBlue:function(index){
         this.addBlueColor = null;
       },
-      saveOne:function(index){
-        this.$confirm('添加至收藏夹后，该商品将不在购物车显示!', '添加至收藏夹', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+      saveOne:function(index,id){
+        var that = this;
+        that.$confirm('添加至收藏夹后，该商品将不在购物车显示!', '添加至收藏夹', {
+          confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
-          var that = this;
           var obj = {
             phone:that.global.getUser().phone,
-            itemId:"",
+            itemId:id,
             token:that.global.getToken()
           };
           that.global.axiosPostReq('/cart/star', obj)
           .then((res) => {
             console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
-              // this.getData = res.data.data;
-              // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
-              this.gwcGoods.splice(index,1);
-              this.$message({type: 'success',  message: '商品收藏成功!' });
+              that.gwcGoods.splice(index,1);
+              that.$message({type: 'success',  message: '商品收藏成功!' });
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {
-          this.$message({  type: 'info',  message: '已取消'});
+          that.$message({  type: 'info',  message: '已取消'});
         });
       },
-      deleteOne:function(index){
-        this.$confirm('此操作将该商品移出购物车, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+      deleteOne:function(index,id){
+        var that = this;
+        that.$confirm('此操作将该商品移出购物车, 是否继续?', '提示', {
+          confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
-          var that = this;
           var obj = {
             phone:that.global.getUser().phone,
-            itemId:"",
+            itemId:id,
             token:that.global.getToken()
           };
-          that.global.axiosPostReq('/cart/star', obj)
+          that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
             console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
-              // this.getData = res.data.data;
-              // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
-              this.gwcGoods.splice(index,1);
-              this.$message({  type: 'success',  message: '删除成功!'});
+              that.gwcGoods.splice(index,1);
+              that.$message({  type: 'success',  message: '删除成功!'});
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
         }).catch(() => {
-          this.$message({  type: 'info',message: '已取消删除'});
+          that.$message({  type: 'info',message: '已取消删除'});
         });
       })
     }

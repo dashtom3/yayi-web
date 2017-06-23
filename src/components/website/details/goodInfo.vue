@@ -16,8 +16,16 @@
       </div>
 
       <div class="infoLeft_3">
-        <span v-on:click="showCllect('商品收藏成功！',1)"><img v-if="saveGood" src="../../../images/details/collect.png" /><img v-else src="../../../images/details/collect2.jpg" />收藏</span>
-        <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)"><img v-if="copyUrl" src="../../../images/details/share.png" /><img v-else src="../../../images/details/share2.jpg" />分享</span>
+        <span v-on:click="showCllect('商品收藏成功！',1)">
+          <img v-if="saveGood" src="../../../images/details/collect.png" />
+          <img v-else src="../../../images/details/collect2.jpg" />
+          {{saveGood?"收藏":"已收藏"}}
+        </span>
+        <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)">
+          <img v-if="copyUrl" src="../../../images/details/share.png" />
+          <img v-else src="../../../images/details/share2.jpg" />
+          分享
+        </span>
       </div>
     </div>
   	<div class="infoRight">
@@ -119,6 +127,7 @@ import myAddress from './selectThree'
           this.items = this.nowGoodDetails.itemValueList;
           this.commentList = this.nowGoodDetails.commentList;
           this.instructions = this.nowGoodDetails.itemDetail;
+          this.instructions.addName = this.nowGoodDetails.itemName;
         },
         deep:true
       }
@@ -135,7 +144,7 @@ import myAddress from './selectThree'
 
         that.global.axiosGetReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data.data)
+          // console.log(res.data.data)
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
@@ -185,17 +194,20 @@ import myAddress from './selectThree'
           itemPropertyNamea:that.sureGoodAttr,
           token:that.global.getToken()
         };
-        that.global.axiosPostReq('/cart/add',obj)
-        .then((res) => {
-          console.log(res)
-          if (res.data.callStatus === 'SUCCEED') {
-            this.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
-            // that.nowGoodDetails = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
+        if(!obj.itemPropertyNamea){
+          that.$alert("请选择商品属性！", {confirmButtonText: '确定'});
+        }else{
+          that.global.axiosPostReq('/cart/add',obj)
+          .then((res) => {
+            console.log(res.data.data)
+            if (res.data.callStatus === 'SUCCEED') {
+              that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          });
+        }
+
       }
     },
     components: {

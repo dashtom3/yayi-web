@@ -70,7 +70,7 @@
     },
     watch:{
       getData:{
-        handler:function(){ // 计算当前钱币
+        handler:function(){ // 计算当前乾币
           for(var i in this.getData){
             if(this.getData[i].qbRget!=0){
               this.myAllMoney.currentMoney += this.getData[i].qbRget;

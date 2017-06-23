@@ -1,7 +1,7 @@
 <template>
   <div class="goodIntroduce">
     <div>
-      <span>品名：康特/COLTENE（金霸王）金刚砂车针5*1</span>
+      <span>品名：{{instruction.addName}}</span>
       <span>单位：{{instruction.unit}}</span>
       <span>品牌：AQUAPICK</span>
     </div>

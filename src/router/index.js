@@ -90,7 +90,7 @@ let router = new Router({
 		component: details,
 	},
 	{
-		path: '/brandLib',
+		path: '/brandLib/:classifyIdAndbrandId',
 		name: 'brandLib',
 		component: brandLib,
 	},

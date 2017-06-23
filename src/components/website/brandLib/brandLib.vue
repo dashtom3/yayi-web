@@ -8,25 +8,25 @@
       </div>
       <div class="classifyLine">
         分类：
-        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:mouseenter="clearAllClassfy">不限</span>
-          <span class="fenlei1" v-bind:class="{fenlieselect: classifyIndex===index}" v-on:mouseenter="selectClassfy(index)"  v-for="(item,index) in brandClassfy">
+        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy">不限</span>
+          <span class="fenlei1" v-bind:class="{fenlieselect: classifyIndex===index}" v-on:click="selectClassfy(index)"  v-for="(item,index) in brandClassfy">
             {{item.oneName}}
           </span>
           <div class="classfyDetail" v-show="fenlie2.length>0">
             <div class="towClassfy" >
               <ul>
-                <li :class="{asdff:selectedTwo==index}" v-on:mouseenter="showChilds222(index)" v-for="(item,index) in fenlie2">{{item.toeNmae}}</li>
+                <li :class="{asdff:selectedTwo==index}" v-on:click="showChilds222(index)" v-for="(item,index) in fenlie2">{{item.toeNmae}}</li>
               </ul>
             </div>
             <div class="threeClassfy">
               <ul>
-                <li :class="{asdff:selectedThree==index}" v-on:mouseenter="selectedThreeClassfy(index)" v-for="(item,index) in fenlie3">{{item}}</li>
+                <li :class="{asdff:selectedThree==index}" v-on:click="selectedThreeClassfy(index)" v-for="(item,index) in fenlie3">{{item}}</li>
               </ul>
             </div>
           </div>
       </div>
       <div class="brandLine">
-        <span>品牌：</span>
+        <span style="margin-top:11px">品牌：</span>
         <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn">不限</span>
         <ul>
           <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item.itemBrandId)" v-for="(item,index) in brands">
@@ -93,6 +93,8 @@
     name: 'brandLib',
     data () {
       return {
+        intClassfy:null,
+        intBrandId:null,
         selectThisBrand:null,
         noLimitClassfy:true,
         brandNoLimit:true,
@@ -102,7 +104,7 @@
         isBlueBgc:null,
         orderState:0,
         // false表示toTop,升
-        orderArr:[{orderName:"全部",orderSort:""},{orderName:"销量",orderSort:false},{orderName:"新品",orderSort:false},{orderName:"评论",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
+        orderArr:[{orderName:"最新商品",orderSort:""},{orderName:"销量",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
         fenlie2:[],
         fenlie3:[],
         classifyIndex:null,
@@ -153,8 +155,11 @@
       paging0
     },
     created: function() {
-      this.getAllBrandList();
-
+      var that = this;
+      that.getAllBrandList();
+      var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
+      that.intBrandId = classifyIdAndbrandId.split("AND")[1];
+      that.intClassfy = classifyIdAndbrandId.split("AND")[0];
     },
     watch:{
       haveSelectedBrands:function(){
@@ -164,10 +169,19 @@
           this.brandNoLimit = true;
         }
       },
+      intBrandId:function(){
+        var that = this;
+        if(that.intBrandId!=null){
+          that.getOneBrandGoodsList(that.intBrandId);
+        }
+      },
       // brands:{
       //   handler:function(){
-      //     for(let i in this.brands){
-      //       this.brands[i].selected = false;
+      //     var that = this;
+      //     for(let i in that.brands){
+      //       if(that.brands[i].itemBrandId==this.intBrandId){
+      //         that.selectThisBrand = i;
+      //       }
       //     }
       //   },
       //   deep:true
@@ -194,20 +208,26 @@
         var that = this;
         that.global.axiosGetReq('/item/brandList')
         .then((res) => {
-          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            this.brands = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+            that.brands = res.data.data;
+            if(that.intBrandId!=null){
+              for(let i in that.brands){
+                that.brands[i].selected = false;
+                if(that.brands[i].itemBrandId==that.intBrandId){
+                    this.selectThisBrand = i;
+                    this.brandNoLimit = false;
+                    that.brands[i].selected = true;
+                }
+              }
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
       goToThisDetail:function(index,id){
-        // console.log(id)
         this.$router.push({
           path:"/details/"+id,
-
         });
       },
       selectClassfy:function(index){
@@ -227,12 +247,18 @@
         //   this.haveSelectedBrands.push(this.brands[index].brandNmae);
         // }else{
         //   var nowstr = event.target.innerText.trim();
-        //   for(var  i = 0;i < this.haveSelectedBrands.length;i++ ){
-        //     if(nowstr==this.haveSelectedBrands[i]){
-        //       this.haveSelectedBrands.splice(i,1);
-        //     }
+          // for(var  i = 0;i < this.haveSelectedBrands.length;i++ ){
+          //   if(nowstr==this.haveSelectedBrands[i]){
+          //     this.haveSelectedBrands.splice(i,1);
+          //   }
         //   }
         // }
+
+        for(let i in this.brands){
+          this.brands[i].selected = false;
+        }
+        this.brands[index].selected = true;
+        this.brandNoLimit = false;
         this.selectThisBrand = index;
         this.getOneBrandGoodsList(id);
       },
@@ -248,6 +274,7 @@
       },
       brandNoLimitFn:function(){
         this.brandNoLimit = true;
+        this.selectThisBrand = null,
         this.haveSelectedBrands = [];
         for(var i = 0;i<this.brands.length;i++){
           this.brands[i].selected = false;
