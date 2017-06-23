@@ -20,7 +20,7 @@
           <div class="block">
             <el-date-picker
               v-model="value3"
-              type="datetimerange"
+              type="daterange"
               placeholder="选择时间范围">
             </el-date-picker>
           </div>
@@ -91,7 +91,7 @@
     display:block;
   }
   .t_input_w{
-    width:320px;
+    width:220px;
   }
   .t_select_width{
     width:110px;

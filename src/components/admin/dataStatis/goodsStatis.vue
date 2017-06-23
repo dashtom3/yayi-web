@@ -28,10 +28,10 @@
         </el-form-item>
         <div class="clearfix"></div>
         <el-form-item label="下单时间" class="fl">
-          <div class="block">
+          <div class="block" style="margin-left:30px;">
             <el-date-picker
               v-model="value3"
-              type="datetimerange"
+              type="daterange"
               placeholder="选择时间范围">
             </el-date-picker>
           </div>
@@ -129,7 +129,7 @@
     display:block;
   }
   .t_input_w{
-    width:320px;
+    width:220px;
   }
   .t_select_width{
     width:110px;

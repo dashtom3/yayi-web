@@ -137,10 +137,7 @@
 		display:block;
 	}
 	.t_input_width{
-		width:340px;
-	}
-	.t_select_width{
-		width:260px;
+		width:300px;
 	}
 	.btn_{
 	  margin-left: 154px;

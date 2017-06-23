@@ -85,7 +85,7 @@
     display:block;
   }
   .t_input_w{
-    width:320px;
+    width:220px;
   }
   .t_select_width{
     width:110px;

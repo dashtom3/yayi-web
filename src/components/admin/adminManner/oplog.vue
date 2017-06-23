@@ -82,10 +82,10 @@
 		display:block;
 	}
 	.t_input_w{
-		width:260px;
+		width:220px;
 	}
 	.t_input_width{
-		width:340px;
+		width:300px;
 	}
 	.t_select_width{
 		width:110px;
