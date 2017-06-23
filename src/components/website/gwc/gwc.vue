@@ -267,6 +267,7 @@
             itemId:id,
             token:that.global.getToken()
           };
+          console.log(obj)
           that.global.axiosPostReq('/cart/star', obj)
           .then((res) => {
             console.log(res)
@@ -293,7 +294,6 @@
           };
           that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
-            console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
               that.$message({  type: 'success',  message: '删除成功!'});

@@ -14,9 +14,9 @@
           <el-form-item>
             <el-input v-model="searchUserContent">
               <el-select v-model="searchUserStyle" slot="prepend" placeholder="请选择">
-                <el-option label="用户编号" value="用户编号"></el-option>
-                <el-option label="真实姓名" value="真实姓名"></el-option>
+                <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
                 <el-option label="手机号" value="手机号"></el-option>
+                <el-option label="真实姓名" value="真实姓名"></el-option>
                 <el-option label="单位名称" value="单位名称"></el-option>
               </el-select>
             </el-input>
@@ -31,7 +31,7 @@
               <el-option  v-for="item in userTypes"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="销售名称：">
+          <el-form-item label="销售员名称：">
             <el-input v-model="searchSaleName"></el-input>
           </el-form-item>
           <el-form-item>
@@ -44,7 +44,7 @@
 
       <!--列表-->
       <el-table :data="userList"  border style="width: 100%">
-        <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column>
+        <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
         <el-table-column  prop="userName"  align="center"  label="用户姓名">  </el-table-column>
         <el-table-column  prop="userPhone"  align="center"  label="手机号"> </el-table-column>
         <el-table-column  prop="userCompony"  align="center"  label="用户单位">  </el-table-column>
@@ -64,10 +64,10 @@
       <el-form :inline="true" >
         <el-form-item>
             <el-select v-model="bindSaleSearchType" placeholder="请选择">
-              <el-option label="用户编号" value="用户编号"></el-option>
-              <el-option label="真实姓名" value="真实姓名"></el-option>
+              <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
               <el-option label="手机号" value="手机号"></el-option>
-              <el-option label="单位名称" value="单位名称"></el-option>
+              <el-option label="真实姓名" value="真实姓名"></el-option>
+              <!-- <el-option label="单位名称" value="单位名称"></el-option> -->
             </el-select>
         </el-form-item>
         <el-form-item>
@@ -77,7 +77,7 @@
         </el-form-item>
       </el-form>
       <el-table height="500"  :data="salesList" border>
-        <el-table-column align="center" property="bianhao" label="销售员编号" width="150"></el-table-column>
+        <!-- <el-table-column align="center" property="bianhao" label="销售员编号" width="150"></el-table-column> -->
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
         <el-table-column align="center" property="name" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="hehushu" label="操作">
@@ -146,11 +146,11 @@
         showBindSalAlert:false,
         showUserDetailInfor:false,
         searchUserContent:null,
-        searchUserStyle: "用户编号",
-        searchUserType:'不限',
+        searchUserStyle: "手机号",
+        searchUserType:'全部',
         searchIfBindSale:"全部",
         searchSaleName:null,
-        bindSaleSearchType:'用户编号',
+        bindSaleSearchType:'手机号',
         bindSaleSearchCont:null,
         options: [{
             value: '选项1',
@@ -165,7 +165,7 @@
           ifBindSale: "全部",
           userTypes: [{
             value: '选项1',
-            label: '不限'
+            label: '全部'
           }, {
             value: '选项2',
             label: '个人'

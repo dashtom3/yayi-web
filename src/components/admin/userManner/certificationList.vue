@@ -2,7 +2,6 @@
   <el-row class="certificationWarp">
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
-        <b>用户管理</b>
         <el-breadcrumb-item><b>用户管理</b></el-breadcrumb-item>
         <el-breadcrumb-item>资质列表</el-breadcrumb-item>
       </el-breadcrumb>
@@ -14,7 +13,7 @@
         <el-form-item>
           <el-input v-model="searchUserContent">
             <el-select v-model="searchUserType" slot="prepend" placeholder="请选择">
-              <el-option label="用户编号" value="用户编号"></el-option>
+              <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
               <el-option label="真实姓名" value="真实姓名"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="单位名称" value="单位名称"></el-option>
@@ -42,7 +41,7 @@
 
 
     <el-table :data="certificationList"  border style="width: 100%">
-      <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column>
+      <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
       <el-table-column  prop="nameAndPhone"  align="center"  label="真实姓名+手机号">  </el-table-column>
       <el-table-column  prop="userType"  align="center"  label="类型">  </el-table-column>
       <el-table-column  prop="userCompony"  align="center"  label="单位名称">  </el-table-column>
@@ -72,8 +71,8 @@
       return {
         ifShowBigImg:false,
         searchUserContent:null,
-        searchUserType:"用户编号",
-        searchType:"不限",
+        searchUserType:"手机号",
+        searchType:"全部",
         searchState:"全部",
         certificationList:[
           {userId:12121,nameAndPhone:'asdfaf&&1234141414',userType:"asdfa",userCompony:"aewfaef",place:"adfgagfaggrefg",certification:"1.png",state:"待审核"},
@@ -88,7 +87,7 @@
           {userId:12121,nameAndPhone:'asdfaf&&1234141414',userType:"asdfa",userCompony:"aewfaef",place:"adfgagfaggrefg",certification:"1.png",state:"待审核"}
         ],
         userTypes: [
-          {value: '不限',label: '不限'},
+          {value: '全部',label: '全部'},
           {value: '个人',label: '个人'},
           {value: '机构',label: '机构'}
         ],

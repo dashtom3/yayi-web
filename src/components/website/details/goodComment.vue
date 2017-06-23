@@ -4,9 +4,9 @@
       <li v-for="comment in comments">
         <div >
           <span class="name">{{comment.userName}}</span>
-          <span class="phone">{{comment.phone}}</span>
+          <span class="phone">{{comment.userPhone}}</span>
           <score :thisscore="comment.commentGrade"></score>
-          <span class="time">{{comment.time}}</span>
+          <span class="time">{{comment.created}}</span>
         </div>
         <div class="commentContents">{{comment.commentContent}}</div>
         <div class="commentReplay">

@@ -18,12 +18,12 @@
             <el-input v-model="searchParentClassfyName"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" v-on:click="search">查询</el-button>
+            <el-button type="primary" v-on:click="search()">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
       <el-col style="text-align:right;line-height:40px;">
-        <el-button type="text" @click="addClassfy">+添加商品分类</el-button>
+        <el-button type="text" @click="addClassfy()">+添加商品分类</el-button>
       </el-col>
 
 
@@ -39,7 +39,7 @@
           </el-table-column>
         </el-table>
     </el-col>
-    <el-dialog title="添加商品分类" :visible.sync="dialogFormVisible">
+    <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible">
       <el-form>
         <el-form-item label="上级分类：" :label-width="formLabelWidth">
           <el-cascader  :options="options"  :show-all-levels="false"  v-model="addClassfyParent">
@@ -265,6 +265,7 @@
           }],
         dialogFormVisible: false,
         formLabelWidth: '120px',
+        bindTitle:null,
         // -----------------------------
         tableData:[
           {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
@@ -285,6 +286,7 @@
     },
     methods: {
       addClassfy:function(){
+        this.bindTitle = "添加商品分类";
         this.dialogFormVisible = true;
         this.classfyOperaType = 1;
         this.addClassfyParent = ["","",""];
@@ -316,6 +318,7 @@
 
       },
       changeOneAttr:function(index){
+        this.bindTitle = "修改商品分类";
         this.classfyOperaType = 2;
         this.classfyChangeIndex = index;
         this.dialogFormVisible = true;

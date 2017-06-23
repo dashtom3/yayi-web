@@ -12,9 +12,9 @@
         <el-form-item>
           <el-input v-model="searchSaleContent">
             <el-select v-model="searchSaleType" slot="prepend" >
-              <el-option label="销售员编号" value="用户编号"></el-option>
-              <el-option label="真实姓名" value="真实姓名"></el-option>
+              <!-- <el-option label="销售员编号" value="用户编号"></el-option> -->
               <el-option label="手机号" value="手机号"></el-option>
+              <el-option label="真实姓名" value="真实姓名"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
@@ -38,16 +38,16 @@
         <el-form-item label="结算日期：">
           <el-date-picker  v-model="searchDataPrev"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
         </el-form-item>
-        <el-form-item label="~">
+        <!-- <el-form-item label="~">
           <el-date-picker  v-model="searchDataNext"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions1"> </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" v-on:click="search">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
     <el-table :data="getMoneyList"  border style="width: 100%">
-      <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column>
+      <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
       <el-table-column  prop="name"  align="center"  label="真实姓名">  </el-table-column>
       <el-table-column  prop="phone"  align="center"  label="手机号"> </el-table-column>
       <el-table-column  prop="orderId"  align="center"  label="订单编号">  </el-table-column>
@@ -181,11 +181,11 @@
         searchSaleContent:null,
         searchDataPrev:null,
         searchDataNext:null,
-        searchSaleType:"销售员编号",
+        searchSaleType:"手机号",
         searchMoneyType:"全部",
         searchGetType:"全部",
         nowUserMoneyNum:null,
-        selectSearchType:"用户编号",
+        // selectSearchType:"用户编号",
         showChangeUserMoney:false,
       }
     },

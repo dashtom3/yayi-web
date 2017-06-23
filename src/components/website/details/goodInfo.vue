@@ -141,13 +141,10 @@ import myAddress from './selectThree'
         var obj = {
           itemId:that.$route.params.goodId
         };
-
         that.global.axiosGetReq('/item/itemDetailDes',obj)
         .then((res) => {
-          // console.log(res.data.data)
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
