@@ -50,7 +50,6 @@
             <img v-if="index==5" v-show="!item.orderSort" src="../../../images/brandLib/6.png" alt="">
             <img v-if="index!=0&&index!=5" v-show="!item.orderSort" src="../../../images/brandLib/7.png" alt="">
           </li>
-
         </ul>
         <div class="checkBox">
           <checkBox v-on:childsay="listenToMyBoy"></checkBox>
@@ -61,7 +60,7 @@
         <ul>
           <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index)">
             <!-- <router-link to="/details/index"> -->
-            <img  class="ifGold" v-if="item.ifGold" src="../../../images/brandLib/3.png" alt="">
+            <!-- <img  class="ifGold" v-if="item.ifGold" src="../../../images/brandLib/3.png" alt=""> -->
             <div class="imgWrap">
               <img class="goodImg" src="../../../images/brandLib/4.png" alt="">
               <span></span>
@@ -76,9 +75,9 @@
         </ul>
       </div>
     </div>
-    <div class="fenye">
-<paging0 ></paging0>
-    </div>
+    <!-- <div class="fenye">
+        <paging0 ></paging0>
+    </div> -->
 
     <publicFooter></publicFooter>
   </div>
@@ -201,9 +200,9 @@
     },
     methods: {
       goToThisDetail:function(id){
-        this.$router.push({
-          path:"/details/"+id,
-        });
+        // this.$router.push({
+        //   path:"/details/"+id,
+        // });
       },
       selectClassfy:function(index){
         this.classifyIndex=index;

@@ -2,7 +2,7 @@
   <div class="bindSale">
     <div class="content">
       <el-form v-if="saleData.saleId" ref="userData" :model="saleData" label-width="80px">
-        <el-form-item label="销售员ID：" label-width="100px">
+        <el-form-item label="销售员手机号：" label-width="130px">
           <el-input v-model="willBindSale"></el-input>
           <div v-show="showSearchInfo" class="showSearchInfoClass">
             <span>真实姓名：上海小酱</span>
@@ -15,7 +15,7 @@
       </el-form>
       <div v-else class="binded">
         <p>
-          <span class="left">销售员ID：</span>
+          <span class="left">销售员手机号：</span>
           <span class="right">{{saleData.saleId}}</span>
         </p>
         <p>
