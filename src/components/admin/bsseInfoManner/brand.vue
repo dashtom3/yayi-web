@@ -52,7 +52,7 @@
     <el-dialog title="照片大图" :visible.sync="ifShowBigImg">
       <img src="1.png" style="width:350px;height:350px;display:block;margin:auto;">
     </el-dialog>
-    <el-dialog title="添加商品品牌" :visible.sync="showAddBrandAlert">
+    <el-dialog :title="bindTitle" :visible.sync="showAddBrandAlert">
       <el-form>
         <el-form-item label="品牌名称：" :label-width="formLabelWidth">
           <el-input v-model="name"></el-input>
@@ -87,6 +87,7 @@
   export default{
     data(){
       return {
+        bindTitle:null,
         searchBranName:null,
         searchBranPlace:null,
         // 1增加。2修改
@@ -129,6 +130,7 @@
         return isJPG && isLt2M;
       },
       addGoodBrand:function(){
+        this.bindTitle = "添加商品品牌";
         this.name = null;
         this.address = null;
         this.showAddBrandAlert = true;
@@ -157,6 +159,7 @@
 
       },
       changeOneBrand:function(index){
+        this.bindTitle = "修改商品品牌";
         this.showAddBrandAlert = true;
         var thisData = this.tableData[index];
         this.address = thisData.madein;

@@ -14,29 +14,8 @@
       <el-carousel :autoplay="true" :interval="5000" height="500px" trigger="click" arrow="never" indicator-position="none" ref="carousel">
         <el-carousel-item>
           <div class="brand_container">
-            <div class="brand_item" style="margin-left: 0px;">
-              <img src="../../../images/index/item1.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item2.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item3.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item4.png" alt="img">
-            </div>
-            <div class="brand_item" style="margin-left: 0px;">
-              <img src="../../../images/index/item1.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item2.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item3.png" alt="img">
-            </div>
-            <div class="brand_item">
-              <img src="../../../images/index/item4.png" alt="img">
+            <div class="brand_item" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
+              <img :src="oneBrand.itemBrandLogo" alt="img">
             </div>
           </div>
         </el-carousel-item>
@@ -51,9 +30,35 @@
     data () {
       return {
         img_change: true,
+        brandListData:[]
       }
     },
+    created:function(){
+      var that = this;
+      that.getAllBrandList();
+    },
     methods: {
+      getAllBrandList:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/brandList')
+        .then((res) => {
+          console.log(res.data.data)
+          if (res.data.callStatus === 'SUCCEED') {
+            that.brandListData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      goToThisBrand:function(id){
+        var that = this;
+        // this.$router.push({
+        //   path:"/details/"+id,
+        // });
+        that.$router.push({
+          path:"/brandLib/1AND"+id,
+        });
+      },
       prev() {
         var that = this;
         that.$refs.carousel.prev();

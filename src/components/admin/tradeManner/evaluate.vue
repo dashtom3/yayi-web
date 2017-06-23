@@ -14,7 +14,6 @@
         <el-form-item label="用户编号" class="fl t_input_width">
           <el-input v-model="userCode"></el-input>
         </el-form-item>
-        <div class="clearfix"></div>
         <el-form-item label="回复状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
 				    <el-option
@@ -156,10 +155,10 @@
 	display:block;
 }
 .t_input_width{
-	width:340px;
+	width:300px;
 }
 .t_select_width{
-	width:260px;
+	width:220px;
 }
 .btn_{
   margin-left: 140px;

@@ -34,16 +34,15 @@
 				    </el-option>
 				  </el-select>
         </el-form-item>
-        <el-form-item label="下单时间" class="fl">
+        <div class="clearfix"></div>
+        <el-form-item label="下单时间" class="fl" style="width:380px;">
 	          <el-date-picker
               v-model="value3"
-              type="datetimerange"
+              type="daterange"
               placeholder="选择时间范围">
             </el-date-picker>
         </el-form-item>
-        <el-form-item class="fl">
-          <el-button type="primary">查询</el-button>
-        </el-form-item>
+        <el-button type="primary">查询</el-button>
       </el-form>
 
       <!--列表-->
@@ -232,7 +231,7 @@
             </el-select>
           </template>
         </div>
-        <div  style="height:40px;padding-left:60px;">
+        <div style="height:40px;padding-left:60px;">
           <i class="i_col_red">*</i>
           <span>快递单号：</span>
           <template>
@@ -511,10 +510,10 @@
 	display:block;
 }
 .t_input_width{
-	width:340px;
+	width:300px;
 }
 .t_select_width{
-	width:260px;
+	width:220px;
 }
 .t_data_width{
 	width:400px;

@@ -1,3 +1,6 @@
+
+
+
 <template>
   <div class="index">
     <div v-show="isActive" class="sidebar">
@@ -17,8 +20,8 @@
        <p class="contact_title">联系客服</p>
       <img src="../../../images/index/contact.png" alt="img" />
     </div>
-    <publicHeader></publicHeader>
-    <classify></classify>
+    <publicHeader ></publicHeader>
+    <classify :brandListData="brandList"></classify>
     <carousel></carousel>
     <brand class="d_jump"></brand>
     <preventive class="d_jump"></preventive>
@@ -55,6 +58,7 @@
         isSpe4: false,
         isSpe5: false,
         isSpe6: false,
+        brandList:[]
       }
     },
     components: {
@@ -72,8 +76,10 @@
     created: function() {
       var that = this;
       window.addEventListener('scroll', that.menu);
+      
     },
     methods: {
+
       //回到顶部
       backToTop: function() {
         var that = this;
@@ -173,7 +179,7 @@
             isTop = true;
             if (document.body.scrollTop <= total || document.documentElement.scrollTo <= total){
               clearInterval(timer);
-            } 
+            }
           }
         },1);
       },

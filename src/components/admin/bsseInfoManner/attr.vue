@@ -45,17 +45,17 @@
       </el-table>
     </el-col>
 
-    <el-dialog title="添加商品属性" :visible.sync="showAddGoodAttr">
+    <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr">
       <el-form label-width="100px" class="demo-dynamic">
         <el-form-item  prop="addName"  label="属性名称：">
           <el-input v-model="addGoodAttrName"></el-input>
         </el-form-item>
-        <span v-if="addGoodAttrValues.length>=1">
+        <!-- <span v-if="addGoodAttrValues.length>=1">
           <el-form-item  v-for="(value, index) in addGoodAttrValues" :label="'属性值：'" :property="value.name" :key="value">
             <el-input v-model="value.name"></el-input>
           </el-form-item>
-        </span>
-        <el-form-item>
+        </span> -->
+        <el-form-item :label="'属性值：'">
           <el-input v-model="addGoodAttrOneVal"></el-input>
           <el-button v-on:click="addOneAttrVal()">添加</el-button>
         </el-form-item>
@@ -85,6 +85,7 @@
   export default{
     data(){
       return {
+        bindTitle:null,
         addGoodAttrName:null,
         addGoodAttrValues:[],
         addGoodAttrOneVal:null,
@@ -111,6 +112,7 @@
     },
     methods: {
       addGoodAttr:function(){
+        this.bindTitle = "添加商品属性";
         this.showAddGoodAttr = true;
         this.attOperaType = 1;
         this.addGoodAttrName = null;
@@ -146,6 +148,7 @@
 
       },
       changeOneAttr:function(index){
+        this.bindTitle = "修改商品属性";
         this.addGoodAttrName = this.tableData[index].shuxingname;
         this.addGoodAttrValues = this.tableData[index].shuxingzhi;
         this.changAttrIndex = index;

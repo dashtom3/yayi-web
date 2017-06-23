@@ -39,7 +39,8 @@ import userManner_userList from '@/components/admin/userManner/userList'
 import userManner_moneyList from '@/components/admin/userManner/moneyList'
 import userManner_certificationList from '@/components/admin/userManner/certificationList'
 
-//管理员列表
+//系统管理
+import adminManner_oplog from '@/components/admin/adminManner/oplog'
 import adminManner_admin from '@/components/admin/adminManner/admin'
 
 
@@ -56,6 +57,12 @@ import videoManner_video from '@/components/admin/videoManner/video'
 
 // 运费管理
 import freightSet from '@/components/admin/freightManner/freightSet'
+
+//数据统计
+import dataStatis_goodsStatis from '@/components/admin/dataStatis/goodsStatis'
+import dataStatis_elecSuppStatis from '@/components/admin/dataStatis/elecSuppStatis'
+import dataStatis_salesStatis from '@/components/admin/dataStatis/salesStatis'
+
 
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
@@ -83,7 +90,7 @@ let router = new Router({
 		component: details,
 	},
 	{
-		path: '/brandLib',
+		path: '/brandLib/:classifyIdAndbrandId',
 		name: 'brandLib',
 		component: brandLib,
 	},
@@ -174,11 +181,12 @@ let router = new Router({
     {
       path: '/adminManner',
       component: Home,
-      name: '管理员列表',
+      name: '系统管理',
       menuShow: true,
-      leaf: true, // 只有一个节点
+      // leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-users', // 图标样式class
       children: [
+        {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
     },
@@ -226,6 +234,19 @@ let router = new Router({
       iconCls: 'iconfont icon-users', // 图标样式class
       children: [
         {path: '/admin/freightManner/freightSet', component: freightSet, name: '运费设置', menuShow: true}
+      ]
+    },
+    {
+      path: '/dataStatis',
+      component: Home,
+      name: '数据统计',
+      menuShow: true,
+      //leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/dataStatis/goodsStatis', component: dataStatis_goodsStatis, name: '商品统计', menuShow: true},
+        {path: '/admin/dataStatis/elecSuppStatis', component: dataStatis_elecSuppStatis, name: '电商用户统计', menuShow: true},
+        {path: '/admin/dataStatis/salesStatis', component: dataStatis_salesStatis, name: '销售员统计', menuShow: true}
       ]
     }
 	],

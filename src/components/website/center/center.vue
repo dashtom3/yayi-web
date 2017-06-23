@@ -4,7 +4,7 @@
     <div class="big_box">
       <div class="left_box">
         <div class="left_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">我的订单</div>
-        <div class="left_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的钱币</div>
+        <div class="left_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的乾币</div>
         <div class="left_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">我的收藏</div>
         <div class="left_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">个人资料</div>
         <div class="left_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">收货地址</div>
