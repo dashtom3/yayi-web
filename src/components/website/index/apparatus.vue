@@ -70,7 +70,7 @@ export default {
   margin: 0 auto;
   position: relative;
   text-align: center;
-  background-color: #fff;
+  background-color: #F2F2F2;
 }
 .brand_img {
   margin-top: 20px;

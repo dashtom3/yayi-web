@@ -1,9 +1,9 @@
 <template>
-  <div class="medical">
+  <div class="zq">
     <div class="preventive_box">
       <div class="img_box_change" @mouseover="img_in" @mouseout="img_out">
-        <img class="brand_img" v-if="img_change" src="../../../images/index/instrument.png" alt="img">
-        <img class="brand_img" v-else src="../../../images/index/instrument_c.png" alt="img">
+        <img class="brand_img" v-if="img_change" src="../../../images/index/zq.png" alt="img">
+        <img class="brand_img" v-else src="../../../images/index/zq_c.png" alt="img">
       </div>
       <div class="preventive_container">
         <div class="preventive_item" v-for="item in items" :key="item">
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'medical',
+  name: 'zq',
   data () {
     return {
       img_change: true,

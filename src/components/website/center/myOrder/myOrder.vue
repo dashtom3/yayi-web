@@ -6,7 +6,7 @@
       <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">待发货</div>
       <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">待收货</div>
       <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">待评价</div>
-      <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">退款／退货／换货中</div>
+<!--       <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">退款／退货／换货中</div> -->
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">

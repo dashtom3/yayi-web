@@ -1,12 +1,12 @@
 <template>
-  <div class="medical">
+  <div class="readycut">
     <div class="preventive_box">
       <div class="img_box_change" @mouseover="img_in" @mouseout="img_out">
-        <img class="brand_img" v-if="img_change" src="../../../images/index/instrument.png" alt="img">
-        <img class="brand_img" v-else src="../../../images/index/instrument_c.png" alt="img">
+        <img class="brand_img" v-if="img_change" src="../../../images/index/readycut.png" alt="img">
+        <img class="brand_img" v-else src="../../../images/index/readycut_c.png" alt="img">
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-for="item in items" :key="item">
+        <div class="preventive_item" v-for="item in items" :key="item" @click="toDetail">
           <img class="item_img" src="" alt="img">
           <p class="item_des">{{item.des}}</p>
           <p class="item_price">￥{{item.price}}</p>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'medical',
+  name: 'readycut',
   data () {
     return {
       img_change: true,
@@ -50,6 +50,10 @@ export default {
     }
   },
   methods: {
+    toDetail: function() {
+      var that = this;
+      that.$router.push({ path: '/details'});
+    },
     img_in() {
       var that = this;
       that.img_change = false;
@@ -68,7 +72,6 @@ export default {
   width: 100%;
   height: 800px;
   margin: 0 auto;
-  margin-bottom: 100px;
   position: relative;
   text-align: center;
   background-color: #fff;

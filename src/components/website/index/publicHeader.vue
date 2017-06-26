@@ -3,6 +3,7 @@
     <div class="headerBox" :class="{ speH: isActive }">
       <div class="headerFirst">
         <div class="system_enter left">创客系统入口</div>
+        <div class="yayi left" @click="gotoIndex">首页</div>
         <div v-if="hasLogin" class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
@@ -427,6 +428,11 @@
           that.isActive = false;
         }
         // console.log(scroll, 'frisco')
+      },
+      // 回到首页
+      gotoIndex: function() {
+        var that = this;
+        that.$router.push({path: '/'});
       },
       // 去购物车
       gotocar: function() {
@@ -1014,6 +1020,7 @@
   }
   .log {
     margin-left: 60px;
+    position: relative;
   }
   .my_order {
     margin-left: 60px;
@@ -1051,13 +1058,21 @@
     position: fixed;
     top: 28px;
   }
+  .yayi {
+    margin-left: 60px;
+  }
+  .yayi:hover {
+    color: #5DB7E7;
+    cursor: pointer;
+    transition: all ease 0.5s;
+  }
 /*------------页面购物车hover样式 start----------------*/
   .whiteLine {
     display: none;
     position: absolute;
     top: 26px;
     left: 90px;
-    width: 327px;
+    width: 268px;
     height: 1px;
     background-color: #e9e9e9;
     z-index: 9999;
@@ -1091,7 +1106,7 @@
   }
   .shopping_car .car_hover {
     display: none;
-    width: 376px;
+    width: 317px;
     position: absolute;
     top: 27px;
     left: -1px;
@@ -1123,7 +1138,7 @@
 /*    margin-top: 12px;*/
   }
   .cargo_box {
-    width: 376px;
+    width: 317px;
     height: 70px;
     margin-top: 12px;
     position: relative;
@@ -1167,10 +1182,12 @@
     height: 100%;
   }
   .fir {
+    font-weight: bold;
     margin-top: 15px;
     margin-right: 20px;
   }
   .sec {
+    font-weight: bold;
     margin-top: 15px;
   }
   .gotocar {
@@ -1504,7 +1521,9 @@
   .logOut {
     color: #000;
     font-size: 14px;
-    margin-left: 27px;
+    margin-left: 60px;
+    float: right;
+    transform: translateY(-5%);
   }
   .logOut:hover {
     color: #5DB7E7;
@@ -1537,7 +1556,7 @@
     position: relative;
   }
   .headerSecond .search_word {
-    width: 400px;
+    width: 420px;
     height: 33px;
     border: 1px solid #5DB7E8;
     outline: medium;

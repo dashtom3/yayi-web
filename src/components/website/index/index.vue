@@ -1,13 +1,16 @@
 <template>
   <div class="index">
     <div v-show="isActive" class="sidebar">
-<!--       <div class="sideBtn" v-for="(item,index) in items" @click="jump(index)">{{item.des}}</div> -->
+<!--  <div class="sideBtn" v-for="(item,index) in items" :class="{spe: item.spe}" @click="jump(index)">{{item.des}}</div> -->
       <div class="sideBtn" :class="{spe: isSpe1}" @click="jump(0)">品牌库</div>
-      <div class="sideBtn" :class="{spe: isSpe2}" @click="jump(1)">品牌护理</div>
+      <div class="sideBtn" :class="{spe: isSpe2}" @click="jump(1)">预防护理</div>
       <div class="sideBtn" :class="{spe: isSpe3}" @click="jump(2)">口内材料</div>
       <div class="sideBtn" :class="{spe: isSpe4}" @click="jump(3)">医用耗材</div>
-      <div class="sideBtn" :class="{spe: isSpe5}" @click="jump(4)">器械</div>
-      <div class="sideBtn" :class="{spe: isSpe6}" @click="jump(5)">仪器</div>
+      <div class="sideBtn" :class="{spe: isSpe5}" @click="jump(4)">预备切磨</div>
+      <div class="sideBtn" :class="{spe: isSpe6}" @click="jump(5)">器械</div>
+      <div class="sideBtn" :class="{spe: isSpe7}" @click="jump(6)">仪器</div>
+      <div class="sideBtn" :class="{spe: isSpe8}" @click="jump(7)">种植</div>
+      <div class="sideBtn" :class="{spe: isSpe9}" @click="jump(8)">正畸</div>
     </div>
     <div v-show="top" class="top_box" @click="backToTop">
        <p class="top_title">置顶</p>
@@ -17,15 +20,18 @@
        <p class="contact_title">联系客服</p>
       <img src="../../../images/index/contact.png" alt="img" />
     </div>
-    <publicHeader ></publicHeader>
+    <publicHeader></publicHeader>
     <classify :brandListData="brandList"></classify>
     <carousel></carousel>
     <brand class="d_jump"></brand>
     <preventive class="d_jump"></preventive>
     <dental class="d_jump"></dental>
     <medical class="d_jump"></medical>
+    <readycut class="d_jump"></readycut>
     <apparatus class="d_jump"></apparatus>
     <instrument class="d_jump"></instrument>
+    <plant class="d_jump"></plant>
+    <zq class="d_jump"></zq>
     <publicFooter></publicFooter>
   </div>
 </template>
@@ -41,11 +47,15 @@
   import medical from './medical'
   import apparatus from './apparatus'
   import instrument from './instrument'
+  import readycut from './readycut'
+  import plant from './plant'
+  import zq from './zq'
 
   export default {
     name: 'index',
     data () {
       return {
+        items: [],
         isActive: false,
         top: false,
         contact: false,
@@ -55,6 +65,9 @@
         isSpe4: false,
         isSpe5: false,
         isSpe6: false,
+        isSpe7: false,
+        isSpe8: false,
+        isSpe9: false,
         brandList:[]
       }
     },
@@ -66,14 +79,16 @@
       preventive,
       dental,
       medical,
+      readycut,
       apparatus,
       instrument,
+      plant,
+      zq,
       publicFooter,
     },
     created: function() {
       var that = this;
       window.addEventListener('scroll', that.menu);
-      
     },
     methods: {
 
@@ -144,7 +159,7 @@
         } else {
           that.isSpe6 = false;
         }
-        // console.log(scroll, 'frisco')
+        //console.log(scroll, 'frisco')
       },
       // 根据锚点跳转并实现动画
       jump: function(index) {
