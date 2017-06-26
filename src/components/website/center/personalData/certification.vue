@@ -32,7 +32,7 @@
             <i v-else class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
           </el-upload>
           <transition name="shake">
-            <p v-show="doctorPic_validate" class="error">请输入真实的单位名称</p>
+            <p v-show="doctorPic_validate" class="error">请上传真实的医师资格证书</p>
           </transition>
         </el-form-item>
         <el-form-item>
@@ -95,11 +95,6 @@
             this.companyName_validate = true
           }else{
             this.companyName_validate = false
-          }
-          if(!this.certiData.doctorPic){
-            this.doctorPic_validate = true
-          }else{
-            this.doctorPic_validate = false
           }
         },
         deep: true
