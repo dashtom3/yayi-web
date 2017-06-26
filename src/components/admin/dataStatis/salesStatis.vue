@@ -15,7 +15,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-input v-model="goodName" class="fl t_input_w"></el-input>
+        <el-input v-model="selectInput" class="fl t_input_w"></el-input>
         <el-form-item class="fl">
           <el-button type="primary">查询</el-button>
         </el-form-item>
@@ -52,6 +52,7 @@
           label: '真实姓名'
         }],
         value: '1',
+        selectInput: '',
         salesList: [{
           trueName: '张三',
           mobile: '18947689378',

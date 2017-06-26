@@ -15,7 +15,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-input v-model="goodName" class="fl t_input_w"></el-input>
+        <el-input v-model="selectInput" class="fl t_input_w"></el-input>
         <el-form-item label="下单时间" class="fl">
           <div class="block">
             <el-date-picker
@@ -60,6 +60,7 @@
         }],
         value: '1',
         value3: '',
+        selectInput: '',
         elecList: [{
           trueName: '张三',
           mobile: '18947689378',
