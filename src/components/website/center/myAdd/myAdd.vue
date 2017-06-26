@@ -4,7 +4,7 @@
       <div class="header_box">管理收货地址</div>
         <el-form :model="form" class="form_box">
           <el-form-item label="所在区域" :label-width="formLabelWidth" class="item">
-            <myAddress v-on:listenToChild="showFromChild" style="width:260px;"></myAddress>
+            <myAddress v-on:listenToChild="showFromChild" :selected="this.xRegion" style="width:260px;"></myAddress>
             <transition name="shake">
               <span v-show="placeAlert" class="error">请选择所在区域！</span>
             </transition>
@@ -46,13 +46,13 @@
             <div class="left add_operate">操作</div>
           </div>
           <div class="address_des" v-for="add in address" :key="add">
-            <div class="left des_people">{{add.people}}</div>
-            <div class="left des_place">{{add.place}}</div>
-            <div class="left des_des">{{add.des}}</div>
-            <div class="left des_mobile">{{add.mobile}}</div>
+            <div class="left des_people">{{add.receiverName}}</div>
+            <div class="left des_place">{{add.province}}{{add.city}}{{add.county}}</div>
+            <div class="left des_des">{{add.receiverDetail}}</div>
+            <div class="left des_mobile">{{add.phone}}</div>
             <div class="left des_operate">
-              <i class="el-icon-edit edit" @click="add_edit"></i>
-              <i class="el-icon-delete remove" @click="add_remove"></i>
+              <i class="el-icon-edit edit" @click="add_edit(add)"></i>
+              <i class="el-icon-delete remove" @click="add_remove(add)"></i>
             </div>
             <div class="clearfix"></div>
           </div>
@@ -73,31 +73,31 @@
         <!--  v-else end -->
         <!-- 修改地址弹出框开始 -->
         <el-dialog title="修改收货信息" v-model="editAddVisible">
-          <el-form :model="form">
+          <el-form :model="edForm">
             <el-form-item label="收货人" :label-width="formLabelWidth">
-              <el-input v-model="form.name" auto-complete="off" style="width:180px;"></el-input>
+              <el-input v-model="edForm.name" auto-complete="off" style="width:180px;"></el-input>
               <transition name="shake">
                 <span v-show="realAlert1" style="color: #D0011B;">请填写收货人！</span>
               </transition>
             </el-form-item>
             <el-form-item label="所在区域" :label-width="formLabelWidth">
-              <myAddress></myAddress>
+              <myAddress v-on:listenToChild="showFromChild" :selected="this.xRegion" style="width:260px;"></myAddress>
               <transition name="shake">
                 <span v-show="placeAlert1" style="margin-left: 20px; color: #D0011B;">请选择所在区域！</span>
               </transition>
             </el-form-item>
             <el-form-item label="手机号码" :label-width="formLabelWidth">
-              <el-input v-model="form.mobile" auto-complete="off" style="width:180px;"></el-input>
+              <el-input v-model="edForm.mobile"  auto-complete="off" style="width:180px;"></el-input>
               <transition name="shake">
                 <span v-show="phoneAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人手机号码！</span>
               </transition>
             </el-form-item>
             <el-form-item label="固定电话" :label-width="formLabelWidth">
-              <el-input v-model="form.gmobile" auto-complete="off" style="width:180px;"></el-input>
+              <el-input v-model="edForm.gmobile"  auto-complete="off" style="width:180px;"></el-input>
               <span style="color: #D0011B;">（选填）</span>
             </el-form-item>
             <el-form-item label="详细地址" :label-width="formLabelWidth">
-              <el-input v-model="form.address" auto-complete="off" style="width:70%;"></el-input>
+              <el-input v-model="edForm.address" auto-complete="off" style="width:70%;"></el-input>
               <transition name="shake">
                 <span v-show="addAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人地址！</span>
               </transition>
@@ -111,15 +111,6 @@
           </div>
         </el-dialog>
         <!-- 修改地址弹出框结束 -->
-        <!-- 删除地址弹出框开始 -->
-        <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny">
-          <span>是否确定删除收货地址?</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="removeVisible = false">取 消</el-button>
-            <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
-          </span>
-        </el-dialog>
-        <!-- 删除地址弹出框结束 -->
     </div>
   </div>
 </template>
@@ -140,86 +131,269 @@
         placeAlert1: false,
         phoneAlert1: false,
         setDefault1: false,
-        hasAddress: true,
+        hasAddress: false,
         editAddVisible: false,
         removeVisible: false,
-        address:[{
-          people: '收货人1号',
-          place: '上海 上海市 静安区',
-          des: '共和新路街道洛川中路1100弄31号103（居委会）',
-          mobile: '18652111236',
-        },{
-          people: '收货人1号',
-          place: '上海 上海市 静安区',
-          des: '共和新路街道洛川中路1100弄31号103（居委会）',
-          mobile: '18652111236',
-        },{
-          people: '收货人1号',
-          place: '上海 上海市 静安区',
-          des: '共和新路街道洛川中路1100弄31号103（居委会）',
-          mobile: '18652111236',
-        }],
+        address:[],
         form: {
-          name: '',
           region: '',
+          name: '',
           address: '',
           mobile: '',
           gmobile: '',
-          type: [],
-          resource: '',
+        },
+        edForm: {
+          region: '',
+          name: '',
+          address: '',
+          mobile: '',
+          gmobile: '',
         },
         formLabelWidth: '120px',
+        xRegion: [],
+        xRegion2: [],
+        editAdd: {},
       }
     },
     components: {
       myAddress,
     },
+    watch: {
+      xRegion: function() {
+        var that = this;
+        if (that.xRegion !== []) {
+          that.placeAlert = false;
+        }
+      },
+      form: {
+        handler: function() {
+         var that = this;
+         if (that.form.name !== '') {
+          that.realAlert = false;
+         }
+         if (that.form.mobile !== '') {
+          that.phoneAlert = false;
+         }
+         if (that.form.address !== '') {
+          that.addAlert = false;
+         }
+        },
+        deep: true
+      },
+      edForm: {
+        handler: function() {
+         var that = this;
+         if (that.edForm.name !== '') {
+          that.realAlert1 = false;
+         }
+         if (that.edForm.mobile !== '') {
+          that.phoneAlert1 = false;
+         }
+         if (that.edForm.address !== '') {
+          that.addAlert1 = false;
+         }
+        },
+        deep: true
+      }
+    },
     created: function () {
       var that = this;
       var obj = {
-        token:that.global.getToken()
+        phone:that.global.getUser().phone,
       };
-      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj)
-      .then((res) => {
+      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
         if (res.data.callStatus === 'SUCCEED') {
-          this.getData = res.data.data;
+          console.log(res.data);
+          if (res.data.data.length == 0) {
+            that.hasAddress = false;
+          } else {
+            that.hasAddress = true;
+            that.address = res.data.data;
+          }
+          //this.getData = res.data.data;
         } else {
           that.$message.error('网络出错，请稍后再试！');
         }
       })
     },
     methods: {
-      //
+      // 选择所在区域
       showFromChild: function(data) {
         var that = this;
-        console.log(data,'22');
+        that.xRegion = data;
+        //console.log(that.xRegion,'22');
       },
       // 保存地址
       save: function() {
         var that = this;
-        that.realAlert = true;
-        that.addAlert = true;
-        that.placeAlert = true;
-        that.phoneAlert = true;
+        console.log(that.xRegion, '22')
+        if(that.xRegion == [] || that.xRegion.length == 0) {
+          that.placeAlert = true;
+          return false
+        }
+        if(that.form.name == '') {
+          that.realAlert = true;
+          return false
+        }
+        if(that.form.mobile == '') {
+          that.phoneAlert = true;
+          return false
+        }
+        if(that.form.address == '') {
+          that.addAlert = true;
+          return false
+        }
+        var obj = {
+          newPhone: that.global.getUser().phone,
+          province: that.xRegion[0],
+          city: that.xRegion[1],
+          county: that.xRegion[2],
+          receiverName: that.form.name,
+          receiverDetail: that.form.address,
+          landlineNumber: that.form.gmobile,
+          phone: that.form.mobile,
+          isDefault: 1,
+          //isDefault: that.setDefault,
+        }
+        that.global.axiosPostReq('/shoppingAdress/insert', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            // console.log(that.xRegion,'frisco');
+            that.xRegion = [];
+            that.form.name = '';
+            that.form.address = '';
+            that.form.gmobile = '';
+            that.form.mobile = '';
+            that.isDefault = false;
+            that.$message('保存地址成功！');
+            var obj = {
+              phone:that.global.getUser().phone,
+            };
+            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                console.log(res.data);
+                if (res.data.data.length == 0) {
+                  that.hasAddress = false;
+                } else {
+                  that.hasAddress = true;
+                  that.address = res.data.data;
+                }
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          } else {
+            that.$message.error('保存地址失败！');
+          }
+        })
       },
       // 修改地址
-      add_edit: function() {
+      add_edit: function(add) {
         var that = this;
+        that.editAdd = add;
         that.editAddVisible = true;
       },
-      // 删除地址
-      add_remove: function() {
+      // 保存修改
+      saveEdit: function() {
         var that = this;
-        that.removeVisible = true;   
-      },
-      // 确定取消
-      confirm_cancel: function() {
-        var that = this;
-        that.removeVisible = false;
-        that.$message('删除地址成功！');
-        if (condition) {
-          expression
+        if(that.edForm.name == '') {
+          that.realAlert1 = true;
+          return false
         }
+        if(that.xRegion == [] || that.xRegion.length == 0) {
+          that.placeAlert1 = true;
+          return false
+        }
+        if(that.edForm.mobile == '') {
+          that.phoneAlert1 = true;
+          return false
+        }
+        if(that.edForm.address == '') {
+          that.addAlert1 = true;
+          return false
+        }
+        var obj = {
+          newPhone: that.global.getUser().phone,
+          receiverId: that.editAdd.receiverId,
+          province: that.xRegion[0],
+          city: that.xRegion[1],
+          county: that.xRegion[2],
+          receiverName: that.edForm.name,
+          receiverDetail: that.edForm.address,
+          landlineNumber: that.edForm.gmobile,
+          phone: that.edForm.mobile,
+          isDefault: 1,
+          //isDefault: that.setDefault,
+        }
+        that.global.axiosPostReq('/shoppingAdress/update', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            // console.log(that.xRegion,'frisco');
+            that.editAddVisible = false;
+            that.xRegion = [];
+            that.edForm.name = '';
+            that.edForm.address = '';
+            that.edForm.gmobile = '';
+            that.edForm.mobile = '';
+            that.isDefault = false;
+            that.$message('保存地址成功！');
+            var obj = {
+              phone:that.global.getUser().phone,
+            };
+            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                if (res.data.data.length == 0) {
+                  that.hasAddress = false;
+                } else {
+                  that.hasAddress = true;
+                  that.address = res.data.data;
+                }
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          } else {
+            that.$message.error('保存地址失败！');
+          }
+        })
+      },
+      // 删除地址
+      add_remove: function(add) {
+        var that = this;
+        that.$confirm('此操作将删除该收货地址, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          var obj = {
+            receiverId: add.receiverId,
+          }
+          that.global.axiosGetReq('/shoppingAdress/deleteShippingAddress', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              var obj = {
+                phone:that.global.getUser().phone,
+              };
+              that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  if (res.data.data.length == 0) {
+                    that.hasAddress = false;
+                  } else {
+                    that.hasAddress = true;
+                    that.address = res.data.data;
+                  }
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+              that.$message(res.data.msg);
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });  
       },
     }
   }
@@ -309,6 +483,7 @@
 }
 .address_des {
   width: 1069px;
+  border-bottom: 1px solid #e9e9e9;
 }
 .des_people {
   width: 156px;

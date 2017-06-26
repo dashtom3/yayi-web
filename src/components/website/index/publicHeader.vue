@@ -10,10 +10,11 @@
           <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
         </div>
         <div class="my_order right" @click="myOrder">我的订单</div>
-        <div class="shopping_car right" @mouseover="showCargo">
-          <img class="car_img" src="../../../images/index/shopping_car.png" alt="img">
-          <p class="left gwcHeader">购物车<span class="car_num">{{car_num}}</span></p>
-          <div class="whiteLine"></div>
+        <div class="shopping_car right">
+          <img class="car_img" @click="gotocar" @mouseover="showCargo" src="../../../images/index/shopping_car.png" alt="img">
+          <p class="left gwcHeader" @click="gotocar" @mouseover="showCargo">购物车<span class="car_num">{{car_num}}</span></p>
+          <div v-if="cargo_show" class="whiteLine"></div>
+          <div v-else class="elseLine"></div>
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
             <div class="cargo_box" v-for="item in items" :key="item">
@@ -21,7 +22,7 @@
               <div class="cargo_des">{{item.name}}</div>
               <div class="cargo_price">￥{{item.price}}</div>
               <div class="cargo_num">{{item.num}}盒</div>
-              <div class="cargo_rm">删除</div>
+              <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
               <p class="fir left">共<span style="color: #D81E06;">{{total_num}}</span>件商品</p>
@@ -248,19 +249,7 @@
         fg_Yzm: '获取验证码',
         rg_Yzm1: '',
         rg_Yzm: '获取验证码',
-        items: [{
-          des: '爱丽思 标准#',
-          price: '3267',
-          num: '1',
-        },{
-          des: '爱丽思 标准#',
-          price: '3267',
-          num: '1',
-        },{
-          des: '爱丽思 标准#',
-          price: '3267',
-          num: '1',
-        }],
+        items: [],
         msPhone_alert: false,
         msCode_alert: false,
         pwdPhone_alert: false,
@@ -324,6 +313,13 @@
             }
           })
         }
+      },
+      items: {
+        handler: function() {
+          var that = this;
+          console.log('22');
+        },
+        deep: true
       },
       //监听短信登录手机号验证
       ms_mobilephone: function() {
@@ -435,18 +431,13 @@
       // 去购物车
       gotocar: function() {
         var that = this;
-          if (that.global.getToken() !== null) {
-            that.$router.push({ path: '/gwc' });
-          } else {
-            that.changeForget1 = true;
-            that.changeForget2 = false;
-            that.changeForget3 = false;
-            that.showLogin = !that.showLogin;
-            if (that.showLogin == false) {
-              that.isNum = true;
-            }else {
-              that.isNum = false;
-          }
+        if (that.global.getToken() !== null) {
+          that.$router.push({ path: '/gwc' });
+        } else {
+          that.changeForget1 = true;
+          that.changeForget2 = false;
+          that.changeForget3 = false;
+          that.showLogin1 = !that.showLogin1;
         }
       },
       // hover购物车
@@ -460,11 +451,11 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-        that.global.axiosGetReq('/cart/list', obj)
-        .then((res) => {
+        that.global.axiosGetReq('/cart/list', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length == 0) {
               that.cargo_show = false;
+              that.car_num = res.data.data.length;
               return false
             }
             if (res.data.data.length !== 0) {
@@ -479,13 +470,70 @@
               }
               that.total_num = sum;
               that.total_price = sumPrice;
-              console.log(res.data.data);
+              //console.log(res.data.data);
               return false
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
+      },
+      // 删除购物车商品
+      delete_cargo: function(item) {
+        var that = this;
+        // console.log(item.itemSKU);
+        var obj = {
+          phone: that.global.getUser().phone,
+          itemSKU: item.itemSKU,
+          token: that.global.getToken()
+        };
+        that.global.axiosPostReq('/cart/delete', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.global.axiosGetReq('/cart/list', obj).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                if (res.data.data.length == 0) {
+                  that.cargo_show = false;
+                  that.car_num = res.data.data.length;
+                  return false
+                }
+                if (res.data.data.length !== 0) {
+                  var sum = 0;
+                  var sumPrice = 0;
+                  that.cargo_show = true;
+                  that.items = res.data.data;
+                  that.car_num = res.data.data.length;
+                  for (var i = 0; i < that.items.length; i++) {
+                    sum += that.items[i].num
+                    sumPrice += that.items[i].num*that.items[i].price
+                  }
+                  that.total_num = sum;
+                  that.total_price = sumPrice;
+                  //console.log(res.data.data);
+                  return false
+                }
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+            that.$message({
+              message: '删除成功！',
+              type: 'success'
+            });
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+        // that.$confirm('此操作将删除该商品, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        // }).catch(() => {
+        //   that.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   });          
+        // });
       },
       // logo跳转
       logo: function() {
@@ -1009,12 +1057,25 @@
     position: absolute;
     top: 26px;
     left: 90px;
-    width: 298px;
+    width: 327px;
+    height: 1px;
+    background-color: #e9e9e9;
+    z-index: 9999;
+  }
+  .elseLine {
+    display: none;
+    position: absolute;
+    top: 26px;
+    left: 90px;
+    width: 239px;
     height: 1px;
     background-color: #e9e9e9;
     z-index: 9999;
   }
   .shopping_car:hover .whiteLine{
+    display: block;
+  }
+  .shopping_car:hover .elseLine{
     display: block;
   }
   .shopping_car:hover {
@@ -1030,20 +1091,20 @@
   }
   .shopping_car .car_hover {
     display: none;
-    width: 347px;
+    width: 376px;
     position: absolute;
     top: 27px;
     left: -1px;
     border-left: 1px solid #e9e9e9;
     border-right: 1px solid #e9e9e9;
     border-bottom: 1px solid #e9e9e9;
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
     background-color: #fff;
     z-index: 999;
   }
   .shopping_car .car_hover1 {
     display: none;
-    width: 347px;
+    width: 288px;
     position: absolute;
     text-align: center;
     top: 27px;
@@ -1062,7 +1123,7 @@
 /*    margin-top: 12px;*/
   }
   .cargo_box {
-    width: 347px;
+    width: 376px;
     height: 70px;
     margin-top: 12px;
     position: relative;
@@ -1079,7 +1140,7 @@
   .cargo_des {
     position: absolute;
     top: 3px;
-    left: 50px;
+    left: 70px;
   }
   .cargo_price {
     position: absolute;
@@ -1090,12 +1151,12 @@
   .cargo_num {
     position: absolute;
     top: 30px;
-    left: 50px;
+    left: 70px;
   }
   .cargo_rm {
     position: absolute;
     top: 30px;
-    right: 8px;
+    right: 0px;
   }
   .cargo_rm:hover {
     color: #5DB7E8;
@@ -1441,8 +1502,9 @@
     transition: all ease 0.5s;
   }
   .logOut {
-    color: #666666;
+    color: #000;
     font-size: 14px;
+    margin-left: 27px;
   }
   .logOut:hover {
     color: #5DB7E7;

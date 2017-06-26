@@ -3641,7 +3641,7 @@ export default {
         this.selectedOptions3 = this.selected;
       },
       deep: true
-    }
+    },
   },
   methods:{
     

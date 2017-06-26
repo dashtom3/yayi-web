@@ -1,6 +1,3 @@
-
-
-
 <template>
   <div class="index">
     <div v-show="isActive" class="sidebar">
