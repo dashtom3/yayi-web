@@ -1,55 +1,69 @@
 <template>
   <div class="certification">
     <div class="content">
-      <el-form ref="userData" :model="userData" label-width="250px">
+      <el-form ref="certiData" :model="certiData" label-width="250px">
         <el-form-item label="类型：">
-          <el-select v-model="userData.type" placeholder="" :change="adsf(userData.type)">
+          <el-select v-model="certiData.type" :change="adsf(certiData.type)">
             <el-option label="个人" value="1"></el-option>
             <el-option label="企业" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单位名称：">
-          <el-input v-model="userData.companyName"></el-input>
+          <el-input v-model="certiData.companyName"></el-input>
         </el-form-item>
         <el-form-item label="单位所在地：">
-          <selectThree @listenToChild="showFromChild" :selected="userData.part"></selectThree>
+          <selectThree @listenToChild="showFromChild" :selected="this.certiData.part"></selectThree>
         </el-form-item>
         <el-form-item label="详细地址：">
-          <el-input v-model="userData.workAddress"></el-input>
+          <el-input v-model="certiData.workAddress"></el-input>
         </el-form-item>
         <el-form-item :label="sczgz">
           <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="savePerInfo">保存</el-button>
-        </el-form-item>
-        </el-form-item>
+          </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-  import global from '../../../global/global'
   import selectThree from "../../details/selectThree"
+  import global from '../../../global/global'
   export default {
     name: 'certification',
+    props:["state","userData"],
     data () {
       return {
         // 1,ing-----2,false
         certificateState:0,
         sczgz:"口腔执业医师资格证：",
-        imageUrl: ''
+        imageUrl: '',
+        certiData: {
+          phone: global.getUser().phone,
+          token: global.getToken(),
+          trueName: this.userData.trueName || '',
+          sex: this.userData.sex || '1',
+          birthday: this.userData.birthday || '1970-01-01',
+          qq: this.userData.birthday || '',
+          userPic: this.userData.userPic || '',
+          type: this.userData.type || '1',
+          companyName: this.userData.companyName || '',
+          part: this.userData.part || ['北京','北京市','东城区'],
+          workAddress: this.userData.workAddress || '',
+          doctorPic: this.userData.doctorPic || ''
+        } //作为局部这个组件的data的初始值
       }
     },
-    props:["state","userData"],
     components:{
       selectThree
     },
@@ -63,23 +77,34 @@
     methods:{
       //编辑个人信息
       savePerInfo(){
+        var localData = JSON.parse(localStorage.getItem('personData')) || {};
         var params = {
           phone: global.getUser().phone,
           token: global.getToken(),
-          trueName: this.userData.trueName,
-          sex: this.userData.sex,
-          birthday: this.userData.birthday,
-          qq: this.userData.qq,
+          trueName: localData.trueName || '',
+          sex: localData.sex || '',
+          birthday: localData.birthday || '',
+          qq: localData.qq || '',
           userPic: '',
-          type: this.userData.type,
-          companyName: this.userData.companyName,
-          part: this.userData.part,
-          workAddress: this.userData.workAddress,
-          doctorPic: this.userData.imageUrl
+          type: this.certiData.type,
+          companyName: this.certiData.companyName,
+          part: (this.certiData.part).join(","),
+          workAddress: this.certiData.workAddress,
+          doctorPic: this.certiData.imageUrl
         }
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            let certData = {
+              userPic: '',
+              type: this.certiData.type,
+              companyName: this.certiData.companyName,
+              part: (this.certiData.part).join(","),
+              workAddress: this.certiData.workAddress,
+              doctorPic: this.certiData.imageUrl
+            }
+
+            localStorage.setItem("certData",JSON.stringify(certData));
             this.$message({
               message: '个人信息修改成功！',
               type: 'success'
@@ -90,7 +115,7 @@
         })
       },
       showFromChild(data){
-        this.userData.part =  data;
+        this.certiData.part =  data;
       },
       adsf:function(aa){
         if(aa=="个人"){

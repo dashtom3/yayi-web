@@ -10,6 +10,7 @@
 
 export default {
   name: 'myAddress',
+  props: ['selected'],
   data () {
     return {
       selectedOptions3: ['zujian', 'data', 'tag'],
@@ -3627,14 +3628,19 @@ export default {
       ],
     }
   },
-  props: ['selected'],
+  created(){
+    this.selectedOptions3 = this.selected;
+  },
   watch: {
     selectedOptions3: function() {
       var that = this;
       that.$emit('listenToChild',that.selectedOptions3);
     },
-    selected: function(){
-      this.selectedOptions3 = this.selected;
+    selected: {
+      handler: function(){
+        this.selectedOptions3 = this.selected;
+      },
+      deep: true
     }
   },
   methods:{

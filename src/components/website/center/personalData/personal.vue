@@ -8,8 +8,9 @@
 
       </div>
     </div>
-    <personalData :userData="personInfo" v-show="1==currentTabs"></personalData>
-    <certification :userData="personInfo" v-bind:state="currentTabs" v-show="2==currentTabs"></certification>
+    <div style="height:745px;" v-if="!personInfo.phone"></div>
+    <personalData :userData="personInfo" v-show="1==currentTabs" v-if="personInfo.phone"></personalData>
+    <certification :userData="personInfo" v-bind:state="currentTabs" v-if="personInfo.phone" v-show="2==currentTabs"></certification>
     <bindSale v-show="3==currentTabs"></bindSale>
   </div>
 </template>
