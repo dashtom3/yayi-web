@@ -59,7 +59,7 @@
           label: '真实姓名'
         }],
         value: '1',
-        value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        value3: '',
         elecList: [{
           trueName: '张三',
           mobile: '18947689378',

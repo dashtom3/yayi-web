@@ -29,7 +29,7 @@
             :before-upload="beforeAvatarUpload"
             :data="qiNiuToken">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" >
-            <i v-else class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
+            <i class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
           </el-upload>
           <transition name="shake">
             <p v-show="doctorPic_validate" class="error">请输入真实的单位名称</p>
@@ -91,9 +91,7 @@
       },
       certiData: {
         handler: function(){
-          if(!this.certiData.companyName){
-            this.companyName_validate = true
-          }else{
+          if(this.certiData.companyName){
             this.companyName_validate = false
           }
           if(!this.certiData.doctorPic){

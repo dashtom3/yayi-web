@@ -79,8 +79,11 @@
           label: 'sku代码'
         }],
         value: '1',
-        value1: '1',
+        value1: '0',
         brands: [{
+          value1: '0',
+          label1: '全部'
+        },{
           value1: '1',
           label1: '品牌1'
         },{
@@ -91,7 +94,7 @@
           label1: '品牌3'
         }],
         goodName: '',
-        value3: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        value3: '',
         goodsList: [{
           goodsCode: 'FGDS78473',
           goodsName: '超声波洗牙',

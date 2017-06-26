@@ -86,9 +86,7 @@
     watch: {
       personData: {
         handler: function(){
-          if(!this.personData.trueName){
-            this.trueName_validate = true
-          }else{
+          if(this.personData.trueName){
             this.trueName_validate = false
           }
         },
