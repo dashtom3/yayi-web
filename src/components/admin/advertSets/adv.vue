@@ -2,7 +2,7 @@
 	<el-row class="warp">
 		<el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item><b>首页广告设置</b></el-breadcrumb-item>
+        <el-breadcrumb-item><b>广告设置</b></el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
 

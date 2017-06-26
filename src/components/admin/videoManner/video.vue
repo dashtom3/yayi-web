@@ -39,7 +39,7 @@
   				<el-radio class="radio" v-model="radio" label="2">输入外部视频网址</el-radio>
 		    </li>
 		    <li class="clearfix" style="padding-left:92px;padding-bottom:20px;">
-		    	<el-input v-model="video_link" class="fl" style="width:200px;padding-right:20px;"></el-input>
+		    	<el-input v-model="video_link" class="fl" style="width:200px;padding-right:20px;" :placeholder="ifPlaceHolder"></el-input>
 		      <el-upload
 					  class="upload-demo"
 					  ref="upload"
@@ -48,7 +48,7 @@
 					  :on-remove="handleRemove"
 					  :file-list="fileList"
 					  :auto-upload="false">
-					  <el-button slot="trigger" type="primary">选择</el-button>
+					  <el-button slot="trigger" type="primary" v-if="radio==='1'" >选择</el-button>
 					</el-upload>
 		    </li>
 		  </ul>
@@ -67,11 +67,16 @@
 					video_id: 'xxxxxxx'
 				}],
 				videoVisible: false,
+				radio: '1',
 				input_video: '',
 				video_link: '',
-				radio: '1',
 				isEdit: false,
 				fileList: [{name: 'food.mp4', url: ''}]
+			}
+		},
+		computed: {
+			ifPlaceHolder: function(){
+				return this.radio === '1' ? this.ifPlaceHolder = '' : this.ifPlaceHolder = '请输入视频地址'
 			}
 		},
 		methods: {
