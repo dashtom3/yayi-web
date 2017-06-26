@@ -82,7 +82,7 @@
 		display:block;
 	}
 	.t_input_w{
-		width:220px;
+		width:220px!important;
 	}
 	.t_input_width{
 		width:300px;

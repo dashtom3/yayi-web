@@ -178,18 +178,6 @@ let router = new Router({
 				{path: '/admin/userManner/certificationList', component: userManner_certificationList, name: '资质列表', menuShow: true}
       ]
     },
-    {
-      path: '/adminManner',
-      component: Home,
-      name: '系统管理',
-      menuShow: true,
-      // leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
-      children: [
-        {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
-        {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
-      ]
-    },
 		{
       path: '/salesManner',
       component: Home,
@@ -247,6 +235,18 @@ let router = new Router({
         {path: '/admin/dataStatis/goodsStatis', component: dataStatis_goodsStatis, name: '商品统计', menuShow: true},
         {path: '/admin/dataStatis/elecSuppStatis', component: dataStatis_elecSuppStatis, name: '电商用户统计', menuShow: true},
         {path: '/admin/dataStatis/salesStatis', component: dataStatis_salesStatis, name: '销售员统计', menuShow: true}
+      ]
+    },
+    {
+      path: '/adminManner',
+      component: Home,
+      name: '系统管理',
+      menuShow: true,
+      // leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-users', // 图标样式class
+      children: [
+        {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
+        {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
     }
 	],

@@ -1,12 +1,20 @@
 <template>
   <div class="personalData">
-    <div class="content">
-      <div class="changeUserImg">
-        <label for="file1">更改头像<img id="img_up" class="loadUserImg" src="../../../../images/center/loadUserImg.png" alt=""></label>
-        <input type="file" name="file1" id="file1" accept="image/png,image/gif" style="display:none">
-      </div>
+    <div class="content">  
       <div class="mainContent">
         <el-form ref="personData" :model="personData" label-width="90px">
+          <el-form-item>
+            <el-upload
+              class="avatar-uploader"
+              :action="qiNiuUrl"
+              :show-file-list="false"
+              :on-success="uploadFile"
+              :data="qiNiuToken">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
+              <img src="../../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personData.userPic">
+              <div>更改头像</div>
+            </el-upload>
+          </el-form-item>
           <el-form-item label="用户名：">
             <el-input :disabled="true" v-model="personData.phone"></el-input>
           </el-form-item>
@@ -49,59 +57,47 @@
     data () {
       return {
         currentTabs:1,
-        qiNiuToken: '',
         trueName_validate: false,
+        imageUrl: this.userData.userPic || '',
+        qiNiuToken: null,
+        qiNiuUrl: global.qiNiuUrl,
+        //作为局部这个组件的data的初始值
         personData: {
           phone: global.getUser().phone,
           token: global.getToken(),
+          userPic: this.userData.userPic || '',
           trueName: this.userData.trueName || '',
           sex: this.userData.sex || '1',
           birthday: this.userData.birthday || '1970-01-01',
-          qq: this.userData.qq || ''
-        }//作为局部这个组件的data的初始值
+          qq: this.userData.qq || '',
+        }
       }
     },
-    // mounted(){
-    //   // 获取七牛token
-    //   // global.getQiNiuToken()
-    //   // .then((res) => {
-    //   //   this.qiNiuToken = {token: res.data.data}
-    //   // })
-    // },
-    mounted(){
-      var filechooser = document.getElementById('file1');
-      var previewer = document.getElementById('img_up');
-      
-      filechooser.onchange = function() {
-          var file = this.files[0];
-          // 接受 jpeg, jpg, png 类型的图片
-          if (!/\/(?:jpeg|jpg|png)/i.test(file.type)) return;
-
-          var reader = new FileReader();
-          reader.onload = function() {
-              var result = this.result;
-              console.log(result);
-              previewer.src = result;
-
-              // 清空图片上传框的值
-              filechooser.value = '';
-          };
-
-          reader.readAsDataURL(file);
-      };
+    created(){
+      //获取七牛token
+      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          this.qiNiuToken = {
+            token: res.data.msg
+          }
+        }
+      })
     },
     watch: {
-      // userData: function(){
-      //   var that = this;
-      //   if(that.userData.trueName !== ''){
-      //     that.trueName_validate = false;
-      //   }
-      // }
+      personData: {
+        handler: function(){
+          if(!this.personData.trueName){
+            this.trueName_validate = true
+          }else{
+            this.trueName_validate = false
+          }
+        },
+        deep: true
+      }
     },
     methods: {
       //编辑个人信息
       savePerInfo(){
-        var localData = JSON.parse(localStorage.getItem('certData')) || {};
         var params = {
           phone: global.getUser().phone,
           token: global.getToken(),
@@ -109,28 +105,17 @@
           sex: this.personData.sex,
           birthday: util.formatDate.format(new Date(this.personData.birthday)),
           qq: this.personData.qq,
-          userPic: localData.userPic || '',
-          type: localData.type || '',
-          companyName: localData.companyName || '',
-          part: localData.part || '',
-          workAddress: localData.workAddress || '',
-          doctorPic: localData.doctorPic || ''
+          userPic: this.imageUrl
         }
-        //验证表单
-        // if(this.userData.trueName == ''){
-        //   this.trueName_validate = true;
-        //   return false;
-        // }
+        
+        //验证真实姓名必输
+        if(!this.personData.trueName){
+          this.trueName_validate = true;
+          return false;
+        }
         //保存个人信息
-        global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
+        global.axiosPostReq('/userPersonalInfo/updateUser', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            let personData = {
-              trueName: this.personData.trueName,
-              sex: this.personData.sex,
-              birthday: util.formatDate.format(new Date(this.personData.birthday)),
-              qq: this.personData.qq
-            }
-            localStorage.setItem('personData',JSON.stringify(personData));
             this.$message({
               message: '个人信息修改成功！',
               type: 'success'
@@ -141,6 +126,10 @@
           }
         })
         this.$emit('listentoChild',this.userData);
+      },
+      uploadFile(res, file) {
+        this.personData.userPic = global.qiniuShUrl + file.response.key
+        this.imageUrl = global.qiniuShUrl + file.response.key
       }
     }
   }
@@ -152,12 +141,12 @@
   font-size: 14px;
 }
 .content{
-margin-top: 100px;
-margin-left: 44px;
-margin-right: 50px;
-width: 970px;
-border: 1px solid #eeeeee;
-border-radius: 3px;
+  margin-top: 100px;
+  margin-left: 44px;
+  margin-right: 50px;
+  width: 970px;
+  border: 1px solid #eeeeee;
+  border-radius: 3px;
 }
 .changeUserImg{
   margin-top: 40px;
@@ -165,11 +154,19 @@ border-radius: 3px;
   text-align: center;
   position: relative;
 }
+.changeUserImg img{
+  border-radius: 50%;
+}
 .error {
   position: absolute;
   left: 20px;
   font-size: 14px;
   color: #D81E06;
+}
+.defaultCss{
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
 }
 
 </style>
@@ -205,7 +202,7 @@ border-radius: 3px;
 }
 .loadUserImg{
   position: absolute;
-  top: -140px;
+  top: -150px;
   left: 50%;
   width: 150px;
   height: 150px;

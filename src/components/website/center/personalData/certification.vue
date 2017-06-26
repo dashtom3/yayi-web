@@ -10,6 +10,9 @@
         </el-form-item>
         <el-form-item label="单位名称：">
           <el-input v-model="certiData.companyName"></el-input>
+          <transition name="shake">
+            <p v-show="companyName_validate" class="error">请输入真实的单位名称</p>
+          </transition>
         </el-form-item>
         <el-form-item label="单位所在地：">
           <selectThree @listenToChild="showFromChild" :selected="this.certiData.part"></selectThree>
@@ -20,13 +23,17 @@
         <el-form-item :label="sczgz">
           <el-upload
           class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="qiNiuUrl"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            :on-success="uploadFile"
+            :before-upload="beforeAvatarUpload"
+            :data="qiNiuToken">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" >
+            <i v-else class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
           </el-upload>
+          <transition name="shake">
+            <p v-show="doctorPic_validate" class="error">请输入真实的单位名称</p>
+          </transition>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="savePerInfo">保存</el-button>
@@ -46,16 +53,15 @@
       return {
         // 1,ing-----2,false
         certificateState:0,
+        companyName_validate: false,
+        doctorPic_validate: false,
         sczgz:"口腔执业医师资格证：",
-        imageUrl: '',
+        imageUrl: this.userData.doctorPic || '',
+        qiNiuToken: null,
+        qiNiuUrl: global.qiNiuUrl,
         certiData: {
           phone: global.getUser().phone,
           token: global.getToken(),
-          trueName: this.userData.trueName || '',
-          sex: this.userData.sex || '1',
-          birthday: this.userData.birthday || '1970-01-01',
-          qq: this.userData.birthday || '',
-          userPic: this.userData.userPic || '',
           type: this.userData.type || '1',
           companyName: this.userData.companyName || '',
           part: this.userData.part || ['北京','北京市','东城区'],
@@ -63,6 +69,16 @@
           doctorPic: this.userData.doctorPic || ''
         } //作为局部这个组件的data的初始值
       }
+    },
+    created(){
+      //获取七牛token
+      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          this.qiNiuToken = {
+            token: res.data.msg
+          }
+        }
+      })
     },
     components:{
       selectThree
@@ -72,45 +88,58 @@
         if(this.state==2){
           this.ert();
         }
+      },
+      certiData: {
+        handler: function(){
+          if(!this.certiData.companyName){
+            this.companyName_validate = true
+          }else{
+            this.companyName_validate = false
+          }
+          if(!this.certiData.doctorPic){
+            this.doctorPic_validate = true
+          }else{
+            this.doctorPic_validate = false
+          }
+        },
+        deep: true
       }
     },
     methods:{
       //编辑个人信息
       savePerInfo(){
-        var localData = JSON.parse(localStorage.getItem('personData')) || {};
         var params = {
           phone: global.getUser().phone,
           token: global.getToken(),
-          trueName: localData.trueName || '',
-          sex: localData.sex || '',
-          birthday: localData.birthday || '',
-          qq: localData.qq || '',
-          userPic: '',
           type: this.certiData.type,
           companyName: this.certiData.companyName,
           part: (this.certiData.part).join(","),
           workAddress: this.certiData.workAddress,
-          doctorPic: this.certiData.imageUrl
+          doctorPic: this.imageUrl
+        }
+        //验证单位名称必输
+        if(!this.certiData.companyName){
+          this.companyName_validate = true;
+          return false;
+        }
+        //验证医师资格证书必输
+        if(!this.certiData.doctorPic){
+          this.doctorPic_validate = true;
+          return false;
+        }
+        //编辑资质认证前需先完成个人信息验证
+        if(!this.userData.trueName){
+          this.$message.error('请先完善个人信息部分！');
         }
         //保存个人信息
-        global.axiosPostReq('/userPersonalInfo/update', params).then((res) => {
+        global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            let certData = {
-              userPic: '',
-              type: this.certiData.type,
-              companyName: this.certiData.companyName,
-              part: (this.certiData.part).join(","),
-              workAddress: this.certiData.workAddress,
-              doctorPic: this.certiData.imageUrl
-            }
-
-            localStorage.setItem("certData",JSON.stringify(certData));
             this.$message({
-              message: '个人信息修改成功！',
+              message: '资质认证修改成功！',
               type: 'success'
             });
           }else{
-            this.$message.error('个人信息修改失败！');
+            this.$message.error('资质认证修改失败！');
           }
         })
       },
@@ -135,19 +164,20 @@
         });
         }
       },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      uploadFile(res, file) {
+        this.certiData.doctorPic = global.qiniuShUrl + file.response.key
+        this.imageUrl = global.qiniuShUrl + file.response.key
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+        // const isJPG = file.type === 'image/jpeg';
+        // const isLt2M = file.size / 1024 / 1024 < 2;
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
+        // if (!isLt2M) {
+        //   this.$message.error('上传头像图片大小不能超过 2MB!');
+        // }
+        // return isJPG && isLt2M;
       }
     }
   }
@@ -178,15 +208,21 @@
     height: 178px;
     display: block;
   }
-.content{
-  padding-top: 40px;
-margin-top: 30px;
-margin-left: 44px;
-margin-right: 50px;
-width: 970px;
-border: 1px solid #eeeeee;
-border-radius: 3px;
-}
+  .error {
+    position: absolute;
+    left: 20px;
+    font-size: 14px;
+    color: #D81E06;
+  }
+  .content{
+    padding-top: 40px;
+    margin-top: 30px;
+    margin-left: 44px;
+    margin-right: 50px;
+    width: 970px;
+    border: 1px solid #eeeeee;
+    border-radius: 3px;
+  }
 </style>
 <style>
 .certification  form{

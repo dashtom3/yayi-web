@@ -1,8 +1,8 @@
 import axios from 'axios'
 export default {
   baseUrl: 'http://47.93.48.111:8080/api',
-  qiNiuUrl: 'http://up-z0.qiniu.com/',
-  qiniuShUrl: 'http://oqhy88nu6.bkt.clouddn.com/',
+  qiNiuUrl: 'http://upload-z2.qiniu.com/',
+  qiniuShUrl: 'http://orl5769dk.bkt.clouddn.com/',
   success (obj, msg, url) {
     obj.$message({
       message: msg,
