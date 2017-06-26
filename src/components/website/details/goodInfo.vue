@@ -17,13 +17,13 @@
 
       <div class="infoLeft_3">
         <span v-on:click="showCllect('商品收藏成功！',1)">
-          <img v-if="saveGood" src="../../../images/details/collect.png" />
-          <img v-else src="../../../images/details/collect2.jpg" />
+          <img style="position:relative;top:1px" v-if="saveGood" src="../../../images/details/collect.png" />
+          <img style="position:relative;top:1px" v-else src="../../../images/details/collect2.jpg" />
           {{saveGood?"收藏":"已收藏"}}
         </span>
         <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)">
-          <img v-if="copyUrl" src="../../../images/details/share.png" />
-          <img v-else src="../../../images/details/share2.jpg" />
+          <img style="position:relative;top:3px" v-if="copyUrl" src="../../../images/details/share.png" />
+          <img style="position:relative;top:3px" v-else src="../../../images/details/share2.jpg" />
           分享
         </span>
       </div>
@@ -101,13 +101,13 @@ import myAddress from './selectThree'
         itemDetail:{},
         commentList:[],
         instructions:{},
-        sureGoodAttr:null,
+        sureGoodAttr:0,
         saveGood:true,
         copyUrl:true,
         bigImgUrl:"1.png",
         goodDefaultNum:1,
         goodInforWord:1,
-        ite: null,
+        ite: 0,
         items: ['1','2','3','4','5','6'],
         goodAllImgs:['1','2','3','4','5']
       }
@@ -145,6 +145,7 @@ import myAddress from './selectThree'
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
+            that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -413,9 +414,15 @@ import myAddress from './selectThree'
     background:#5db7e8;
     color: white;
   }
+  .goodBtn span:nth-child(1):hover{
+    background:#57a5cf;
+  }
   .goodBtn span:nth-child(2){
     /*color: white;*/
-    background:#e6e6e6;
+    background:#5ed6dc;
+  }
+  .goodBtn span:nth-child(2):hover{
+    background:#54c5cb;
   }
   .goodMore {
     border-bottom: 1px solid #e5e5e5;

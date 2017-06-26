@@ -6,30 +6,30 @@
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
         首页><span class="indexLine">3M</span>
       </div>
-      <div class="classifyLine">
+      <div class="classifyLine" >
         分类：
         <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy()">不限</span>
-          <span class="fenlei1" v-bind:class="{fenlieselect: classifyIndex===index}" v-on:click="selectClassfy(index)"  v-for="(item,index) in brandClassfy">
+          <span class="fenlei1" v-bind:class="{fenlieselect: classify1Index===index}" v-on:click="selectClassfy1(index,item)"  v-for="(item,index) in brandClassfy">
             {{item.oneClassify}}
           </span>
           <div class="classfyDetail" v-show="fenlie2.length>0">
             <div class="towClassfy" >
               <ul>
-                <li :class="{asdff:selectedTwo==index}" v-on:click="showChilds222(index)" v-for="(item,index) in fenlie2">{{item.classifyTwoName}}</li>
+                <li :class="{asdff:classify2Index==index}" v-on:click="selectClassfy2(index,item)" v-for="(item,index) in fenlie2">{{item.classifyTwoName}}</li>
               </ul>
             </div>
-            <div class="threeClassfy">
+            <div class="threeClassfy" v-show="fenlie3.length>0">
               <ul>
-                <li :class="{asdff:selectedThree==index}" v-on:click="selectedThreeClassfy(index)" v-for="(item,index) in fenlie3">{{item.classifyThreeName}}</li>
+                <li :class="{asdff:classify3Index==index}" v-on:click="selectClassfy3(index,item)" v-for="(item,index) in fenlie3">{{item.classifyThreeName}}</li>
               </ul>
             </div>
           </div>
       </div>
-      <div class="brandLine">
+      <div class="brandLine" >
         <span style="margin-top:11px">品牌：</span>
-        <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn">不限</span>
+        <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn()">不限</span>
         <ul>
-          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item.itemBrandId)" v-for="(item,index) in brands">
+          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands">
             {{item.itemBrandLogo}}
             <img v-show="item.selected" src="../../../images/brandLib/1.png" alt="">
             <img v-show="!item.selected" src="../../../images/brandLib/2.png" alt="">
@@ -47,8 +47,10 @@
           <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}">
             {{item.orderName}}
             <span></span>
-            <img v-if="index==5" v-show="!item.orderSort" src="../../../images/brandLib/6.png" alt="">
-            <img v-if="index!=0&&index!=5" v-show="!item.orderSort" src="../../../images/brandLib/7.png" alt="">
+            <img v-if="!item.orderSort&&index>0&&index<3"  src="../../../images/brandLib/7.png" alt="">
+            <img v-if="item.orderSort&&index>0&&index<3" src="../../../images/brandLib/8.png" alt="">
+            <img v-if="!item.orderSort&&index>0&&index==3" src="../../../images/brandLib/6.png" alt="">
+            <img v-if="item.orderSort&&index>0&&index==3" src="../../../images/brandLib/9.png" alt="">
           </li>
         </ul>
         <!-- <div class="checkBox">
@@ -59,8 +61,6 @@
       <div class="allGoods">
         <ul>
           <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
-            <!-- <router-link to="/details/index"> -->
-            <!-- <img  class="ifGold" v-if="item.ifGold" src="../../../images/brandLib/3.png" alt=""> -->
             <div class="imgWrap">
               <img class="goodImg" :src="item.itemDetail" alt="">
               <span></span>
@@ -70,7 +70,6 @@
               <span>￥{{item.itemPrice}}</span>
               <span><img src="../../../images/brandLib/5.png" alt="购物车"></span>
             </div>
-            <!-- </router-link> -->
           </li>
         </ul>
       </div>
@@ -93,41 +92,32 @@
     name: 'brandLib',
     data () {
       return {
-        intClassfy:null,
+        intClassfy1:null,
+        intClassfy2:null,
+        intClassfy3:null,
+        classify1Index:null,
+        classify2Index:null,
+        classify3Index:null,
         intBrandId:null,
         selectThisBrand:null,
         noLimitClassfy:true,
         brandNoLimit:true,
-        selectedTwo:0,
-        selectedThree:0,
         showAllGold:null,
         isBlueBgc:null,
         orderState:0,
-        // false表示toTop,升
-        orderArr:[{orderName:"最新商品",orderSort:""},{orderName:"销量",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
+        orderArr:[{orderName:"最新商品",orderSort:false},{orderName:"销量",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
         fenlie2:[],
         fenlie3:[],
-        classifyIndex:null,
+
         brandIndex:null,
         haveSelectedBrands:[],
-        brandClassfy:[
-          // {
-          //   oneClassify:"口腔护理",
-          //   classifyTwoList:[
-          //     {
-          //       classifyTwoName:"不限",
-          //       classifyThreeList:["口腔1","口腔1","口腔1","口腔1",]
-          //     },
-          //     {
-          //       classifyTwoName:"不限1",
-          //       classifyThreeList:["口腔2","口腔2","口腔2","口腔2",]
-          //     }
-          //   ]
-          // },
-        ],
-        // brandClassfy:["不限","口腔护理","口腔材料","医用耗材","预备切莫","器械","仪器"],
+        brandClassfy:[],
+        searchOneStr:null,
+        searchTwoStr:null,
+        searchThreeStr:null,
+        searchBrandStr:null,
         brands:[
-          {brandNmae:"品牌11",selected:false}
+          // {brandNmae:"品牌11",selected:false}
         ],
         allGoods:[
           // {goodImg:"./img/4.png",goodTitle:"商品111111111111113333333333333333333111111111商品111111111111113333333333333333333111111111",goodPrice:23,ifGold:false},
@@ -143,73 +133,92 @@
     },
     created: function() {
       var that = this;
-      that.getAllBrandList();
-      that.getAllClassfyList();
+      // that.getAllClassfyList();
+      // that.getAllBrandList();
+      that.getClassfytAndBrandList();
+
+      // 初始化分类和品牌
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
-      that.intBrandId = classifyIdAndbrandId.split("AND")[1];
-      that.intClassfy = classifyIdAndbrandId.split("AND")[0];
+        // 品牌和分类，0表示不限
+      that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
+      var intClassfy = classifyIdAndbrandId.split("AND")[0];
+        // 分类（index+1）
+      that.intClassfy1 = intClassfy.split("-")[0];
+      that.intClassfy2 = intClassfy.split("-")[1];
+      that.intClassfy3 = intClassfy.split("-")[2];
+      // if(that.intClassfy1!=0){
+      //   that.searchOneStr = that.brandClassfy[that.intClassfy1-1].oneClassify;
+      // }
+      // if(that.intClassfy2!=0){
+      //   that.searchTwoStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2-1].classifyTwoName;
+      // }
+      // if(that.intClassfy3!=0){
+      //   that.searchThreeStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2-1].classifyThreeList[that.intClassfy3].classifyThreeName;
+      // }
+
     },
     watch:{
-      haveSelectedBrands:function(){
-        if(this.haveSelectedBrands.length>0){
-          this.brandNoLimit = false;
-        }else{
-          this.brandNoLimit = true;
-        }
-      },
-      intBrandId:function(){
-        var that = this;
-        if(that.intBrandId!=null){
-          that.getOneBrandGoodsList(that.intBrandId);
-        }
-      },
+
     },
     methods: {
-      getOneBrandGoodsList:function(bradnId){
+      getClassfytAndBrandList:function(){
         var that = this;
-        var obj = {
-          itemBrandId:bradnId
-        };
-        that.global.axiosGetReq('/item/brandItemList',obj)
-        .then((res) => {
-          // console.log(res)
-          if (res.data.callStatus === 'SUCCEED') {
-            this.allGoods = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      getAllClassfyList:function(){
-        var that = this;
-        that.global.axiosGetReq('/item/showClassify')
-        .then((res) => {
-          console.log(res.data.data,"classify")
-          if (res.data.callStatus === 'SUCCEED') {
-            this.brandClassfy = res.data.data;
-            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      getAllBrandList:function(){
-        var that = this;
-        that.global.axiosGetReq('/item/brandList')
+        that.global.axiosGetReq('/item/getAllClassifyAndBrand')
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.brands = res.data.data;
-            if(that.intBrandId!=null){
-              for(let i in that.brands){
-                that.brands[i].selected = false;
-                if(that.brands[i].itemBrandId==that.intBrandId){
-                    this.selectThisBrand = i;
-                    this.brandNoLimit = false;
-                    that.brands[i].selected = true;
+            that.brandClassfy = res.data.data.classifyList;
+            for(var i in that.brandClassfy){
+              // for(var m in that.brandClassfy[i].classifyTwoList){
+                that.brandClassfy[i].classifyTwoList.unshift({classifyTwoName:"不限",classifyThreeList:[]});
+                for(var m in that.brandClassfy[i].classifyTwoList){
+                  that.brandClassfy[i].classifyTwoList[m].classifyThreeList.unshift({classifyThreeName:"不限"});
                 }
-              }
+                // for(let n in that.brandClassfy[i].classifyTwoList[m].classifyThreeList){
+                //   that.brandClassfy[i].classifyTwoList[m].classifyThreeList.unshift({classifyThreeName:"不限"});
+                // }
+              // }
             }
+            that.brands = res.data.data.itemBrandList;
+            that.intClassftAndBrand();
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getNowClassfyAndBrandGoods:function(rule){
+        var that = this;
+        var obj = {};
+        if(that.searchOneStr!=null){
+          if(that.searchOneStr!="不限"){
+            obj.oneClassify = that.searchOneStr;
+          }
+        }
+        if(that.searchTwoStr!=null){
+          if(that.searchTwoStr!="不限"){
+            obj.twoClassify = that.searchTwoStr;
+          }
+        }
+        if(that.searchThreeStr!=null){
+          if(that.searchThreeStr!="不限"){
+            obj.threeClassify = that.searchThreeStr;
+          }
+        }
+        if(that.searchBrandStr){
+          obj.itemBrandName = that.searchBrandStr;
+        }
+        if(rule){
+          obj.rule = rule;
+        }
+        // console.log(obj)
+        that.global.axiosPostReq('/item/queryItemSearch',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            // console.log(res.data.data)
+            // if(res.data.data.length>0){
+              this.allGoods = res.data.data;
+            // }else{
+              // that.$alert('当前条件下没有商品，请重新选择', {confirmButtonText: '确定',});
+            // }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -220,56 +229,120 @@
           path:"/details/"+id,
         });
       },
-      selectClassfy:function(index){
-        this.selectedTwo = 0;
-        this.selectedThree = 0;
-        this.classifyIndex=index;
-        this.noLimitClassfy = false;
-        this.fenlie2 = this.brandClassfy[index].classifyTwoList;
-        this.fenlie3 = [];
+      selectClassfy1:function(index,item){
+        var that = this;
+        that.noLimitClassfy = false;
+        that.classify2Index = 0;
+        that.classify3Index = null;
+        that.classify1Index=index;
+        that.fenlie2 = that.brandClassfy[index].classifyTwoList;
+        that.fenlie3 = [];
+        that.searchOneStr = item.oneClassify;
+        that.searchTwoStr = null;
+        that.searchThreeStr = null;
+        that.getNowClassfyAndBrandGoods();
       },
-      showChilds222:function(index){
-        this.fenlie3 = this.fenlie2[index].classifyThreeList;
-        this.selectedTwo = index;
-        this.selectedThree = 0;
-        this.noLimitClassfy = false;
+      selectClassfy2:function(index,item){
+        var that = this;
+        that.fenlie3 = that.fenlie2[index].classifyThreeList;
+        that.classify2Index = index;
+        that.classify3Index = 0;
+        that.searchTwoStr = item.classifyTwoName;
+        that.searchThreeStr = null;
+        that.getNowClassfyAndBrandGoods();
       },
-      selectBrand:function(index,id){
-        for(let i in this.brands){
-          this.brands[i].selected = false;
+      selectClassfy3:function(index,item){
+        var that = this;
+        that.classify3Index = index;
+        that.searchThreeStr = item.classifyThreeName;
+        that.getNowClassfyAndBrandGoods();
+      },
+      selectBrand:function(index,item){
+        var that = this;
+        for(let i in that.brands){
+          that.brands[i].selected = false;
         }
-        this.brands[index].selected = true;
-        this.brandNoLimit = false;
-        this.selectThisBrand = index;
-        this.getOneBrandGoodsList(id);
+        that.brands[index].selected = true;
+        that.brandNoLimit = false;
+        that.searchBrandStr = item.itemBrandName;
+        that.selectThisBrand = index;
+        that.getNowClassfyAndBrandGoods();
       },
       sureOrderStyle:function(index){
-        this.orderState = index;
+        var that = this;
+        that.orderState = index;
+        for(let i in this.orderArr){
+          that.orderArr[i].orderSort = false;
+        }
+        that.orderArr[index].orderSort = true;
+
+        var num = parseInt(index)+1;
+        that.getNowClassfyAndBrandGoods(num);
+
       },
       listenToMyBoy: function (data){
         this.showAllGold = data;
       },
-      selectedThreeClassfy:function(index){
-        this.selectedThree = index;
-          this.noLimitClassfy = false;
-      },
       brandNoLimitFn:function(){
-        this.brandNoLimit = true;
-        this.selectThisBrand = null,
-        this.haveSelectedBrands = [];
-        for(var i = 0;i<this.brands.length;i++){
-          this.brands[i].selected = false;
+        var that = this;
+        that.searchBrandStr = null,
+        that.brandNoLimit = true;
+        that.selectThisBrand = null,
+        that.haveSelectedBrands = [];
+        for(var i = 0;i<that.brands.length;i++){
+          that.brands[i].selected = false;
         }
+        that.getNowClassfyAndBrandGoods();
       },
       clearAllClassfy:function(){
-        this.noLimitClassfy = true;
-        this.selectClassfy = 0;
-        this.selectedTwo = null;
-        this.selectedThree = null;
-        this.fenlie2 = [];
-        this.fenlie3s = [];
-        this.classifyIndex = null;
-      }
+        var that = this;
+        that.noLimitClassfy = true;
+        that.classify2Index = null;
+        that.classify3Index = null;
+        that.classify1Index = null;
+        that.fenlie2 = [];
+        that.fenlie3 = [];
+        that.searchThreeStr = null;
+        that.searchTwoStr = null;
+        that.searchOneStr = null;
+        that.getNowClassfyAndBrandGoods();
+      },
+      intClassftAndBrand:function(){
+        var that = this;
+        if(that.intClassfy1!=0){
+          that.classify1Index = that.intClassfy1-1;
+          that.classify2Index = 0;
+          that.classify3Index = 0;
+          that.noLimitClassfy = false;
+          that.fenlie2 = that.brandClassfy[that.intClassfy1-1].classifyTwoList;
+          that.fenlie3 = [];
+          that.searchOneStr = that.brandClassfy[that.intClassfy1-1].oneClassify;
+        }
+        if(that.intClassfy2!=0){
+          that.fenlie3 = that.fenlie2[that.intClassfy2].classifyThreeList;
+          that.classify2Index = that.intClassfy2;
+          that.classify3Index = 0;
+          that.noLimitClassfy = false;
+          that.searchTwoStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2].classifyTwoName;
+        }
+        if(that.intClassfy3!=0){
+          that.classify3Index = that.intClassfy3;
+          that.noLimitClassfy = false;
+          that.searchThreeStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2].classifyThreeList[that.intClassfy3].classifyThreeName;
+        }
+        if(that.intBrandId!=null){
+          for(let i in that.brands){
+            that.brands[i].selected = false;
+            if(that.brands[i].itemBrandId==that.intBrandId){
+                this.selectThisBrand = i;
+                this.brandNoLimit = false;
+                that.brands[i].selected = true;
+                that.searchBrandStr = that.brands[i].itemBrandName;
+            }
+          }
+        }
+        that.getNowClassfyAndBrandGoods();
+      },
     }
   }
 </script>
@@ -480,6 +553,7 @@ margin: 0 auto;
 .allGoods ul  {
   padding-top: 50px;
   width: 1200px;
+  min-height: 200px;
 }
 .allGoods li {
   width: 279px;

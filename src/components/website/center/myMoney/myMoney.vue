@@ -58,7 +58,7 @@
         };
         that.global.axiosGetReq('/userMyQb/query', obj)
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.getData = res.data.data;
             this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
@@ -122,6 +122,7 @@
 }
 .myMoney {
   font-size: 14px;
+  min-height: 620px;
 }
 .myMoney .el-table th{
   background-color: #F2F2F2

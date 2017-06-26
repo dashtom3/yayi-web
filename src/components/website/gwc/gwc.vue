@@ -165,7 +165,7 @@
         })
       },
       goToSuborder:function(){
-      this.$router.push({path: '/suborder'})
+        this.$router.push({path: '/suborder'})
       },
       deleteAll:function(){
         var that = this;
@@ -178,21 +178,19 @@
             for(let i in that.gwcGoods){
               var obj = {
                 phone:that.global.getUser().phone,
-                itemId:that.gwcGoods[i].itemId,
+                itemSKU:that.gwcGoods[i].itemSKU,
                 token:that.global.getToken()
               };
-              // that.global.axiosPostReq('/cart/delete', obj)
-              // .then((res) => {
-              //   if (res.data.callStatus === 'SUCCEED') {
-              //     // that.gwcGoods.splice(index,1);
-              //     // that.$message({  type: 'success',  message: '删除成功!'});
-              //   } else {
-              //     that.$message.error('网络出错，请稍后再试！');
-              //   }
-              // })
+              that.global.axiosPostReq('/cart/delete', obj)
+              .then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.gwcGoods=[];
+                  that.$message({  type: 'success',  message: '删除成功!'});
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
             }
-            // that.gwcGoods = [];
-            // that.$message({type: 'success',  message: '商品收藏成功!'});
           }).catch(() => {
             that.$message({type: 'info',message: '已取消'});
           });
@@ -210,6 +208,7 @@
               var obj = {
                 phone:that.global.getUser().phone,
                 itemId:that.gwcGoods[i].itemId,
+                itemSKU:that.gwcGoods[i].itemSKU,
                 token:that.global.getToken()
               };
               // that.global.axiosPostReq('/cart/star', obj)
@@ -265,12 +264,11 @@
           var obj = {
             phone:that.global.getUser().phone,
             itemId:id,
+            itemSKU:that.gwcGoods[i].itemSKU,
             token:that.global.getToken()
           };
-          console.log(obj)
           that.global.axiosPostReq('/cart/star', obj)
           .then((res) => {
-            console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
               that.$message({type: 'success',  message: '商品收藏成功!' });

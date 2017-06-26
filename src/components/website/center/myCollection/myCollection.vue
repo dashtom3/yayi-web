@@ -14,7 +14,7 @@
       <div v-else class="goodDetail">
         <ul>
           <li v-for="(good,index) in allGoods" v-on:click="goToThisDetail(good.itemId)">
-            <i class="el-icon-delete2 myDele" v-on:click.stop="deleOneCollect(index)"></i>
+            <i class="el-icon-delete2 myDele" v-on:click.stop="deleOneCollect(index,good)"></i>
             <img class="gold" v-if="good.ifGold" src="../../../../images/center/glod.png" alt="">
             <div class="imgwrap">
               <img :src="good.item_pica" >
@@ -68,13 +68,16 @@
           }
         })
       },
-      deleOneCollect:function(index){
+      deleOneCollect:function(index,good){
         var that = this;
         var obj = {
-          itemId:index,
+          itemId:good.itemId,
+          phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
+        console.log(obj)
         that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
+          console.log(res,"asdfafsf")
           if (res.data.callStatus === 'SUCCEED') {
             that.$alert('删除收藏成功！', {confirmButtonText: '确定',});
             that.allGoods.splice(index,1);
@@ -86,7 +89,7 @@
       clearAllCollection:function(){
         var that = this;
         var obj = {
-          itemId:index,
+          phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
         that.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
