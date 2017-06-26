@@ -13,8 +13,8 @@
       </div>
       <div v-else class="goodDetail">
         <ul>
-          <li v-for="(good,index) in allGoods">
-            <i class="el-icon-delete2 myDele" @click="deleOneCollect(index)"></i>
+          <li v-for="(good,index) in allGoods" v-on:click="goToThisDetail(good.itemId)">
+            <i class="el-icon-delete2 myDele" v-on:click.stop="deleOneCollect(index)"></i>
             <img class="gold" v-if="good.ifGold" src="../../../../images/center/glod.png" alt="">
             <div class="imgwrap">
               <img :src="good.item_pica" >
@@ -49,6 +49,11 @@
       console.log(".....")
     },
     methods: {
+      goToThisDetail:function(id){
+        this.$router.push({
+          path:"/details/"+id,
+        });
+      },
       getMyCollection:function(){
         var that = this;
         var obj = {
@@ -56,10 +61,8 @@
           token:that.global.getToken()
         };
         that.global.axiosPostReq('/mystar/shows', obj).then((res) => {
-          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            // this.allGoods = res.data.data;
-
+            this.allGoods = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -72,37 +75,33 @@
           token:that.global.getToken()
         };
         that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
-          console.log(res)
-          // if (res.data.callStatus === 'SUCCEED') {
-          //
-          // } else {
-          //   that.$message.error('网络出错，请稍后再试！');
-          // }
+          if (res.data.callStatus === 'SUCCEED') {
+            that.$alert('删除收藏成功！', {confirmButtonText: '确定',});
+            that.allGoods.splice(index,1);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
         })
       },
       clearAllCollection:function(){
-        this.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+        var that = this;
+        var obj = {
+          itemId:index,
+          token:that.global.getToken()
+        };
+        that.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
+          confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
-          var that = this;
-          var obj = {
-            phone:that.global.getUser().phone,
-            token:that.global.getToken()
-          };
-          that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
-            console.log(res)
-            // if (res.data.callStatus === 'SUCCEED') {
-            //
-            // } else {
-            //   that.$message.error('网络出错，请稍后再试！');
-            // }
+          that.global.axiosPostReq('/mystar/deleteAll', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              this.$alert('删除全部收藏成功！', {confirmButtonText: '确定',});
+              that.allGoods = [];
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
           })
-          this.$message({type: 'success',message: "清除成功！"});
-          this.allGoods = [];
         }).catch(() => {
-          this.$message({type: 'info',message: '已取消'});
+          that.$message({type: 'info',message: '已取消'});
         });
       }
     }
@@ -146,6 +145,7 @@ color:  #5db7e8;
 .goodDetail{
   margin-left: 38px;
   margin-top: 29px;
+  min-height: 590px;
   margin-bottom: 30px;
 }
 .goodDetail li{

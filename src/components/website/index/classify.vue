@@ -4,18 +4,18 @@
       商品分类
       <img v-if="change1" src="../../../images/index/down.png" alt="img">
       <img v-else src="../../../images/index/up.png" alt="img">
-      <div v-show="!change1"  class="classfyDetail"  >
+      <div v-show="!change1"  class="classfyDetail" v-if="allClassfy.length>0"  >
         <ul class="classfyDetail_left">
-          <li :class="{oneHover:index1==defaultOne}" v-for="(one,index1) in allClassfy" v-on:mouseenter="getTwo(index1)">{{one.title}}</li>
+          <li :class="{oneHover:index1==defaultOne}" v-for="(one,index1) in allClassfy" v-on:mouseenter="getTwo(index1,one.oneId)" v-on:click="goToClassfy1(one.oneId)">{{one.oneClassify}}</li>
         </ul>
         <div class="classfyDetail_right">
-          <div class="details" v-for="(two,index2) in allClassfy[defaultOne].children">
-            <div class="title" >
-              {{two.title}}&nbsp;&nbsp;&nbsp;&nbsp;>
+          <div class="details" v-for="(two,index2) in allClassfy[defaultOne].classifyTwoList">
+            <div class="title" v-on:click="goToClassfy2(two.twoId)">
+              {{two.classifyTwoName}}&nbsp;&nbsp;&nbsp;&nbsp;>
             </div>
             <div class="detail">
               <ul>
-                <li  v-for="(three ,index3) in allClassfy[defaultOne].children[index2].children">{{three}}</li>
+                <li v-on:click="goToClassfy3(two.twoId,three.threeId)"  v-for="(three ,index3) in allClassfy[defaultOne].classifyTwoList[index2].classifyThreeList">{{three.classifyThreeName}}</li>
               </ul>
             </div>
           </div>
@@ -47,41 +47,30 @@
         defaultOne:0,
         change1: true,
         change2: true,
-        allClassfy:[
-          {
-            title:"一级标题",
-            children:[
-              {
-                title:"一级子标题_",
-                children:["111111",'111111']
-              },
-              {
-                title:"一级子标题",
-                children:["222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222","222"]
-              }
-            ]
-          },
-          {
-            title:"333333",
-            children:[
-              {
-                title:"444444",
-                children:["555555",'666666']
-              },
-              {
-                title:"77777777",
-                children:["8888","99999","aa","ssss","ddddd","fffffff"]
-              }
-            ]
-          },
-        ]
+        allClassfy:[],
+        goOne:null,
+        goTow:null,
+        goThree:null
       }
     },
     created:function(){
       var that = this;
       that.getAllBrandList();
+      this.getAllClassfyList();
     },
     methods: {
+      getAllClassfyList:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/showClassify')
+        .then((res) => {
+          // console.log(res.data.data,"classify1111111")
+          if (res.data.callStatus === 'SUCCEED') {
+            this.allClassfy = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       goToThisBrand:function(id){
         var that = this;
         that.$router.push({
@@ -92,7 +81,6 @@
           var that = this;
           that.global.axiosGetReq('/item/brandList')
           .then((res) => {
-            console.log(res.data.data)
             if (res.data.callStatus === 'SUCCEED') {
               that.brandListData = res.data.data;
             } else {
@@ -116,15 +104,30 @@
       hideBrand(){
         this.change2 = true;
       },
-      getTwo:function(index1){
+      getTwo:function(index1,id){
         this.defaultOne = index1;
+        this.goOne =id;
       },
       sureThis:function(index3){
         this.defaultThree = index3;
       },
-      goToBrandLib:function(){
+      // goToBrandLib:function(){
+      //   this.$router.push({path: '/brandLib'})
+      // },
+      // 分类跳转1-1-1的形式
+      goToClassfy1:function(id){
+        this.goOne = id;
+        var classfyArg = id+"-0-0";
+        this.$router.push({path: '/brandLib/'+classfyArg})
+      },
+      goToClassfy2:function(id){
+        var classfyArg = this.goOne+"-"+id+"-0";
         this.$router.push({path: '/brandLib'})
-      }
+      },
+      goToClassfy3:function(tow,three){
+        var classfyArg = this.goOne+"-"+tow+"-"+three;
+        this.$router.push({path: '/brandLib'})
+      },
     }
   }
 </script>

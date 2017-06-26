@@ -50,7 +50,7 @@
         </div>
         <div class="operas">
           <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good.itemId)">收藏</span>
-          <span class="colorRed" v-on:click="deleteOne(index,good.itemId)">删除</span>
+          <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
         </div>
         <div style="clear:both"> </div>
       </div>
@@ -282,14 +282,14 @@
           that.$message({  type: 'info',  message: '已取消'});
         });
       },
-      deleteOne:function(index,id){
+      deleteOne:function(index,good){
         var that = this;
         that.$confirm('此操作将该商品移出购物车, 是否继续?', '提示', {
           confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
           var obj = {
             phone:that.global.getUser().phone,
-            itemId:id,
+            itemSKU:good.itemSKU,
             token:that.global.getToken()
           };
           that.global.axiosPostReq('/cart/delete', obj)

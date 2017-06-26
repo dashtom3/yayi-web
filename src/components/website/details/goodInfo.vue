@@ -187,6 +187,7 @@ import myAddress from './selectThree'
           name:that.nowGoodDetails.itemName,
           pic:that.itemDetail.itemPica,
           num:that.goodDefaultNum,
+          itemSKU:parseInt(Math.random()*100000),
           price:that.nowGoodDetails.itemPrice,
           itemPropertyNamea:that.sureGoodAttr,
           token:that.global.getToken()

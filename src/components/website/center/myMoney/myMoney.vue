@@ -35,7 +35,7 @@
         },
         getData:[],
         currentPage:1,
-        everyPageShowNum:8,
+        everyPageShowNum:10,
         myAllMoney:{
           currentMoney:0,
           details:[]

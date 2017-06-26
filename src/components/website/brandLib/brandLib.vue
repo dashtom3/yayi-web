@@ -8,19 +8,19 @@
       </div>
       <div class="classifyLine">
         分类：
-        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy">不限</span>
+        <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy()">不限</span>
           <span class="fenlei1" v-bind:class="{fenlieselect: classifyIndex===index}" v-on:click="selectClassfy(index)"  v-for="(item,index) in brandClassfy">
-            {{item.oneName}}
+            {{item.oneClassify}}
           </span>
           <div class="classfyDetail" v-show="fenlie2.length>0">
             <div class="towClassfy" >
               <ul>
-                <li :class="{asdff:selectedTwo==index}" v-on:click="showChilds222(index)" v-for="(item,index) in fenlie2">{{item.toeNmae}}</li>
+                <li :class="{asdff:selectedTwo==index}" v-on:click="showChilds222(index)" v-for="(item,index) in fenlie2">{{item.classifyTwoName}}</li>
               </ul>
             </div>
             <div class="threeClassfy">
               <ul>
-                <li :class="{asdff:selectedThree==index}" v-on:click="selectedThreeClassfy(index)" v-for="(item,index) in fenlie3">{{item}}</li>
+                <li :class="{asdff:selectedThree==index}" v-on:click="selectedThreeClassfy(index)" v-for="(item,index) in fenlie3">{{item.classifyThreeName}}</li>
               </ul>
             </div>
           </div>
@@ -111,32 +111,19 @@
         brandIndex:null,
         haveSelectedBrands:[],
         brandClassfy:[
-          {
-            oneName:"口腔护理",
-            shildres:[
-              {
-                toeNmae:"不限",
-                shildres:["口腔1","口腔1","口腔1","口腔1",]
-              },
-              {
-                toeNmae:"不限1",
-                shildres:["口腔2","口腔2","口腔2","口腔2",]
-              }
-            ]
-          },
-          {
-            oneName:"口内材料",
-            shildres:[
-              {
-                toeNmae:"不限3",
-                shildres:["口内1","口内1","口内1","口内1",]
-              },
-              {
-                toeNmae:"不限14",
-                shildres:["口内2","口内2","口内2","口内2",]
-              }
-            ]
-          }
+          // {
+          //   oneClassify:"口腔护理",
+          //   classifyTwoList:[
+          //     {
+          //       classifyTwoName:"不限",
+          //       classifyThreeList:["口腔1","口腔1","口腔1","口腔1",]
+          //     },
+          //     {
+          //       classifyTwoName:"不限1",
+          //       classifyThreeList:["口腔2","口腔2","口腔2","口腔2",]
+          //     }
+          //   ]
+          // },
         ],
         // brandClassfy:["不限","口腔护理","口腔材料","医用耗材","预备切莫","器械","仪器"],
         brands:[
@@ -157,6 +144,7 @@
     created: function() {
       var that = this;
       that.getAllBrandList();
+      that.getAllClassfyList();
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];
       that.intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -175,17 +163,6 @@
           that.getOneBrandGoodsList(that.intBrandId);
         }
       },
-      // brands:{
-      //   handler:function(){
-      //     var that = this;
-      //     for(let i in that.brands){
-      //       if(that.brands[i].itemBrandId==this.intBrandId){
-      //         that.selectThisBrand = i;
-      //       }
-      //     }
-      //   },
-      //   deep:true
-      // }
     },
     methods: {
       getOneBrandGoodsList:function(bradnId){
@@ -195,9 +172,22 @@
         };
         that.global.axiosGetReq('/item/brandItemList',obj)
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.allGoods = res.data.data;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getAllClassfyList:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/showClassify')
+        .then((res) => {
+          console.log(res.data.data,"classify")
+          if (res.data.callStatus === 'SUCCEED') {
+            this.brandClassfy = res.data.data;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -231,29 +221,20 @@
         });
       },
       selectClassfy:function(index){
+        this.selectedTwo = 0;
+        this.selectedThree = 0;
         this.classifyIndex=index;
         this.noLimitClassfy = false;
-        this.fenlie2 = this.brandClassfy[index].shildres;
+        this.fenlie2 = this.brandClassfy[index].classifyTwoList;
+        this.fenlie3 = [];
       },
       showChilds222:function(index){
-        this.fenlie3 = this.fenlie2[index].shildres;
+        this.fenlie3 = this.fenlie2[index].classifyThreeList;
         this.selectedTwo = index;
+        this.selectedThree = 0;
         this.noLimitClassfy = false;
       },
       selectBrand:function(index,id){
-        // console.log(id)
-        // this.brands[index].selected = !this.brands[index].selected;
-        // if(this.brands[index].selected){
-        //   this.haveSelectedBrands.push(this.brands[index].brandNmae);
-        // }else{
-        //   var nowstr = event.target.innerText.trim();
-          // for(var  i = 0;i < this.haveSelectedBrands.length;i++ ){
-          //   if(nowstr==this.haveSelectedBrands[i]){
-          //     this.haveSelectedBrands.splice(i,1);
-          //   }
-        //   }
-        // }
-
         for(let i in this.brands){
           this.brands[i].selected = false;
         }
@@ -282,9 +263,11 @@
       },
       clearAllClassfy:function(){
         this.noLimitClassfy = true;
+        this.selectClassfy = 0;
         this.selectedTwo = null;
         this.selectedThree = null;
         this.fenlie2 = [];
+        this.fenlie3s = [];
         this.classifyIndex = null;
       }
     }
