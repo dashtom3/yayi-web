@@ -77,19 +77,19 @@
             <el-form-item label="收货人" :label-width="formLabelWidth">
               <el-input v-model="edForm.name" auto-complete="off" style="width:180px;"></el-input>
               <transition name="shake">
-                <span v-show="realAlert1" style="color: #D0011B;">请填写收货人！</span>
+                <span v-show="realAlert1" class="error">请填写收货人！</span>
               </transition>
             </el-form-item>
             <el-form-item label="所在区域" :label-width="formLabelWidth">
               <myAddress v-on:listenToChild="showFromChild" :selected="this.xRegion" style="width:260px;"></myAddress>
               <transition name="shake">
-                <span v-show="placeAlert1" style="margin-left: 20px; color: #D0011B;">请选择所在区域！</span>
+                <span v-show="placeAlert1" class="error">请选择所在区域！</span>
               </transition>
             </el-form-item>
             <el-form-item label="手机号码" :label-width="formLabelWidth">
               <el-input v-model="edForm.mobile"  auto-complete="off" style="width:180px;"></el-input>
               <transition name="shake">
-                <span v-show="phoneAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人手机号码！</span>
+                <span v-show="phoneAlert1" class="error">请填写收货人手机号码！</span>
               </transition>
             </el-form-item>
             <el-form-item label="固定电话" :label-width="formLabelWidth">
@@ -99,7 +99,7 @@
             <el-form-item label="详细地址" :label-width="formLabelWidth">
               <el-input v-model="edForm.address" auto-complete="off" style="width:70%;"></el-input>
               <transition name="shake">
-                <span v-show="addAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人地址！</span>
+                <span v-show="addAlert1" class="error">请填写收货人地址！</span>
               </transition>
             </el-form-item>
             <el-form-item  :label-width="formLabelWidth">
@@ -163,6 +163,7 @@
         var that = this;
         if (that.xRegion !== []) {
           that.placeAlert = false;
+          that.placeAlert1 = false;
         }
       },
       form: {
