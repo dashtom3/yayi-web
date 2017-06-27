@@ -23,13 +23,14 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="search">查询</el-button>
+          <el-button type="primary" v-on:click="headSearch()">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
+    <!-- 绑定弹窗 -->
     <el-dialog :visible.sync="bindSalseAlert">
       <h4>当前已绑定人数（人）：<span>12</span></h4>
-      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
+      <el-tabs v-model="activeName2" type="card">
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
             <el-form-item>
@@ -43,8 +44,8 @@
                 <el-button slot="append" icon="search"></el-button>
               </el-input>
             </el-form-item>
-            <el-form-item style="font-size:40px;">
-              <el-button type="primary" v-on:click="search">绑定</el-button>
+            <el-form-item style="font-size:40px;float:right">
+              <el-button type="primary" v-on:click="bindAlertSearch()">绑定</el-button>
             </el-form-item>
           </el-form>
           <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" height="500">
@@ -52,10 +53,11 @@
             <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
+            <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
             <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
-                <el-button type="primary" v-on:click="search">绑定</el-button>
+                <el-button type="primary" v-on:click="bindThisUser(scope.row)">绑定</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -68,16 +70,16 @@
                   <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
-                  <el-option label="公司名称" value="公司名称"></el-option>
+                  <el-option label="单位名称" value="单位名称"></el-option>
                 </el-select>
                 <el-button slot="append" icon="search"></el-button>
               </el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" v-on:click="search">取消绑定</el-button>
+            <el-form-item style="float:right">
+              <el-button type="primary" v-on:click="search()">取消绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="500">
+          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2()" height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
             <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
@@ -86,7 +88,7 @@
             <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
-                <el-button type="primary" v-on:click="search">取消绑定</el-button>
+                <el-button type="primary" v-on:click="search()">取消绑定</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -94,6 +96,7 @@
       </el-tabs>
     </el-dialog>
 
+    <!-- 详情 -->
     <el-dialog custom-class="asgagewgf" title="销售员详情" :visible.sync="showSaleDetailInfor">
       <div class="personalInfor">
         <img src="" alt="">
@@ -116,9 +119,13 @@
         </div>
       </div>
       <div class="certification">
-        <h3>体现方式</h3>
+        <h3>提现方式</h3>
         <div class="">
           <span>类型：{{someOneUserDetails.getMoneyStyle.type}}</span>
+          <span>银行：{{someOneUserDetails.getMoneyStyle.count}}</span>
+        </div>
+        <div class="">
+          <span>开户者：{{someOneUserDetails.getMoneyStyle.type}}</span>
           <span>账号：{{someOneUserDetails.getMoneyStyle.count}}</span>
         </div>
       </div>
@@ -127,10 +134,11 @@
         <el-table-column align="center" property="bianhao" label="用户编号" width="150"></el-table-column>
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
         <el-table-column align="center" property="name" label="真实姓名" width="200"></el-table-column>
-        <el-table-column align="center" property="componey" label="公司名称"></el-table-column>
+        <el-table-column align="center" property="componey" label="单位名称"></el-table-column>
       </el-table>
     </el-dialog>
 
+    <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
       <!-- <el-table-column  prop="saleId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
       <el-table-column  prop="name"  align="center"  label="真实姓名">  </el-table-column>
@@ -245,13 +253,24 @@
 
     },
     methods: {
+      headSearch:function(){
+
+      },
+      bindAlertSearch:function(){
+
+      },
+      bindThisUser:function(arg){
+        console.log(arg)
+      },
       handleSelectionChange1(val) {
-        this.multipleSelection2 = val;
-        console.log(this.multipleSelection2)
+        this.multipleSelection1 = val;
+        if(this.multipleSelection1.length=0){
+          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
+        }
+
       },
       handleSelectionChange2(val) {
         this.multipleSelection2 = val;
-        console.log(this.multipleSelection2)
       },
       handleClick(tab, event) {
         console.log(tab, event);

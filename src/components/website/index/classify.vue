@@ -61,9 +61,10 @@
         var that = this;
         that.global.axiosGetReq('/item/showClassify')
         .then((res) => {
-          // console.log(res.data.data,"classify1111111")
+          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.allClassfy = res.data.data;
+
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

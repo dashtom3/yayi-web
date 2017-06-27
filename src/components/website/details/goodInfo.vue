@@ -16,10 +16,18 @@
       </div>
 
       <div class="infoLeft_3">
-        <span v-on:click="showCllect('商品收藏成功！',1)">
-          <img style="position:relative;top:1px" v-if="saveGood" src="../../../images/details/collect.png" />
-          <img style="position:relative;top:1px" v-else src="../../../images/details/collect2.jpg" />
-          {{saveGood?"收藏":"已收藏"}}
+        <!-- 0表示没收藏 -->
+        <span v-if="nowGoodDetails.num==0" v-on:click="showCllect('商品收藏成功！',1)">
+          <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
+          收藏
+        </span>
+        <span v-else-if="nowGoodDetails.num==1" v-on:click="cancleClloect()">
+          <img style="position:relative;top:1px" src="../../../images/details/collect2.jpg" />
+          已收藏
+        </span>
+        <span v-else>
+          <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
+          收藏
         </span>
         <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)">
           <img style="position:relative;top:3px" v-if="copyUrl" src="../../../images/details/share.png" />
@@ -103,7 +111,7 @@ import myAddress from './selectThree'
         commentList:[],
         instructions:{},
         sureGoodAttr:0,
-        saveGood:true,
+        // saveGood:true,
         copyUrl:true,
         bigImgUrl:"1.png",
         goodDefaultNum:1,
@@ -144,10 +152,8 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:userToken
         };
-        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data)
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
@@ -160,7 +166,6 @@ import myAddress from './selectThree'
           this.goodDefaultNum += 1;
       },
       reduceGoodNum:function () {
-
         if(this.goodDefaultNum != 1){
           this.goodDefaultNum -= 1;
         }
@@ -176,14 +181,49 @@ import myAddress from './selectThree'
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
       },
+      cancleClloect:function(){
+        var that = this;
+        var obj = {
+          itemId:that.nowGoodDetails.itemId,
+          // itemSKU:parseInt(Math.random()*100000),
+          token:that.global.getToken()
+        };
+          that.global.axiosPostReq('/mystar/deleteOne',obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              this.$alert(msg, {confirmButtonText: '取消收藏成功！'});
+              this.nowGoodDetails.num = 0;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          });
+      },
       showCllect:function(msg,arg){
-        if(arg==1&&this.saveGood==true){
-          this.$alert(msg, {confirmButtonText: '确定'});
-          this.saveGood = false;
+        var that = this;
+        if(arg==1){
+          var obj = {
+            phone:that.global.getUser().phone,
+            itemId:that.nowGoodDetails.itemId,
+            itemSKU:parseInt(Math.random()*100000),
+            token:that.global.getToken()
+          };
+          if(obj.token){
+            that.global.axiosPostReq('/cart/star',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.$alert(msg, {confirmButtonText: '收藏成功！'});
+                that.nowGoodDetails.num = 1;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            });
+          }else{
+            this.$alert(msg, {confirmButtonText: '请先登录后再收藏！'});
+          }
         }
-        if(arg==2&&this.copyUrl==true){
-          this.$alert(msg, {confirmButtonText: '确定'});
-          this.copyUrl = false;
+        if(arg==2&&that.copyUrl==true){
+          that.$alert(msg, {confirmButtonText: '确定'});
+          that.copyUrl = false;
         }
       },
       addGwcThisGood:function(){
@@ -211,7 +251,6 @@ import myAddress from './selectThree'
             }
           });
         }
-
       }
     },
     components: {

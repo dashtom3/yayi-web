@@ -4,7 +4,12 @@
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
-        首页><span class="indexLine">3M</span>
+        首页>
+        <span v-if="firstClassfy" >{{firstClassfy}}></span>
+        <span v-if="secondClassfy" >{{secondClassfy}}></span>
+        <span v-if="thirdClassfy" >{{thirdClassfy}}></span>
+        <span v-if="haveBrand" >{{haveBrand}}></span>
+        <span class="indexLine">{{searchWordFromIndex}}</span>
       </div>
       <div class="classifyLine" >
         分类：
@@ -59,7 +64,7 @@
       </div>
 
       <div class="allGoods">
-        <ul>
+        <ul v-if="ifHaveData">
           <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
             <div class="imgWrap">
               <img class="goodImg" :src="item.itemDetail" alt="">
@@ -72,6 +77,9 @@
             </div>
           </li>
         </ul>
+        <div v-else class="" style="text-align:center;margin-top:100px;">
+          <h4>{{noGoods}}</h4>
+        </div>
       </div>
     </div>
     <!-- <div class="fenye">
@@ -92,13 +100,21 @@
     name: 'brandLib',
     data () {
       return {
+        ifHaveData:true,
         intClassfy1:null,
         intClassfy2:null,
         intClassfy3:null,
         classify1Index:null,
         classify2Index:null,
         classify3Index:null,
+        firstClassfy:'',
+        secondClassfy:'',
+        thirdClassfy:'',
+        haveBrand:null,
         intBrandId:null,
+        searchDataFromIndex:[],
+        searchWordFromIndex:'',
+        seachDataFrombRrandLidPage:null,
         selectThisBrand:null,
         noLimitClassfy:true,
         brandNoLimit:true,
@@ -108,7 +124,7 @@
         orderArr:[{orderName:"最新商品",orderSort:false},{orderName:"销量",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
         fenlie2:[],
         fenlie3:[],
-
+        noGoods:"未能找到您想要的商品，请重新搜索~",
         brandIndex:null,
         haveSelectedBrands:[],
         brandClassfy:[],
@@ -133,16 +149,11 @@
     },
     created: function() {
       var that = this;
-      // that.getAllClassfyList();
-      // that.getAllBrandList();
-      that.getClassfytAndBrandList();
-
       // 初始化分类和品牌
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
       // 初始化搜索框值
-      var searchData = that.$route.params.data;
-      var searchWord = that.$route.params.word; 
-      console.log(searchData,searchWord,'lcy');
+      that.searchDataFromIndex = that.$route.params.data;
+      that.searchWordFromIndex = that.$route.params.word;
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -150,26 +161,29 @@
       that.intClassfy1 = intClassfy.split("-")[0];
       that.intClassfy2 = intClassfy.split("-")[1];
       that.intClassfy3 = intClassfy.split("-")[2];
-
-      // if(that.intClassfy1!=0){
-      //   that.searchOneStr = that.brandClassfy[that.intClassfy1-1].oneClassify;
-      // }
-      // if(that.intClassfy2!=0){
-      //   that.searchTwoStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2-1].classifyTwoName;
-      // }
-      // if(that.intClassfy3!=0){
-      //   that.searchThreeStr = that.brandClassfy[that.intClassfy1-1].classifyTwoList[that.intClassfy2-1].classifyThreeList[that.intClassfy3].classifyThreeName;
-      // }
-
+      that.getClassfytAndBrandList();
     },
     watch:{
-
+      seachDataFrombRrandLidPage:{
+        handler:function(){
+          var that = this;
+          if(that.seachDataFrombRrandLidPage){
+            var length = that.seachDataFrombRrandLidPage.length;
+            var arr = that.seachDataFrombRrandLidPage;
+            var newarr = [];
+            if(length>1){
+              that.allGoods = arr.slice(0,length-1);
+            }
+          }
+        },
+        deep:true
+      },
     },
     methods: {
       //监听publicHeader标签
       msgFromHeader: function(data) {
         var that = this;
-        console.log(data);
+        that.seachDataFrombRrandLidPage = data;
       },
       getClassfytAndBrandList:function(){
         var that = this;
@@ -178,15 +192,10 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.brandClassfy = res.data.data.classifyList;
             for(var i in that.brandClassfy){
-              // for(var m in that.brandClassfy[i].classifyTwoList){
                 that.brandClassfy[i].classifyTwoList.unshift({classifyTwoName:"不限",classifyThreeList:[]});
                 for(var m in that.brandClassfy[i].classifyTwoList){
                   that.brandClassfy[i].classifyTwoList[m].classifyThreeList.unshift({classifyThreeName:"不限"});
                 }
-                // for(let n in that.brandClassfy[i].classifyTwoList[m].classifyThreeList){
-                //   that.brandClassfy[i].classifyTwoList[m].classifyThreeList.unshift({classifyThreeName:"不限"});
-                // }
-              // }
             }
             that.brands = res.data.data.itemBrandList;
             that.intClassftAndBrand();
@@ -201,25 +210,28 @@
         if(that.searchOneStr!=null){
           if(that.searchOneStr!="不限"){
             obj.oneClassify = that.searchOneStr;
+            that.firstClassfy = that.searchOneStr;
           }
         }
         if(that.searchTwoStr!=null){
           if(that.searchTwoStr!="不限"){
             obj.twoClassify = that.searchTwoStr;
+            that.secondClassfy = that.searchTwoStr;
           }
         }
         if(that.searchThreeStr!=null){
           if(that.searchThreeStr!="不限"){
             obj.threeClassify = that.searchThreeStr;
+            that.thirdClassfy = that.searchThreeStr;
           }
         }
         if(that.searchBrandStr){
           obj.itemBrandName = that.searchBrandStr;
+          that.haveBrand = that.searchBrandStr;
         }
         if(rule){
           obj.rule = rule;
         }
-        // console.log(obj)
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -351,7 +363,21 @@
             }
           }
         }
-        that.getNowClassfyAndBrandGoods();
+        // if(that.searchWordFromIndex){
+        //
+        // }else{
+        //   that.getNowClassfyAndBrandGoods();
+        // }
+        if(that.searchWordFromIndex){
+          if(that.searchDataFromIndex.length>0){
+            that.allGoods = that.searchDataFromIndex;
+
+          }else{
+            that.ifHaveData = false;
+          }
+        }else{
+          that.getNowClassfyAndBrandGoods();
+        }
       },
     }
   }
@@ -560,10 +586,13 @@ margin: 0 auto;
   bottom: 0;
   right: 0;
 }
+.allGoods{
+  min-height: 300px;
+}
 .allGoods ul  {
   padding-top: 50px;
   width: 1200px;
-  min-height: 200px;
+
 }
 .allGoods li {
   width: 279px;

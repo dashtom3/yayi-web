@@ -31,7 +31,6 @@
     },
     mounted: function() {
       window.scroll(0,0);
-      console.log(111111111,this.$route.params)
     },
     methods: {
 
