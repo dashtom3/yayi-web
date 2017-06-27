@@ -170,30 +170,27 @@
         <div class="refund_info">
           <div>退款信息</div>
           <table class="refund_tb">
-            <tr style="background:#ddd;">
-              <td colspan="7" style="text-align:left;">
-                <span style="padding-left:10px;">实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</span>
-                <span style="padding-left:90px;">运费：包邮</span>
-                <span style="padding-left:90px;">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</span>
-              </td>
+            <tr class="bgc">
+              <td>实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</td>
+              <td>运费：包邮</td>
+              <td colspan="2">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</td>
             </tr>
-            <tr style="background:#ddd;">
+            <tr class="bgc">
               <td>sku代码</td>
               <td>商品名称+属性</td>
               <td>价格*数量</td>
               <td>退货数量</td>
-              <td>退款金额</td>
-              <td>退回的乾币数</td>
-              <td>扣除的乾币数</td>
             </tr>
             <tr v-for="item in orderInfo.goodsInfo">
               <td></td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
               <td>{{item.backNo>item.goodsNum ? "" : item.backNo}}</td>
-              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :item.price * item.backNo}}</i></td>
-              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
-              <td><i class="i_col_red">{{item.backNo>item.goodsNum ? "" :orderInfo.deductible}}</i></td>
+            </tr>
+            <tr class="bgc">
+              <td>退款金额：36</td>
+              <td>退回的乾币数：20</td>
+              <td colspan="2">扣除的乾币数：2</td>
             </tr>
           </table>
         </div>
@@ -247,22 +244,15 @@
       <!-- 退款处理 -->
       <el-dialog title="退款处理" v-model="refundVisible" :close-on-click-modal="true">
         <table class="refund_tb">
-            <tr style="background:#ddd;">
-              <td colspan="7" style="text-align:left;">
-                <span>订单编号：xxxxxxxxx</span>
-                <span style="padding-left:32px;">实付款：xxxxxxxxx</span>
-                <span style="padding-left:59px;">运费：包邮</span>
-                <span style="padding-left:66px;">乾币抵扣：20</span>
-              </td>
+            <tr class="bgc">
+              <td colspan="2">订单编号：{{orderInfo.orderNo}}</td>
+              <td colspan="2">乾币抵扣：{{orderInfo.deductible}}</td>
             </tr>
-            <tr style="background:#ddd;">
+            <tr class="bgc">
               <td>是否退款</td>
               <td>商品名称+属性</td>
               <td>价格*数量</td>
               <td>退货数量</td>
-              <td>退款金额</td>
-              <td>退回的乾币数</td>
-              <td>扣除的乾币数</td>
             </tr>
             <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index" style="height:46px;">
               <td>
@@ -279,9 +269,11 @@
                   <i style="position:absolute;left:150px;top:2px" class="icon_i_r" @click="addCount(index, item)">+</i>
                 </div>
               </td>
-              <td><i class="i_col_red" v-show="item.goodsNum">{{item.count * item.price}}</i></td>
-              <td><i class="i_col_red" v-show="item.goodsNum">{{orderInfo.deductible/item.goodsNum*item.backNo}}</i></td>
-              <td><i class="i_col_red" v-show="item.goodsNum">{{orderInfo.deductible}}</i></td> 
+            </tr>
+            <tr class="bgc">
+              <td>退款金额：{{orderInfo.refundAmt}}</td>
+              <td>退回的乾币数：{{orderInfo.untread}}</td>
+              <td colspan="2">扣除的乾币数：{{orderInfo.outCoins}}</td>
             </tr>
           </table>
           <div class="btn_box">
@@ -423,6 +415,9 @@
           orderNo: '173828478CSJHC',
           orderTime: 'xxxxxxxxxxx',
           totalPrice: 156,
+          refundAmt: 78,
+          outCoins: 2,
+          untread: 6,
           freight: 68,
           deductible: 2,
           //商品信息
@@ -438,6 +433,15 @@
           },{
             goodsSrc: '',
             goodsName: '商品名称2',
+            SKUCode: 'xxxxxxxxx',
+            price: 39,
+            goodsNum: 0,
+            checked: false,
+            backNo: 1,
+            count: 0//退款数量
+          },{
+            goodsSrc: '',
+            goodsName: '商品名称3',
             SKUCode: 'xxxxxxxxx',
             price: 39,
             goodsNum: 0,
@@ -604,7 +608,11 @@
 }
 .refund_tb tr{
   width: 100%;
+  height: 46px;
   border: 1px solid #ccc;
+}
+.bgc{
+  background: #eee;
 }
 .refund_tb td{
   text-align: center;
