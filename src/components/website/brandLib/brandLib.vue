@@ -1,6 +1,6 @@
 <template>
   <div class="brandLib">
-    <publicHeader></publicHeader>
+    <publicHeader v-on:listenToBrand="msgFromHeader"></publicHeader>
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
@@ -139,6 +139,10 @@
 
       // 初始化分类和品牌
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
+      // 初始化搜索框值
+      var searchData = that.$route.params.data;
+      var searchWord = that.$route.params.word; 
+      console.log(searchData,searchWord,'lcy');
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -146,6 +150,7 @@
       that.intClassfy1 = intClassfy.split("-")[0];
       that.intClassfy2 = intClassfy.split("-")[1];
       that.intClassfy3 = intClassfy.split("-")[2];
+
       // if(that.intClassfy1!=0){
       //   that.searchOneStr = that.brandClassfy[that.intClassfy1-1].oneClassify;
       // }
@@ -161,6 +166,11 @@
 
     },
     methods: {
+      //监听publicHeader标签
+      msgFromHeader: function(data) {
+        var that = this;
+        console.log(data);
+      },
       getClassfytAndBrandList:function(){
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand')

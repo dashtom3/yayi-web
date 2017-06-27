@@ -5,9 +5,9 @@
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app'
+  }
 </script>
 
 <style>
@@ -40,6 +40,12 @@ export default {
     list-style-type:none;
   }
   /*过渡动画开始*/
+  .component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .3s ease;
+  }
+  .component-fade-enter, .component-fade-leave-active {
+    opacity: 0;
+  }
   .shake-enter-active {
     animation: shake .5s;
   }

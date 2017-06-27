@@ -27,11 +27,7 @@ import global from '../../global/global'
       return {
         thisscore:null,
         allComments:[
-          {name:'陈**1',phone:'12341431341',score:3,time:'1324-12-12 23:12'},
-          {name:'陈**2',phone:'12341431341',score:5,time:'1324-12-12 23:12'},
-          {name:'陈**3',phone:'12341431341',score:2,time:'1324-12-12 23:12'},
-          {name:'陈**4',phone:'12341431341',score:1,time:'1324-12-12 23:12'},
-          {name:'陈**5',phone:'12341431341',score:4,time:'1324-12-12 23:12'}
+          
         ]
       }
     },

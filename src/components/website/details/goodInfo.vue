@@ -73,14 +73,14 @@
     <div class="clearFloat"></div>
     <div>
     <div class="goodMore">
-      <span :class="{nowGoodMore:goodInforWord==1}" v-on:click="changeGoodInforWord('1')">商品介绍</span>
-      <span :class="{nowGoodMore:goodInforWord==3}" v-on:click="changeGoodInforWord('3')">使用说明</span>
-      <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2')">商品评论</span>
+      <span :class="{nowGoodMore:goodInforWord==1}" v-on:click="changeGoodInforWord('1','goodIntroduce')">商品介绍</span>
+      <span :class="{nowGoodMore:goodInforWord==3}" v-on:click="changeGoodInforWord('3','instructions')">使用说明</span>
+      <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2','goodComment')">商品评论</span>
     </div>
     <div >
-      <goodIntroduce :instruction="instructions" v-if="goodInforWord==1"></goodIntroduce>
-      <instructions v-if="goodInforWord==3"></instructions>
-      <goodComment :comments="commentList" v-if="goodInforWord==2"></goodComment>
+      <transition name="component-fade" mode="out-in">
+        <component :instruction="instructions" :comments="commentList"  :is="currentView" keep-alive></component>
+      </transition>
     </div>
   </div>
   </div>
@@ -96,6 +96,7 @@ import myAddress from './selectThree'
     name: 'goodInfo',
     data () {
       return {
+        currentView:"goodIntroduce",
         nowGoodDetails:{},
         itemBrand:{},
         itemDetail:{},
@@ -138,11 +139,15 @@ import myAddress from './selectThree'
     methods:{
       getNowGoodDetail:function(){
         var that = this;
+        var userToken = that.global.getToken();
         var obj = {
-          itemId:that.$route.params.goodId
+          itemId:that.$route.params.goodId,
+          token:userToken
         };
-        that.global.axiosGetReq('/item/itemDetailDes',obj)
+        console.log(obj)
+        that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
+          console.log(res.data)
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
@@ -160,8 +165,9 @@ import myAddress from './selectThree'
           this.goodDefaultNum -= 1;
         }
       },
-      changeGoodInforWord:function(arg){
+      changeGoodInforWord:function(arg,view){
         this.goodInforWord = arg;
+        this.currentView = view;
       },
       changeAttSty:function(index,item){
         this.ite = index;
@@ -198,7 +204,6 @@ import myAddress from './selectThree'
         }else{
           that.global.axiosPostReq('/cart/add',obj)
           .then((res) => {
-            console.log(res.data.data)
             if (res.data.callStatus === 'SUCCEED') {
               that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
             } else {
