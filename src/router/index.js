@@ -48,6 +48,7 @@ import adminManner_admin from '@/components/admin/adminManner/admin'
 import salesManner_salesList from '@/components/admin/salesManner/salesList'
 import salesManner_incomeList from '@/components/admin/salesManner/incomeList'
 import salesManner_getMoneyManner from '@/components/admin/salesManner/getMoneyManner'
+import salesManner_customerManner from '@/components/admin/salesManner/customerManner'
 
 //广告设置
 import advertSets_adv from '@/components/admin/advertSets/adv'
@@ -188,7 +189,8 @@ let router = new Router({
       children: [
         {path: '/admin/salesManner/salesList', component: salesManner_salesList, name: '销售员列表', menuShow: true},
 				{path: '/admin/salesManner/incomeList', component: salesManner_incomeList, name: '收入列表', menuShow: true},
-				{path: '/admin/salesManner/getMoneyManner', component: salesManner_getMoneyManner, name: '提现管理', menuShow: true}
+				{path: '/admin/salesManner/getMoneyManner', component: salesManner_getMoneyManner, name: '提现管理', menuShow: true},
+        {path: '/admin/salesManner/customerManner', component: salesManner_customerManner, name: '客户资源管理', menuShow: true}
       ]
     },
     {

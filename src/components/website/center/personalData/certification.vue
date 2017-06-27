@@ -32,7 +32,7 @@
             <i class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
           </el-upload>
           <transition name="shake">
-            <p v-show="doctorPic_validate" class="error">请输入真实的单位名称</p>
+            <p v-show="doctorPic_validate" class="error">请上传真实的资格证书</p>
           </transition>
         </el-form-item>
         <el-form-item>
@@ -94,9 +94,7 @@
           if(this.certiData.companyName){
             this.companyName_validate = false
           }
-          if(!this.certiData.doctorPic){
-            this.doctorPic_validate = true
-          }else{
+          if(this.certiData.doctorPic){
             this.doctorPic_validate = false
           }
         },
@@ -145,7 +143,7 @@
         this.certiData.part =  data;
       },
       adsf:function(aa){
-        if(aa=="个人"){
+        if(aa=="1"){
           this.sczgz = "口腔执业医师资格证：";
         }else{
           this.sczgz = "营利性医疗机构执业许可证：";

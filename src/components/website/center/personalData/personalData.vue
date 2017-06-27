@@ -12,7 +12,7 @@
               :data="qiNiuToken">
               <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
               <img src="../../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personData.userPic">
-              <div>更改头像</div>
+              <div class="changeImg">更改头像</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="用户名：">
@@ -146,14 +146,8 @@
   border: 1px solid #eeeeee;
   border-radius: 3px;
 }
-.changeUserImg{
-  margin-top: 40px;
-  margin-bottom: 53px;
-  text-align: center;
-  position: relative;
-}
-.changeUserImg img{
-  border-radius: 50%;
+.changeImg:hover{
+  color: #5db7e8;
 }
 .error {
   position: absolute;

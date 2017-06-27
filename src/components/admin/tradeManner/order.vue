@@ -274,9 +274,9 @@
               <td>{{item.price + '*' + item.goodsNum}}</td>
               <td style="width:200px;position:relative;">
                 <div v-show="item.goodsNum" style="position:absolute;top:4px;">
-                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" @click="reduceCount(index)">-</i>
-                  <el-input v-model="item.count" style="width:88px;position:absolute;left:60px;"></el-input>
-                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" @click="addCount(index)">+</i>
+                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" @click="reduceCount(index, item)">-</i>
+                  <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
+                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" @click="addCount(index, item)">+</i>
                 </div>
               </td>
               <td><i class="i_col_red" v-show="item.goodsNum">{{item.count * item.price}}</i></td>
@@ -452,7 +452,6 @@
       //详情
       handleDetail(index, row) {
         this.detailVisible = true;
-        console.log(row);
       },
       //关闭交易
       handleClose(index, row) {
@@ -478,14 +477,13 @@
       handleDelivery(index, row) {
         this.deliveryVisible = true;
       },
-      reduceCount(index){
-        if(this.orderInfo.goodsInfo[index].count !== 1){
+      reduceCount(index, item){
+        if(item.checked && this.orderInfo.goodsInfo[index].count !== 1){
           this.orderInfo.goodsInfo[index].count -= 1;
         }
       },
-      addCount(index){
-        console.log(this.orderInfo.goodsInfo[index].count);
-        if(this.orderInfo.goodsInfo[index].count < this.orderInfo.goodsInfo[index].goodsNum){
+      addCount(index, item){
+        if(item.checked && this.orderInfo.goodsInfo[index].count < this.orderInfo.goodsInfo[index].goodsNum){
           this.orderInfo.goodsInfo[index].count += 1;
         }
       }
@@ -617,11 +615,13 @@
   font-style:normal;
   font-size:20px;
   padding-right:12px;
+  cursor: pointer;
 }
 .icon_i_r{
   font-style:normal;
   font-size:20px;
   padding-left:12px;
+  cursor: pointer;
 }
 /* 仓库发货 */
 .btn_{

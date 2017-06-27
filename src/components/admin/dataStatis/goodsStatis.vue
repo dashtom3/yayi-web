@@ -26,7 +26,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <div class="clearfix"></div>
         <el-form-item label="下单时间" class="fl">
           <div class="block" style="margin-left:30px;">
             <el-date-picker
