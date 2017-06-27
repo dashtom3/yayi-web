@@ -4,7 +4,7 @@
       <span>关于我们</span>
       <span>联系我们</span>
       <span>联系客服</span>
-      <span style="margin-right:0px; border:none;">意见反馈</span>
+      <span style="margin-right:0px; border:none;" @click="question">意见反馈</span>
     </p> 
     <p class="copyright">Copyright © 2017 yayiABC.com 版权所有</p>
   </div>
@@ -16,6 +16,13 @@
     data () {
       return {
       }
+    },
+    methods: {
+      //意见反馈
+      question: function() {
+        var that = this;
+        window.open('http://cn.mikecrm.com/BvO3hVU');
+      },
     }
   }
 </script>

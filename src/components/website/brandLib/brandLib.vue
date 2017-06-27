@@ -87,11 +87,13 @@
     </div> -->
 
     <publicFooter></publicFooter>
+    <backToTop></backToTop>
   </div>
 </template>
 
 <script>
   import publicHeader from '../index/publicHeader'
+  import backToTop from '../index/backToTop'
   import classify from '../index/classify'
   import publicFooter from '../index/publicFooter'
   import checkBox from './checkBox'
@@ -143,6 +145,7 @@
     components: {
       publicHeader,
       classify,
+      backToTop,
       publicFooter,
       checkBox,
       paging0

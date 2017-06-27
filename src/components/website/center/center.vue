@@ -1,6 +1,7 @@
 <template>
   <div class="center">
     <publicHeader></publicHeader>
+    <backToTop></backToTop>
     <div class="big_box">
       <div class="left_box">
         <div class="left_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">我的订单</div>
@@ -30,6 +31,7 @@
   import myCollection from './myCollection/myCollection'
   import personal from './personalData/personal'
   import myAdd from './myAdd/myAdd'
+  import backToTop from '../index/backToTop'
   // var tab02 = Vue.extend({
   //   template: '<div>this is 待评价02</div>',
   // });
@@ -53,6 +55,7 @@
     components: {
       publicHeader,
       publicFooter,
+      backToTop,
       tab01: myOrder,
       tab02: myMoney,
       tab03: myCollection,

@@ -49,6 +49,9 @@ export default {
       }],
     }
   },
+  created: function() {
+    var that = this;
+  },
   methods: {
     toDetail: function() {
       var that = this;

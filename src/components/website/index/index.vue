@@ -12,14 +12,7 @@
       <div class="sideBtn" :class="{spe: isSpe8}" @click="jump(7)">种植</div>
       <div class="sideBtn" :class="{spe: isSpe9}" @click="jump(8)">正畸</div>
     </div>
-    <div v-show="top" class="top_box" @click="backToTop">
-       <p class="top_title">置顶</p>
-      <img src="../../../images/index/top.png" alt="img" />
-    </div>
-    <div v-show="contact" class="contact_box">
-       <p class="contact_title">联系客服</p>
-      <img src="../../../images/index/contact.png" alt="img" />
-    </div>
+    <backToTop></backToTop>
     <publicHeader></publicHeader>
     <classify :brandListData="brandList"></classify>
     <carousel></carousel>
@@ -50,6 +43,7 @@
   import readycut from './readycut'
   import plant from './plant'
   import zq from './zq'
+  import backToTop from './backToTop'
 
   export default {
     name: 'index',
@@ -57,8 +51,6 @@
       return {
         items: [],
         isActive: false,
-        top: false,
-        contact: false,
         isSpe1: false,
         isSpe2: false,
         isSpe3: false,
@@ -85,6 +77,7 @@
       plant,
       zq,
       publicFooter,
+      backToTop,
     },
     created: function() {
       var that = this;
@@ -121,13 +114,6 @@
           that.isActive = true;
         } else {
           that.isActive = false;
-        }
-        if(scroll >= 1577) {
-          that.top = true;
-          that.contact = true;
-        } else {
-          that.top = false;
-          that.contact = false;
         }
         if(scroll >= 810 && scroll < 1000) {
           that.isSpe1 = true;
@@ -244,43 +230,5 @@
   .spe {
     background-color: #5ed6dc;
     transition: all ease 0.5s;
-  }
-  .top_box {
-    width: 64px;
-    height: 86px;
-    padding: 5px;
-    font-size: 14px;
-/*    background-color: #EECE7C;*/
-    position: fixed;
-    top: 150px;
-    right:0px;
-    z-index: 999;
-    text-align: center;
-  }
-  .top_box:hover {
-    opacity: 0.8;
-    cursor: pointer;
-  }
-  .top_title {
-    margin-bottom: 8px;
-  }
-  .contact_box {
-    width: 64px;
-    height: 86px;
-    padding: 5px;
-    font-size: 14px;
-/*    background-color: #EECE7C;*/
-    position: fixed;
-    top: 250px;
-    right:0px;
-    z-index: 999;
-    text-align: center;
-  }
-  .contact_box:hover {
-    opacity: 0.8;
-    cursor: pointer;
-  }
-  .contact_title {
-    margin-bottom: 8px;
   }
 </style>

@@ -8,7 +8,7 @@
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
         <div v-else class="log right">
-          <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut"> 退出</span>
+          <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut">退出</span>
         </div>
         <div class="my_order right" @click="myOrder">我的订单</div>
         <div class="shopping_car right">
@@ -19,7 +19,7 @@
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
             <div class="cargo_box" v-for="item in items" :key="item">
-              <img class="cargo_sm" :src=item.pic alt="img">
+              <img class="cargo_sm" :src=item.pic alt="img" @click="gotocar">
               <div class="cargo_des">{{item.name}}</div>
               <div class="cargo_price">￥{{item.price}}</div>
               <div class="cargo_num">{{item.num}}盒</div>
@@ -1033,6 +1033,8 @@
   .headerBox {
     width: 100%;
     height: 28px;
+    border-bottom: 1px #eee solid;
+    box-shadow: 1px 1px 5px #eee;
     margin-bottom: 30px;
   }
   .headerFirst {

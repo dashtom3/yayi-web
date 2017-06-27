@@ -22,12 +22,12 @@
           <el-form-item label="品牌名称：">
             <el-input v-model="cargo.brand"></el-input>
           </el-form-item>
-          <el-form-item label="乾币抵扣：">
+<!--           <el-form-item label="乾币抵扣：">
             <el-select v-model="coinValue" placeholder="请选择">
               <el-option v-for="coin in options1" :key="coin.value" :label="coin.label" :value="coin.value">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="商品状态：">
             <el-select v-model="stateValue" placeholder="请选择">
               <el-option v-for="state in options2" :key="state.value" :label="state.label" :value="state.value">
@@ -45,12 +45,12 @@
         <el-table-column label="商品名称" prop="name"></el-table-column>
         <el-table-column label="商品分类" prop="class"></el-table-column>
         <el-table-column label="品牌名称" prop="brand"></el-table-column>
-        <el-table-column label="支持乾币抵扣">
+<!--         <el-table-column label="支持乾币抵扣">
           <template scope="scope">
             <span v-if="scope.row.coin == 1">是</span>
             <span v-if="scope.row.coin == 0">否</span>
           </template> 
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="商品状态">
           <template scope="scope">
             <span v-if="scope.row.state == true">已上架</span>

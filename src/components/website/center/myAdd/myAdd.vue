@@ -45,14 +45,19 @@
             <div class="left add_mobile">手机号</div>
             <div class="left add_operate">操作</div>
           </div>
-          <div class="address_des" v-for="add in address" :key="add">
+          <div class="address_des" v-for="add in address" :key="add" style="position:relative;">
             <div class="left des_people">{{add.receiverName}}</div>
             <div class="left des_place">{{add.province}}{{add.city}}{{add.county}}</div>
-            <div class="left des_des">{{add.receiverDetail}}</div>
+            <div class="left des_des" @mouseover="showAll(add)">
+              {{add.receiverDetail}}
+             <!--  <p class="all_detail" v-show="allDetail">{{add.receiverDetail}}</p> -->
+            </div>
             <div class="left des_mobile">{{add.phone}}</div>
             <div class="left des_operate">
               <i class="el-icon-edit edit" @click="add_edit(add)"></i>
               <i class="el-icon-delete remove" @click="add_remove(add)"></i>
+              <span v-if="add.isDefault" class="default_add">默认地址</span>
+              <span class="set_default_add" @click="setDefaultAdd(add)">设为默认</span>
             </div>
             <div class="clearfix"></div>
           </div>
@@ -134,6 +139,8 @@
         hasAddress: false,
         editAddVisible: false,
         removeVisible: false,
+        defaultAdd: true,
+        allDetail: true,
         address:[],
         form: {
           region: '',
@@ -224,10 +231,12 @@
         that.xRegion = data;
         //console.log(that.xRegion,'22');
       },
+      showAll: function() {
+         var that = this;
+      },
       // 保存地址
       save: function() {
         var that = this;
-        console.log(that.xRegion, '22')
         if(that.xRegion == [] || that.xRegion.length == 0) {
           that.placeAlert = true;
           return false
@@ -253,8 +262,8 @@
           receiverDetail: that.form.address,
           landlineNumber: that.form.gmobile,
           phone: that.form.mobile,
-          isDefault: 1,
-          //isDefault: that.setDefault,
+          //isDefault: 1,
+          isDefault: that.setDefault,
         }
         that.global.axiosPostReq('/shoppingAdress/insert', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -264,7 +273,7 @@
             that.form.address = '';
             that.form.gmobile = '';
             that.form.mobile = '';
-            that.isDefault = false;
+            that.setDefault = false;
             that.$message('保存地址成功！');
             var obj = {
               phone:that.global.getUser().phone,
@@ -322,8 +331,7 @@
           receiverDetail: that.edForm.address,
           landlineNumber: that.edForm.gmobile,
           phone: that.edForm.mobile,
-          isDefault: 1,
-          //isDefault: that.setDefault,
+          isDefault: that.setDefault1,
         }
         that.global.axiosPostReq('/shoppingAdress/update', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -334,7 +342,7 @@
             that.edForm.address = '';
             that.edForm.gmobile = '';
             that.edForm.mobile = '';
-            that.isDefault = false;
+            that.setDefault1 = false;
             that.$message('保存地址成功！');
             var obj = {
               phone:that.global.getUser().phone,
@@ -396,6 +404,45 @@
           });          
         });  
       },
+      // 设置默认地址
+      setDefaultAdd: function(add) {
+        var that = this;
+        console.log(add);
+        var obj = {
+          newPhone: that.global.getUser().phone,
+          receiverId: add.receiverId,
+          province: add.province,
+          city: add.city,
+          county: add.county,
+          receiverName: add.receiverName,
+          receiverDetail: add.receiverDetail,
+          landlineNumber: add.landlineNumber,
+          phone: add.phone,
+          isDefault: true,
+        }
+        that.global.axiosPostReq('/shoppingAdress/update', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.$message('设置默认地址成功！');
+            var obj = {
+              phone:that.global.getUser().phone,
+            };
+            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                if (res.data.data.length == 0) {
+                  that.hasAddress = false;
+                } else {
+                  that.hasAddress = true;
+                  that.address = res.data.data;
+                }
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          } else {
+            that.$message.error('保存地址失败！');
+          }
+        })
+      }
     }
   }
 </script>
@@ -486,6 +533,14 @@
   width: 1069px;
   border-bottom: 1px solid #e9e9e9;
 }
+.address_des:hover {
+  cursor: pointer;
+  transition: all ease 0.3s;
+  background-color: #F8F8F8;
+}
+.address_des:hover .set_default_add {
+  display: block;
+}
 .des_people {
   width: 156px;
   height: 40px;
@@ -512,6 +567,13 @@
   font-size: 14px;
   text-align: center;
   border-right: 1px solid #e9e9e9;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+　line-clamp: 1;
+　box-orient: vertical;
+　-webkit-line-clamp: 1;
+　-webkit-box-orient: vertical;
 /*  border-bottom: 1px solid #e9e9e9;*/
 }
 .des_mobile {
@@ -528,19 +590,58 @@
   height: 40px;
   line-height: 40px;
   font-size: 14px;
-  text-align: center;
 /*  border-right: 1px solid #e9e9e9;*/
 /*  border-bottom: 1px solid #e9e9e9;*/
 }
 .edit {
   color: #BFBFBF;
-  margin-right: 50px;
+  float: left;
+  margin-top: 15px; 
+  margin-right: 20px;
+  margin-left: 20px;
 }
 .edit:hover, .remove:hover{
   color: #5DB7E7;
   cursor: pointer;
 }
 .remove {
+  margin-top: 15px; 
   color: #BFBFBF;
+  float: left;
+}
+.default_add {
+  position:absolute; 
+  right: 20px; 
+  top: 8px; 
+  height: 26px; 
+  line-height: 26px;
+  color: #5DB7E7; 
+  margin-left:40px;
+  font-size:14px;
+}
+.set_default_add {
+  display: none;
+  position:absolute; 
+  right: 5px; 
+  top: 8px; 
+  height: 26px; 
+  line-height: 26px;
+  width: 100px;  
+  text-align: center;  
+  border-radius: 6px; 
+  color: #fff; 
+  background-color: #5DB7E7; 
+  margin-left:40px;
+  font-size:14px;
+}
+.all_detail {
+  position: absolute;
+  width: 120px;
+  height: 100px;
+  background-color: #fff;
+  color: #000;
+  font-size: 12px;
+  border: 1px solid #eaeaea;
+  border-radius: 7px;
 }
 </style>

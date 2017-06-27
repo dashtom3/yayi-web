@@ -5,11 +5,13 @@
     <detailsBar></detailsBar>
     <goodInfo></goodInfo>
     <publicFooter></publicFooter>
+    <backToTop></backToTop>
   </div>
 </template>
 
 <script>
   import publicHeader from '../index/publicHeader'
+  import backToTop from '../index/backToTop'
   import classify from '../index/classify'
   import publicFooter from '../index/publicFooter'
 
@@ -27,7 +29,8 @@
       classify,
       detailsBar,
       goodInfo,
-      publicFooter
+      publicFooter,
+      backToTop,
     },
     mounted: function() {
       window.scroll(0,0);
