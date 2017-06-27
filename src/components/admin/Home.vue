@@ -220,6 +220,7 @@
         height: 100%;
         border-radius: 0px;
         background-color: #333744;
+        overflow: scroll;
       }
       .collapsed {
         width: 50px;

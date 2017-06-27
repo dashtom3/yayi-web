@@ -438,6 +438,10 @@
       //首页搜索框
       search_cargo: function() {
         var that = this;
+        if (that.searchCargo == '') {
+          that.$message.error('请输入查询条件！');
+          return false
+        }
         var obj = {
           keyWord: that.searchCargo,
         }
@@ -1566,7 +1570,7 @@
   }
   .checkYa {
     position: relative;
-    transform: translateY(1px);
+    transform: translateY(2px);
   }
   .rg_choose_word {
     margin-left: 5px;
@@ -1603,6 +1607,9 @@
     position: absolute;
     top: 5px;
     right: 10px;
+  }
+  .search_img:hover {
+    cursor: pointer;
   }
   .headerSecond .logo_img:hover {
     cursor: pointer;

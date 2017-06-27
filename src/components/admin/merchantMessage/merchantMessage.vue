@@ -78,27 +78,28 @@
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="商品编号" prop="cargoId">
-        <el-input v-model="ruleForm.cargoId" placeholder="默认的，不需要修改" style="width: 300px !important;"></el-input>
+        <el-input v-model="ruleForm.cargoId" placeholder="默认的，不需要修改" style="width: 300px !important;" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="商品名称" prop="name">
-        <el-input v-model="ruleForm.name" style="width: 300px !important;"></el-input>
+        <el-input v-model="ruleForm.name" style="width: 300px !important;" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="商品分类" prop="type">
-        <el-cascader :options="options4" :show-all-levels="false" v-model="ruleForm.type"></el-cascader>
+        <el-cascader :options="options4" :show-all-levels="false" v-model="ruleForm.type" :disabled="true"></el-cascader>
 <!--         <el-input v-model="ruleForm.classify" style="width: 300px;" icon="search" :on-icon-click="handleIconClick"></el-input> -->
       </el-form-item>
       <el-form-item label="品牌名称" prop="brand">
-        <el-select v-model="ruleForm.brand" placeholder="请选择">
+        <el-select v-model="ruleForm.brand" placeholder="请选择" :disabled="true">
           <el-option v-for="brand in options3" :key="brand.value" :label="brand.label" :value="brand.value">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="注册账号" prop="rgAcount">
-        <el-input v-model="ruleForm.rgAcount" style="width: 300px !important;"></el-input>
+        <el-input v-model="ruleForm.rgAcount" style="width: 300px !important;" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="乾币抵扣" prop="qian">
-        <el-radio class="radio" v-model="radio" label="1">支持</el-radio>
-        <el-radio class="radio" v-model="radio" label="2">不支持</el-radio>
+        <el-input v-model="ruleForm.cargoId" placeholder="支持不支持" style="width: 100px !important;" :disabled="true"></el-input>
+<!--         <el-radio class="radio" v-model="radio" label="1">支持</el-radio>
+        <el-radio class="radio" v-model="radio" label="2">不支持</el-radio> -->
       </el-form-item>
       <el-form-item label="商品属性">
         <el-button type="primary" @click="chooseType()">选择属性</el-button>

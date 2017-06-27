@@ -86,7 +86,7 @@
               </transition>
             </el-form-item>
             <el-form-item label="所在区域" :label-width="formLabelWidth">
-              <myAddress v-on:listenToChild="showFromChild" :selected="this.xRegion" style="width:260px;"></myAddress>
+              <myAddress v-on:listenToChild="showFromChild1" :aselected="this.xRegion1" style="width:260px;"></myAddress>
               <transition name="shake">
                 <span v-show="placeAlert1" class="error">请选择所在区域！</span>
               </transition>
@@ -158,7 +158,7 @@
         },
         formLabelWidth: '120px',
         xRegion: [],
-        xRegion2: [],
+        xRegion1: [],
         editAdd: {},
       }
     },
@@ -170,6 +170,13 @@
         var that = this;
         if (that.xRegion !== []) {
           that.placeAlert = false;
+          // that.placeAlert1 = false;
+        }
+      },
+      xRegion1: function() {
+        var that = this;
+        if (that.xRegion1 !== []) {
+          // that.placeAlert = false;
           that.placeAlert1 = false;
         }
       },
@@ -229,6 +236,11 @@
       showFromChild: function(data) {
         var that = this;
         that.xRegion = data;
+        //console.log(that.xRegion,'22');
+      },
+      showFromChild1: function(data) {
+        var that = this;
+        that.xRegion1 = data;
         //console.log(that.xRegion,'22');
       },
       showAll: function() {
@@ -299,7 +311,18 @@
       // 修改地址
       add_edit: function(add) {
         var that = this;
+        var place = [];
+        place.push(add.province);
+        place.push(add.city);
+        place.push(add.county);
+        that.xRegion1 = place;
         that.editAdd = add;
+        that.edForm.name = add.receiverName;
+        that.edForm.address = add.receiverDetail;
+        that.edForm.mobile = add.phone;
+        that.edForm.gmobile = add.landlineNumber;
+        that.setDefault1 = add.isDefault;
+        console.log(that.editAdd);
         that.editAddVisible = true;
       },
       // 保存修改
@@ -309,7 +332,7 @@
           that.realAlert1 = true;
           return false
         }
-        if(that.xRegion == [] || that.xRegion.length == 0) {
+        if(that.xRegion1 == [] || that.xRegion1.length == 0) {
           that.placeAlert1 = true;
           return false
         }
@@ -324,9 +347,9 @@
         var obj = {
           newPhone: that.global.getUser().phone,
           receiverId: that.editAdd.receiverId,
-          province: that.xRegion[0],
-          city: that.xRegion[1],
-          county: that.xRegion[2],
+          province: that.xRegion1[0],
+          city: that.xRegion1[1],
+          county: that.xRegion1[2],
           receiverName: that.edForm.name,
           receiverDetail: that.edForm.address,
           landlineNumber: that.edForm.gmobile,
@@ -337,7 +360,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             // console.log(that.xRegion,'frisco');
             that.editAddVisible = false;
-            that.xRegion = [];
+            that.xRegion1 = [];
             that.edForm.name = '';
             that.edForm.address = '';
             that.edForm.gmobile = '';

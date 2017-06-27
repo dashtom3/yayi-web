@@ -10,7 +10,7 @@
 
 export default {
   name: 'myAddress',
-  props: ['selected'],
+  props: ['selected','aselected'],
   data () {
     return {
       selectedOptions3: ['zujian', 'data', 'tag'],
@@ -3629,7 +3629,22 @@ export default {
     }
   },
   created(){
-    this.selectedOptions3 = this.selected;
+    // console.log(this.aselected,'23232323');
+    // console.log(this.selected,'22222222');
+    if (this.selected !== undefined) {
+      this.selectedOptions3 = this.selected
+      return false
+    }
+    if (this.aselected !== undefined) {
+      this.selectedOptions3 = this.aselected
+      return false
+    }
+    //console.log(this.selected,'223355');
+    // if (condition) {
+    //   expression
+    // }
+    // this.selectedOptions3 = this.selected
+    // this.selectedOptions3 = this.aselected
   },
   watch: {
     selectedOptions3: function() {
@@ -3638,7 +3653,17 @@ export default {
     },
     selected: {
       handler: function(){
-        this.selectedOptions3 = this.selected;
+        if (this.selected !== undefined) {
+          this.selectedOptions3 = this.selected;
+        }
+      },
+      deep: true
+    },
+    aselected: {
+      handler: function(){
+        if (this.aselected !== undefined) {
+          this.selectedOptions3 = this.aselected;
+        }
       },
       deep: true
     },
