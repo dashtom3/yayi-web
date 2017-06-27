@@ -139,6 +139,9 @@
 
       // 初始化分类和品牌
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
+      // 初始化搜索框值
+      var searchData = that.$route.params.data;
+      console.log(that.$route.params.data,'lcy');
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -146,6 +149,7 @@
       that.intClassfy1 = intClassfy.split("-")[0];
       that.intClassfy2 = intClassfy.split("-")[1];
       that.intClassfy3 = intClassfy.split("-")[2];
+
       // if(that.intClassfy1!=0){
       //   that.searchOneStr = that.brandClassfy[that.intClassfy1-1].oneClassify;
       // }

@@ -106,7 +106,7 @@
         }
         timer = setInterval(function(){
           var osTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-          var ispeed = Math.floor(-osTop / 6);
+          var ispeed = Math.floor(-osTop / 5);
           document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed;
           isTop = true;
           if (osTop == 0) {
@@ -117,7 +117,7 @@
       menu: function() {
         var that = this;
         var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(scroll >= 819) {
+        if(scroll >= 810) {
           that.isActive = true;
         } else {
           that.isActive = false;
@@ -129,35 +129,50 @@
           that.top = false;
           that.contact = false;
         }
-        if(scroll >= 819 && scroll < 982) {
+        if(scroll >= 810 && scroll < 1000) {
           that.isSpe1 = true;
         } else {
           that.isSpe1 = false;
         }
-        if(scroll >= 982 && scroll < 1831) {
+        if(scroll >= 1000 && scroll < 1800) {
           that.isSpe2 = true;
         } else {
           that.isSpe2 = false;
         }
-        if(scroll >= 1831 && scroll < 2730) {
+        if(scroll >= 1800 && scroll < 2700) {
           that.isSpe3 = true;
         } else {
           that.isSpe3 = false;
         }
-        if(scroll >= 2730 && scroll < 3613) {
+        if(scroll >= 2700 && scroll < 3600) {
           that.isSpe4 = true;
         } else {
           that.isSpe4 = false;
         }
-        if(scroll >= 3613 && scroll < 4390) {
+        if(scroll >= 3600 && scroll < 4500) {
           that.isSpe5 = true;
         } else {
           that.isSpe5 = false;
         }
-        if(scroll >= 4390) {
+        if(scroll >= 4500 && scroll < 5300) {
           that.isSpe6 = true;
         } else {
           that.isSpe6 = false;
+        }
+        if(scroll >= 5300 && scroll < 6200) {
+          that.isSpe7 = true;
+        } else {
+          that.isSpe7 = false;
+        }
+        if(scroll >= 6200 && scroll < 7100) {
+          that.isSpe8 = true;
+        } else {
+          that.isSpe8 = false;
+        }
+        if(scroll >= 7100) {
+          that.isSpe9 = true;
+        } else {
+          that.isSpe9 = false;
         }
         //console.log(scroll, 'frisco')
       },

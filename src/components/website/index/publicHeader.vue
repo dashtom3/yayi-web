@@ -2,8 +2,8 @@
   <div class="publicHeader">
     <div class="headerBox" :class="{ speH: isActive }">
       <div class="headerFirst">
-        <div class="system_enter left">创客系统入口</div>
-        <div class="yayi left" @click="gotoIndex">首页</div>
+        <div class="system_enter left" @click="gotoIndex">首页</div>
+        <div class="yayi left">创客系统入口</div>
         <div v-if="hasLogin" class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
@@ -183,7 +183,7 @@
 <!--                   <p class="rg_alrHave" @click="rg_alrHave">已有账号</p> -->
                   <div class="rg_confirm_btn" @click="rg_register">注册</div>
                   <div class="rg_choose_box">
-                    <input type="checkbox" v-model="agree"/><span class="rg_choose_word">我已阅读并同意牙医ABC服务条款</span>
+                    <input type="checkbox" v-model="agree" class="checkYa" /><span class="rg_choose_word">我已阅读并同意牙医ABC服务条款</span>
                   </div>
                   <transition name="shake">
                     <p class="rg_choose_error" v-show="rgAgree_alert">请先同意牙医ABC服务条款!</p>
@@ -198,8 +198,8 @@
     <div class="headerSecond" v-show="Second">
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
       <div class="search_box right">
-        <input class="search_word" type="text">
-        <img class="search_img" src="../../../images/index/search.png" alt="img">
+        <input class="search_word" type="text" v-model="searchCargo">
+        <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
       </div>
     </div>
     <div class="clearfix"></div>
@@ -270,6 +270,7 @@
         Gtoken: null,
         total_num: 0,
         total_price: 0,
+        searchCargo: '',
       }
     },
     //*******导航钩子*********//
@@ -433,6 +434,23 @@
       gotoIndex: function() {
         var that = this;
         that.$router.push({path: '/'});
+      },
+      //首页搜索框
+      search_cargo: function() {
+        var that = this;
+        var obj = {
+          keyWord: that.searchCargo,
+        }
+        that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            //console.log(res.data.data);
+            var data1 = res.data.data;
+            that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1}});
+            window.scroll(0,0);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       // 去购物车
       gotocar: function() {
@@ -1007,6 +1025,7 @@
   .headerBox {
     width: 100%;
     height: 28px;
+    margin-bottom: 30px;
   }
   .headerFirst {
     width: 1200px;
@@ -1046,7 +1065,7 @@
     margin-left: 30px;
     width: 60px;
   }
-  .logIn:hover, .register:hover, .my_order:hover{
+  .logIn:hover, .register:hover, .my_order:hover, .yayi:hover, .system_enter:hover{
     color: #5DB7E7;
     cursor: pointer;
     transition: all ease 0.5s;
@@ -1533,6 +1552,11 @@
   .rg_choose_box {
     margin-top: 15px;
     font-size: 12px;
+    position: relative;
+  }
+  .checkYa {
+    position: relative;
+    transform: translateY(1px);
   }
   .rg_choose_word {
     margin-left: 5px;
