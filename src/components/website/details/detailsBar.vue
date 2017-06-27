@@ -23,12 +23,12 @@
       getNowGoodDetail:function(){
         var that = this;
         var obj = {
-          itemId:that.$route.params.goodId
+          itemId:that.$route.params.goodId,
+          token:that.global.getToken()
         };
-        that.global.axiosGetReq('/item/itemDetailDes',obj)
+        that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
             var arr = [];
             arr[0] ="首页";
             arr[1] = res.data.data.oneClassify;

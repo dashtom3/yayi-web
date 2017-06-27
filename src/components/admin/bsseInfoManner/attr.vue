@@ -46,9 +46,9 @@
     </el-col>
 
     <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr">
-      <el-form label-width="100px" class="demo-dynamic">
-        <el-form-item  prop="addName"  label="属性名称：">
-          <el-input v-model="addGoodAttrName"></el-input>
+      <el-form label-width="100px" class="demo-dynamic" :model="formData" rules:"rules1">
+        <el-form-item  prop="addGoodAttrName"  label="属性名称：">
+          <el-input v-model="formData.addGoodAttrName"></el-input>
         </el-form-item>
         <!-- <span v-if="addGoodAttrValues.length>=1">
           <el-form-item  v-for="(value, index) in addGoodAttrValues" :label="'属性值：'" :property="value.name" :key="value">
@@ -85,8 +85,12 @@
   export default{
     data(){
       return {
+        formData:{
+          addGoodAttrName:null
+        },
+        rules1:{},
         bindTitle:null,
-        addGoodAttrName:null,
+        // formData.addGoodAttrName:null,
         addGoodAttrValues:[],
         addGoodAttrOneVal:null,
         searchAttrName:null,
@@ -115,7 +119,7 @@
         this.bindTitle = "添加商品属性";
         this.showAddGoodAttr = true;
         this.attOperaType = 1;
-        this.addGoodAttrName = null;
+        this.formData.addGoodAttrName = null;
         this.addGoodAttrValues = [];
       },
       changThisAttrVal:function(index,e){
@@ -149,7 +153,7 @@
       },
       changeOneAttr:function(index){
         this.bindTitle = "修改商品属性";
-        this.addGoodAttrName = this.tableData[index].shuxingname;
+        this.formData.addGoodAttrName = this.tableData[index].shuxingname;
         this.addGoodAttrValues = this.tableData[index].shuxingzhi;
         this.changAttrIndex = index;
         this.attOperaType = 2;
@@ -158,14 +162,14 @@
       saveOneAttrs:function(){
         if(this.attOperaType==1){
           var obj={};
-          obj.shuxingname = this.addGoodAttrName;
+          obj.shuxingname = this.formData.addGoodAttrName;
           obj.shuxingzhi = this.addGoodAttrValues;
           this.tableData.push(obj);
           this.addGoodAttrValues = [];
-          this.addGoodAttrName= null;
+          this.formData.addGoodAttrName= null;
         }
         if(this.attOperaType==2){
-          this.tableData[this.changAttrIndex].shuxingname = this.addGoodAttrName;
+          this.tableData[this.changAttrIndex].shuxingname = this.formData.addGoodAttrName;
           this.tableData[this.changAttrIndex].shuxingzhi = this.addGoodAttrValues;
         }
         this.showAddGoodAttr  = false;

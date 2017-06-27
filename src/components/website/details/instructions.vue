@@ -13,6 +13,9 @@
 
       }
     },
+    created:function(){
+      
+    },
     methods: {
 
     }
