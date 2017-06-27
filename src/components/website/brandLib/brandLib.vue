@@ -1,6 +1,6 @@
 <template>
   <div class="brandLib">
-    <publicHeader></publicHeader>
+    <publicHeader v-on:listenToBrand="msgFromHeader"></publicHeader>
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
@@ -166,6 +166,11 @@
 
     },
     methods: {
+      //监听publicHeader标签
+      msgFromHeader: function(data) {
+        var that = this;
+        console.log(data);
+      },
       getClassfytAndBrandList:function(){
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand')

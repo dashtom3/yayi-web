@@ -444,10 +444,17 @@
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             //console.log(res.data.data);
-            var data1 = res.data.data;
-            var search_word = that.searchCargo;
-            that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1, word: search_word}});
-            window.scroll(0,0);
+            if (that.$router.history.current.name !== 'brandLib') {
+              var data1 = res.data.data;
+              var search_word = that.searchCargo;
+              that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1, word: search_word}});
+              window.scroll(0,0);
+            } else {
+              var data2 = res.data.data;
+              var search_word2 = that.searchCargo;
+              data2.push(search_word2);
+              that.$emit('listenToBrand', data2);
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
