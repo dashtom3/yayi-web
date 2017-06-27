@@ -141,7 +141,8 @@
       var classifyIdAndbrandId = that.$route.params.classifyIdAndbrandId;
       // 初始化搜索框值
       var searchData = that.$route.params.data;
-      console.log(that.$route.params.data,'lcy');
+      var searchWord = that.$route.params.word; 
+      console.log(searchData,searchWord,'lcy');
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];

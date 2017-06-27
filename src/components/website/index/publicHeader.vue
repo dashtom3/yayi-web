@@ -445,7 +445,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             //console.log(res.data.data);
             var data1 = res.data.data;
-            that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1}});
+            var search_word = that.searchCargo;
+            that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1, word: search_word}});
             window.scroll(0,0);
           } else {
             that.$message.error('网络出错，请稍后再试！');
