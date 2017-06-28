@@ -3,26 +3,30 @@
     <div class="content">
       <el-form ref="certiData" :model="certiData" label-width="250px">
         <el-form-item label="类型：">
-          <el-select v-model="certiData.type" :change="adsf(certiData.type)">
+          <el-select v-model="certiData.type" :change="adsf(certiData.type)" :disabled="ifPass">
             <el-option label="个人" value="1"></el-option>
             <el-option label="企业" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单位名称：">
-          <el-input v-model="certiData.companyName"></el-input>
+          <el-input v-model="certiData.companyName" :disabled="ifPass"></el-input>
           <transition name="shake">
             <p v-show="companyName_validate" class="error">请输入真实的单位名称</p>
           </transition>
         </el-form-item>
         <el-form-item label="单位所在地：">
-          <selectThree @listenToChild="showFromChild" :selected="this.certiData.part"></selectThree>
+          <selectThree @listenToChild="showFromChild" :selected="this.certiData.part" v-show="!ifPass"></selectThree>
+          <template>  
+            <el-input v-model="certiData.part" :disabled="ifPass" v-if="ifPass"></el-input>
+          </template>
         </el-form-item>
         <el-form-item label="详细地址：">
-          <el-input v-model="certiData.workAddress"></el-input>
+          <el-input v-model="certiData.workAddress" :disabled="ifPass"></el-input>
         </el-form-item>
         <el-form-item :label="sczgz">
           <el-upload
           class="avatar-uploader"
+            :disabled="ifPass"
             :action="qiNiuUrl"
             :show-file-list="false"
             :on-success="uploadFile"
@@ -36,7 +40,7 @@
           </transition>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="savePerInfo" v-show="btnVisible" style="">提交</el-button>
+          <el-button type="primary" @click="savePerInfo" v-show="btnVisible">提交</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -60,6 +64,8 @@
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
         btnVisible: true,
+        ifPass: false,
+        ifOnce: true,
         certiData: {
           phone: global.getUser().phone,
           token: global.getToken(),
@@ -153,20 +159,25 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1){
+        if(this.certificateState==1 && this.ifOnce){
           this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
           });
+          this.ifOnce = false;
+          this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2){
+        }else if(this.certificateState==2 && this.ifOnce){
           this.$alert('您的认证信息已审核通过',{
             confirmButtonText: '确定',
           });
+          this.ifOnce = false;
+          this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==3){
+        }else if(this.certificateState==3 && this.ifOnce){
           this.$alert('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
           });
+           this.ifOnce = false;
           this.btnVisible = true;
         }
       },

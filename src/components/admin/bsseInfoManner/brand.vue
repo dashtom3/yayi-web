@@ -12,32 +12,33 @@
       <el-col  class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="品牌名称：">
-            <el-input v-model="searchBranName"></el-input>
+            <el-input v-model="itemBrandName"></el-input>
           </el-form-item>
           <el-form-item label="产地：">
-            <el-select v-model="searchBranPlace">
+            <el-select v-model="itemBrandHome">
               <el-option label="国产" value="国产"></el-option>
               <el-option label="进口" value="进口"></el-option>
             </el-select>
-          </el-form-item><el-form-item>
-            <el-button type="primary" @click="onSubmit()">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="queryHandler">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
       <el-col style="text-align:right;line-height:40px;">
-        <el-button type="text" @click="addGoodBrand()">+添加商品品牌</el-button>
+        <el-button type="primary" class="add_btn" @click="addGoodBrand()">+添加商品品牌</el-button>
       </el-col>
 
 
       <!--列表-->
         <el-table  :data="tableData"  border  style="width: 100%">
-          <el-table-column  prop="name"  align="center"    label="品牌名称"  >  </el-table-column>
+          <el-table-column  prop="itemBrandName" align="center" label="品牌名称"></el-table-column>
           <el-table-column  prop="logo"  align="center"  label="logo">
             <template scope="scope">
               <img style="cursor: pointer;" v-on:click="showBigImg(scope.$index)" :src="scope.row.logo" alt="点击查看大图" title="点击查看大图">
             </template>
           </el-table-column>
-          <el-table-column  prop="madein"  align="center"  label="产地">  </el-table-column>
+          <el-table-column  prop="itemBrandHome"  align="center"  label="产地">  </el-table-column>
           <el-table-column  align="center"  label="操作">
             <template scope="scope">
               <el-button  type="text"  v-on:click="changeOneBrand(scope.$index)"  >修改</el-button>
@@ -52,24 +53,25 @@
     <el-dialog title="照片大图" :visible.sync="ifShowBigImg">
       <img src="1.png" style="width:350px;height:350px;display:block;margin:auto;">
     </el-dialog>
-    <el-dialog :title="bindTitle" :visible.sync="showAddBrandAlert">
+    <el-dialog :title="bindTitle" size="tiny" :visible.sync="showAddBrandAlert">
       <el-form>
         <el-form-item label="品牌名称：" :label-width="formLabelWidth">
-          <el-input v-model="name"></el-input>
+          <el-input v-model="itemBrandName" class="item_w_input"></el-input>
         </el-form-item>
         <el-form-item label="产地：" :label-width="formLabelWidth">
-          <el-select v-model="address">
+          <el-select v-model="itemBrandHome">
             <el-option label="国产" value="国产"></el-option>
             <el-option label="进口" value="进口"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="logo：" :label-width="formLabelWidth">
           <el-upload
-            :on-success="handleAvatarSuccess"
-            action=""
+            :on-success="uploadFile"
+            action="qiNiuUrl"
             :before-upload="beforeAvatarUpload"
             class="avatar-uploader"
-            :show-file-list="false">
+            :show-file-list="false"
+            :data="qiNiuToken">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -84,55 +86,74 @@
 
 </template>
 <script>
+  import global from '../../global/global'
+
   export default{
     data(){
       return {
         bindTitle:null,
-        searchBranName:null,
-        searchBranPlace:null,
+        itemBrandName:null,
+        itemBrandHome:null,
         // 1增加。2修改
         brandOperaType:1,
         changeOneIndex:null,
         name:null,
         address:null,
         formLabelWidth:"120px",
-         imageUrl: null,
-        tableData:[
-          {name:"sdfg",logo:"qwerfqew",madein:"国产"},
-          {name:"sdfg",logo:"qwerfqew",madein:"进口"},
-          {name:"sdfg",logo:"qwerfqew",madein:"国产"},
-          {name:"sdfg",logo:"qwerfqew",madein:"进口"},
-          {name:"sdfg",logo:"qwerfqew",madein:"国产"},
-          {name:"sdfg",logo:"qwerfqew",madein:"进口"},
-          {name:"sdfg",logo:"qwerfqew",madein:"国产"},
-          {name:"sdfg",logo:"qwerfqew",madein:"进口"},
-        ],
+        imageUrl: null,
+        tableData:[],
+        qiNiuToken: null,
+        qiNiuUrl: global.qiNiuUrl,
         showAddBrandAlert:false,
         ifShowBigImg:false,
       }
     },
-
+    created(){
+      //获取七牛token
+      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          this.qiNiuToken = {
+            token: res.data.msg
+          }
+        }
+      })
+    },
     methods: {
-      handleAvatarSuccess(res, file) {
-
+      uploadFile(res, file) {
+        // this. = global.qiniuShUrl + file.response.key
+        // this.imageUrl = global.qiniuShUrl + file.response.key
       },
       beforeAvatarUpload(file) {
-        console.log(file)
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        // console.log(file)
+        // const isJPG = file.type === 'image/jpeg';
+        // const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
+        // if (!isLt2M) {
+        //   this.$message.error('上传头像图片大小不能超过 2MB!');
+        // }
+        // return isJPG && isLt2M;
+      },
+      queryHandler: function(){
+        let params = {
+          itemBrandName: this.itemBrandName,
+          itemBrandHome: this.itemBrandHome
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+        global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.tableData = res.data.data;
+            console.log(this.tableData)
+          }else{
+            this.$message.error('查询商品品牌失败！');
+          }
+        })
       },
       addGoodBrand:function(){
         this.bindTitle = "添加商品品牌";
-        this.name = null;
-        this.address = null;
+        this.itemBrandName = null;
+        this.itemBrandHome = null;
         this.showAddBrandAlert = true;
         this.brandOperaType = 1;
       },
@@ -162,8 +183,8 @@
         this.bindTitle = "修改商品品牌";
         this.showAddBrandAlert = true;
         var thisData = this.tableData[index];
-        this.address = thisData.madein;
-        this.name = thisData.name;
+        this.itemBrandHome = thisData.itemBrandHome;
+        this.itemBrandName = thisData.itemBrandName;
         this.changeOneIndex = index;
         this.brandOperaType = 2;
       },
@@ -171,17 +192,17 @@
         if(this.brandOperaType==1){
           var obj = {};
           obj.madein = this.address;
-          obj.name = this.name;
+          obj.itemBrandName = this.itemBrandName;
           obj.logo = "1.png";
           this.tableData.push(obj);
-          this.madein = null;
-          this.name = null;
+          this.itemBrandHome = null;
+          this.itemBrandName = null;
           this.searchBranName = null;
           this.searchBranPlace = null;
         }
         if(this.brandOperaType==2){
-          this.tableData[this.changeOneIndex].madein = this.address;
-          this.tableData[this.changeOneIndex].name = this.name;
+          this.tableData[this.changeOneIndex].itemBrandHome = this.itemBrandHome;
+          this.tableData[this.changeOneIndex].itemBrandName = this.itemBrandName;
         }
         this.showAddBrandAlert  = false;
       },
@@ -211,5 +232,11 @@
     height: 178px;
     display: block;
   }
-
+.add_btn{
+  float:right;
+  margin: 20px 118px 20px 0;
+}
+.item_w_input{
+  width: 216px;
+}
 </style>

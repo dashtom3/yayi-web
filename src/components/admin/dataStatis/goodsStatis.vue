@@ -26,15 +26,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="下单时间" class="fl">
-          <div class="block" style="margin-left:30px;">
-            <el-date-picker
-              v-model="value3"
-              type="daterange"
-              placeholder="选择时间范围">
-            </el-date-picker>
-          </div>
-        </el-form-item>
         <el-form-item class="fl">
           <el-button type="primary">查询</el-button>
         </el-form-item>
@@ -93,7 +84,6 @@
           label1: '品牌3'
         }],
         goodName: '',
-        value3: '',
         goodsList: [{
           goodsCode: 'FGDS78473',
           goodsName: '超声波洗牙',

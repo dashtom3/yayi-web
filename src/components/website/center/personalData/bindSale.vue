@@ -67,7 +67,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .bindSale{
-
+  height: 500px;
 }
 .content{
 /*margin-top: 62px;*/
