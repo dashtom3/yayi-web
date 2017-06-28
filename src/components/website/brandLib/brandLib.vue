@@ -452,7 +452,7 @@ border-radius: 3px;
   margin-bottom: 20px;
   background: #eeeeee;
   padding: 0 25px;
-  width: 902px;
+  width: 901px;
 }
 .threeClassfy{
   border-top: 1px solid #bcbcbc;
@@ -559,7 +559,7 @@ margin: 0 auto;
   margin-right: 50px;
   line-height: 52px;
   text-align: center;
-  width: 111px;
+  width: 93px;
 }
 .brandLine{
   border-bottom: 1px solid #e5e5e5;

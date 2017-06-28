@@ -75,7 +75,6 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-        console.log(obj)
         that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
           console.log(res,"asdfafsf")
           if (res.data.callStatus === 'SUCCEED') {
@@ -193,6 +192,7 @@ max-width: 100%;
 max-height: 100%;
 display: inline-block;
 vertical-align: middle;
+margin-left: 5px;
 }
 .goodDetail .imgwrap span{
 height: 100%;

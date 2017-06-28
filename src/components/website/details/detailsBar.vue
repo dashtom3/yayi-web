@@ -1,7 +1,8 @@
 <template>
   <div class="detailsBar">
     <span v-for="(one ,index) in fenlei">
-      <span  :class="{goodName:has===index,goodName1:fenlei.length-1==index}" v-on:mouseenter="hover(index)" v-on:mouseleave="leave(index)">{{one}}</span><span v-if="index!=fenlei.length-1">></span>
+      <span :class="{goodName:has===index,goodName1:fenlei.length-1==index}" v-on:mouseenter="hover(index)" v-on:mouseleave="leave(index)" @click="goToThisPage(index)">{{one}}</span>
+      <span v-if="index!=fenlei.length-1">></span>
     </span>
   </div>
 </template>
@@ -13,13 +14,31 @@
     data () {
       return {
         has:null,
-        fenlei:[]
+        fenlei:[],
+        Classify:[],
+        allClassfy:[],
       }
     },
     created: function() {
       this.getNowGoodDetail();
+      this.getClassfy();
     },
     methods: {
+      getClassfy:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/showClassify')
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.allClassfy = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      goToThisPage:function(index){
+        var that = this;
+        console.log(that.Classify)
+      },
       getNowGoodDetail:function(){
         var that = this;
         var obj = {
@@ -36,6 +55,7 @@
             arr[3] = res.data.data.threeClassify;
             arr[4] = res.data.data.itemName;
             this.fenlei = arr;
+            this.Classify = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

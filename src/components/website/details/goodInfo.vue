@@ -118,8 +118,8 @@ import myAddress from './selectThree'
         goodDefaultNum:1,
         goodInforWord:1,
         ite: 0,
-        items: ['1','2','3','4','5','6'],
-        goodAllImgs:['1','2','3','4','5']
+        items: [],
+        goodAllImgs:[]
       }
     },
     watch:{
@@ -129,10 +129,11 @@ import myAddress from './selectThree'
           this.itemDetail = this.nowGoodDetails.itemDetail;
           this.commentList = this.nowGoodDetails.commentList;
           this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPica;
-          this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPicb;
-          this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPicc;
-          this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPicd;
-          this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPice;
+          this.goodAllImgs[1] = this.nowGoodDetails.itemDetail.itemPicb;
+          this.goodAllImgs[2] = this.nowGoodDetails.itemDetail.itemPicc;
+          this.goodAllImgs[3] = this.nowGoodDetails.itemDetail.itemPicd;
+          this.goodAllImgs[4] = this.nowGoodDetails.itemDetail.itemPice;
+          console.log(this.goodAllImgs)
           this.bigImgUrl = this.goodAllImgs[0];
           this.items = this.nowGoodDetails.itemValueList;
           this.commentList = this.nowGoodDetails.commentList;
@@ -153,9 +154,10 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:"'"+userToken+"'"
         };
+        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data,'111111111111111111')
+          console.log(res,'111111111111111111')
           this.ifshoucang = res.data.num;
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
@@ -211,9 +213,10 @@ import myAddress from './selectThree'
               itemSKU:parseInt(Math.random()*100000),
               token:that.global.getToken()
             };
+            console.log(obj)
             that.global.axiosPostReq('/cart/star',obj)
             .then((res) => {
-              // console.log(res.data)
+              console.log(res,"111111111111111111111111aaaaa")
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("收藏成功！", {confirmButtonText: '确定'});
                 that.ifshoucang = 1;
@@ -232,29 +235,28 @@ import myAddress from './selectThree'
       },
       addGwcThisGood:function(){
         var that = this;
-        var obj = {
-          phone:that.global.getUser().phone,
-          itemId:that.nowGoodDetails.itemId,
-          name:that.nowGoodDetails.itemName,
-          pic:that.itemDetail.itemPica,
-          num:that.goodDefaultNum,
-          itemSKU:parseInt(Math.random()*100000),
-          price:that.nowGoodDetails.itemPrice,
-          itemPropertyNamea:that.sureGoodAttr,
-          token:that.global.getToken()
-        };
-        if(!obj.itemPropertyNamea){
-          that.$alert("请选择商品属性！", {confirmButtonText: '确定'});
+        if(that.global.getUser()){
+          var obj = {
+            phone:that.global.getUser().phone,
+            itemId:that.nowGoodDetails.itemId,
+            name:that.nowGoodDetails.itemName,
+            pic:that.itemDetail.itemPica,
+            num:that.goodDefaultNum,
+            itemSKU:parseInt(Math.random()*100000),
+            price:that.nowGoodDetails.itemPrice,
+            itemPropertyNamea:that.sureGoodAttr,
+            token:that.global.getToken()
+          };
+            that.global.axiosPostReq('/cart/add',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            });
         }else{
-          that.global.axiosPostReq('/cart/add',obj)
-          .then((res) => {
-            // console.log(res)
-            if (res.data.callStatus === 'SUCCEED') {
-              that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          });
+          that.$alert("未登录，请先登录！", {confirmButtonText: '确定'});
         }
       }
     },

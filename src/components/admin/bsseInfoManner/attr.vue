@@ -27,50 +27,44 @@
       <!--列表-->
       <el-table  :data="tableData"  border  style="width: 100%">
         <el-table-column  type="index"  width="200px"  align="center"label="序号"></el-table-column>
-        <el-table-column  prop="shuxingname"  align="center"  label="属性名"></el-table-column>
-        <el-table-column  prop="shuxingzhi" align="center"  label="属性值">
+        <el-table-column  prop="itemPropertyName"  align="center"  label="属性名"></el-table-column>
+        <el-table-column  prop="itempropertydList" align="center"  label="属性值">
           <template scope="scope">
-            <span v-for="(one,index) in scope.row.shuxingzhi">
-              {{one.name}}
-              <span v-if="index!=scope.row.shuxingzhi.length-1">/</span>
+            <span v-for="(one,index) in scope.row.itempropertydList">
+              {{one.itemPparam}}
+              <span v-if="index!=scope.row.itempropertydList.length-1">/</span>
             </span>
           </template>
         </el-table-column>
         <el-table-column  align="center"  label="操作">
           <template scope="scope">
-            <el-button  type="text"  v-on:click="changeOneAttr(scope.$index)"  >修改</el-button>
-            <el-button  type="text"  v-on:click="DELEONE(scope.$index)"  >删除</el-button>
+            <el-button  type="text"  v-on:click="changeOneAttr(scope.$index,scope.row)">修改</el-button>
+            <el-button  type="text"  v-on:click="DELEONE(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-col>
 
     <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr">
-      <el-form label-width="100px" class="demo-dynamic" :model="formData" rules:"rules1">
+      <el-form label-width="100px" class="demo-dynamic" :model="formData" ref="formData" :rules="rules1">
         <el-form-item  prop="addGoodAttrName"  label="属性名称：">
           <el-input v-model="formData.addGoodAttrName"></el-input>
         </el-form-item>
-        <!-- <span v-if="addGoodAttrValues.length>=1">
-          <el-form-item  v-for="(value, index) in addGoodAttrValues" :label="'属性值：'" :property="value.name" :key="value">
-            <el-input v-model="value.name"></el-input>
-          </el-form-item>
-        </span> -->
-        <el-form-item :label="'属性值：'">
-          <el-input v-model="addGoodAttrOneVal"></el-input>
-          <el-button v-on:click="addOneAttrVal()">添加</el-button>
+        <el-form-item prop="addGoodAttrOneVal" label="属性值：" >
+          <el-input v-model="formData.addGoodAttrOneVal"></el-input>
+          <el-button v-on:click="addOneAttrVal('formData')">添加</el-button>
         </el-form-item>
       </el-form>
-
       <el-table border :data="addGoodAttrValues" style="windth:80%"  >
-        <el-table-column align="center" property="name" label="属性值" >
-          <template scope="scope">
-            <el-input @blur="changThisAttrVal(scope.$index,$event)" :disabled="scope.$index!=changeThisAll" :value="scope.row.name"></el-input>
+        <el-table-column align="center" property="itemPparam" label="属性值">
+          <template scope="scope" >
+            <el-input :minlength="5" @blur="changThisAttrVal(scope.$index,$event,scope.row)" :disabled="scope.$index!=changeThisAll" :value="scope.row.itemPparam"></el-input>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template scope="scope">
-            <el-button  type="text"  v-on:click="changeThisAttr(scope.$index)">修改</el-button>
-            <el-button  v-on:click="deleOneAttrVal(scope.$index)"  type="text">删除</el-button>
+            <el-button  type="text"  v-on:click="changeThisAttr(scope.$index,scope.row)">修改</el-button>
+            <el-button  v-on:click="deleOneAttrVal(scope.$index,scope.row)"  type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -86,13 +80,15 @@
     data(){
       return {
         formData:{
-          addGoodAttrName:null
+          addGoodAttrName:null,
+          addGoodAttrOneVal:null
         },
-        rules1:{},
+        rules1:{
+          addGoodAttrName:{ required: true, message: '请输入属性名称', trigger: 'blur' },
+          addGoodAttrOneVal:{required: true, message: '请输入属性值', trigger: 'blur'}
+        },
         bindTitle:null,
-        // formData.addGoodAttrName:null,
         addGoodAttrValues:[],
-        addGoodAttrOneVal:null,
         searchAttrName:null,
         changeThisAll:null,
         changAttrIndex:null,
@@ -105,87 +101,203 @@
         },
         addAttrShow:[],
         tableData:[
-          {shuxingname:"sdfg",shuxingzhi:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
-          {shuxingname:"sdfg",shuxingzhi:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
-          {shuxingname:"sdfg",shuxingzhi:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
-          {shuxingname:"sdfg",shuxingzhi:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
-          {shuxingname:"sdfg",shuxingzhi:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]}
+          {itemPropertyName:"sdfg",itempropertydList:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
         ],
         showAddGoodAttr: false,
+        channgAttrId:null,
+        flag1:true,
       }
     },
+    created:function(){
+      var that = this;
+      that.getGoodAttrList();
+    },
     methods: {
+      getGoodAttrList:function(){
+        var that = this;
+        that.global.axiosGetReq('/item/queryProperty')
+        .then((res) => {
+          // console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+
+            var data = res.data.data;
+            // console.log(data)
+            that.tableData = data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        },(err) => {that.$message.error('网络出错，请稍后再试！');})
+      },
       addGoodAttr:function(){
-        this.bindTitle = "添加商品属性";
-        this.showAddGoodAttr = true;
-        this.attOperaType = 1;
-        this.formData.addGoodAttrName = null;
-        this.addGoodAttrValues = [];
+        var that = this;
+        that.bindTitle = "添加商品属性";
+        that.showAddGoodAttr = true;
+        that.attOperaType = 1;
+        that.formData.addGoodAttrName = null;
+        that.addGoodAttrValues = [];
+        that.flag1 = false;
       },
-      changThisAttrVal:function(index,e){
-        this.changeThisAll = null;
-        this.addGoodAttrValues[index].name = e.target._value;
+      changThisAttrVal:function(index,e,item){
+        var that = this;
+        if(e.target._value){
+          if(that.attOperaType==2){//修改已有属性属性值
+            that.$confirm('确定修改该属性值吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
+            .then(() => {
+                var obj = {
+                  itemPparam:e.target._value,
+                  itemSKU:item.itemSKU
+                };
+                that.global.axiosPostReq('/item/updatePropertyd',obj)
+                .then((res) => {
+                  that.addGoodAttrValues[index].itemPparam = e.target._value;
+                  that.changeThisAll = null;
+                  that.flag1 = true;
+                });
+            });
+          }
+        }else{
+          this.$alert('请填写完整商品的属性值', {confirmButtonText: '确定',});
+          that.flag1 = false;
+        }
       },
-      changeThisAttr:function(index){
+      changeThisAttr:function(index,item){
+        // console.log(item)
         this.changeThisAll = index;
+        this.flag1 = false;
+        this.attOperaType = 2;
       },
       search:function(){
-        this.filters.name;
+        var that = this;
+        var obj = {
+          itemPropertyName:that.searchAttrName
+        }
+        if(that.searchAttrName){
+          that.global.axiosPostReq('/item/queryProperty',obj)
+          .then((res) => {
+            console.log(res)
+            if (res.data.callStatus === 'SUCCEED') {
+              that.tableData==res.data.data;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          }).catch(() => { this.$alert('网络出错，请稍后再试！', {confirmButtonText: '确定',});});
+        }else{
+          this.$alert('请输入属性名', {confirmButtonText: '确定',});
+        }
       },
-      DELEONE:function(index){
-        this.$confirm('确定删除该属性吗, 是否继续?', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          this.tableData.splice(index,1);
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
+      DELEONE:function(index,item){
+        var that = this;
+        that.$confirm('确定删除该属性吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
+        .then(() => {
+            var obj = {
+              itemPropertyId:item.itemPropertyId
+            };
+            that.global.axiosGetReq('/item/deleteProperty',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.$message({type: 'success',message: '删除成功!'});
+                that.tableData.splice(index,1);
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+          }).catch(() => {
+            that.$message({type: 'info',message: '已取消删除'});
           });
         });
-
       },
-      changeOneAttr:function(index){
-        this.bindTitle = "修改商品属性";
-        this.formData.addGoodAttrName = this.tableData[index].shuxingname;
-        this.addGoodAttrValues = this.tableData[index].shuxingzhi;
-        this.changAttrIndex = index;
-        this.attOperaType = 2;
-        this.showAddGoodAttr = true;
+      changeOneAttr:function(index,item){
+        // console.log(item)
+        var that = this;
+        that.bindTitle = "修改商品属性";
+        that.formData.addGoodAttrName = item.itemPropertyName;
+        that.addGoodAttrValues = item.itempropertydList;
+        that.channgAttrId = item.itemPropertyId;
+        that.changAttrIndex = index;
+        that.attOperaType = 2;
+        that.showAddGoodAttr = true;
       },
       saveOneAttrs:function(){
-        if(this.attOperaType==1){
-          var obj={};
-          obj.shuxingname = this.formData.addGoodAttrName;
-          obj.shuxingzhi = this.addGoodAttrValues;
-          this.tableData.push(obj);
-          this.addGoodAttrValues = [];
-          this.formData.addGoodAttrName= null;
+        var that = this;
+        if(that.attOperaType==1){
+          //添加
+          if(that.flag1){
+            var obj={};
+            obj.itemPropertyName = that.formData.addGoodAttrName;
+            obj.itempropertydList = that.addGoodAttrValues;
+            that.tableData.push(obj);
+            that.addGoodAttrValues = [];
+            that.formData.addGoodAttrName= null;
+            that.showAddGoodAttr  = false;
+          }else{
+            this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
+          }
         }
-        if(this.attOperaType==2){
-          this.tableData[this.changAttrIndex].shuxingname = this.formData.addGoodAttrName;
-          this.tableData[this.changAttrIndex].shuxingzhi = this.addGoodAttrValues;
+        if(that.attOperaType==2){
+          // 修改
+          if(that.flag1){
+            var obj2 = {
+              itemPropertyId:that.channgAttrId,
+              itemPropertyName:that.formData.addGoodAttrName
+            };
+            that.global.axiosPostReq('/item/updateProperty',obj2)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
+                that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
+                that.showAddGoodAttr  = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            }).catch(() => {
+              that.$message({type: 'info',message: '网络出错'});
+            });
+          }else{
+            this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
+          }
         }
-        this.showAddGoodAttr  = false;
       },
-      deleOneAttrVal:function(index){
-        this.addGoodAttrValues.splice(index, 1);
-        this.changeThisAll = null;
+      deleOneAttrVal:function(index,item){
+        var that = this;
+        if(that.attOperaType==2){
+          that.$confirm('确定删除该属性吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
+          .then(() => {
+              var obj = {
+                itemSKU:item.itemSKU
+              };
+              that.global.axiosPostReq('/item/deletePropertyd',obj)
+              .then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.addGoodAttrValues.splice(index, 1);
+                  that.changeThisAll = null;
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+            }).catch(() => {
+              that.$message({type: 'info',message: '已取消删除'});
+            });
+          });
+        }else{
+          that.addGoodAttrValues.splice(index, 1);
+          that.changeThisAll = null;
+        }
       },
-      addOneAttrVal:function(){
-        var aa= {};
-        aa.id="1",
-        aa.name = this.addGoodAttrOneVal;
-        this.addGoodAttrValues.push(aa);
-        this.addGoodAttrOneVal = null;
+      addOneAttrVal:function(formName){
+        var that = this;
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            var aa= {};
+            aa.id="1",
+            aa.itemPropertyName = that.formData.addGoodAttrOneVal;
+            that.addGoodAttrValues.push(aa);
+            that.formData.addGoodAttrOneVal = null;
+            that.flag1 = true;
+          } else {
+            that.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
+            that.flag1 = false;
+            return false;
+          }
+        });
       },
-      // -----------------------------
     },
   }
 </script>

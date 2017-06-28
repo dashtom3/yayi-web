@@ -183,5 +183,6 @@
 <style>
 .freightSet .el-input{
   width: 100px;
+  padding-right: 0;
 }
 </style>
