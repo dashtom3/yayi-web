@@ -101,7 +101,7 @@
       </el-table>
 
       <!--详情界面-->
-      <el-dialog title="订单详情" v-model="detailVisible" size="large" :close-on-click-modal="true">
+      <el-dialog title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true">
         <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">订单已确认</span></h3>
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
@@ -263,7 +263,7 @@
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
               <td style="width:200px;position:relative;">
-                <div v-show="item.goodsNum" style="position:absolute;top:4px;">
+                <div id="inputCenter" v-show="item.goodsNum" style="position:absolute;top:4px;">
                   <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" :class="{i_disabled: !item.checked}" @click="reduceCount(index, item)">-</i>
                   <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
                   <i style="position:absolute;left:150px;top:2px" class="icon_i_r" :class="{i_disabled: !item.checked}" @click="addCount(index, item)">+</i>
@@ -490,7 +490,11 @@
     }
   }
 </script>
-
+<style>
+  #inputCenter input{
+    text-align: center;
+  }
+</style>
 <style scoped>
 .el-table th>.cell{
   text-align: center;

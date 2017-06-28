@@ -3,7 +3,7 @@
     <div class="content">  
       <div class="mainContent">
         <el-form ref="personData" :model="personData" label-width="90px">
-          <el-form-item>
+          <el-form-item style="margin: -78px 0 0 38px;">
             <el-upload
               class="avatar-uploader"
               :action="qiNiuUrl"
@@ -118,7 +118,6 @@
               message: '个人信息修改成功！',
               type: 'success'
             });
-            // this.trueName_validate = false;
           }else{
             this.$message.error('个人信息修改失败！');
           }
@@ -146,6 +145,9 @@
   border: 1px solid #eeeeee;
   border-radius: 3px;
 }
+.changeImg{
+  margin-top: -12px;
+}
 .changeImg:hover{
   color: #5db7e8;
 }
@@ -156,8 +158,11 @@
   color: #D81E06;
 }
 .defaultCss{
-  width: 170px;
-  height: 170px;
+  width: 100px;
+  height: 100px;
+  -webkit-box-shadow: 3px 3px 10px #ddd;  
+  -moz-box-shadow: 3px 3px 10px #ddd;
+  box-shadow: 3px 3px 10px #ddd;
   border-radius: 50%;
 }
 

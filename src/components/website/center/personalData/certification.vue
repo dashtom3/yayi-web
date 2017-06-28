@@ -36,8 +36,8 @@
           </transition>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="savePerInfo">保存</el-button>
-          </el-form-item>
+          <el-button type="primary" @click="savePerInfo" v-show="btnVisible" style="">提交</el-button>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -52,13 +52,14 @@
     data () {
       return {
         // 1,ing-----2,false
-        certificateState:0,
+        certificateState:0,//认证状态
         companyName_validate: false,
         doctorPic_validate: false,
         sczgz:"口腔执业医师资格证：",
         imageUrl: this.userData.doctorPic || '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
+        btnVisible: true,
         certiData: {
           phone: global.getUser().phone,
           token: global.getToken(),
@@ -85,8 +86,9 @@
     },
     watch:{
       state:function(){
-        if(this.state==2){
-          this.ert();
+        if(this.state == 2){
+          this.certificateState = this.userData.state;
+          this.ert(this.userData.failReason);
         }
       },
       certiData: {
@@ -131,9 +133,10 @@
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.$message({
-              message: '资质认证修改成功！',
+              message: '您的认证信息我们会尽快审核，请耐心等待~',
               type: 'success'
             });
+            this.btnVisible = false;
           }else{
             this.$message.error('资质认证修改失败！');
           }
@@ -149,15 +152,22 @@
           this.sczgz = "营利性医疗机构执业许可证：";
         }
       },
-      ert:function(){
+      ert:function(msg){
         if(this.certificateState==1){
           this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
-          confirmButtonText: '确定',
-        });
+            confirmButtonText: '确定',
+          });
+          this.btnVisible = false;
         }else if(this.certificateState==2){
-          this.$alert('抱歉，您的认证信息审核不通过，原因~',{
-          confirmButtonText: '确定',
-        });
+          this.$alert('您的认证信息已审核通过',{
+            confirmButtonText: '确定',
+          });
+          this.btnVisible = false;
+        }else if(this.certificateState==3){
+          this.$alert('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
+            confirmButtonText: '确定',
+          });
+          this.btnVisible = true;
         }
       },
       uploadFile(res, file) {
@@ -232,7 +242,7 @@
   margin-bottom: 40px;
 }
 .certification .el-button--primary{
-  margin-left: 268px ;
+  margin-left: 168px ;
   background-color: #5db7e8;
   border-color: #5db7e8;
   width: 160px;
