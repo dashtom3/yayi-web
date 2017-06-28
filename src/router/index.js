@@ -7,6 +7,7 @@ import center from '@/components/website/center/center'
 import gwc from '@/components/website/gwc/gwc'
 import suborder from '@/components/website/gwc/suborder'
 import pay from '@/components/website/gwc/pay'
+import publicHeader from '@/components/website/index/publicHeader'
 
 //后台管理
 import Home from '@/components/admin/Home'
@@ -110,6 +111,11 @@ let router = new Router({
 		name: 'pay',
 		component: pay,
 	},
+  {
+    path: '/publicHeader',
+    name: 'publicHeader',
+    component: publicHeader,
+  },
 	//后台管理router
     {
       path: '/admin/login',
