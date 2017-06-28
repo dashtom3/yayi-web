@@ -34,15 +34,14 @@
 				    </el-option>
 				  </el-select>
         </el-form-item>
-        <div class="clearfix"></div>
-        <el-form-item label="下单时间" class="fl" style="width:380px;">
+        <el-form-item label="下单时间" class="fl" style="width:300px;margin-right:12px;">
 	          <el-date-picker
               v-model="value3"
               type="daterange"
               placeholder="选择时间范围">
             </el-date-picker>
         </el-form-item>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" class="fl">查询</el-button>
       </el-form>
 
       <!--列表-->
@@ -171,26 +170,25 @@
           <div>退款信息</div>
           <table class="refund_tb">
             <tr class="bgc">
-              <td>实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</td>
-              <td>运费：包邮</td>
-              <td colspan="2">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</td>
+            <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</span><span style="padding-left:100px;">运费：包邮</span><span style="padding-left:100px;">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</span></td>
             </tr>
             <tr class="bgc">
               <td>sku代码</td>
               <td>商品名称+属性</td>
               <td>价格*数量</td>
               <td>退货数量</td>
+              <td>退款金额</td>
+              <td>退回的乾币数</td>
+              <td>扣除的乾币数</td>
             </tr>
-            <tr v-for="item in orderInfo.goodsInfo">
+            <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index">
               <td></td>
               <td>{{item.goodsName}}</td>
               <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>{{item.backNo>item.goodsNum ? "" : item.backNo}}</td>
-            </tr>
-            <tr class="bgc">
-              <td>退款金额：36</td>
-              <td>退回的乾币数：20</td>
-              <td colspan="2">扣除的乾币数：2</td>
+              <td>{{item.backNo>item.goodsNum ? "" : item.count}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.untread}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
             </tr>
           </table>
         </div>
@@ -245,14 +243,16 @@
       <el-dialog title="退款处理" v-model="refundVisible" :close-on-click-modal="true">
         <table class="refund_tb">
             <tr class="bgc">
-              <td colspan="2">订单编号：{{orderInfo.orderNo}}</td>
-              <td colspan="2">乾币抵扣：{{orderInfo.deductible}}</td>
+              <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">订单编号：{{orderInfo.orderNo}}</span><span style="padding-left:100px;">乾币抵扣：{{orderInfo.deductible}}</span></td>
             </tr>
             <tr class="bgc">
               <td>是否退款</td>
               <td>商品名称+属性</td>
               <td>价格*数量</td>
               <td>退货数量</td>
+              <td>退款金额</td>
+              <td>退回乾币数</td>
+              <td>扣除乾币数</td>
             </tr>
             <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index" style="height:46px;">
               <td>
@@ -264,16 +264,14 @@
               <td>{{item.price + '*' + item.goodsNum}}</td>
               <td style="width:200px;position:relative;">
                 <div v-show="item.goodsNum" style="position:absolute;top:4px;">
-                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" @click="reduceCount(index, item)">-</i>
+                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" :class="{i_disabled: !item.checked}" @click="reduceCount(index, item)">-</i>
                   <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
-                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" @click="addCount(index, item)">+</i>
+                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" :class="{i_disabled: !item.checked}" @click="addCount(index, item)">+</i>
                 </div>
               </td>
-            </tr>
-            <tr class="bgc">
-              <td>退款金额：{{orderInfo.refundAmt}}</td>
-              <td>退回的乾币数：{{orderInfo.untread}}</td>
-              <td colspan="2">扣除的乾币数：{{orderInfo.outCoins}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.untread}}</td>
+              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
             </tr>
           </table>
           <div class="btn_box">
@@ -428,26 +426,23 @@
             price: 39,
             goodsNum: 2,
             checked: false,
-            backNo: 1,
             count: 1//退款数量
           },{
             goodsSrc: '',
             goodsName: '商品名称2',
             SKUCode: 'xxxxxxxxx',
             price: 39,
-            goodsNum: 0,
+            goodsNum: 1,
             checked: false,
-            backNo: 1,
-            count: 0//退款数量
+            count: 1//退款数量
           },{
             goodsSrc: '',
             goodsName: '商品名称3',
             SKUCode: 'xxxxxxxxx',
             price: 39,
-            goodsNum: 0,
+            goodsNum: 1,
             checked: false,
-            backNo: 1,
-            count: 0//退款数量
+            count: 1//退款数量
           }]
         }
       }
@@ -631,6 +626,11 @@
   padding-left:12px;
   cursor: pointer;
 }
+.i_disabled{
+  color: #ccc;
+  cursor: default;
+}
+
 /* 仓库发货 */
 .btn_{
   margin-left: 154px;
