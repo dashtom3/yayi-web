@@ -37,9 +37,9 @@
         </div>
         <div class="jisuanqi">
           <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
-            <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index)">-</span>
+            <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index,good)">-</span>
             <span>{{good.num}}</span>
-            <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index)">+</span>
+            <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index,good)">+</span>
           </div>
           <div class=""  v-show="good.num>=good.goodLeaveNum">
             （库存不足）
@@ -240,15 +240,39 @@
         }
         this.selectaLL = !this.selectaLL;
       },
-      reduceGood:function (index) {
+      reduceGood:function (index,good) {
+        var that = this;
         if(this.gwcGoods[index].num!=1){
           this.gwcGoods[index].num--;
         }
+        that.updataNum(this.gwcGoods[index].num,good);
       },
-      addGood:function(index){
+      addGood:function(index,good){
+        var that = this;
         if(this.gwcGoods[index].num<this.gwcGoods[index].goodLeaveNum){
           this.gwcGoods[index].num++;
         }
+        that.updataNum(this.gwcGoods[index].num,good);
+      },
+      updataNum:function(num,good){
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+          num:num,
+          itemSKU:"11212121",
+          token:that.global.getToken()
+        };
+        console.log(obj)
+        that.global.axiosPostReq('/cart/updateNum', obj)
+        .then((res) => {
+          console.log(res,"22222")
+          if (res.data.callStatus === 'SUCCEED') {
+            // this.gwcGoods.splice(index,1);
+            // this.$message({type: 'success',  message: '商品收藏成功!' });
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       showBlue:function(index){
         this.addBlueColor = index;
@@ -264,9 +288,11 @@
           var obj = {
             phone:that.global.getUser().phone,
             itemId:id,
-            itemSKU:that.gwcGoods[i].itemSKU,
+            itemSKU:"121212",
+            // itemSKU:that.gwcGoods[i].itemSKU,
             token:that.global.getToken()
           };
+          console.log(obj)
           that.global.axiosPostReq('/cart/star', obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {

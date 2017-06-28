@@ -12,7 +12,7 @@
       <el-col  class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" >
           <el-form-item>
-            <el-input v-model="searchUserContent" placeholder='请输入销售员姓名或编号或手机号'></el-input>
+            <el-input v-model="searchUserContent" placeholder='请输入销售员姓名或手机号'></el-input>
           </el-form-item>
           <el-form-item label="提现状态：">
             <el-select v-model="searchType" placeholder="请选择">
@@ -33,17 +33,24 @@
 
       <!--列表-->
       <el-table :data="getMoneyList"  border style="width: 100%">
-        <el-table-column  prop="userId"   align="center"  label="销售员编号"></el-table-column>
+        <!-- <el-table-column  prop="userId"   align="center"  label="销售员编号"></el-table-column> -->
         <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
         <el-table-column  prop="userPhone"  align="center"  label="手机号"> </el-table-column>
         <el-table-column  prop="getNum"  align="center"  label="提现金额">  </el-table-column>
+
+        <el-table-column  prop="getNum"  align="center"  label="类型">  </el-table-column>
+        <el-table-column  prop="getNum"  align="center"  label="开户者">  </el-table-column>
+        <el-table-column  prop="getNum"  align="center"  label="银行">  </el-table-column>
+
         <el-table-column  prop="zhufubaoCount"  align="center"  label="支付宝账号">  </el-table-column>
         <el-table-column  prop="time"  align="center"  label="申请时间">  </el-table-column>
         <el-table-column  prop="state" align="center"  label="提现状态">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
-            <el-button type="text"  v-on:click="passThisGet(scope.$index)">通过</el-button>
-            <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button>
+            <span v-if="scope.row.state!='提现成功'">
+              <el-button  type="text"  v-on:click="passThisGet(scope.$index)">通过</el-button>
+              <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button>
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -59,10 +66,10 @@
         searchUserContent:null,
         searchType:"全部",
         getMoneyList:[
+          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'提现成功'},
           {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
           {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
+          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'提现成功'},
           {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
           {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
         ],

@@ -9,11 +9,11 @@
 
     <el-col  class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
       <el-form :inline="true" >
-        <!-- <el-form-item label="用户编号：">
+        <el-form-item label="用户手机号：">
           <el-input v-model="searchUserId"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="时间：">
-          <el-date-picker  v-model="searchDataPrev"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
+          <el-date-picker  v-model="searchDataPrev"   type="daterange"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
         </el-form-item>
         <!-- <el-form-item label="~">
           <el-date-picker  v-model="searchDataNext"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions1"> </el-date-picker>
@@ -28,7 +28,7 @@
     </el-col>
 
     <el-table :data="moneyList"  border style="width: 100%">
-      <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
+      <el-table-column  prop="userId"  width="200px"  align="center"  label="用户手机号"></el-table-column>
       <el-table-column  prop="get"  align="center"  label="收入">  </el-table-column>
       <el-table-column  prop="pay"  align="center"  label="支出"> </el-table-column>
       <el-table-column  prop="leave"  align="center"  label="余额">  </el-table-column>

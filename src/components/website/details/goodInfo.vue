@@ -17,11 +17,11 @@
 
       <div class="infoLeft_3">
         <!-- 0表示没收藏 -->
-        <span v-if="nowGoodDetails.num==0" v-on:click="showCllect('商品收藏成功！',1)">
+        <span v-if="ifshoucang==0" v-on:click="showCllect('商品收藏成功！',1)">
           <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
           收藏
         </span>
-        <span v-else-if="nowGoodDetails.num==1" v-on:click="cancleClloect()">
+        <span v-else-if="ifshoucang==1" v-on:click="cancleClloect()">
           <img style="position:relative;top:1px" src="../../../images/details/collect2.jpg" />
           已收藏
         </span>
@@ -105,6 +105,7 @@ import myAddress from './selectThree'
     data () {
       return {
         currentView:"goodIntroduce",
+        ifshoucang:null,
         nowGoodDetails:{},
         itemBrand:{},
         itemDetail:{},
@@ -150,10 +151,12 @@ import myAddress from './selectThree'
         var userToken = that.global.getToken();
         var obj = {
           itemId:that.$route.params.goodId,
-          token:userToken
+          token:"'"+userToken+"'"
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
+          console.log(res.data,'111111111111111111')
+          this.ifshoucang = res.data.num;
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
@@ -191,8 +194,8 @@ import myAddress from './selectThree'
           that.global.axiosPostReq('/mystar/deleteOne',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              this.$alert(msg, {confirmButtonText: '取消收藏成功！'});
-              this.nowGoodDetails.num = 0;
+              this.$alert("取消收藏成功！", {confirmButtonText: '确定'});
+              this.ifshoucang = 0;
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
@@ -201,28 +204,29 @@ import myAddress from './selectThree'
       showCllect:function(msg,arg){
         var that = this;
         if(arg==1){
-          var obj = {
-            phone:that.global.getUser().phone,
-            itemId:that.nowGoodDetails.itemId,
-            itemSKU:parseInt(Math.random()*100000),
-            token:that.global.getToken()
-          };
-          if(obj.token){
+          if(that.global.getUser()){
+            var obj = {
+              phone:that.global.getUser().phone,
+              itemId:that.nowGoodDetails.itemId,
+              itemSKU:parseInt(Math.random()*100000),
+              token:that.global.getToken()
+            };
             that.global.axiosPostReq('/cart/star',obj)
             .then((res) => {
+              // console.log(res.data)
               if (res.data.callStatus === 'SUCCEED') {
-                that.$alert(msg, {confirmButtonText: '收藏成功！'});
-                that.nowGoodDetails.num = 1;
+                that.$alert("收藏成功！", {confirmButtonText: '确定'});
+                that.ifshoucang = 1;
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
             });
           }else{
-            this.$alert(msg, {confirmButtonText: '请先登录后再收藏！'});
+            this.$alert("请先登录后再收藏！", {confirmButtonText: '确定'});
           }
         }
         if(arg==2&&that.copyUrl==true){
-          that.$alert(msg, {confirmButtonText: '确定'});
+          that.$alert("链接复制成功！", {confirmButtonText: '确定'});
           that.copyUrl = false;
         }
       },
@@ -244,6 +248,7 @@ import myAddress from './selectThree'
         }else{
           that.global.axiosPostReq('/cart/add',obj)
           .then((res) => {
+            // console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
               that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
             } else {
@@ -462,7 +467,7 @@ import myAddress from './selectThree'
     background:#57a5cf;
   }
   .goodBtn span:nth-child(2){
-    /*color: white;*/
+    color: white;
     background:#5ed6dc;
   }
   .goodBtn span:nth-child(2):hover{

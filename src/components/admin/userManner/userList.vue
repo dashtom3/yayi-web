@@ -47,7 +47,7 @@
         <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
         <el-table-column  prop="userName"  align="center"  label="用户姓名">  </el-table-column>
         <el-table-column  prop="userPhone"  align="center"  label="手机号"> </el-table-column>
-        <el-table-column  prop="userCompony"  align="center"  label="用户单位">  </el-table-column>
+        <el-table-column  prop="userCompony"  align="center"  label="单位名称">  </el-table-column>
         <el-table-column  prop="userType"  align="center"  label="类型">  </el-table-column>
         <el-table-column  prop="ifBindSale"  align="center"  label="是否绑定销售">  </el-table-column>
         <el-table-column  prop="saleName" align="center"  label="销售员姓名">  </el-table-column>

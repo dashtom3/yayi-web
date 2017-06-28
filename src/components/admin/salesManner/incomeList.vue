@@ -12,7 +12,6 @@
         <el-form-item>
           <el-input v-model="searchSaleContent">
             <el-select v-model="searchSaleType" slot="prepend" >
-              <!-- <el-option label="销售员编号" value="用户编号"></el-option> -->
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
             </el-select>
@@ -33,8 +32,6 @@
             <el-option label="已取消" value="已取消"></el-option>
           </el-select>
         </el-form-item>
-      </el-form>
-      <el-form :inline="true" >
         <el-form-item label="结算日期：">
           <el-date-picker  v-model="searchDataPrev"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
         </el-form-item>
@@ -45,6 +42,9 @@
           <el-button type="primary" v-on:click="search">查询</el-button>
         </el-form-item>
       </el-form>
+      <!-- <el-form :inline="true" >
+
+      </el-form> -->
     </el-col>
     <el-table :data="getMoneyList"  border style="width: 100%">
       <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
@@ -214,6 +214,9 @@
       font-weight: 500;
       line-height: 50px;
       color: #20a0ff;
+    }
+    .incomeWrap .el-select .el-input{
+      width: 120px;
     }
   .incomeWrap   .asgagewgf .personalInfor{
       position: relative;

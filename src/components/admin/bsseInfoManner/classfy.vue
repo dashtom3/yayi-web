@@ -40,19 +40,19 @@
         </el-table>
     </el-col>
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible">
-      <el-form>
-        <el-form-item label="上级分类：" :label-width="formLabelWidth">
-          <el-cascader  :options="options"  :show-all-levels="false"  v-model="addClassfyParent">
+      <el-form >
+        <el-form-item label="上级分类：" :label-width="formLabelWidth" >
+          <el-cascader  :options="options"  :show-all-levels="false" expand-trigger="hover" :props="{value:'label'}" change-on-select  v-model="ruleForm1.addClassfyParent">
             <el-button slot="append" icon="search"></el-button>
           </el-cascader>
         </el-form-item>
-        <el-form-item label="分类名称：" :label-width="formLabelWidth">
-          <el-input v-model="addClassfyName" auto-complete="off"></el-input>
+        <el-form-item label="分类名称：" :label-width="formLabelWidth" >
+          <el-input v-model="ruleForm1.addClassfyName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item style="text-align:right">
+          <el-button type="primary" @click="saveOneAttrs()">保存</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveOneAttrs">保存</el-button>
-      </div>
     </el-dialog>
   </el-row>
 </template>
@@ -61,13 +61,17 @@
   export default{
     data(){
       return {
+        ruleForm1:{
+          addClassfyParent:['', '', ''],
+          addClassfyName:null,
+        },
         searchClassfyName:null,
         searchParentClassfyName:null,
         // 1是增加，2是修改
         classfyOperaType:1,
         classfyChangeIndex:null,
-        addClassfyParent:['', '', ''],
-        addClassfyName:null,
+        // addClassfyParent:['', '', ''],
+        // addClassfyName:null,
         options: [{
             value: 'zhinan',
               label: '指南',
@@ -323,24 +327,27 @@
         this.classfyChangeIndex = index;
         this.dialogFormVisible = true;
         var thisData = this.tableData[index];
-        // console.log(thisData);
         this.addClassfyParent = ["","",thisData.shuxingzhi];
         this.addClassfyName = thisData.shuxingname;
       },
       saveOneAttrs:function(){
-        if(this.classfyOperaType==1){
-          var obj = {};
-          obj.shuxingname = this.addClassfyName;
-          obj.shuxingzhi = this.addClassfyParent;
-          this.tableData.push(obj);
-          this.addClassfyParent = ["","",""];
-          this.addClassfyName = null;
+        if(this.ruleForm1.addClassfyName==""||this.ruleForm1.addClassfyParent[0]==""){
+          this.$alert("请填写完属性值！", {confirmButtonText: '确定'});
+        }else{
+          if(this.classfyOperaType==1){
+              var obj = {};
+             obj.shuxingname = this.ruleForm1.addClassfyName;
+             obj.shuxingzhi = this.ruleForm1.addClassfyParent;
+             this.tableData.push(obj);
+             this.addClassfyParent = ["","",""];
+             this.addClassfyName = null;
+          }
+          if(this.classfyOperaType==2){
+            this.tableData[this.classfyChangeIndex].shuxingname = this.ruleForm1.addClassfyName;
+            this.tableData[this.classfyChangeIndex].shuxingzhi = this.ruleForm1.addClassfyParent;
+          }
+          this.dialogFormVisible  = false;
         }
-        if(this.classfyOperaType==2){
-          this.tableData[this.classfyChangeIndex].shuxingname = this.addClassfyName;
-          this.tableData[this.classfyChangeIndex].shuxingzhi = this.addClassfyParent;
-        }
-        this.dialogFormVisible  = false;
       },
       // -----------------------------
     },

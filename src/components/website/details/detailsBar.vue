@@ -24,7 +24,7 @@
         var that = this;
         var obj = {
           itemId:that.$route.params.goodId,
-          token:that.global.getToken()
+          token:"'"+that.global.getToken()+"'"
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
