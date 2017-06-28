@@ -9,8 +9,8 @@
           <span class="time">{{comment.created}}</span>
         </div>
         <div class="commentContents">{{comment.commentContent}}</div>
-        <div class="commentReplay">
-          {{comment.replyContent}}
+        <div class="commentReplay" style="background:#ececec;border-radius:8px;padding:0 10px;width:1200px;word-break: break-all;">
+          {{comment.replyContent}}asdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsege
         </div>
       </li>
     </ul>
@@ -27,7 +27,7 @@ import global from '../../global/global'
       return {
         thisscore:null,
         allComments:[
-          
+
         ]
       }
     },

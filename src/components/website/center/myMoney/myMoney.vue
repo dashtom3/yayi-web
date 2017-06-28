@@ -122,7 +122,7 @@
 }
 .myMoney {
   font-size: 14px;
-  min-height: 620px;
+  min-height: 672px;
 }
 .myMoney .el-table th{
   background-color: #F2F2F2

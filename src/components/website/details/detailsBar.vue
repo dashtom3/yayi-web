@@ -36,8 +36,14 @@
         })
       },
       goToThisPage:function(index){
+        console.log(that.allClassfy)
         var that = this;
-        console.log(that.Classify)
+        if(index==0){
+          that.$router.push({path:"/index/"});
+        }
+        if(index==1){
+
+        }
       },
       getNowGoodDetail:function(){
         var that = this;

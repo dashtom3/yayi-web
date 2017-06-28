@@ -133,7 +133,7 @@ import myAddress from './selectThree'
           this.goodAllImgs[2] = this.nowGoodDetails.itemDetail.itemPicc;
           this.goodAllImgs[3] = this.nowGoodDetails.itemDetail.itemPicd;
           this.goodAllImgs[4] = this.nowGoodDetails.itemDetail.itemPice;
-          console.log(this.goodAllImgs)
+          // console.log(this.goodAllImgs)
           this.bigImgUrl = this.goodAllImgs[0];
           this.items = this.nowGoodDetails.itemValueList;
           this.commentList = this.nowGoodDetails.commentList;
@@ -165,7 +165,7 @@ import myAddress from './selectThree'
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
-        })
+        }).catch((err) => { this.$alert("网络出错，请稍后再试！", {confirmButtonText: '确定'});});
       },
       addGoodNum:function () {
           this.goodDefaultNum += 1;
@@ -213,10 +213,10 @@ import myAddress from './selectThree'
               itemSKU:parseInt(Math.random()*100000),
               token:that.global.getToken()
             };
-            console.log(obj)
+            // console.log(obj)
             that.global.axiosPostReq('/cart/star',obj)
             .then((res) => {
-              console.log(res,"111111111111111111111111aaaaa")
+              // console.log(res,"111111111111111111111111aaaaa")
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("收藏成功！", {confirmButtonText: '确定'});
                 that.ifshoucang = 1;

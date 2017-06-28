@@ -5,10 +5,10 @@
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
         首页>
-        <span v-if="firstClassfy" >{{firstClassfy}}></span>
-        <span v-if="secondClassfy" >{{secondClassfy}}></span>
-        <span v-if="thirdClassfy" >{{thirdClassfy}}></span>
-        <span v-if="haveBrand" >{{haveBrand}}></span>
+        <span v-if="firstClassfy">{{firstClassfy}}<span v-if="secondClassfy">></span></span>
+        <span v-if="secondClassfy" >{{secondClassfy}}<span v-if="thirdClassfy">></span></span>
+        <span v-if="thirdClassfy" >{{thirdClassfy}}<span v-if="haveBrand">></span></span>
+        <span v-if="haveBrand" >{{haveBrand}}<span v-if="searchWordFromIndex">></span></span>
         <span class="indexLine">{{searchWordFromIndex}}</span>
       </div>
       <div class="classifyLine" >
@@ -310,6 +310,7 @@
       },
       brandNoLimitFn:function(){
         var that = this;
+        that.haveBrand = null;
         that.searchBrandStr = null,
         that.brandNoLimit = true;
         that.selectThisBrand = null,
@@ -321,6 +322,9 @@
       },
       clearAllClassfy:function(){
         var that = this;
+        that.firstClassfy = null;
+        that.secondClassfy = null;
+        that.thirdClassfy = null;
         that.noLimitClassfy = true;
         that.classify2Index = null;
         that.classify3Index = null;
