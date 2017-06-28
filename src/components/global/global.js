@@ -1,7 +1,11 @@
 import axios from 'axios'
 export default {
   // baseUrl: 'http://47.93.48.111:8080/api',
+<<<<<<< Updated upstream
   baseUrl:"http://192.168.1.103:8081/api",
+=======
+  baseUrl: 'http://192.168.1.103:8081/api',
+>>>>>>> Stashed changes
   qiNiuUrl: 'http://upload-z2.qiniu.com/',
   qiniuShUrl: 'http://orl5769dk.bkt.clouddn.com/',
   success (obj, msg, url) {

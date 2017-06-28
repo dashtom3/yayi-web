@@ -3,7 +3,6 @@
     <div class="brand_box">
       <div class="img_box">
         <img class="brand_img" v-if="img_change" src="../../../images/index/brand.png" alt="img">
-<!--         <img class="brand_img" v-else src="../../../images/index/brand_c.png" alt="img"> -->
       </div>
       <div class="prev" @click="prev()">
         <img src="../../../images/index/prev.png" alt="img">
@@ -75,7 +74,7 @@
 <style scoped>
   .brand_box {
     width: 1200px;
-    height: 758px;
+    height: 800px;
     margin: 0 auto;
     text-align: center;
     position: relative;

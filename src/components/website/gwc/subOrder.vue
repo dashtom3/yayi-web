@@ -16,12 +16,11 @@
             <div class="clearfix"></div>
             <div class="first left">寄送至：</div>
             <div class="second left">
-              <el-radio class="radio" v-model="radio" :label="item.num">{{item.add}}</el-radio>
+              <el-radio class="radio" v-model="radio" :label="item.num">{{item.province}} {{item.city}} {{item.county}} {{item.receiverDetail}} ({{item.receiverName}} 收) {{item.phone}}</el-radio>
             </div>
             <i class="el-icon-edit third" @click="add_edit"></i>
             <i class="el-icon-delete fouth" @click="add_remove"></i>
           </div>
-          <div class="otherAdd">使用其它地址</div>
         </div>
       </div>
       <div class="list_box">
@@ -186,22 +185,7 @@
     name: 'subOrder',
     data () {
       return {
-        items: [{
-          add: '上海市 杨浦区 五角场镇 国定东路200号1号楼903室（王林娟 收）13122390809',
-          num: '1'
-        },{
-          add: '上海市 杨浦区 五角场镇 国定东路200号1号楼903室（王林娟 收）13122390809',
-          num: '2'
-        },{
-          add: '上海市 杨浦区 五角场镇 国定东路200号1号楼903室（王林娟 收）13122390809',
-          num: '3'
-        },{
-          add: '上海市 杨浦区 五角场镇 国定东路200号1号楼903室（王林娟 收）13122390809',
-          num: '4'
-        },{
-          add: '上海市 杨浦区 五角场镇 国定东路200号1号楼903室（王林娟 收）13122390809',
-          num: '5'
-        }],
+        items: [],
         cargos: [{
           des: '爱丽丝 标准#',
           color: '红色厚',
@@ -446,6 +430,27 @@
       publicFooter,
       myAddress,
     },
+    created: function () {
+      var that = this;
+      var obj = {
+        phone:that.global.getUser().phone,
+      };
+      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') {
+          console.log(res.data.data);
+          that.items = res.data.data;
+          // if (res.data.data.length == 0) {
+          //   that.hasAddress = false;
+          // } else {
+          //   that.hasAddress = true;
+          //   that.address = res.data.data;
+          // }
+          //this.getData = res.data.data;
+        } else {
+          that.$message.error('网络出错，请稍后再试！');
+        }
+      })
+    },
     methods: {
       // 新增收货地址按钮
       addNew: function() {
@@ -487,6 +492,9 @@ input {
 }
 input:focus {
   border: 1px solid #e9e9e9;
+}
+.el-radio__label {
+  padding-left: 20px !important;
 }
 .left {
   float: left;
@@ -589,7 +597,7 @@ input:focus {
 .el-icon-edit, .el-icon-delete {
   color: #fff;
 }
-.otherAdd {
+/*.otherAdd {
   width: 160px;
   height: 40px;
   line-height: 40px;
@@ -603,7 +611,7 @@ input:focus {
 .otherAdd:hover {
   cursor: pointer;
   opacity: 0.8;
-}
+}*/
 .list_box {
   width: 1200px;
   margin-top: 23px;

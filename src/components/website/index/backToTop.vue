@@ -1,8 +1,9 @@
 <template>
   <div class="backToTop">
-    <div v-show="top" class="top_box" @click="backToTop">
-       <p class="top_title">置顶</p>
-      <img src="../../../images/index/top.png" alt="img" />
+    <div v-show="top" class="top_box" @click="backToTop" @mouseover="img_in" @mouseout="img_out">
+<!--        <p class="top_title">置顶</p> -->
+      <img v-if="hoverTop" src="../../../images/index/top2.png" alt="img"/>
+      <img v-else src="../../../images/index/top2_hover.png" alt="img"/>
     </div>
     <div v-show="contact" class="contact_box" @click="question">
        <p class="contact_title">意见反馈</p>
@@ -16,6 +17,7 @@
     name: 'backToTop',
     data () {
       return {
+        hoverTop: true,
         top: false,
         contact: false,
       }
@@ -55,14 +57,22 @@
       menu: function() {
         var that = this;
         var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(scroll >= 819) {
+        if(scroll >= 270) {
           that.top = true;
           that.contact = true;
         } else {
           that.top = false;
           that.contact = false;
         }
-        // console.log(scroll, 'frisco')
+        //console.log(scroll, 'frisco')
+      },
+      img_in() {
+        var that = this;
+        that.hoverTop = false;
+      },
+      img_out() {
+        var that = this;
+        that.hoverTop = true;
       },
     }
   }
@@ -76,13 +86,13 @@
     padding: 5px;
     font-size: 14px;
     position: fixed;
-    top: 150px;
+    top: 350px;
     right:0px;
     z-index: 999;
     text-align: center;
   }
   .top_box:hover {
-    opacity: 0.8;
+/*    opacity: 0.8;*/
     cursor: pointer;
   }
   .top_title {

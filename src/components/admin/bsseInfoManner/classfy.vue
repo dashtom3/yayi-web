@@ -9,7 +9,7 @@
 
     <el-col :span="24" class="warp-main">
       <!--工具条-->
-      <el-col  class="toolbar" style="padding-bottom: 0px;">
+      <el-col class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true">
           <el-form-item label="分类名称：">
             <el-input v-model="searchClassfyName"></el-input>
@@ -26,31 +26,30 @@
         <el-button type="text" @click="addClassfy()">+添加商品分类</el-button>
       </el-col>
 
-
       <!--列表-->
-        <el-table  :data="tableData"  border  style="width: 100%">
-          <el-table-column  prop="shuxingname"  align="center"  label="分类名称"></el-table-column>
-          <el-table-column  prop="shuxingzhi"  align="center"  label="上级分类">  </el-table-column>
-          <el-table-column  align="center" label="操作">
+        <el-table  :data="tableData" border style="width: 100%">
+          <el-table-column prop="shuxingname" align="center" label="分类名称"></el-table-column>
+          <el-table-column prop="shuxingzhi" align="center" label="上级分类"></el-table-column>
+          <el-table-column align="center" label="操作">
             <template scope="scope">
-              <el-button  type="text" v-on:click="changeOneAttr(scope.$index)"  >修改</el-button>
-              <el-button  type="text"  v-on:click="DELEONE(scope.$index)"  >删除</el-button>
+              <el-button type="text" v-on:click="changeOneAttr(scope.$index)">修改</el-button>
+              <el-button type="text" v-on:click="DELEONE(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
     </el-col>
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible">
-      <el-form >
-        <el-form-item label="上级分类：" :label-width="formLabelWidth" >
-          <el-cascader  :options="options"  :show-all-levels="false" expand-trigger="hover" :props="{value:'label'}" change-on-select  v-model="ruleForm1.addClassfyParent">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+        <el-form-item label="上级分类：" prop="upClass" :label-width="formLabelWidth">
+          <el-cascader :options="options" :show-all-levels="false" v-model="ruleForm.upClass" expand-trigger="hover" change-on-select>
             <el-button slot="append" icon="search"></el-button>
           </el-cascader>
         </el-form-item>
-        <el-form-item label="分类名称：" :label-width="formLabelWidth" >
-          <el-input v-model="ruleForm1.addClassfyName" auto-complete="off"></el-input>
+        <el-form-item label="分类名称：" prop="classname" :label-width="formLabelWidth">
+          <el-input v-model="ruleForm.classname" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item style="text-align:right">
-          <el-button type="primary" @click="saveOneAttrs()">保存</el-button>
+          <el-button type="primary" @click="saveOneAttrs('ruleForm')">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -61,9 +60,9 @@
   export default{
     data(){
       return {
-        ruleForm1:{
-          addClassfyParent:['', '', ''],
-          addClassfyName:null,
+        ruleForm:{
+          upClass: [],
+          classname: '',
         },
         searchClassfyName:null,
         searchParentClassfyName:null,
@@ -271,13 +270,15 @@
         formLabelWidth: '120px',
         bindTitle:null,
         // -----------------------------
-        tableData:[
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"},
-          {shuxingname:"sdfg",shuxingzhi:"qwerfqew"}
-        ],
+        tableData:[],
+        rules: {
+          upClass: [
+            { required: true, message: '请选择上级分类', trigger: 'change' }
+          ],
+          classname: [
+            { required: true, message: '请输入分类名称', trigger: 'blur' }
+          ],
+        }
         // formLabelWidth: '120px'
         // -----------------------------------
       }
@@ -288,66 +289,100 @@
     components:{
       // abc
     },
+    created: function () {
+      var that = this;
+      that.global.axiosGetReq('/item/showItemClassify').then((res) => {
+        console.log(res);
+        if (res.data.callStatus === 'SUCCEED') {
+          console.log(res.data.data);
+          that.tableData = res.data.data;
+          // if (res.data.data.length == 0) {
+          //   that.hasAddress = false;
+          // } else {
+          //   that.hasAddress = true;
+          //   that.address = res.data.data;
+          // }
+          //this.getData = res.data.data;
+        } else {
+          that.$message.error('网络出错，请稍后再试！');
+        }
+      })
+    },
     methods: {
-      addClassfy:function(){
-        this.bindTitle = "添加商品分类";
-        this.dialogFormVisible = true;
-        this.classfyOperaType = 1;
-        this.addClassfyParent = ["","",""];
-        this.addClassfyName = null;
+      addClassfy: function () {
+        var that = this;
+        that.bindTitle = "添加商品分类";
+        that.dialogFormVisible = true;
+        that.classfyOperaType = 1;
+        that.addClassfyParent = ["","",""];
+        that.addClassfyName = null;
       },
       aaga:function(val){
         // console.log(val)
       },
-      search:function(){
+      // 查询分类
+      search:function () {
+        var that = this;
         this.filters.name;
       },
       DELEONE:function(index){
-        this.$confirm('确定删除该属性吗, 是否继续?', {
+        var that = this;
+        that.$confirm('确定删除该属性吗, 是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
+          that.$message({
             type: 'success',
             message: '删除成功!'
           });
-          this.tableData.splice(index,1);
+          that.tableData.splice(index,1);
         }).catch(() => {
-          this.$message({
+          that.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
 
       },
-      changeOneAttr:function(index){
-        this.bindTitle = "修改商品分类";
-        this.classfyOperaType = 2;
-        this.classfyChangeIndex = index;
-        this.dialogFormVisible = true;
-        var thisData = this.tableData[index];
-        this.addClassfyParent = ["","",thisData.shuxingzhi];
-        this.addClassfyName = thisData.shuxingname;
+      changeOneAttr: function(index) {
+        var that = this;
+        that.bindTitle = "修改商品分类";
+        that.classfyOperaType = 2;
+        that.classfyChangeIndex = index;
+        that.dialogFormVisible = true;
+        var thisData = that.tableData[index];
+        that.addClassfyParent = ["","",thisData.shuxingzhi];
+        that.addClassfyName = thisData.shuxingname;
       },
-      saveOneAttrs:function(){
-        if(this.ruleForm1.addClassfyName==""||this.ruleForm1.addClassfyParent[0]==""){
-          this.$alert("请填写完属性值！", {confirmButtonText: '确定'});
-        }else{
-          if(this.classfyOperaType==1){
-              var obj = {};
-             obj.shuxingname = this.ruleForm1.addClassfyName;
-             obj.shuxingzhi = this.ruleForm1.addClassfyParent;
-             this.tableData.push(obj);
-             this.addClassfyParent = ["","",""];
-             this.addClassfyName = null;
+      // 保存商品分类
+      saveOneAttrs: function(formName) {
+        var that = this;
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
           }
-          if(this.classfyOperaType==2){
-            this.tableData[this.classfyChangeIndex].shuxingname = this.ruleForm1.addClassfyName;
-            this.tableData[this.classfyChangeIndex].shuxingzhi = this.ruleForm1.addClassfyParent;
-          }
-          this.dialogFormVisible  = false;
-        }
+        });
+        // if(that.ruleForm1.addClassfyName==""||that.ruleForm1.addClassfyParent[0]==""){
+        //   that.$alert("请填写完属性值！", {confirmButtonText: '确定'});
+        // }else{
+        //   if(that.classfyOperaType==1){
+        //       var obj = {};
+        //      obj.shuxingname = that.ruleForm1.addClassfyName;
+        //      obj.shuxingzhi = that.ruleForm1.addClassfyParent;
+        //      that.tableData.push(obj);
+        //      that.addClassfyParent = ["","",""];
+        //      that.addClassfyName = null;
+        //   }
+        //   if(that.classfyOperaType==2){
+        //     that.tableData[that.classfyChangeIndex].shuxingname = that.ruleForm1.addClassfyName;
+        //     that.tableData[that.classfyChangeIndex].shuxingzhi = that.ruleForm1.addClassfyParent;
+        //   }
+        //   that.dialogFormVisible  = false;
+        // }
       },
       // -----------------------------
     },

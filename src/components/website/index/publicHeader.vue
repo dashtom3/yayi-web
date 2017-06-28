@@ -19,10 +19,10 @@
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
             <div class="cargo_box" v-for="item in items" :key="item">
-              <img class="cargo_sm" :src=item.pic alt="img" @click="gotocar">
-              <div class="cargo_des">{{item.name}}</div>
-              <div class="cargo_price">￥{{item.price}}</div>
-              <div class="cargo_num">{{item.num}}盒</div>
+              <img class="cargo_sm" :src=item.pic alt="img" @click="gotoDetails(item)">
+              <div class="cargo_des" @click="gotoDetails(item)">{{item.name}}</div>
+              <div class="cargo_price" @click="gotoDetails(item)">￥{{item.price}}</div>
+              <div class="cargo_num" @click="gotoDetails(item)">{{item.num}}盒</div>
               <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
@@ -463,6 +463,12 @@
             that.$message.error('网络出错，请稍后再试！');
           }
         })
+      },
+      // 去商品详情
+      gotoDetails: function(item) {
+        var that = this;
+        that.$router.push({path: '/details/' + item.itemId})
+        window.scroll(0,0);
       },
       // 去购物车
       gotocar: function() {
@@ -1184,6 +1190,8 @@
   .cargo_sm {
     margin-top: 10px;
     border: 1px solid #e9e9e9;
+    width: 45px;
+    height: 45px;
   }
   .cargo_des {
     position: absolute;
