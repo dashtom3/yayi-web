@@ -135,7 +135,7 @@
           }
         }
       })
-
+      this.queryHandler();//初始化请求
     },
     methods: {
       uploadFile(res, file) {

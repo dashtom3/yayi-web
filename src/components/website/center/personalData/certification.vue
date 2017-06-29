@@ -65,7 +65,6 @@
         qiNiuUrl: global.qiNiuUrl,
         btnVisible: true,
         ifPass: false,
-        ifOnce: true,
         certiData: {
           phone: global.getUser().phone,
           token: global.getToken(),
@@ -73,7 +72,8 @@
           companyName: this.userData.companyName || '',
           part: this.userData.part || ['北京','北京市','东城区'],
           workAddress: this.userData.workAddress || '',
-          doctorPic: this.userData.doctorPic || ''
+          doctorPic: this.userData.doctorPic || '',
+          judge: this.userData.judge || 0
         } //作为局部这个组件的data的初始值
       }
     },
@@ -119,7 +119,8 @@
           companyName: this.certiData.companyName,
           part: (this.certiData.part).join(","),
           workAddress: this.certiData.workAddress,
-          doctorPic: this.imageUrl
+          doctorPic: this.imageUrl,
+          judge: this.certiData.judge
         }
         //验证单位名称必输
         if(!this.certiData.companyName){
@@ -159,25 +160,25 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1 && this.ifOnce){
+        if(this.certificateState==1 && this.certiData.judge === 0){
           this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
           });
-          this.ifOnce = false;
+          this.certiData.judge = 1;
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2 && this.ifOnce){
+        }else if(this.certificateState==2 && this.certiData.judge === 0){
           this.$alert('您的认证信息已审核通过',{
             confirmButtonText: '确定',
           });
-          this.ifOnce = false;
+          this.certiData.judge = 1;
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==3 && this.ifOnce){
+        }else if(this.certificateState==3 && this.certiData.judge === 0){
           this.$alert('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
           });
-           this.ifOnce = false;
+           this.certiData.judge = 1;
           this.btnVisible = true;
         }
       },

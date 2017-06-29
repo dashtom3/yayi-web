@@ -40,7 +40,7 @@
 
     <el-table :data="certificationList"  border style="width: 100%">
       <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
-      <el-table-column  prop="trueNameMobile"  align="center"  label="真实姓名+手机号">  </el-table-column>
+      <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号">  </el-table-column>
       <el-table-column  prop="certification.type"  align="center"  label="类型">  </el-table-column>
       <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
       <el-table-column  prop="certification.part"  align="center"  label="所在地+详细地址">  </el-table-column>
@@ -92,6 +92,9 @@
       trueNameMobile: function(){
         return this.certificationList
       }
+    },
+    created(){
+      this.search();
     },
     methods: {
       search:function(){
