@@ -16,8 +16,12 @@
           </el-form-item>
           <el-form-item label="产地：">
             <el-select v-model="itemBrandHome">
-              <el-option label="国产" value="国产"></el-option>
-              <el-option label="进口" value="进口"></el-option>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -33,9 +37,9 @@
       <!--列表-->
         <el-table  :data="tableData"  border  style="width: 100%">
           <el-table-column  prop="itemBrandName" align="center" label="品牌名称"></el-table-column>
-          <el-table-column  prop="logo"  align="center"  label="logo">
+          <el-table-column  prop="itemBrandLogo"  align="center"  label="logo">
             <template scope="scope">
-              <img style="cursor: pointer;" v-on:click="showBigImg(scope.$index)" :src="scope.row.logo" alt="点击查看大图" title="点击查看大图">
+              <img style="cursor: pointer;width:150px;height:150px;" v-on:click="showBigImg(scope.$index)" :src="tableData[scope.$index].itemBrandLogo" alt="点击查看大图" title="点击查看大图">
             </template>
           </el-table-column>
           <el-table-column  prop="itemBrandHome"  align="center"  label="产地">  </el-table-column>
@@ -51,15 +55,15 @@
     <!-- Form -->
 
     <el-dialog title="照片大图" :visible.sync="ifShowBigImg">
-      <img src="1.png" style="width:350px;height:350px;display:block;margin:auto;">
+      <img :src="bigImgSrc" style="width:350px;height:350px;display:block;margin:auto;">
     </el-dialog>
     <el-dialog :title="bindTitle" size="tiny" :visible.sync="showAddBrandAlert">
       <el-form>
         <el-form-item label="品牌名称：" :label-width="formLabelWidth">
-          <el-input v-model="itemBrandName" class="item_w_input"></el-input>
+          <el-input v-model="itemBrandNameAdd" class="item_w_input"></el-input>
         </el-form-item>
         <el-form-item label="产地：" :label-width="formLabelWidth">
-          <el-select v-model="itemBrandHome">
+          <el-select v-model="itemBrandHomeAdd">
             <el-option label="国产" value="国产"></el-option>
             <el-option label="进口" value="进口"></el-option>
           </el-select>
@@ -67,7 +71,7 @@
         <el-form-item label="logo：" :label-width="formLabelWidth">
           <el-upload
             :on-success="uploadFile"
-            action="qiNiuUrl"
+            :action="qiNiuUrl"
             :before-upload="beforeAvatarUpload"
             class="avatar-uploader"
             :show-file-list="false"
@@ -91,21 +95,35 @@
   export default{
     data(){
       return {
+        options: [{
+          value: '',
+          label: '全部'
+        }, {
+          value: '国产',
+          label: '国产'
+        }, {
+          value: '进口',
+          label: '进口'
+        }],
+        value: '',
         bindTitle:null,
+        itemBrandId: null,
         itemBrandName:null,
         itemBrandHome:null,
+        itemBrandLogo:null,
         // 1增加。2修改
         brandOperaType:1,
-        changeOneIndex:null,
-        name:null,
-        address:null,
         formLabelWidth:"120px",
         imageUrl: null,
         tableData:[],
         qiNiuToken: null,
+        itemBrandNameAdd: null,
+        itemBrandHomeAdd: null,
+        itemBrandLogoAdd: null,
         qiNiuUrl: global.qiNiuUrl,
         showAddBrandAlert:false,
         ifShowBigImg:false,
+        bigImgSrc: null
       }
     },
     created(){
@@ -117,11 +135,12 @@
           }
         }
       })
+
     },
     methods: {
       uploadFile(res, file) {
-        // this. = global.qiniuShUrl + file.response.key
-        // this.imageUrl = global.qiniuShUrl + file.response.key
+        this.itemBrandLogoAdd = global.qiniuShUrl + file.response.key
+        this.imageUrl = global.qiniuShUrl + file.response.key
       },
       beforeAvatarUpload(file) {
         // console.log(file)
@@ -152,27 +171,41 @@
       },
       addGoodBrand:function(){
         this.bindTitle = "添加商品品牌";
-        this.itemBrandName = null;
-        this.itemBrandHome = null;
+
+        this.itemBrandNameAdd = null;
+        this.itemBrandHomeAdd = null;
+        this.itemBrandLogoAdd = null;
         this.showAddBrandAlert = true;
+        this.imageUrl = null;
         this.brandOperaType = 1;
       },
       showBigImg:function(index){
         this.ifShowBigImg = true;
+        this.bigImgSrc = this.tableData[index].itemBrandLogo;
       },
       DELEONE:function(index){
-        this.$confirm('确定删除该属性吗, 是否继续?', {
+        var that = this;
+        this.$confirm('确定删除该品牌吗, 是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          this.tableData.splice(index,1);
+          let params = {
+            itemBrandId: that.tableData[index].itemBrandId
+          }
+          global.axiosPostReq('/item/deleteItemBrand',params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+              that.queryHandler();
+            }else{
+              that.$message.error('删除失败！');
+            }
+          })
         }).catch(() => {
-          this.$message({
+          that.$message({
             type: 'info',
             message: '已取消删除'
           });
@@ -183,26 +216,54 @@
         this.bindTitle = "修改商品品牌";
         this.showAddBrandAlert = true;
         var thisData = this.tableData[index];
-        this.itemBrandHome = thisData.itemBrandHome;
-        this.itemBrandName = thisData.itemBrandName;
-        this.changeOneIndex = index;
+        this.itemBrandHomeAdd = thisData.itemBrandHome;
+        this.itemBrandNameAdd = thisData.itemBrandName;
+        this.itemBrandLogoAdd = thisData.itemBrandLogo;
+        this.itemBrandId = thisData.itemBrandId;
+        this.imageUrl = this.itemBrandLogoAdd;
         this.brandOperaType = 2;
+
       },
       saveOneBrand:function(){
+        var that = this;
+        //增加商品信息
         if(this.brandOperaType==1){
-          var obj = {};
-          obj.madein = this.address;
-          obj.itemBrandName = this.itemBrandName;
-          obj.logo = "1.png";
-          this.tableData.push(obj);
-          this.itemBrandHome = null;
-          this.itemBrandName = null;
-          this.searchBranName = null;
-          this.searchBranPlace = null;
+          let params = {
+            itemBrandName: this.itemBrandNameAdd,
+            itemBrandHome: this.itemBrandHomeAdd,
+            itemBrandLogo: this.itemBrandLogoAdd
+          }
+          global.axiosPostReq('/item/addItemBrand',params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              this.$message({
+                message: '商品品牌添加成功',
+                type: 'success'
+              });
+              that.queryHandler();
+            }else{
+              this.$message.error('商品品牌添加失败！');
+            }
+          })
         }
+        //修改商品信息
         if(this.brandOperaType==2){
-          this.tableData[this.changeOneIndex].itemBrandHome = this.itemBrandHome;
-          this.tableData[this.changeOneIndex].itemBrandName = this.itemBrandName;
+          var params = {
+            itemBrandId: this.itemBrandId,
+            itemBrandName: this.itemBrandNameAdd,
+            itemBrandHome: this.itemBrandHomeAdd,
+            itemBrandLogo: this.itemBrandLogoAdd
+          }
+          global.axiosPostReq('/item/updateItemBrand',params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              this.$message({
+                message: '商品品牌修改成功',
+                type: 'success'
+              });
+              that.queryHandler();
+            }else{
+              this.$message.error('商品品牌修改失败！');
+            }
+          })
         }
         this.showAddBrandAlert  = false;
       },
