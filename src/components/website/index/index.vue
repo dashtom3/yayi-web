@@ -15,7 +15,6 @@
   import publicFooter from './publicFooter'
   import classify from './classify'
   import carousel from './carousel'
-  import brand from './brand'
   import preventive from './preventive'
   import backToTop from './backToTop'
 
@@ -30,7 +29,6 @@
       publicHeader,
       classify,
       carousel,
-      brand,
       preventive,
       publicFooter,
       backToTop,

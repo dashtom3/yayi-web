@@ -73,7 +73,7 @@ const Login = resolve => require(['@/components/admin/Login'], resolve)
 Vue.use(Router)
 
 let router = new Router({
-	mode: 'history',
+	//mode: 'history',
 	routes: [
 	{ path: '/', redirect: { name: 'index' }},
 	{

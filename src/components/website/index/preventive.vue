@@ -37,7 +37,9 @@
       </div>
       <div class="preventive_container">
         <div class="preventive_item" v-for="item in filteredItems[index]" :key="item" @click="toDetail(item)">
-          <img class="item_img" :src=item.itemDetail.itemPica alt="img">
+          <div class="item_img_box">
+            <img class="item_img" :src=item.itemDetail.itemPica alt="img">
+          </div>
           <p class="item_des">{{item.itemName}}</p>
           <p class="item_price">￥{{item.itemPrice}}</p>
         </div>
@@ -261,7 +263,7 @@ a {
     width: 163px;
     height: 163px;
     margin-top: 70px;
-    margin-left: 46px;
+    margin-left: 35px;
     border: 1px #e9e9e9 solid;
     border-radius: 50%;
     display:flex;
@@ -275,8 +277,10 @@ a {
     transition: all 0.5s ease;
   }
   .brand_container .brand_item img {
-    width: 112px;
-    height: 80px;
+    max-width: 100%;
+    max-height: 100%;
+    display: inline-block;
+    vertical-align: center;
   }
 /*-------------品牌库页面 结束-------------*/
 .preventive_box {
@@ -336,10 +340,15 @@ a {
   margin-right: 15px;
   margin-top: 10px
 }
-.item_img {
+.item_img_box {
   width: 263px;
   height: 200px;
-  background-color: #bcbcbc;
+}
+.item_img {
+  max-width: 100%;
+  max-height: 100%;
+  display: inline-block;
+  vertical-align: center;
 }
 .classifyName {
   position: absolute;

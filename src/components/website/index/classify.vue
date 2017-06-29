@@ -26,7 +26,7 @@
       品牌库
       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
       <img v-else src="../../../images/index/down.png" alt="img">
-      <div class="brandLib" >
+      <div class="brandLib" v-show="!change2" >
         <div class="imgWrap" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
           <img :src="oneBrand.itemBrandLogo" alt="img">
           <span></span>

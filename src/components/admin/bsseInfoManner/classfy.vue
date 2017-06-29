@@ -27,13 +27,13 @@
       </el-col>
 
       <!--列表-->
-        <el-table  :data="tableData" border style="width: 100%">
-          <el-table-column prop="shuxingname" align="center" label="分类名称"></el-table-column>
-          <el-table-column prop="shuxingzhi" align="center" label="上级分类"></el-table-column>
+        <el-table :data="tableData" border style="width: 100%">
+          <el-table-column prop="itemClassifyName" align="center" label="分类名称"></el-table-column>
+          <el-table-column prop="itemPreviousClassify" align="center" label="上级分类"></el-table-column>
           <el-table-column align="center" label="操作">
             <template scope="scope">
-              <el-button type="text" v-on:click="changeOneAttr(scope.$index)">修改</el-button>
-              <el-button type="text" v-on:click="DELEONE(scope.$index)">删除</el-button>
+              <el-button type="text" v-on:click="changeOneAttr(scope)">修改</el-button>
+              <el-button type="text" v-on:click="DELEONE(scope)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -41,7 +41,7 @@
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
         <el-form-item label="上级分类：" prop="upClass" :label-width="formLabelWidth">
-          <el-cascader :options="options" :show-all-levels="false" v-model="ruleForm.upClass" expand-trigger="hover" change-on-select>
+          <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.upClass"change-on-select>
             <el-button slot="append" icon="search"></el-button>
           </el-cascader>
         </el-form-item>
@@ -63,209 +63,14 @@
         ruleForm:{
           upClass: [],
           classname: '',
+          itemId: null,
         },
-        searchClassfyName:null,
-        searchParentClassfyName:null,
+        searchClassfyName: '',
+        searchParentClassfyName: '',
         // 1是增加，2是修改
         classfyOperaType:1,
         classfyChangeIndex:null,
-        // addClassfyParent:['', '', ''],
-        // addClassfyName:null,
-        options: [{
-            value: 'zhinan',
-              label: '指南',
-              children: [{
-                value: 'shejiyuanze',
-                label: '设计原则',
-                children: [{
-                  value: 'yizhi',
-                label: '一致'
-              }, {
-                value: 'fankui',
-                label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-              }, {
-                value: 'kekong',
-                label: '可控'
-              }]
-            }, {
-              value: 'daohang',
-              label: '导航',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }, {
-                value: 'dingbudaohang',
-                label: '顶部导航'
-              }]
-            }]
-          }, {
-              value: 'zujian',
-              label: '组件',
-              children: [{
-                value: 'basic',
-                label: 'Basic',
-                children: [{
-                  value: 'layout',
-                  label: 'Layout 布局'
-                }, {
-                    value: 'color',
-                label: 'Color 色彩'
-              }, {
-                value: 'typography',
-                label: 'Typography 字体'
-              }, {
-                value: 'icon',
-                label: 'Icon 图标'
-              }, {
-                value: 'button',
-                label: 'Button 按钮'
-              }]
-            }, {
-              value: 'form',
-              label: 'Form',
-              children: [{
-                value: 'radio',
-                label: 'Radio 单选框'
-              }, {
-                value: 'checkbox',
-                label: 'Checkbox 多选框'
-              }, {
-                value: 'input',
-                label: 'Input 输入框'
-              }, {
-                value: 'input-number',
-                label: 'InputNumber 计数器'
-              }, {
-                value: 'select',
-                label: 'Select 选择器'
-              }, {
-                value: 'cascader',
-                label: 'Cascader 级联选择器'
-              }, {
-                value: 'switch',
-                label: 'Switch 开关'
-              }, {
-                value: 'slider',
-                label: 'Slider 滑块'
-              }, {
-                value: 'time-picker',
-                label: 'TimePicker 时间选择器'
-              }, {
-                value: 'date-picker',
-                label: 'DatePicker 日期选择器'
-              }, {
-                value: 'datetime-picker',
-                label: 'DateTimePicker 日期时间选择器'
-              }, {
-                value: 'upload',
-                label: 'Upload 上传'
-              }, {
-                  value: 'rate',
-                label: 'Rate 评分'
-              }, {
-                value: 'form',
-                label: 'Form 表单'
-              }]
-            }, {
-              value: 'data',
-              label: 'Data',
-              children: [{
-                value: 'table',
-                label: 'Table 表格'
-              }, {
-                value: 'tag',
-                label: 'Tag 标签'
-              }, {
-                value: 'progress',
-                label: 'Progress 进度条'
-              }, {
-                value: 'tree',
-                label: 'Tree 树形控件'
-              }, {
-                value: 'pagination',
-                label: 'Pagination 分页'
-              }, {
-                value: 'badge',
-                label: 'Badge 标记'
-              }]
-            }, {
-              value: 'notice',
-              label: 'Notice',
-              children: [{
-                value: 'alert',
-                label: 'Alert 警告'
-              }, {
-                value: 'loading',
-                label: 'Loading 加载'
-              }, {
-                value: 'message',
-                label: 'Message 消息提示'
-              }, {
-                value: 'message-box',
-                label: 'MessageBox 弹框'
-              }, {
-                value: 'notification',
-                label: 'Notification 通知'
-              }]
-            }, {
-              value: 'navigation',
-              label: 'Navigation',
-              children: [{
-                value: 'menu',
-                label: 'NavMenu 导航菜单'
-              }, {
-                value: 'tabs',
-                label: 'Tabs 标签页'
-              }, {
-                value: 'breadcrumb',
-                label: 'Breadcrumb 面包屑'
-              }, {
-                value: 'dropdown',
-                label: 'Dropdown 下拉菜单'
-              }, {
-                value: 'steps',
-                label: 'Steps 步骤条'
-              }]
-            }, {
-              value: 'others',
-              label: 'Others',
-              children: [{
-                value: 'dialog',
-                label: 'Dialog 对话框'
-              }, {
-                value: 'tooltip',
-                label: 'Tooltip 文字提示'
-              }, {
-                value: 'popover',
-                label: 'Popover 弹出框'
-              }, {
-                value: 'card',
-                label: 'Card 卡片'
-              }, {
-                value: 'carousel',
-                label: 'Carousel 走马灯'
-              }, {
-                value: 'collapse',
-                label: 'Collapse 折叠面板'
-              }]
-            }]
-          }, {
-            value: 'ziyuan',
-            label: '资源',
-            children: [{
-              value: 'axure',
-              label: 'Axure Components'
-            }, {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }, {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }]
-          }],
+        options: [],
         dialogFormVisible: false,
         formLabelWidth: '120px',
         bindTitle:null,
@@ -273,7 +78,7 @@
         tableData:[],
         rules: {
           upClass: [
-            { required: true, message: '请选择上级分类', trigger: 'change' }
+            { type: 'array', required: true, message: '请选择上级分类', trigger: 'change' }
           ],
           classname: [
             { required: true, message: '请输入分类名称', trigger: 'blur' }
@@ -292,108 +97,111 @@
     },
     created: function () {
       var that = this;
-      //获取分类列表
-      for (var i = 0; i < that.options.length; i++) {
-        that.options[i].frisco = that.options[i].label;
-        that.options[i].farry = that.options[i].children;
-        for (var k in that.options[i].farry) {
-          that.options[i].farry[k].frisco = that.options[i].farry[k].label
-          that.options[i].farry[k].farry = that.options[i].farry[k].children
-          for (var j in that.options[i].farry[k].farry) {
-            that.options[i].farry[k].farry[j].frisco = that.options[i].farry[k].farry[j].label
-          }
-        }
-      }
-      console.log(that.options)
-      // that.global.axiosGetReq('/item/showItemClassify').then((res) => {
-      //   //console.log(res);
-      //   if (res.data.callStatus === 'SUCCEED') {
-      //     console.log(res.data.data);
-      //     that.tableData = res.data.data;
-      //   } else {
-      //     that.$message.error('网络出错，请稍后再试！');
-      //   }
-      // })
-      // console.log('22');
-      // that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-      //   if (res.data.callStatus === 'SUCCEED') {
-      //     that.options = res.data.data.classifyList;
-      //     for (var i = 0; i < that.options.length; i++) {
-      //       that.options[i].label = that.options[i].oneClassify;
-      //       that.options[i].children = that.options[i].classifyTwoList;
-      //       if (that.options[i].children[i] == undefined) {
-      //         that.options[i].children[i].label == ''
-      //       } else {
-      //         that.options[i].children[i].label == that.options[i].children[i].classifyTwoName
-      //       }
-      //       // that.options[i].children[i].classifyTwoName = that.options[i].children[i].label;
-      //       console.log(that.options[i].children[i], '22')
-      //       // for (var j = 0; j < that.options[i].children.length; i++) {
-      //       //   that.a.push(that.options[i].children[j])
-      //       // }
-      //       //that.a.push(that.options[i].children);
-      //       // that.options[i].children.label = that.options[i].children.classifyTwoName;
-      //       // console.log(that.options[i])
-      //     }
-      //     // for (var i = 0; i < that.a.length; i++) {
-      //     //   for (var j = 0; j < that.a[i].length; i++) {
-      //     //     console.log(that.a[i][i].classifyTwoName)
-      //     //   }
-      //     // }
-      //     //console.log(that.a);
-      //     console.log(that.options);
-      //     // that.options = res.data.data.classifyList;
-      //   } else {
-      //     that.$message.error('网络出错，请稍后再试！');
-      //   }
-      // })
+      that.getClassify();
+      that.getAllClassify();
     },
     methods: {
+      //获取分类列表
+      getClassify: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/showItemClassify').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+            console.log(that.tableData)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      //获取所有分类列表
+      getAllClassify: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.options = res.data.data.classifyList
+            for (var i = 0; i < that.options.length; i++) {
+              that.options[i].label = that.options[i].oneClassify
+              that.options[i].children = that.options[i].classifyTwoList
+              for (var k in that.options[i].children) {
+                that.options[i].children[k].label = that.options[i].children[k].classifyTwoName
+                that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
+                for (var j in that.options[i].children[k].children) {
+                  that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
+                }
+              }
+            }
+            console.log(that.options);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      // 添加商品分类
       addClassfy: function () {
         var that = this;
         that.bindTitle = "添加商品分类";
         that.dialogFormVisible = true;
-        that.classfyOperaType = 1;
-        that.addClassfyParent = ["","",""];
-        that.addClassfyName = null;
-      },
-      aaga:function(val){
-        // console.log(val)
       },
       // 查询分类
       search:function () {
         var that = this;
-        this.filters.name;
+        if (that.searchClassfyName == '' || that.searchParentClassfyName == '') {
+          that.$message.error('请至少选择一项查询类型！');
+          return false
+        }
+        var obj = {
+          itemClassifyName: that.searchClassfyName,
+          itemPreviousClassify: that.searchParentClassfyName,
+        }
+        that.global.axiosPostReq('/item/showItemClassify',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+            // console.log(that.tableData)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
-      DELEONE:function(index){
+      DELEONE:function(scope){
         var that = this;
+        // console.log(scope.row.itemClassifyId);
         that.$confirm('确定删除该属性吗, 是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          that.tableData.splice(index,1);
+          var obj = {
+            itemClassifyId: scope.row.itemClassifyId,
+          }
+          console.log(scope.row.itemClassifyId)
+          that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
+              that.getClassify();
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
           that.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
-
       },
-      changeOneAttr: function(index) {
+      // 修改商品分类
+      changeOneAttr: function(scope) {
         var that = this;
+        console.log(scope.row);
         that.bindTitle = "修改商品分类";
-        that.classfyOperaType = 2;
-        that.classfyChangeIndex = index;
         that.dialogFormVisible = true;
-        var thisData = that.tableData[index];
-        that.addClassfyParent = ["","",thisData.shuxingzhi];
-        that.addClassfyName = thisData.shuxingname;
+        that.ruleForm.classname = scope.row.itemClassifyName;
+        //that.ruleForm.upClass = scope.row.itemPreviousClassify;
+        that.ruleForm.itemId = scope.row.itemClassifyId;
       },
       // 保存商品分类
       saveOneAttrs: function(formName) {
@@ -401,43 +209,31 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             var obj = {
-              itemClassifyId: '',
-              itemClassifyName: '',
-              itemPreviousClassify: '',
+              itemClassifyName: that.ruleForm.classname,
+              itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
             }
-            that.global.axiosGetReq('/item/addItemClassify',obj).then((res) => {
-              console.log(res)
+            console.log(obj);
+            that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                
+                that.getClassify();
+                that.ruleForm.classname = '';
+                that.ruleForm.upClass = [];
+                that.dialogFormVisible = false;
+                that.$message({
+                  type: 'success',
+                  message: '添加成功成功!'
+                });
+                that.tableData = res.data.data;
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
             })
-            alert('submit!');
           } else {
             console.log('error submit!!');
             return false;
           }
         });
-        // if(that.ruleForm1.addClassfyName==""||that.ruleForm1.addClassfyParent[0]==""){
-        //   that.$alert("请填写完属性值！", {confirmButtonText: '确定'});
-        // }else{
-        //   if(that.classfyOperaType==1){
-        //       var obj = {};
-        //      obj.shuxingname = that.ruleForm1.addClassfyName;
-        //      obj.shuxingzhi = that.ruleForm1.addClassfyParent;
-        //      that.tableData.push(obj);
-        //      that.addClassfyParent = ["","",""];
-        //      that.addClassfyName = null;
-        //   }
-        //   if(that.classfyOperaType==2){
-        //     that.tableData[that.classfyChangeIndex].shuxingname = that.ruleForm1.addClassfyName;
-        //     that.tableData[that.classfyChangeIndex].shuxingzhi = that.ruleForm1.addClassfyParent;
-        //   }
-        //   that.dialogFormVisible  = false;
-        // }
       },
-      // -----------------------------
     },
   }
 </script>
@@ -446,5 +242,8 @@
 .classfy  .el-dialog__footer{
   margin-left: 120px;
   text-align: left;
-  }
+}
+.cascader {
+  width: 260px;
+}
 </style>

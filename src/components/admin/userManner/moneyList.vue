@@ -93,7 +93,26 @@
         ]
       }
     },
+    created: function() {
+      var that = this;
+      that.getClassify()
+    },
     methods: {
+      //获取用户钱币列表
+      getClassify: function() {
+        var that = this;
+        var obj = {
+          token: '11'
+        }
+        that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.moneyList = res.data.data;
+            console.log(that.moneyList)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       search:function(){
 
       },

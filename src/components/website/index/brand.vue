@@ -114,7 +114,7 @@
     border-radius: 50%;
     display:flex;
     justify-content:center;
-    align-items:center
+    align-items:centere
   }
   .brand_item:hover {
     cursor: pointer;
@@ -123,7 +123,9 @@
     transition: all 0.5s ease;
   }
   .brand_container .brand_item img {
-    width: 112px;
-    height: 80px;
+    max-width: 100%;
+    max-height: 100%;
+    display: inline-block;
+    vertical-align: center;
   }
 </style>
