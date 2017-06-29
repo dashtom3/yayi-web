@@ -13,13 +13,10 @@
           <el-input v-model="searchUserId"></el-input>
         </el-form-item>
         <el-form-item label="时间：">
-          <el-date-picker  v-model="searchDataPrev"   type="daterange"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
+          <el-date-picker v-model="searchDataPrev" type="daterange" placeholder="选择日期" :picker-options="pickerOptions0"></el-date-picker>
         </el-form-item>
-        <!-- <el-form-item label="~">
-          <el-date-picker  v-model="searchDataNext"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions1"> </el-date-picker>
-        </el-form-item> -->
         <el-form-item>
-          <el-button type="primary" v-on:click="search">查询</el-button>
+          <el-button type="primary" v-on:click="searchAll">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -28,22 +25,20 @@
     </el-col>
 
     <el-table :data="moneyList"  border style="width: 100%">
-      <el-table-column  prop="userId"  width="200px"  align="center"  label="用户手机号"></el-table-column>
-      <el-table-column  prop="get"  align="center"  label="收入">  </el-table-column>
-      <el-table-column  prop="pay"  align="center"  label="支出"> </el-table-column>
-      <el-table-column  prop="leave"  align="center"  label="余额">  </el-table-column>
-      <el-table-column  prop="time"  align="center"  label="时间">  </el-table-column>
-      <el-table-column  prop="descrition"  align="center"  label="描述">  </el-table-column>
+      <el-table-column prop="phone" width="200px" align="center" label="用户手机号"></el-table-column>
+      <el-table-column prop="qbRget" align="center" label="收入"></el-table-column>
+      <el-table-column prop="qbRout" align="center" label="支出"></el-table-column>
+      <el-table-column prop="qbBalance" align="center" label="余额"></el-table-column>
+      <el-table-column prop="time" align="center" label="时间"></el-table-column>
+      <el-table-column prop="remark" align="center" label="描述"></el-table-column>
     </el-table>
 
     <el-dialog custom-class="" title="修改用户乾币：" :visible.sync="showChangeUserMoney">
-      <el-form :inline="true" >
+      <el-form :inline="true">
         <el-form-item>
-          <el-input  v-model="nowUserMoneyNum" >
-            <el-select  v-model="selectSearchType" slot="prepend" placeholder="请选择">
-              <el-option label="用户编号" value="1"></el-option>
-              <el-option label="真实姓名" value="2"></el-option>
-              <el-option label="手机号" value="3"></el-option>
+          <el-input v-model="nowUserMoneyNum">
+            <el-select  v-model="selectSearchType" slot="prepend" placeholder="请选择" :disabled="true">
+              <el-option label="手机号" value="1"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
@@ -52,8 +47,8 @@
         </el-form-item>
       </el-form>
       <el-form :inline="true" >
-        <el-form-item label="当前钱币币数：">
-          <el-input></el-input>
+        <el-form-item label="当前乾币币数：">
+          <el-input v-model="yayiCoin"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="saveUserMoney">保存</el-button>
@@ -63,6 +58,7 @@
   </el-row>
 </template>
 <script>
+  import util from '../../../common/util'
   export default{
     data(){
       return {
@@ -76,21 +72,13 @@
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
-        searchDataPrev:null,
-        searchDataNext:null,
-        searchUserId:null,
-        nowUserMoneyNum:null,
-        selectSearchType:"用户编号",
+        searchDataPrev: [],
+        searchUserId: '',
+        nowUserMoneyNum:'',
+        yayiCoin: '',
+        selectSearchType:"手机号",
         showChangeUserMoney:false,
-        moneyList:[
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'},
-          {userId:"1",get:3214,pay:'',leave:'232',time:"1234-12-12 12:12",descrition:'adfadkjbakdfakjnhkajf'}
-        ]
+        moneyList:[],
       }
     },
     created: function() {
@@ -102,25 +90,99 @@
       getClassify: function() {
         var that = this;
         var obj = {
-          token: '11'
+          phone: '',
+          startDate: '',
+          endDate: '',
+          token: ''
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.moneyList = res.data.data;
-            console.log(that.moneyList)
+            that.moneyList = res.data.data[0].qbRecordList;
+            for (var i = 0; i < that.moneyList.length; i++) {
+              that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
-      search:function(){
-
+      // 头部查询
+      searchAll: function() {
+        var that = this;
+        if (that.searchUserId == '' && that.searchDataPrev.length == 0) {
+          that.$message.error('请输入手机号或时间！');
+          return false
+        }
+        var startDate = util.formatDate.format(new Date(that.searchDataPrev[0]));
+        var endDate = util.formatDate.format(new Date(that.searchDataPrev[1]));
+        var obj = {
+          phone: that.searchUserId,
+          startDate: startDate,
+          endDate: endDate,
+          token: ''
+        }
+        that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.searchUserId = '';
+            that.searchDataPrev = [];
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
-      changeUserMoney:function(){
+      // 查询手机号
+      search: function() {
+        var that = this;
+        if (that.nowUserMoneyNum == '') {
+          that.$message.error('请填写手机号！');
+          return false
+        }
+        var obj = {
+          phone: that.nowUserMoneyNum,
+          startDate: '',
+          endDate: '',
+          token: ''
+        }
+        that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+            if (res.data.data.length == 0) {
+              that.$message.error('手机号不存在！');
+            } else {
+              console.log(res.data.data);
+              console.log(that.nowUserMoneyNum);
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      changeUserMoney:function() {
         this.showChangeUserMoney = true;
       },
-      saveUserMoney:function(){
-        this.showChangeUserMoney = false;
+      // 保存修改
+      saveUserMoney:function() {
+        var that = this;
+        if (that.nowUserMoneyNum == '') {
+          that.$message.error('请输入手机号！');
+          return false
+        }
+        if (that.yayiCoin == '') {
+          that.$message.error('请输入乾币数量！');
+          return false
+        }
+        var obj = {
+          phone: that.nowUserMoneyNum,
+          qbBalance: that.yayiCoin,
+          token: '',
+        }
+        that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
 
     },

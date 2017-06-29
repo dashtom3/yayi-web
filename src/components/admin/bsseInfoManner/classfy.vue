@@ -56,7 +56,6 @@
   </el-row>
 </template>
 <script>
-  // import abc from "./abc"
   export default{
     data(){
       return {

@@ -1146,6 +1146,8 @@
   .shopping_car .car_hover {
     display: none;
     width: 317px;
+    max-height: 300px;
+    overflow: scroll;
     position: absolute;
     top: 27px;
     left: -1px;

@@ -30,8 +30,8 @@
     <!--  品牌库页面 结束 -->
     <!--  一级分类页面 开始 -->
     <div class="preventive_box d_jump" :class="{active:index%2==1}" v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
-      <div class="img_box_change" @mouseover="img_in" @mouseout="img_out" @click="toBrand(index)">
-        <img class="brand_img" v-if="img_change" src="../../../images/index/yayi.png" alt="img">
+      <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
+        <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
         <p class="classifyName">{{classifyItem.oneClassify}}</p>
       </div>
@@ -39,6 +39,7 @@
         <div class="preventive_item" v-for="item in filteredItems[index]" :key="item" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src=item.itemDetail.itemPica alt="img">
+            <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
           </div>
           <p class="item_des">{{item.itemName}}</p>
           <p class="item_price">￥{{item.itemPrice}}</p>
@@ -107,7 +108,7 @@ export default {
       }
       var num = parseInt((scroll-650)/800);
       that.yayi = num;
-      console.log(scroll);
+      // console.log(scroll);
     },
     // 根据锚点跳转并实现动画
     jump: function(index) {
@@ -156,13 +157,14 @@ export default {
       that.$router.push({path: '/details/' + item.itemId})
       window.scroll(0,0);
     },
-    img_in(index) {
+    img_in(classifyItem) {
       var that = this;
-      that.img_change = false;
+      //console.log(classifyItem.oneId);
+      that.img_change = classifyItem.oneId;
     },
-    img_out(index) {
+    img_out(classifyItem) {
       var that = this;
-      that.img_change = true;
+      that.img_change = -1;
     },
     getAllBrandList:function(){
       var that = this;
@@ -255,7 +257,6 @@ a {
     width: 800px;
     height: 500px;
     margin: 0 auto;
-/*    background-color: #A08F65;*/
     overflow: hidden;
   }
   .brand_container .brand_item {
@@ -267,8 +268,9 @@ a {
     border: 1px #e9e9e9 solid;
     border-radius: 50%;
     display:flex;
-    justify-content:center;
-    align-items:center
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
   .brand_item:hover {
     cursor: pointer;
@@ -280,7 +282,7 @@ a {
     max-width: 100%;
     max-height: 100%;
     display: inline-block;
-    vertical-align: center;
+    vertical-align: middle;
   }
 /*-------------品牌库页面 结束-------------*/
 .preventive_box {
@@ -305,13 +307,14 @@ a {
 /*  background-color: #EECE7C;*/
 }
 .preventive_item {
-  width: 275px;
-  height: 295px;
+  width: 265px;
+  height: 290px;
   border: 1px #bcbcbc solid;
   float: left;
   padding: 5px 5px 0 5px;
   margin-right: 17px;
   margin-bottom: 17px;
+  position: relative;
 }
 .preventive_item:nth-child(4n+0) {
   margin-right: 0px;
@@ -319,7 +322,7 @@ a {
 .preventive_item:hover {
   cursor: pointer;
 }
-.preventive_item img:hover {
+.preventive_item .item_img_box:hover {
   box-shadow: 7px 7px 28px #bcbcbc;
   transition: all 0.5s ease;
 }
@@ -331,14 +334,13 @@ a {
   font-size: 14px;
   color: #000;
   margin-top: 10px;
-  text-align: left;
 }
 .item_price {
   font-size: 18px;
   color: #D81E06;
-  text-align: right;
-  margin-right: 15px;
-  margin-top: 10px
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
 }
 .item_img_box {
   width: 263px;
@@ -350,7 +352,7 @@ a {
   max-width: 40%;
   max-height: 40%;
   display: inline-block;
-  vertical-align: center;
+  vertical-align: middle;
 }
 .classifyName {
   position: absolute;
