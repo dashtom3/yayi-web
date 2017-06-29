@@ -3,7 +3,7 @@
     <div class="headerBox" :class="{ speH: isActive }">
       <div class="headerFirst">
         <div class="system_enter left" @click="gotoIndex">首页</div>
-        <div class="yayi left">创客系统入口</div>
+        <div class="yayi left" @click="gotoSales">创客系统入口</div>
         <div v-if="hasLogin" class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
@@ -434,6 +434,11 @@
       gotoIndex: function() {
         var that = this;
         that.$router.push({path: '/'});
+      },
+      // 创客系统入口
+      gotoSales: function() {
+        var that = this;
+        that.$router.push({path: '/salesIndex'});
       },
       //首页搜索框
       search_cargo: function() {
