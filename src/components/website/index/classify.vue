@@ -26,9 +26,10 @@
       品牌库
       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
       <img v-else src="../../../images/index/down.png" alt="img">
-      <div class="brandLib" v-show="!change2" >
+      <div class="brandLib" >
         <div class="imgWrap" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
           <img :src="oneBrand.itemBrandLogo" alt="img">
+          <span></span>
           <div class=""></div>
         </div>
     </div>
@@ -174,6 +175,13 @@
     max-width: 100%;
     max-height: 100%;
     margin-left: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .imgWrap span{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
   }
   .imgWrap{
     border: 1px solid #cccccc;
@@ -183,6 +191,7 @@
     margin-bottom: 28px;
     width: 138px ;
     height: 138px;
+    text-align: center;
   }
   .brandLib .imgWrap:hover div{
     display: block;

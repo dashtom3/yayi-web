@@ -1,7 +1,7 @@
 <template>
   <div class="detailsBar">
     <span v-for="(one ,index) in fenlei">
-      <span :class="{goodName:has===index,goodName1:fenlei.length-1==index}" v-on:mouseenter="hover(index)" v-on:mouseleave="leave(index)" @click="goToThisPage(index)">{{one}}</span>
+      <span :class="{goodName:has===index,goodName1:fenlei.length-1==index}" v-on:mouseenter="hover(index)" v-on:mouseleave="leave(index)" @click="goToThisPage(index,one)">{{one}}</span>
       <span v-if="index!=fenlei.length-1">></span>
     </span>
   </div>
@@ -17,6 +17,9 @@
         fenlei:[],
         Classify:[],
         allClassfy:[],
+        index1:0,
+        index2:0,
+        index3:0,
       }
     },
     created: function() {
@@ -30,19 +33,62 @@
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.allClassfy = res.data.data;
+            console.log(that.allClassfy,'allClassfy')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
-      goToThisPage:function(index){
-        console.log(that.allClassfy)
+      goToThisPage:function(index,one){
         var that = this;
         if(index==0){
           that.$router.push({path:"/index/"});
         }
         if(index==1){
-
+          for(let i in that.allClassfy){
+            if(that.fenlei[1]==that.allClassfy[i].oneClassify){
+              this.index1 = i;
+            }
+          }
+          var str = parseInt(this.index1)+1+"-0-0AND0";
+          that.$router.push({path:"/brandLib/"+str,});
+        }
+        if(index==2){
+          for(let i in that.allClassfy){
+            if(that.fenlei[1]==that.allClassfy[i].oneClassify){
+              this.index1 = i;
+            }
+          }
+          var towList = that.allClassfy[this.index1].classifyTwoList;
+          for(let t in towList){
+            if(that.fenlei[2]==towList[t].classifyTwoName){
+              that.index2 = t;
+            }
+          }
+          var dfaf = parseInt(this.index2)+1;
+          var str = parseInt(this.index1)+1+"-"+dfaf+"-0AND0";
+          that.$router.push({path:"/brandLib/"+str,});
+        }
+        if(index==3){
+          for(let i in that.allClassfy){
+            if(that.fenlei[1]==that.allClassfy[i].oneClassify){
+              this.index1 = i;
+            }
+          }
+          var towList = that.allClassfy[this.index1].classifyTwoList;
+          for(let t in towList){
+            if(that.fenlei[2]==towList[t].classifyTwoName){
+              that.index2 = t;
+            }
+          }
+          var threeList = towList[that.index2].classifyThreeList;
+          for(let th in threeList){
+            if(that.fenlei[3]==threeList[th].classifyThreeName){
+              that.index3 = th;
+            }
+          }
+          var str = parseInt(this.index1)+1+"-"+parseInt(this.index2)+1+"-"+parseInt(this.index3)+1;
+          that.$router.push({path:"/brandLib/"+str,});
         }
       },
       getNowGoodDetail:function(){

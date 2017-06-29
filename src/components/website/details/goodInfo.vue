@@ -154,10 +154,10 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:"'"+userToken+"'"
         };
-        console.log(obj)
+        // console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res,'111111111111111111')
+          // console.log(res,'111111111111111111')
           this.ifshoucang = res.data.num;
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
@@ -213,10 +213,8 @@ import myAddress from './selectThree'
               itemSKU:parseInt(Math.random()*100000),
               token:that.global.getToken()
             };
-            // console.log(obj)
             that.global.axiosPostReq('/cart/star',obj)
             .then((res) => {
-              // console.log(res,"111111111111111111111111aaaaa")
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("收藏成功！", {confirmButtonText: '确定'});
                 that.ifshoucang = 1;
@@ -229,6 +227,8 @@ import myAddress from './selectThree'
           }
         }
         if(arg==2&&that.copyUrl==true){
+          var url = window.location.href;
+          window.clipboardData.setData("Text",url);
           that.$alert("链接复制成功！", {confirmButtonText: '确定'});
           that.copyUrl = false;
         }

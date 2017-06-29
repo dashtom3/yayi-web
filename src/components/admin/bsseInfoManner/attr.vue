@@ -117,11 +117,8 @@
         var that = this;
         that.global.axiosGetReq('/item/queryProperty')
         .then((res) => {
-          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-
             var data = res.data.data;
-            // console.log(data)
             that.tableData = data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -174,7 +171,6 @@
         if(that.searchAttrName){
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
-            console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
               that.tableData==res.data.data;
             } else {
@@ -206,7 +202,6 @@
         });
       },
       changeOneAttr:function(index,item){
-        // console.log(item)
         var that = this;
         that.bindTitle = "修改商品属性";
         that.formData.addGoodAttrName = item.itemPropertyName;
@@ -228,6 +223,7 @@
             that.addGoodAttrValues = [];
             that.formData.addGoodAttrName= null;
             that.showAddGoodAttr  = false;
+            
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -287,7 +283,7 @@
           if (valid) {
             var aa= {};
             aa.id="1",
-            aa.itemPropertyName = that.formData.addGoodAttrOneVal;
+            aa.itemPparam = that.formData.addGoodAttrOneVal;
             that.addGoodAttrValues.push(aa);
             that.formData.addGoodAttrOneVal = null;
             that.flag1 = true;

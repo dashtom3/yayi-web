@@ -22,13 +22,13 @@
             </el-input>
           </el-form-item>
           <el-form-item label="是否绑定销售：">
-            <el-select v-model="searchIfBindSale" placeholder="请选择">
+            <el-select v-model="searchisBindSale" placeholder="请选择">
               <el-option  v-for="item in options"  :key="item.value"  :label="item.label"  :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="类型：">
-            <el-select v-model="searchUserType" placeholder="请选择">
-              <el-option  v-for="item in userTypes"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
+            <el-select v-model="searchtype" placeholder="请选择">
+              <el-option  v-for="item in types"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="销售员名称：">
@@ -45,29 +45,37 @@
       <!--列表-->
       <el-table :data="userList"  border style="width: 100%">
         <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
-        <el-table-column  prop="userName"  align="center"  label="用户姓名">  </el-table-column>
-        <el-table-column  prop="userPhone"  align="center"  label="手机号"> </el-table-column>
-        <el-table-column  prop="userCompony"  align="center"  label="单位名称">  </el-table-column>
-        <el-table-column  prop="userType"  align="center"  label="类型">  </el-table-column>
-        <el-table-column  prop="ifBindSale"  align="center"  label="是否绑定销售">  </el-table-column>
+        <el-table-column  prop="trueName"  align="center"  label="用户姓名">  </el-table-column>
+        <el-table-column  prop="phone"  align="center"  label="手机号"> </el-table-column>
+        <el-table-column  prop="companyName"  align="center"  label="单位名称">  </el-table-column>
+        <el-table-column  prop="type"  align="center"  label="类型">
+          <template scope="scope">
+            <span v-if="scope.row.type==1">个人</span>
+            <span v-else>机构</span>
+          </template>
+        </el-table-column>
+        <el-table-column  prop="isBindSale"  align="center"  label="是否绑定销售">
+          <template scope="scope">
+            <span v-if="scope.row.isBindSale==1">是</span>
+            <span v-else>否</span>
+          </template>
+        </el-table-column>
         <el-table-column  prop="saleName" align="center"  label="销售员姓名">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
-          <el-button v-if="userList[scope.$index].ifBindSale=='是'"  type="text"  v-on:click="cancelBindSale(scope.$index)">取消绑定</el-button>
-          <el-button v-else  type="text"  v-on:click="addBindSale(scope.$index)">绑定销售</el-button>
-          <el-button type="text"   v-on:click="details(scope.$index)">详情</el-button>
+            <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index)">取消绑定</el-button>
+            <el-button v-else  type="text"  v-on:click="addBindSale(scope.$index)">绑定销售</el-button>
+            <el-button type="text" v-on:click="details(scope.$index,scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-col>
-    <el-dialog custom-class="" title="绑定销售员" :visible.sync="showBindSalAlert">
+    <el-dialog title="绑定销售员" :visible.sync="showBindSalAlert">
       <el-form :inline="true" >
         <el-form-item>
             <el-select v-model="bindSaleSearchType" placeholder="请选择">
-              <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
-              <!-- <el-option label="单位名称" value="单位名称"></el-option> -->
             </el-select>
         </el-form-item>
         <el-form-item>
@@ -77,9 +85,8 @@
         </el-form-item>
       </el-form>
       <el-table height="500"  :data="salesList" border>
-        <!-- <el-table-column align="center" property="bianhao" label="销售员编号" width="150"></el-table-column> -->
-        <el-table-column align="center" property="phone" label="手机号"></el-table-column>
-        <el-table-column align="center" property="name" label="真实姓名" width="200"></el-table-column>
+        <el-table-column align="center" property="salePhone" label="手机号"></el-table-column>
+        <el-table-column align="center" property="saleName" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="hehushu" label="操作">
           <template scope="scope">
             <el-button type="text" v-on:click="bandThisSale(scope.$index)">绑定</el-button>
@@ -87,36 +94,38 @@
         </el-table-column>
       </el-table>
     </el-dialog>
+
+    <!-- 用户详情 -->
     <el-dialog custom-class="asgagewgf" title="用户详情" :visible.sync="showUserDetailInfor">
       <div class="personalInfor">
-        <img src="" alt="">
+        <img :src="someOneUserDetails.userPic" alt="">
         <h3>个人信息</h3>
         <div class="">
-          <span>用户编号：{{someOneUserDetails.info.bianhao}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
+          <span>用户编号：{{someOneUserDetails.userId}}</span>
+          <span>真实姓名：{{someOneUserDetails.trueName}}</span>
         </div>
         <div class="">
-          <span>手机号：{{someOneUserDetails.info.phone}}</span>
-          <span>性别：{{someOneUserDetails.info.sex}}</span>
+          <span>手机号：{{someOneUserDetails.phone}}</span>
+          <span>性别：{{someOneUserDetails.sex}}</span>
         </div>
         <div class="">
-          <span>生日：{{someOneUserDetails.info.shengri}}</span>
-          <span>QQ：{{someOneUserDetails.info.qq}}</span>
+          <span>生日：{{someOneUserDetails.birthday}}</span>
+          <span>QQ：{{someOneUserDetails.qq}}</span>
         </div>
       </div>
       <div class="certification">
         <h3>资质认证</h3>
         <div class="">
-          <span>类型：{{someOneUserDetails.info.type}}</span>
-          <span>单位名称：{{someOneUserDetails.info.compony}}</span>
+          <span>类型：{{someOneUserDetails.type}}</span>
+          <span>单位名称：{{someOneUserDetails.companyName}}</span>
         </div>
         <div class="">
-          <span>所在地：{{someOneUserDetails.info.place}}</span>
-          <span>详细地址：{{someOneUserDetails.info.detailPlace}}</span>
+          <span>所在地：{{someOneUserDetails.part}}</span>
+          <span>详细地址：{{someOneUserDetails.workAddress}}</span>
         </div>
         <div class="">
           <span>口腔执业医师资格证：</span>
-          <img style="width:100px;height:100px;display:block" src="a.png" alt="">
+          <img style="width:100px;height:100px;display:block" :src="someOneUserDetails.doctorPic" alt="">
         </div>
       </div>
       <h3>绑定的销售</h3>
@@ -128,11 +137,17 @@
         <el-table-column align="center" property="hehushu" label="客户数"></el-table-column>
       </el-table>
       <h3>收货地址</h3>
-      <el-table :data="someOneUserDetails.address">
-        <el-table-column align="center" property="name" label="收货人" width="150"></el-table-column>
-        <el-table-column align="center" property="place" label="所在地区" width="200"></el-table-column>
-        <el-table-column align="center" property="detailPlace" label="详细地址"></el-table-column>
-        <el-table-column align="center" property="phone" label="手机/电话"></el-table-column>
+      <el-table :data="someOneUserDetails.Receiver">
+        <el-table-column align="center" property="receiverName" label="收货人" width="150"></el-table-column>
+         <el-table-column align="center" label="所在地区" width="200">
+          <template scope="scope">
+            <span>{{scope.row.province}}</span>
+            <span>{{scope.row.city}}</span>
+            <span>{{scope.row.county}}</span>
+         </template>
+        </el-table-column>
+        <el-table-column align="center" property="receiverDetail" label="详细地址"></el-table-column>
+        <el-table-column align="center" property="receiverPhone" label="手机/电话"></el-table-column>
       </el-table>
     </el-dialog>
   </el-row>
@@ -147,8 +162,8 @@
         showUserDetailInfor:false,
         searchUserContent:null,
         searchUserStyle: "手机号",
-        searchUserType:'全部',
-        searchIfBindSale:"全部",
+        searchtype:'全部',
+        searchisBindSale:"全部",
         searchSaleName:null,
         bindSaleSearchType:'手机号',
         bindSaleSearchCont:null,
@@ -162,8 +177,8 @@
             value: '选项3',
             label: '否'
           },],
-          ifBindSale: "全部",
-          userTypes: [{
+          isBindSale: "全部",
+          types: [{
             value: '选项1',
             label: '全部'
           }, {
@@ -174,74 +189,85 @@
             label: '机构'
           },],
 
-        userList:[
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"不限",ifBindSale:"是",saleName:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"个人",ifBindSale:"否",saleName:''},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"机构",ifBindSale:"是",saleName:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"个人",ifBindSale:"否",saleName:''},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"机构",ifBindSale:"是",saleName:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',userCompony:"小酱",userType:"不限",ifBindSale:"否",saleName:''},
-        ],
+        userList:[],
         someOneUserDetails:{
-          info:{
-            bianhao:"123134",
-            name:"23545",
-            phone:"1234",
-            sex:'aef',
-            shengri:"aef",
-            qq:"aef"
-          },
-          certification:{
-            type:"a",
-            compony:"adf",
-            place:"aafg",
-            detailPlace:"aa",
-            imgUrl:'ww'
-          },
-          bindSales:[
-            {bianhao:'12',name:'w4er',phone:'32424',time:'werwarf',hehushu:'2w323'}
-          ],
-          address:[
-            {name:'232',place:'43ef',detailPlace:'sdsfs',phone:"3412341412"},
-            {name:'232',place:'43ef',detailPlace:'sdsfs',phone:"3412341412"},
-            {name:'232',place:'43ef',detailPlace:'sdsfs',phone:"3412341412"},
-            {name:'232',place:'43ef',detailPlace:'sdsfs',phone:"3412341412"},
-            {name:'232',place:'43ef',detailPlace:'sdsfs',phone:"3412341412"}
-          ]
+          bindSales:[],
+          address:[]
         },
-        salesList:[
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},
-          {bianhao:'12',name:'w4er',phone:'32424'},{bianhao:'12',name:'w4er',phone:'32424'},
-        ]
+        salesList:[]
       }
     },
+    created:function(){
+      var that = this;
+      that.getUserList();
+      that.getSalesList();
+    },
     methods: {
+      getUserList:function(){
+        var that = this;
+        var obj = {
+          // token:that.global.getToken()
+          phone:"",
+          trueName:"",
+          companyName:"",
+          isBindSale:"",
+          type:"",
+          saleName:"",
+          token:"111"
+        };
+        that.global.axiosGetReq('/userManageList/userlist',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.userList = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getSalesList:function(){
+        var that = this;
+        var obj = {
+          // token:that.global.getToken()
+          salePhone:'',
+          saleName:'',
+          token:"111"
+        };
+        that.global.axiosGetReq('/userManageList/salelist',obj)
+        .then((res) => {
+          console.log(res,"saleList");
+          if (res.data.callStatus === 'SUCCEED') {
+            that.salesList = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getOneUserDetails:function(userPhone){
+        var that = this;
+        var obj = {
+          // token:that.global.getToken()
+          phone:userPhone,
+          token:"1111"
+        };
+        that.global.axiosGetReq('/userManageList/detail',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.someOneUserDetails = res.data.data;
+            var boj2 = {
+              name:that.someOneUserDetails.saleName,
+              phone:that.someOneUserDetails.salePhone,
+              time:that.someOneUserDetails.saleCreated,
+              hehushu:that.someOneUserDetails.bindUserNum,
+            };
+            that.someOneUserDetails.bindSales = [];
+            that.someOneUserDetails.bindSales.push(boj2);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       bandThisSale:function(index){
-        this.userList[this.needBindSaleUserIndex].ifBindSale = "是";
+        this.userList[this.needBindSaleUserIndex].isBindSale = "是";
         this.userList[this.needBindSaleUserIndex].saleName = this.salesList[index].name;
         this.showBindSalAlert = false;
       },
@@ -249,8 +275,10 @@
         this.needBindSaleUserIndex = index;
         this.showBindSalAlert = true;
       },
-      details:function(index){
-        this.showUserDetailInfor = true;
+      details:function(index,user){
+        var that = this;
+        that.showUserDetailInfor = true;
+        that.getOneUserDetails(user.phone);
       },
       search:function(){
 
@@ -262,7 +290,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.userList[index].ifBindSale = "否";
+          this.userList[index].isBindSale = "否";
           this.userList[index].saleName = "";
           this.$message({
             type: 'success',
