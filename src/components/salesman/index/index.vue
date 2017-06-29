@@ -2,14 +2,14 @@
   <div class="salesIndex">
     <salesHead></salesHead>
     <div class="saleSecond">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
+      <img class="logo_img" src="../../../images/index/logo.png" alt="img" >
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
         <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
         <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
         <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">我的钱包</div>
-        <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">个人信息</div> 
+        <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">个人信息</div>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -25,9 +25,10 @@
   import Vue from 'vue'
   import salesHead from "./header"
   import salesFoot from "./footer"
-  var tab01 = Vue.extend({
-    template: '<div>this is 待评价01</div>',
-  });
+  import aa from "./aa"
+  // var tab01 = Vue.extend({
+  //   template: '<div>this is 待评价01</div>',
+  // });
   var tab02 = Vue.extend({
     template: '<div>this is 待评价02</div>',
   });
@@ -65,7 +66,7 @@
     components: {
       salesHead,
       salesFoot,
-      tab01: tab01,
+      tab01: aa,
       tab02: tab02,
       tab03: tab03,
       tab04: tab04,
@@ -141,7 +142,7 @@
   margin-bottom: 3px;
   border-bottom: 1px solid #eeeeee;
 }
-.logo_img {  
+.logo_img {
   float: left;
   margin-top: 20px;
   margin-right: 88px;
@@ -163,6 +164,4 @@
   color: #5DB7E7;
   border-bottom: 3px solid #5DB7E7;
 }
-</style>
-<style>
 </style>
