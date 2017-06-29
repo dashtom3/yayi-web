@@ -9,6 +9,9 @@ import suborder from '@/components/website/gwc/suborder'
 import pay from '@/components/website/gwc/pay'
 import publicHeader from '@/components/website/index/publicHeader'
 
+// 创客系统
+import salesIndex from '@/components/salesman/index/index'
+
 //后台管理
 import Home from '@/components/admin/Home'
 // import Dashboard from '@/components/admin/Dashboard'
@@ -64,6 +67,8 @@ import freightSet from '@/components/admin/freightManner/freightSet'
 import dataStatis_goodsStatis from '@/components/admin/dataStatis/goodsStatis'
 import dataStatis_elecSuppStatis from '@/components/admin/dataStatis/elecSuppStatis'
 import dataStatis_salesStatis from '@/components/admin/dataStatis/salesStatis'
+
+
 
 
 
@@ -256,7 +261,12 @@ let router = new Router({
         {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
-    }
+    },
+		{
+			path: '/salesIndex',
+			name: 'salesIndex',
+			component: salesIndex,
+		},
 	],
 })
 

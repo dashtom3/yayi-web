@@ -90,18 +90,7 @@
         allMoeny:0,
         haveSelectedGoodNum:0,
         selectaLL:false,
-        gwcGoods:[
-          // {
-          //   pic:"1.png",
-          //   name:"测试标配提测试标配提测试标配提测试标配提",
-          //   itemPropertyNamea:"红色红色",
-          //   price:50,
-          //   num:1,
-          //   checked:false,
-          //   goodLeaveNum:200,
-          //   totalMoney:20
-          // },
-        ]
+        gwcGoods:[]
       }
     },
     components: {
@@ -150,7 +139,7 @@
         };
         that.global.axiosGetReq('/cart/list', obj)
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             for(let i in data){
@@ -262,10 +251,10 @@
           itemSKU:"11212121",
           token:that.global.getToken()
         };
-        console.log(obj)
+        // console.log(obj)
         that.global.axiosPostReq('/cart/updateNum', obj)
         .then((res) => {
-          console.log(res,"22222")
+          console.log(res,"updataNum")
           if (res.data.callStatus === 'SUCCEED') {
             // this.gwcGoods.splice(index,1);
             // this.$message({type: 'success',  message: '商品收藏成功!' });
@@ -292,7 +281,6 @@
             // itemSKU:that.gwcGoods[i].itemSKU,
             token:that.global.getToken()
           };
-          console.log(obj)
           that.global.axiosPostReq('/cart/star', obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
@@ -318,15 +306,14 @@
           };
           that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
+            console.log(res,"deleOne")
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
               that.$message({  type: 'success',  message: '删除成功!'});
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
-        }).catch(() => {
-          that.$message({  type: 'info',message: '已取消删除'});
-        });
+        })
       })
     }
   }

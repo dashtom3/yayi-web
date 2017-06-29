@@ -85,9 +85,10 @@
           for(let th in threeList){
             if(that.fenlei[3]==threeList[th].classifyThreeName){
               that.index3 = th;
+              console.log(th)
             }
           }
-          var str = parseInt(this.index1)+1+"-"+parseInt(this.index2)+1+"-"+parseInt(this.index3)+1;
+          var str = (parseInt(this.index1)+1)+"-"+(parseInt(this.index2)+1)+"-"+(parseInt(this.index3)+1);
           that.$router.push({path:"/brandLib/"+str,});
         }
       },

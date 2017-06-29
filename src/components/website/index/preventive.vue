@@ -345,8 +345,10 @@ a {
   height: 200px;
 }
 .item_img {
-  max-width: 100%;
-  max-height: 100%;
+  /*max-width: 100%;
+  max-height: 100%;*/
+  max-width: 40%;
+  max-height: 40%;
   display: inline-block;
   vertical-align: center;
 }

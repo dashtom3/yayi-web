@@ -9,9 +9,12 @@
           <span class="time">{{comment.created}}</span>
         </div>
         <div class="commentContents">{{comment.commentContent}}</div>
-        <div class="commentReplay" style="background:#ececec;border-radius:8px;padding:0 10px;width:1200px;word-break: break-all;">
-          {{comment.replyContent}}asdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsege
-        </div>
+        <div class="commentReplay" style="">
+          <span class="sjhf">商家回复</span>
+          <span class="sjhfnr">
+            {{comment.replyContent}}asdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsege
+          </span>
+          </div>
       </li>
     </ul>
   </div>
@@ -43,6 +46,24 @@ import global from '../../global/global'
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.commentReplay{
+  background:#ececec;
+  border-radius:5px;
+  padding:20px;
+  width:1200px;
+  word-break: break-all;
+}
+.commentReplay .sjhf{
+  display: block;
+  float: left;
+  margin-right: 20px;
+}
+.commentReplay .sjhfnr{
+  display: inline-block;
+      margin-left: 70px;
+      margin-top: -30px;
+      margin-right: 0;
+}
 .goodComment li {
   border-bottom:1px solid #dcdcdc;
   padding:35px 0;

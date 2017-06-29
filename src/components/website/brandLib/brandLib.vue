@@ -275,6 +275,9 @@
         that.searchTwoStr = item.classifyTwoName;
         that.searchThreeStr = null;
         that.getNowClassfyAndBrandGoods();
+        if(item.classifyTwoName=="不限"){
+          that.fenlie3 = [];
+        }
       },
       selectClassfy3:function(index,item){
         var that = this;

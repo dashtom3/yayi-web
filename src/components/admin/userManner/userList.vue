@@ -14,7 +14,6 @@
           <el-form-item>
             <el-input v-model="searchUserContent">
               <el-select v-model="searchUserStyle" slot="prepend" placeholder="请选择">
-                <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
                 <el-option label="手机号" value="手机号"></el-option>
                 <el-option label="真实姓名" value="真实姓名"></el-option>
                 <el-option label="单位名称" value="单位名称"></el-option>
@@ -35,16 +34,12 @@
             <el-input v-model="searchSaleName"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" v-on:click="search">查询</el-button>
+            <el-button type="primary" v-on:click="search()">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
-
-
-
       <!--列表-->
       <el-table :data="userList"  border style="width: 100%">
-        <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
         <el-table-column  prop="trueName"  align="center"  label="用户姓名">  </el-table-column>
         <el-table-column  prop="phone"  align="center"  label="手机号"> </el-table-column>
         <el-table-column  prop="companyName"  align="center"  label="单位名称">  </el-table-column>
@@ -80,7 +75,7 @@
         </el-form-item>
         <el-form-item>
           <el-input v-model="bindSaleSearchCont" placeholder="请输入内容">
-            <el-button slot="append" icon="search"></el-button>
+            <el-button slot="append" icon="search" v-on:click="searchSalse()"></el-button>
           </el-input>
         </el-form-item>
       </el-form>
@@ -280,8 +275,74 @@
         that.showUserDetailInfor = true;
         that.getOneUserDetails(user.phone);
       },
+      searchSalse:function(){
+        var that = this;
+        var obj = {
+          token:"111"
+        };
+        // bindSaleSearchType
+        // console.log(that.bindSaleSearchCont)
+      },
       search:function(){
+        var flag = true;
+        var that = this;
+        var obj = {
+          saleName:that.searchSaleName,
+          token:"111"
+        };
+        // 收索用户类型
+        if(that.searchUserStyle=="手机号"){
+          obj.phone = that.searchUserContent;
+          obj.trueName = "";
+          obj.companyName = "";
+        }else if(that.searchUserStyle=="单位名称"){
+          obj.phone = "";
+          obj.trueName = "";
+          obj.companyName = that.searchUserContent;
+        }else if(that.searchUserStyle=="真实姓名"){
+          obj.phone = "";
+          obj.trueName = that.searchUserContent;
+          obj.companyName = "";
+        }else{
+          obj.phone = "";
+          obj.trueName = "";
+          obj.companyName = "";
+          flag = false;
+        }
+        //类型
+        if(that.searchtype=="全部"){
+          obj.type = "";
+          flag = false;
+        }else if(that.searchtype=="个人"){
+          obj.type = 1;
+        }else if(that.searchtype=="机构"){
+          obj.type = 2;
+        }
+        //是否绑定销售
+        if(that.searchisBindSale=="全部"){
+          obj.isBindSale = "";
+          flag = false;
+        }else if(that.searchisBindSale=="是"){
+          obj.isBindSale = 1;
+        }else if(that.searchisBindSale=="否"){
+          obj.isBindSale = 2;
+        }
+        if(!that.searchSaleName){
+          flag = false;
+        }
+        if(flag){
+          that.global.axiosGetReq('/userManageList/userlist',obj)
+          .then((res) => {
+            console.log(res,"searchList")
+            if (res.data.callStatus === 'SUCCEED') {
 
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }else{
+          that.$alert('请输入至少一项搜索项内容',{confirmButtonText: '确定'});
+        }
       },
       cancelBindSale:function(index){
         console.log(index);

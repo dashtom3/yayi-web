@@ -33,7 +33,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="结算日期：">
-          <el-date-picker  v-model="searchDataPrev"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
+          <el-date-picker  v-model="searchDataPrev"  type="daterange"  placeholder="选择日期"  :picker-options="pickerOptions0"> </el-date-picker>
         </el-form-item>
         <!-- <el-form-item label="~">
           <el-date-picker  v-model="searchDataNext"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions1"> </el-date-picker>
