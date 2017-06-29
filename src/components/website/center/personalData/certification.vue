@@ -73,7 +73,7 @@
           part: this.userData.part || ['北京','北京市','东城区'],
           workAddress: this.userData.workAddress || '',
           doctorPic: this.userData.doctorPic || '',
-          judge: this.userData.judge || 0
+          ifOnce: this.userData.judge || '0'
         } //作为局部这个组件的data的初始值
       }
     },
@@ -120,7 +120,7 @@
           part: (this.certiData.part).join(","),
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
-          judge: this.certiData.judge
+          judge: this.certiData.ifOnce
         }
         //验证单位名称必输
         if(!this.certiData.companyName){
@@ -160,25 +160,34 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1 && this.certiData.judge === 0){
+        if(this.certificateState==1){
           this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
+          }).then(() => {
+            //提交后台改变状态
+            this.certiData.ifOnce = "1";
+            this.savePerInfo();
           });
-          this.certiData.judge = 1;
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2 && this.certiData.judge === 0){
+        }else if(this.certificateState==1 && this.certiData.ifOnce==='1'){
+          this.ifPass = true;
+          this.btnVisible = false;
+        }else if(this.certificateState==2){
           this.$alert('您的认证信息已审核通过',{
             confirmButtonText: '确定',
           });
-          this.certiData.judge = 1;
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==3 && this.certiData.judge === 0){
+        }else if(this.certificateState==2 && this.certiData.ifOnce==='1'){
+          this.ifPass = true;
+          this.btnVisible = false;
+        }else if(this.certificateState==3){
           this.$alert('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
           });
-           this.certiData.judge = 1;
+          this.btnVisible = true;
+        }else if(this.certificateState==3 && this.certiData.ifOnce==='1'){
           this.btnVisible = true;
         }
       },

@@ -10,7 +10,7 @@
       <el-form :inline="true" >
         <el-form-item>
             <el-input v-model="searchUserContent">
-            <el-select v-model="searchUserType" slot="prepend" placeholder="请选择">
+            <el-select v-model="searchUserType" slot="prepend" @change="selectOpt">
               <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
               <el-option label="真实姓名" value="真实姓名"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
@@ -19,12 +19,12 @@
           </el-input>
         </el-form-item>
         <el-form-item label="类型：">
-          <el-select v-model="searchType"  placeholder="请选择" >
+          <el-select v-model="searchType">
             <el-option  v-for="item in userTypes"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：">
-          <el-select v-model="searchState" placeholder="请选择" >
+          <el-select v-model="searchState">
             <el-option  v-for="item in states"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
@@ -40,10 +40,23 @@
 
     <el-table :data="certificationList"  border style="width: 100%">
       <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
-      <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号">  </el-table-column>
-      <el-table-column  prop="certification.type"  align="center"  label="类型">  </el-table-column>
+      <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号"> 
+        <template scope="scope">
+            <span>{{scope.row.trueName}}</span><span>{{scope.row.phone}}</span>
+        </template>
+       </el-table-column>
+      <el-table-column  prop="certification.type"  align="center"  label="类型"> 
+        <template scope="scope">
+          <span v-if='scope.row.certification.type === 1'>个人</span>
+          <span v-else-if='scope.row.certification.type === 2'>机构</span>
+        </template>
+       </el-table-column>
       <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
-      <el-table-column  prop="certification.part"  align="center"  label="所在地+详细地址">  </el-table-column>
+      <el-table-column  align="center"  label="所在地+详细地址"> 
+        <template scope="scope">
+            <span>{{scope.row.certification.part}}</span><span>{{scope.row.certification.workAddress}}</span>
+        </template>
+      </el-table-column>
       <el-table-column  prop="certification.doctorPic"  align="center"  label="资格证" class-name="imgWrap">
         <template scope="scope">
           <el-tooltip class="item" effect="dark" content="点击查看大图" placement="left">
@@ -51,7 +64,13 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column  prop="certification.state"  align="center"  label="状态">  </el-table-column>
+      <el-table-column align="center"  label="状态"> 
+        <template scope="scope">
+            <span v-if='scope.row.certification.state === 1'>待审核</span>
+            <span v-else-if='scope.row.certification.state === 2'>审核通过</span>
+            <span v-else='scope.row.certification.state === 3'>审核不通过</span>
+        </template>
+      </el-table-column>
       <el-table-column  label="操作"  align="center" >
         <template scope="scope">
           <span v-if="certificationList[scope.$index].certification.state=='1'">
@@ -69,47 +88,76 @@
     data(){
       return {
         ifShowBigImg:false,
-        searchUserContent:null,
-        searchUserType:"手机号",
-        searchType:"全部",
-        searchState:"全部",
+        searchUserContent:"",
+        searchUserType:"真实姓名",
+        searchType:"",
+        searchState:"",
         certificationList:[],
         bigImgSrc: '',
+        selectVal: '',
         userTypes: [
-          {value: '全部',label: '全部'},
-          {value: '1',label: '个人'},
-          {value: '2',label: '机构'}
+          {value: '',label: '全部'},
+          {value: 1,label: '个人'},
+          {value: 2,label: '机构'}
         ],
         states:[
-          {value: '全部',label: '全部'},
-          {value: '1',label: '待审核'},
-          {value: '2',label: '审核通过'},
-          {value: '3',label: '审核不通过'}
+          {value: '',label: '全部'},
+          {value: 1,label: '待审核'},
+          {value: 2,label: '审核通过'},
+          {value: 3,label: '审核不通过'}
         ],
-      }
-    },
-    computed: {
-      trueNameMobile: function(){
-        return this.certificationList
       }
     },
     created(){
       this.search();
     },
     methods: {
+      selectOpt(key){
+        this.selectVal = key;
+        this.searchUserContent = '';
+      },
       search:function(){
-        var params = {
-          phone: '',
-          trueName: '',
-          companyName: '',
-          type: '',
-          state: '',
-          token: ''
+        var params;
+        if(this.selectVal === "手机号"){
+          params = {
+            phone: this.searchUserContent,
+            trueName: '',
+            companyName: '',
+            type: this.searchType,
+            state: this.searchState,
+            token: ''
+          }
+        }else if(this.selectVal === "真实姓名"){
+          params = {
+            phone: '',
+            trueName: this.searchUserContent,
+            companyName: '',
+            type: this.searchType,
+            state: this.searchState,
+            token: ''
+          }
+        }else if(this.selectVal === "单位名称"){
+          params = {
+            phone: '',
+            trueName: '',
+            companyName: this.searchUserContent,
+            type: this.searchType,
+            state: this.searchState,
+            token: ''
+          }
+        }else{
+          params = {
+            phone: '',
+            trueName: '',
+            companyName: '',
+            type: this.searchType,
+            state: this.searchState,
+            token: ''
+          }
         }
         global.axiosGetReq('/userCertificationList/list',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.certificationList = res.data.data
-            console.log(this.certificationList)
           }else{
             this.$message.error('获取用户资质信息列表失败！');
           }

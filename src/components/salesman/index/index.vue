@@ -3,6 +3,7 @@
     <salesHead></salesHead>
     <div class="saleSecond">
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" >
+
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
@@ -29,9 +30,9 @@
   // var tab01 = Vue.extend({
   //   template: '<div>this is 待评价01</div>',
   // });
-  var tab02 = Vue.extend({
-    template: '<div>this is 待评价02</div>',
-  });
+  // var tab02 = Vue.extend({
+  //   template: '<div>this is 待评价01</div>',
+  // });
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
   });
@@ -44,6 +45,8 @@
   var tab06 = Vue.extend({
     template: '<div>this is 待评价06</div>',
   });
+
+  import myOrder from "./myorder"
   export default {
     name: 'salesIndex',
     data () {
@@ -67,11 +70,13 @@
       salesHead,
       salesFoot,
       tab01: aa,
-      tab02: tab02,
+      tab02: myOrder,
       tab03: tab03,
       tab04: tab04,
       tab05: tab05,
       tab06: tab06,
+
+      myOrder,
     },
     created: function() {
     },

@@ -60,7 +60,7 @@
     <el-dialog :title="bindTitle" size="tiny" :visible.sync="showAddBrandAlert">
       <el-form>
         <el-form-item label="品牌名称：" :label-width="formLabelWidth">
-          <el-input v-model="itemBrandNameAdd" class="item_w_input"></el-input>
+          <el-input v-model="itemBrandNameAdd" class="item_w_input fl"></el-input>
         </el-form-item>
         <el-form-item label="产地：" :label-width="formLabelWidth">
           <el-select v-model="itemBrandHomeAdd">
@@ -233,6 +233,24 @@
             itemBrandHome: this.itemBrandHomeAdd,
             itemBrandLogo: this.itemBrandLogoAdd
           }
+          //验证是否填写品牌名称
+          if(!this.itemBrandNameAdd){
+            this.$message.error('请填写品牌名称！');
+            return false;
+          }
+
+          //验证是否选择产地
+          if(!this.itemBrandHomeAdd){
+            this.$message.error('请选择品牌产地');
+            return false;
+          }
+
+          //验证是否上传图片
+          if(!this.itemBrandLogoAdd){
+            this.$message.error('请上传品牌LOGO');
+            return false;
+          }
+
           global.axiosPostReq('/item/addItemBrand',params).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               this.$message({
