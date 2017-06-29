@@ -4,11 +4,11 @@
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
-        首页>
-        <span v-if="firstClassfy">{{firstClassfy}}<span v-if="secondClassfy">></span></span>
-        <span v-if="secondClassfy" >{{secondClassfy}}<span v-if="thirdClassfy">></span></span>
-        <span v-if="thirdClassfy" >{{thirdClassfy}}<span v-if="haveBrand">></span></span>
-        <span v-if="haveBrand" >{{haveBrand}}<span v-if="searchWordFromIndex">></span></span>
+        <span @click="goThisBrand('首页')" class="showBlueColor">首页</span><span>></span>
+        <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" v-if="firstClassfy">{{firstClassfy}}</span><span v-if="secondClassfy">></span>
+        <span @click="goThisBrand(secondClassfy,2)" class="showBlueColor" v-if="secondClassfy" >{{secondClassfy}}</span><span v-if="thirdClassfy">></span>
+        <span @click="goThisBrand(thirdClassfy,3)" class="showBlueColor" v-if="thirdClassfy" >{{thirdClassfy}}</span><span v-if="haveBrand">></span>
+        <span class="showBlueColor" v-if="haveBrand" >{{haveBrand}}</span><span v-if="searchWordFromIndex">></span>
         <span class="indexLine">{{searchWordFromIndex}}</span>
       </div>
       <div class="classifyLine" >
@@ -35,7 +35,7 @@
         <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn()">不限</span>
         <ul>
           <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands">
-            {{item.itemBrandLogo}}
+            {{item.itemBrandName}}
             <img v-show="item.selected" src="../../../images/brandLib/1.png" alt="">
             <img v-show="!item.selected" src="../../../images/brandLib/2.png" alt="">
           </li>
@@ -77,7 +77,7 @@
             </div>
           </li>
         </ul>
-        <div v-else class="" style="text-align:center;margin-top:100px;">
+        <div v-else style="text-align:center;margin-top:100px;">
           <h4>{{noGoods}}</h4>
         </div>
       </div>
@@ -134,12 +134,8 @@
         searchTwoStr:null,
         searchThreeStr:null,
         searchBrandStr:null,
-        brands:[
-          // {brandNmae:"品牌11",selected:false}
-        ],
-        allGoods:[
-          // {goodImg:"./img/4.png",goodTitle:"商品111111111111113333333333333333333111111111商品111111111111113333333333333333333111111111",goodPrice:23,ifGold:false},
-        ]
+        brands:[],
+        allGoods:[]
       }
     },
     components: {
@@ -176,6 +172,8 @@
             var newarr = [];
             if(length>1){
               that.allGoods = arr.slice(0,length-1);
+            }else{
+              that.ifHaveData = false;
             }
           }
         },
@@ -187,6 +185,7 @@
       msgFromHeader: function(data) {
         var that = this;
         that.seachDataFrombRrandLidPage = data;
+        console.log(data)
       },
       getClassfytAndBrandList:function(){
         var that = this;
@@ -239,11 +238,12 @@
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             // console.log(res.data.data)
-            // if(res.data.data.length>0){
+            if(res.data.data.length>0){
+              that.ifHaveData = true;
               this.allGoods = res.data.data;
-            // }else{
-              // that.$alert('当前条件下没有商品，请重新选择', {confirmButtonText: '确定',});
-            // }
+            }else{
+              that.ifHaveData = false;
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -338,6 +338,22 @@
         that.searchTwoStr = null;
         that.searchOneStr = null;
         that.getNowClassfyAndBrandGoods();
+      },
+      goThisBrand:function(arg,index){
+        var that = this;
+        // firstClassfy:'',
+        // secondClassfy:'',
+        // thirdClassfy:'',
+        if(arg=="首页"){
+          that.$router.push({  path:"/index"});
+        }
+        if(index==1){
+
+        }else if(index==2){
+
+        }else if(index==3){
+
+        }
       },
       intClassftAndBrand:function(){
         var that = this;
@@ -560,6 +576,10 @@ margin: 0 auto;
 }
 .indexLine{
   color: #5db7e8;
+}
+.showBlueColor:hover{
+  color: #5db7e8;
+  cursor: pointer;
 }
 .classifyLine span {
   display: inline-block;
