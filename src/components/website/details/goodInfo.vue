@@ -228,9 +228,13 @@ import myAddress from './selectThree'
         }
         if(arg==2&&that.copyUrl==true){
           var url = window.location.href;
-          window.clipboardData.setData("Text",url);
-          that.$alert("链接复制成功！", {confirmButtonText: '确定'});
-          that.copyUrl = false;
+          window.prompt("请复制链接",url);
+          console.log(window)
+          // var address = ''
+          // address += url
+          // window.clipboardData.setData("Text",address);
+          // that.$alert("链接复制成功！", {confirmButtonText: '确定'});
+          // that.copyUrl = false;
         }
       },
       addGwcThisGood:function(){
