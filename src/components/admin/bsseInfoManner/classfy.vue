@@ -278,7 +278,8 @@
           classname: [
             { required: true, message: '请输入分类名称', trigger: 'blur' }
           ],
-        }
+        },
+        a: [],
         // formLabelWidth: '120px'
         // -----------------------------------
       }
@@ -291,22 +292,61 @@
     },
     created: function () {
       var that = this;
-      that.global.axiosGetReq('/item/showItemClassify').then((res) => {
-        console.log(res);
-        if (res.data.callStatus === 'SUCCEED') {
-          console.log(res.data.data);
-          that.tableData = res.data.data;
-          // if (res.data.data.length == 0) {
-          //   that.hasAddress = false;
-          // } else {
-          //   that.hasAddress = true;
-          //   that.address = res.data.data;
-          // }
-          //this.getData = res.data.data;
-        } else {
-          that.$message.error('网络出错，请稍后再试！');
+      //获取分类列表
+      for (var i = 0; i < that.options.length; i++) {
+        that.options[i].frisco = that.options[i].label;
+        that.options[i].farry = that.options[i].children;
+        for (var k in that.options[i].farry) {
+          that.options[i].farry[k].frisco = that.options[i].farry[k].label
+          that.options[i].farry[k].farry = that.options[i].farry[k].children
+          for (var j in that.options[i].farry[k].farry) {
+            that.options[i].farry[k].farry[j].frisco = that.options[i].farry[k].farry[j].label
+          }
         }
-      })
+      }
+      console.log(that.options)
+      // that.global.axiosGetReq('/item/showItemClassify').then((res) => {
+      //   //console.log(res);
+      //   if (res.data.callStatus === 'SUCCEED') {
+      //     console.log(res.data.data);
+      //     that.tableData = res.data.data;
+      //   } else {
+      //     that.$message.error('网络出错，请稍后再试！');
+      //   }
+      // })
+      // console.log('22');
+      // that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
+      //   if (res.data.callStatus === 'SUCCEED') {
+      //     that.options = res.data.data.classifyList;
+      //     for (var i = 0; i < that.options.length; i++) {
+      //       that.options[i].label = that.options[i].oneClassify;
+      //       that.options[i].children = that.options[i].classifyTwoList;
+      //       if (that.options[i].children[i] == undefined) {
+      //         that.options[i].children[i].label == ''
+      //       } else {
+      //         that.options[i].children[i].label == that.options[i].children[i].classifyTwoName
+      //       }
+      //       // that.options[i].children[i].classifyTwoName = that.options[i].children[i].label;
+      //       console.log(that.options[i].children[i], '22')
+      //       // for (var j = 0; j < that.options[i].children.length; i++) {
+      //       //   that.a.push(that.options[i].children[j])
+      //       // }
+      //       //that.a.push(that.options[i].children);
+      //       // that.options[i].children.label = that.options[i].children.classifyTwoName;
+      //       // console.log(that.options[i])
+      //     }
+      //     // for (var i = 0; i < that.a.length; i++) {
+      //     //   for (var j = 0; j < that.a[i].length; i++) {
+      //     //     console.log(that.a[i][i].classifyTwoName)
+      //     //   }
+      //     // }
+      //     //console.log(that.a);
+      //     console.log(that.options);
+      //     // that.options = res.data.data.classifyList;
+      //   } else {
+      //     that.$message.error('网络出错，请稍后再试！');
+      //   }
+      // })
     },
     methods: {
       addClassfy: function () {
@@ -360,6 +400,19 @@
         var that = this;
         that.$refs[formName].validate((valid) => {
           if (valid) {
+            var obj = {
+              itemClassifyId: '',
+              itemClassifyName: '',
+              itemPreviousClassify: '',
+            }
+            that.global.axiosGetReq('/item/addItemClassify',obj).then((res) => {
+              console.log(res)
+              if (res.data.callStatus === 'SUCCEED') {
+                
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
             alert('submit!');
           } else {
             console.log('error submit!!');
