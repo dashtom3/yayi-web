@@ -130,6 +130,10 @@
         this.isActive5 = false;
         this.isActive6 = true;
       },
+      logo: function() {
+        var that = this;
+        that.$router.push({path: '/'});
+      }
     }
   }
 </script>
@@ -137,7 +141,7 @@
 <style scoped>
 .saleSecond {
   width: 1200px;
-  height: 108px;
+  height: 90px;
   margin: auto;
   margin-bottom: 3px;
   border-bottom: 1px solid #eeeeee;
@@ -153,11 +157,11 @@
 .tab_item {
   float: left;
   width: 152px;
-  height: 108px;
-  line-height: 108px;
+  height: 90px;
+  line-height: 90px;
   color: #000;
   text-align: center;
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
 }
 .spe {

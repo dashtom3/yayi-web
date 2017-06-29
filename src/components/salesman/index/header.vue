@@ -2,7 +2,7 @@
   <div class="salesHead">
     <div class="headerFirst">
       <div class="log right">
-        <span class="alreadyLog">你好，{{username}}</span><span class="logOut" @click="logOut">退出</span>
+        <span class="alreadyLog">你好，{{username}}</span><span class="logOut">退出</span>
       </div>
       <div class="clearfix"></div>
     </div>
