@@ -201,7 +201,7 @@
               });
               that.queryHandler();
             }else{
-              that.$message.error('线上存在该品牌的产品，无法删除');
+              that.$message.error('该品牌下已有商品，不能删除！');
             }
           })
         }).catch(() => {

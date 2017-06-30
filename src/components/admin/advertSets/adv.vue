@@ -5,19 +5,18 @@
         <el-breadcrumb-item><b>广告设置</b></el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
-
     <!--广告设置列表-->
     <el-table :data="advertList" border>
-		  <el-table-column prop="index" label="序号" width="80" align="center" >
+		  <el-table-column prop="advId" label="序号" width="80" align="center" >
 		  </el-table-column>
       <el-table-column prop="advName" label="名称" :span="4" align="center">
       </el-table-column>
       <el-table-column prop="advImg" label="图片" :span="4" align="center">
       	<template scope="scope">
-      		<img src="../../../images/center/order.png" alt="该图片无法显示" style="width:100px;" align="center">
+      		<img :src="scope.row.advImg" alt="该图片无法显示" style="width:100px;" align="center">
       	</template>
       </el-table-column>
-      <el-table-column prop="advSrc" label="链接" width="300" align="center">
+      <el-table-column prop="advUrl" label="链接" width="300" align="center">
       </el-table-column>
       <el-table-column prop="advType" label="类型" :span="4" align="center">
       </el-table-column>
@@ -50,13 +49,24 @@
 		    	<span class="fl span_nav"><span class="fr"><i class="i_col_red">*</i>广告图：</span></span>
 		      <el-upload
 					  class="upload-demo fl"
-					  action="https://jsonplaceholder.typicode.com/posts/"
+					  :action="qiNiuUrl"
 					  :on-preview="handlePreview"
-					  :on-remove="handleRemove"
-					  :file-list="fileList2"
+					  :on-success="uploadFile"
+					  :file-list="fileList"
+					  :data="qiNiuToken"
 					  list-type="picture">
 					  <el-button size="small" type="primary">选择</el-button>
 					</el-upload>
+
+					<!-- <el-upload
+            :on-success="uploadFile"
+            :action="qiNiuUrl"
+            class="avatar-uploader"
+            :show-file-list="false"
+            :data="qiNiuToken">
+            <el-button size="small" type="primary">选择</el-button>
+            <img v-if="img_src" :src="img_src" class="avatar">
+          </el-upload> -->
 		    </li>
 	    	<li class="clearfix">
 		    	<span class="fl span_nav"><span class="fr"><i class="i_col_red">*</i>链接：</span></span>
@@ -64,66 +74,124 @@
 		    </li>
 		  </ul>
 	    <div style="margin-top:30px;">
-	      <el-button class="btn_" type="primary">保存</el-button>
+	      <el-button class="btn_" type="primary" @click="saveBtn">保存</el-button>
 	    </div>
     </el-dialog>
 	</el-row>
 </template>
 
 <script>
+	import global from '../../global/global' 
 	export default {
 		data(){
 			return {
+				// advertList: [],
 				advertList:[{
-					index: 1,
-					advName: 'xxxxxxx',
-					advImg: 'xxxxxxx',
-					advSrc: 'xxxxxxxxxxx',
+					advId: 1,
+					advName: '登录注册页',
+					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
 					advType: '登录注册页'
 				},{
-					index: 2,
-					advName: 'xxxxxxx',
-					advImg: 'xxxxxxx',
-					advSrc: 'xxxxxxxxxxx',
+					advId: 2,
+					advName: '首页轮播',
+					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
 					advType: '首页轮播'
 				},{
-					index: 3,
-					advName: 'xxxxxxx',
-					advImg: 'xxxxxxx',
-					advSrc: 'xxxxxxxxxxx',
+					advId: 3,
+					advName: '首页轮播',
+					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
 					advType: '首页轮播'
 				},{
-					index: 4,
-					advName: 'xxxxxxx',
-					advImg: 'xxxxxxx',
-					advSrc: 'xxxxxxxxxxx',
+					advId: 4,
+					advName: '首页轮播',
+					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
 					advType: '首页轮播'
 				},{
-					index: 5,
-					advName: 'xxxxxxx',
-					advImg: 'xxxxxxx',
-					advSrc: 'xxxxxxxxxxx',
+					advId: 5,
+					advName: '首页轮播',
+					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
 					advType: '首页轮播'
 				}],
+				qiNiuToken: null,
+        qiNiuUrl: global.qiNiuUrl,
 				advertVisible: false,
 				input_adv: '',
 				img_src: '',
 				advNo: '',
 				advertType: '',
-				fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+				fileList: [{name: '', url: ''}]
 			}
 		},
+    created(){
+    	this.init();
+      //获取七牛token
+      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          this.qiNiuToken = {
+            token: res.data.msg
+          }
+        }
+      })
+    },
 		methods : {
+			init(){
+				global.axiosGetReq('/adv/showAdv',{}).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.advertList = res.data.data || this.advertList
+            this.img_src = res.data.data.advImg;
+          }else{
+            this.$message.error('获取广告数据失败！');
+          }
+        })
+			},
 			handleEdit(index, row){
 				this.advertVisible = true;
-				this.advNo = row.index;
+				this.advNo = row.advId;
 				this.advertType = row.advType;
+				this.input_adv = row.advName;
+				this.img_src = row.advUrl;
+				this.fileList[0].url = this.img_src;
 			},
-			handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
       handlePreview(file) {
-        console.log(file);
+        // clearFiles();
+      },
+      uploadFile(res, file) {
+        this.advUrl = global.qiniuShUrl + file.response.key
+        this.img_src = global.qiniuShUrl + file.response.key
+        this.fileList = [];
+        this.fileList.push({
+        	name: '',
+        	url: this.img_src
+        })
+      },
+      saveBtn(){
+      	let params = {
+      		advImg: this.img_src,
+      		advName: this.input_adv,
+      		advUrl: this.img_src,
+      		advType: this.advertType,
+      		advId: this.advNo 
+      	}
+      	//保存广告设置
+        global.axiosPostReq('/adv/updateAdv', params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+            this.init();
+          }else{
+            this.$message.error('修改失败！');
+          }
+          this.advertVisible = false;
+        })
+
+
       }
 		}
 	}
@@ -168,5 +236,9 @@
 }
 .btn_{
   margin-left: 92px;
+}
+.add_btn{
+	float:right;
+	margin: 20px 118px 20px 0;
 }
 </style>
