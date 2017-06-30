@@ -2,8 +2,7 @@
   <div class="salesIndex">
     <salesHead></salesHead>
     <div class="saleSecond">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img" >
-
+      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
@@ -30,26 +29,19 @@
   import myClient from "./myClient"
   import personalData from "./personalData"
   import aa from "./aa"
-  // var tab01 = Vue.extend({
-  //   template: '<div>this is 待评价01</div>',
-  // });
-  // var tab02 = Vue.extend({
-  //   template: '<div>this is 待评价01</div>',
-  // });
-  // var tab03 = Vue.extend({
-  //   template: '<div>this is 待评价03</div>',
-  // });
-  // var tab04 = Vue.extend({
-  //   template: '<div>this is 待评价04</div>',
-  // });
+  import myOrder from "./myorder"
+  var tab03 = Vue.extend({
+    template: '<div>this is 待评价03</div>',
+  });
+  var tab04 = Vue.extend({
+    template: '<div>this is 待评价04</div>',
+  });
   var tab05 = Vue.extend({
     template: '<div>this is 待评价05</div>',
   });
-  // var tab06 = Vue.extend({
-  //   template: '<div>this is 待评价06</div>',
-  // });
-
-  import myOrder from "./myorder"
+  var tab06 = Vue.extend({
+    template: '<div>this is 待评价06</div>',
+  });
   export default {
     name: 'salesIndex',
     data () {
@@ -177,7 +169,7 @@
   line-height: 90px;
   color: #000;
   text-align: center;
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
 }
 .spe {

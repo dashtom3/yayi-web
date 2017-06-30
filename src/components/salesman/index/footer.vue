@@ -1,6 +1,6 @@
 <template>
   <div class="salesFoot">
-    <div class="">
+    <div class="footerBox">
       <span>收入规则</span>
       <span class="center">|</span>
       <span>提现规则</span>
@@ -30,10 +30,12 @@
 
 <style scoped>
 .salesFoot{
+  width: 100%;
+  height: 120px;
   text-align: center;
   background: #eeeeee;
 }
-.salesFoot div{
+.salesFoot .footerBox{
   line-height: 71px;
 }
 .salesFoot .center{

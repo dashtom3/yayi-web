@@ -438,7 +438,7 @@
       // 创客系统入口
       gotoSales: function() {
         var that = this;
-        that.$router.push({path: '/salesIndex'});
+        that.$router.push({path: '/salesLog'});
       },
       //首页搜索框
       search_cargo: function() {

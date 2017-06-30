@@ -11,6 +11,7 @@ import publicHeader from '@/components/website/index/publicHeader'
 
 // 创客系统
 import salesIndex from '@/components/salesman/index/index'
+import salesLog from '@/components/salesman/logIn/logIn'
 
 //后台管理
 import Home from '@/components/admin/Home'
@@ -262,11 +263,17 @@ let router = new Router({
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
     },
+    //创客系统
 		{
 			path: '/salesIndex',
 			name: 'salesIndex',
 			component: salesIndex,
 		},
+    {
+      path: '/salesLog',
+      name: 'salesLog',
+      component: salesLog,
+    },
 	],
 })
 
