@@ -42,14 +42,14 @@
         <el-table-column  prop="getNum"  align="center"  label="开户者">  </el-table-column>
         <el-table-column  prop="getNum"  align="center"  label="银行">  </el-table-column>
 
-        <el-table-column  prop="zhufubaoCount"  align="center"  label="支付宝账号">  </el-table-column>
+        <el-table-column  prop="zhufubaoCount"  align="center"  label="账号">  </el-table-column>
         <el-table-column  prop="time"  align="center"  label="申请时间">  </el-table-column>
         <el-table-column  prop="state" align="center"  label="提现状态">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
             <span v-if="scope.row.state!='提现成功'">
               <el-button  type="text"  v-on:click="passThisGet(scope.$index)">通过</el-button>
-              <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button>
+              <!-- <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button> -->
             </span>
           </template>
         </el-table-column>

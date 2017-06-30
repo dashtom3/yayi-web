@@ -223,7 +223,7 @@
             that.addGoodAttrValues = [];
             that.formData.addGoodAttrName= null;
             that.showAddGoodAttr  = false;
-            
+
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -309,6 +309,6 @@
   }
   .warp .el-input{
     width: 70%;
-    padding-right: 20px;
+    /*padding-right: 20px;*/
   }
 </style>

@@ -16,7 +16,7 @@
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
-      <component :is="currentView" keep-alive></component>
+      <component v-on:msgFromChild="getMsg" :is="currentView" keep-alive></component>
     </transition>
     <salesFoot></salesFoot>
   </div>
@@ -26,6 +26,9 @@
   import Vue from 'vue'
   import salesHead from "./header"
   import salesFoot from "./footer"
+  import findClient from "./findClient"
+  import myClient from "./myClient"
+  import personalData from "./personalData"
   import aa from "./aa"
   // var tab01 = Vue.extend({
   //   template: '<div>this is 待评价01</div>',
@@ -33,18 +36,18 @@
   // var tab02 = Vue.extend({
   //   template: '<div>this is 待评价01</div>',
   // });
-  var tab03 = Vue.extend({
-    template: '<div>this is 待评价03</div>',
-  });
-  var tab04 = Vue.extend({
-    template: '<div>this is 待评价04</div>',
-  });
+  // var tab03 = Vue.extend({
+  //   template: '<div>this is 待评价03</div>',
+  // });
+  // var tab04 = Vue.extend({
+  //   template: '<div>this is 待评价04</div>',
+  // });
   var tab05 = Vue.extend({
     template: '<div>this is 待评价05</div>',
   });
-  var tab06 = Vue.extend({
-    template: '<div>this is 待评价06</div>',
-  });
+  // var tab06 = Vue.extend({
+  //   template: '<div>this is 待评价06</div>',
+  // });
 
   import myOrder from "./myorder"
   export default {
@@ -71,16 +74,24 @@
       salesFoot,
       tab01: aa,
       tab02: myOrder,
-      tab03: tab03,
-      tab04: tab04,
+      tab03: findClient,
+      tab04: myClient,
       tab05: tab05,
-      tab06: tab06,
-
+      tab06: personalData,
       myOrder,
     },
     created: function() {
     },
     methods: {
+      getMsg:function(data){
+        var that = this;
+        if(data=="goToMyClient"){
+          that.changeActive4(that.tab04Text);
+        }else if(data=="goToFindClient"){
+          that.changeActive3(that.tab03Text);
+        }
+
+      },
       changeActive1: function(tabText) {
         this.currentView = tabText;
         this.isActive1 = true;

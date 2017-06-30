@@ -135,7 +135,9 @@
         searchThreeStr:null,
         searchBrandStr:null,
         brands:[],
-        allGoods:[]
+        allGoods:[],
+        aaaaa1:null,
+        aaaaa2:null,
       }
     },
     components: {
@@ -256,6 +258,7 @@
       },
       selectClassfy1:function(index,item){
         var that = this;
+        that.aaaaa1 = index;
         that.noLimitClassfy = false;
         that.classify2Index = 0;
         that.classify3Index = null;
@@ -265,16 +268,22 @@
         that.searchOneStr = item.oneClassify;
         that.searchTwoStr = null;
         that.searchThreeStr = null;
+        that.secondClassfy = null;
+        that.thirdClassfy = null;
+        that.haveBrand = null;
         that.getNowClassfyAndBrandGoods();
       },
       selectClassfy2:function(index,item){
         var that = this;
+        that.aaaaa2 = index;
         that.fenlie3 = that.fenlie2[index].classifyThreeList;
         that.classify2Index = index;
         that.classify3Index = 0;
         that.searchTwoStr = item.classifyTwoName;
         that.searchThreeStr = null;
         that.getNowClassfyAndBrandGoods();
+        that.thirdClassfy = null;
+        that.haveBrand = null;
         if(item.classifyTwoName=="不限"){
           that.fenlie3 = [];
         }
@@ -348,7 +357,10 @@
           that.$router.push({  path:"/index"});
         }
         if(index==1){
-
+          that.classify1Index = that.aaaaa1;
+          that.classify2Index = 0;
+          that.fenlie3 = [];
+          that.classify3Index = 0;
         }else if(index==2){
 
         }else if(index==3){

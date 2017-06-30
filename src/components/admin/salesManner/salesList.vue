@@ -12,7 +12,6 @@
         <el-form-item>
           <el-input v-model="searchUserContent">
             <el-select v-model="searchUserType" slot="prepend" placeholder="请选择">
-              <!-- <el-option label="销售员编号" value="用户编号"></el-option> -->
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
             </el-select>
@@ -37,7 +36,6 @@
             <el-form-item>
               <el-input placeholder="请输入内容" >
                 <el-select  slot="prepend" v-model="noBindSearchType">
-                  <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
                   <el-option label="单位名称" value="单位名称"></el-option>
@@ -51,7 +49,6 @@
           </el-form>
           <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
-            <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
             <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
@@ -68,7 +65,6 @@
             <el-form-item>
               <el-input placeholder="请输入内容" >
                 <el-select  slot="prepend" placeholder="请选择" v-model="BindSearchType">
-                  <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
                   <el-option label="单位名称" value="单位名称"></el-option>
@@ -80,9 +76,8 @@
               <el-button type="primary" v-on:click="search()">取消绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2()" height="500">
+          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
-            <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
             <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
@@ -141,7 +136,6 @@
 
     <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
-      <!-- <el-table-column  prop="saleId"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
       <el-table-column  prop="name"  align="center"  label="真实姓名">  </el-table-column>
       <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
       <el-table-column  prop="time"  align="center"  label="注册时间">  </el-table-column>
@@ -174,38 +168,11 @@
         bindedUserList:[
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"}
         ],
         noBindUserList:[
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"}
+
         ],
         someOneUserDetails:{
           info:{
@@ -263,14 +230,15 @@
       bindThisUser:function(arg){
         console.log(arg)
       },
-      handleSelectionChange1(val) {
+      handleSelectionChange1:function(val) {
         this.multipleSelection1 = val;
+        console.log(this.multipleSelection1)
         if(this.multipleSelection1.length=0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }
 
       },
-      handleSelectionChange2(val) {
+      handleSelectionChange2:function(val) {
         this.multipleSelection2 = val;
       },
       handleClick(tab, event) {
