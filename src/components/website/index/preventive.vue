@@ -101,13 +101,13 @@ export default {
             if (res.data.callStatus === 'SUCCEED') {
               that.items.push(res.data.data);
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              that.$message.error('网络出错，请稍后再试1！');
             }
           })
         }
         // console.log(that.items[i])
       } else {
-        that.$message.error('网络出错，请稍后再试！');
+        that.$message.error('网络出错，请稍后再试2！');
       }
     })
   },
@@ -189,7 +189,7 @@ export default {
           that.brandListData = res.data.data;
           that.brandListData1 = res.data.data;
         } else {
-          that.$message.error('网络出错，请稍后再试！');
+          that.$message.error('网络出错，请稍后再试3！');
         }
       })
     },

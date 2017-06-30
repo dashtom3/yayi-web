@@ -37,7 +37,31 @@
         </el-form>
         <div class="save_btn" @click="save()">保存</div>
         <!--  v-if start -->
-        <div v-if="hasAddress" class="has_address_box">
+        <div v-if="hasAddress">
+          <div class="no_address_header">
+            <div class="left add_people">收货人</div>
+            <div class="left add_place">所在地区</div>
+            <div class="left add_des">详细地址</div>
+            <div class="left add_mobile">手机号</div>
+            <div class="left add_operate">操作</div>
+          </div>
+          <table class="table_address_header" border="1">
+            <tr class="address_des" v-for="add in address" :key="add">
+              <td class="des_people">{{add.receiverName}}</td>
+              <td class="des_place">{{add.province}}{{add.city}}{{add.county}}</td>
+              <td class="des_des">{{add.receiverDetail}}</td>
+              <td class="des_mobile">{{add.phone}}</td>
+              <td class="des_operate">
+                <i class="el-icon-edit edit" @click="add_edit(add)"></i>
+                <i class="el-icon-delete remove" @click="add_remove(add)"></i>
+                <span v-if="add.isDefault" class="default_add">默认地址</span>
+                <div class="set_default_add" @click="setDefaultAdd(add)">设为默认</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!--  v-if end -->
+<!--         <div v-if="hasAddress" class="has_address_box">
           <div class="no_address_header">
             <div class="left add_people">收货人</div>
             <div class="left add_place">所在地区</div>
@@ -46,14 +70,13 @@
             <div class="left add_operate">操作</div>
           </div>
           <div class="address_des" v-for="add in address" :key="add" style="position:relative;">
-            <div class="left des_people">{{add.receiverName}}</div>
-            <div class="left des_place">{{add.province}}{{add.city}}{{add.county}}</div>
-            <div class="left des_des" @mouseover="showAll(add)">
+            <div class="news des_people">{{add.receiverName}}</div>
+            <div class="news des_place">{{add.province}}{{add.city}}{{add.county}}</div>
+            <div class="news des_des" @mouseover="showAll(add)">
               {{add.receiverDetail}}
-             <!--  <p class="all_detail" v-show="allDetail">{{add.receiverDetail}}</p> -->
             </div>
-            <div class="left des_mobile">{{add.phone}}</div>
-            <div class="left des_operate">
+            <div class="news des_mobile">{{add.phone}}</div>
+            <div class="news des_operate">
               <i class="el-icon-edit edit" @click="add_edit(add)"></i>
               <i class="el-icon-delete remove" @click="add_remove(add)"></i>
               <span v-if="add.isDefault" class="default_add">默认地址</span>
@@ -61,8 +84,7 @@
             </div>
             <div class="clearfix"></div>
           </div>
-        </div>
-        <!--  v-if end -->
+        </div> -->
         <!--  v-else start -->
         <div v-else class="no_address_box">
           <div class="no_address_header">
@@ -213,25 +235,30 @@
     },
     created: function () {
       var that = this;
-      var obj = {
-        phone:that.global.getUser().phone,
-      };
-      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-        if (res.data.callStatus === 'SUCCEED') {
-          console.log(res.data);
-          if (res.data.data.length == 0) {
-            that.hasAddress = false;
-          } else {
-            that.hasAddress = true;
-            that.address = res.data.data;
-          }
-          //this.getData = res.data.data;
-        } else {
-          that.$message.error('网络出错，请稍后再试！');
-        }
-      })
+      that.getMyAdd();
     },
     methods: {
+      // 获取收货地址列表
+      getMyAdd: function() {
+        var that = this;
+        var obj = {
+          phone:that.global.getUser().phone,
+        };
+        that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data);
+            if (res.data.data.length == 0) {
+              that.hasAddress = false;
+            } else {
+              that.hasAddress = true;
+              that.address = res.data.data;
+            }
+            //this.getData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       // 选择所在区域
       showFromChild: function(data) {
         var that = this;
@@ -287,22 +314,7 @@
             that.form.mobile = '';
             that.setDefault = false;
             that.$message('保存地址成功！');
-            var obj = {
-              phone:that.global.getUser().phone,
-            };
-            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                console.log(res.data);
-                if (res.data.data.length == 0) {
-                  that.hasAddress = false;
-                } else {
-                  that.hasAddress = true;
-                  that.address = res.data.data;
-                }
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            that.getMyAdd();
           } else {
             that.$message.error('保存地址失败！');
           }
@@ -367,21 +379,7 @@
             that.edForm.mobile = '';
             that.setDefault1 = false;
             that.$message('保存地址成功！');
-            var obj = {
-              phone:that.global.getUser().phone,
-            };
-            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                if (res.data.data.length == 0) {
-                  that.hasAddress = false;
-                } else {
-                  that.hasAddress = true;
-                  that.address = res.data.data;
-                }
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            that.getMyAdd();
           } else {
             that.$message.error('保存地址失败！');
           }
@@ -400,21 +398,7 @@
           }
           that.global.axiosGetReq('/shoppingAdress/deleteShippingAddress', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              var obj = {
-                phone:that.global.getUser().phone,
-              };
-              that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-                if (res.data.callStatus === 'SUCCEED') {
-                  if (res.data.data.length == 0) {
-                    that.hasAddress = false;
-                  } else {
-                    that.hasAddress = true;
-                    that.address = res.data.data;
-                  }
-                } else {
-                  that.$message.error('网络出错，请稍后再试！');
-                }
-              })
+              that.getMyAdd();
               that.$message(res.data.msg);
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -446,21 +430,7 @@
         that.global.axiosPostReq('/shoppingAdress/update', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.$message('设置默认地址成功！');
-            var obj = {
-              phone:that.global.getUser().phone,
-            };
-            that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                if (res.data.data.length == 0) {
-                  that.hasAddress = false;
-                } else {
-                  that.hasAddress = true;
-                  that.address = res.data.data;
-                }
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            that.getMyAdd();
           } else {
             that.$message.error('保存地址失败！');
           }
@@ -472,6 +442,13 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+}
+th,td {
+ padding: 0;
+}
 .error {
   position: absolute; 
   margin-left: 20px; 
@@ -479,6 +456,9 @@
 }
 .left {
   float: left;
+}
+.news {
+  display: inline-block;
 }
 .add_box {
   width: 1069px;
@@ -524,37 +504,52 @@
   text-align: center;
 }
 .no_address_header {
-  width: 1069px;
+  width: 1067px;
   height: 40px;
   line-height: 40px;
   background-color: #F8F8F8;
+  border-left: 1px solid #e9e9e9;
+  border-right: 1px solid #e9e9e9;
+  border-top: 1px solid #e9e9e9;
   color: #333;
   font-weight: bold;
   font-size: 14px;
 }
+.table_address_header {
+  width: 1069px;
+  height: 40px;
+  line-height: 40px;
+  border-left: 1px solid #e9e9e9;
+  border-right: 1px solid #e9e9e9;
+  border-top: 1px solid #e9e9e9;
+  border-bottom: 1px solid #e9e9e9;
+  font-size: 14px;
+}
 .add_people {
-  width: 156px;
+  width: 164px;
   text-align: center;
+/*  position: relative;*/
 }
 .add_place {
-  width: 210px;
+  width: 215px;
   text-align: center;
 }
 .add_des {
-  width: 332px;
+  width: 342px;
   text-align: center;
 }
 .add_mobile {
-  width: 171px;
+  width: 174px;
   text-align: center;
 }
 .add_operate {
-  width: 200px;
+  width: 143px;
   text-align: center;
 }
 .address_des {
   width: 1069px;
-  border-bottom: 1px solid #e9e9e9;
+  height: 100%;
+  position: relative;
 }
 .address_des:hover {
   cursor: pointer;
@@ -566,60 +561,31 @@
 }
 .des_people {
   width: 156px;
-  height: 40px;
-  line-height: 40px;
   font-size: 14px;
   text-align: center;
-/*  border-left: 1px solid #e9e9e9;*/
-  border-right: 1px solid #e9e9e9;
-/*  border-bottom: 1px solid #e9e9e9;*/
 }
 .des_place {
-  width: 210px;
-  height: 40px;
-  line-height: 40px;
+  width: 205px;
   font-size: 14px;
   text-align: center;
-  border-right: 1px solid #e9e9e9;
-/*  border-bottom: 1px solid #e9e9e9;*/
 }
 .des_des {
-  width: 332px;
-  height: 40px;
-  line-height: 40px;
+  width: 327px;
   font-size: 14px;
   text-align: center;
-  border-right: 1px solid #e9e9e9;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-　line-clamp: 1;
-　box-orient: vertical;
-　-webkit-line-clamp: 1;
-　-webkit-box-orient: vertical;
-/*  border-bottom: 1px solid #e9e9e9;*/
 }
 .des_mobile {
-  width: 171px;
-  height: 40px;
-  line-height: 40px;
+  width: 165px;
   font-size: 14px;
   text-align: center;
-  border-right: 1px solid #e9e9e9;
-/*  border-bottom: 1px solid #e9e9e9;*/
 }
 .des_operate {
-  width: 195px;
-  height: 40px;
-  line-height: 40px;
+  width: 157px;
   font-size: 14px;
-/*  border-right: 1px solid #e9e9e9;*/
-/*  border-bottom: 1px solid #e9e9e9;*/
 }
 .edit {
   color: #BFBFBF;
   float: left;
-  margin-top: 15px; 
   margin-right: 20px;
   margin-left: 20px;
 }
@@ -628,34 +594,23 @@
   cursor: pointer;
 }
 .remove {
-  margin-top: 15px; 
   color: #BFBFBF;
   float: left;
 }
 .default_add {
-  position:absolute; 
-  right: 20px; 
-  top: 8px; 
-  height: 26px; 
-  line-height: 26px;
   color: #5DB7E7; 
-  margin-left:40px;
   font-size:14px;
 }
 .set_default_add {
   display: none;
-  position:absolute; 
-  right: 5px; 
-  top: 8px; 
-  height: 26px; 
-  line-height: 26px;
-  width: 100px;  
+  float: left;
+  width: 50%;
   text-align: center;  
   border-radius: 6px; 
   color: #fff; 
   background-color: #5DB7E7; 
-  margin-left:40px;
-  font-size:14px;
+  font-size: 14px;
+  margin-left: 10px;
 }
 .all_detail {
   position: absolute;

@@ -38,7 +38,7 @@
           </el-table-column>
         </el-table>
     </el-col>
-    <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible">
+    <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
         <el-form-item label="上级分类：" prop="upClass" :label-width="formLabelWidth">
           <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.upClass"change-on-select>
@@ -77,7 +77,7 @@
         tableData:[],
         rules: {
           upClass: [
-            { type: 'array', required: true, message: '请选择上级分类', trigger: 'change' }
+            { type: 'array', required: true, message: '请选择上级分类', trigger: 'blur' }
           ],
           classname: [
             { required: true, message: '请输入分类名称', trigger: 'blur' }
@@ -111,12 +111,13 @@
             that.$message.error('网络出错，请稍后再试！');
           }
         })
+        console.log(that.tableData,'hahahaha')
       },
       //获取所有分类列表
       getAllClassify: function() {
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-          console.log(res);
+          console.log(res.data);
           if (res.data.callStatus === 'SUCCEED') {
             that.options = res.data.data.classifyList
             for (var i = 0; i < that.options.length; i++) {
@@ -124,13 +125,19 @@
               that.options[i].children = that.options[i].classifyTwoList
               for (var k in that.options[i].children) {
                 that.options[i].children[k].label = that.options[i].children[k].classifyTwoName
-                that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
-                for (var j in that.options[i].children[k].children) {
-                  that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
-                }
+                // that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
+                // for (var j in that.options[i].children[k].children) {
+                //   that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
+                // }
               }
             }
-            //console.log(that.options);
+            var optionsNew = [{
+              label: '根节点',
+              children: []
+            }]
+            optionsNew[0].children = that.options
+            that.options = optionsNew;
+            // console.log(that.options);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -145,10 +152,6 @@
       // 查询分类
       search:function () {
         var that = this;
-        // if (that.searchClassfyName == '' && that.searchParentClassfyName == '') {
-        //   that.$message.error('请至少选择一项查询类型！');
-        //   return false
-        // }
         var obj = {
           itemClassifyName: that.searchClassfyName,
           itemPreviousClassify: that.searchParentClassfyName,
@@ -162,6 +165,7 @@
           }
         })
       },
+      // 删除分类
       DELEONE:function(scope){
         var that = this;
         // console.log(scope.row.itemClassifyId);
@@ -178,6 +182,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data);
               that.getClassify();
+              that.getAllClassify();
               that.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -196,26 +201,42 @@
       // 修改商品分类
       changeOneAttr: function(scope) {
         var that = this;
-        console.log(scope.row);
-        that.bindTitle = "修改商品分类";
-        that.dialogFormVisible = true;
-        that.ruleForm.classname = scope.row.itemClassifyName;
-        //that.ruleForm.upClass = scope.row.itemPreviousClassify;
-        that.ruleForm.itemId = scope.row.itemClassifyId;
+        console.log(scope.row,'22');
+        if (scope.row.itemPreviousClassify == '根节点') {
+          that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+          that.bindTitle = "修改商品分类";
+          that.dialogFormVisible = true;
+          that.ruleForm.classname = scope.row.itemClassifyName;
+          that.ruleForm.itemId = scope.row.itemClassifyId;
+          return false
+        } 
+        if (scope.row.itemPreviousClassify !== '根节点') {
+          that.ruleForm.upClass.push('根节点');
+          that.ruleForm.upClass.push('2');
+          that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+          // that.ruleForm.upClass.push(scope.row.itemClassifyName)
+          that.bindTitle = "修改商品分类";
+          that.dialogFormVisible = true;
+          that.ruleForm.classname = scope.row.itemClassifyName;
+          that.ruleForm.itemId = scope.row.itemClassifyId;
+        }
+        console.log(that.ruleForm.upClass);
       },
       // 保存商品分类
       saveOneAttrs: function(formName) {
         var that = this;
+        console.log(that.ruleForm);
         that.$refs[formName].validate((valid) => {
           if (valid) {
             var obj = {
               itemClassifyName: that.ruleForm.classname,
               itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
+              itemClassifyGrade: that.ruleForm.upClass.length,
             }
-            console.log(obj);
             that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 that.getClassify();
+                that.getAllClassify();
                 that.ruleForm.classname = '';
                 that.ruleForm.upClass = [];
                 that.dialogFormVisible = false;
@@ -234,6 +255,13 @@
           }
         });
       },
+      // 关闭面板时候
+      handleClose: function() {
+        var that = this;
+        that.ruleForm.classname = '';
+        that.ruleForm.upClass = [];
+        that.dialogFormVisible = false;
+      }
     },
   }
 </script>

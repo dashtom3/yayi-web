@@ -97,6 +97,7 @@
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
             that.moneyList = res.data.data[0].qbRecordList;
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
@@ -179,6 +180,7 @@
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res);
+            that.showChangeUserMoney = false;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
