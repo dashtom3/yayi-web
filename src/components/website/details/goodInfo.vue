@@ -21,14 +21,14 @@
           <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
           收藏
         </span>
-        <span v-else-if="ifshoucang==1" v-on:click="cancleClloect()">
+        <span v-else v-on:click="cancleClloect()">
           <img style="position:relative;top:1px" src="../../../images/details/collect2.jpg" />
           已收藏
         </span>
-        <span v-else>
+        <!-- <span v-else>
           <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
           收藏
-        </span>
+        </span> -->
         <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)" v-on:mouseenter="showShareCol(1)" v-on:mouseout="showShareCol(2)">
           <img style="position:relative;top:3px" v-if="copyUrl" src="../../../images/details/share.png" />
           <img style="position:relative;top:3px" v-else src="../../../images/details/share2.png" />
@@ -105,7 +105,7 @@ import myAddress from './selectThree'
     data () {
       return {
         currentView:"goodIntroduce",
-        ifshoucang:null,
+        ifshoucang:0,
         nowGoodDetails:{},
         itemBrand:{},
         itemDetail:{},
@@ -154,10 +154,13 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:"'"+userToken+"'"
         };
+        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          this.ifshoucang = res.data.num;
+          console.log(res,"getNowGoodDetail")
+
           if (res.data.callStatus === 'SUCCEED') {
+            this.ifshoucang = res.data.num;
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
           } else {

@@ -166,13 +166,15 @@
       search:function(){
         var that = this;
         var obj = {
-          itemPropertyName:that.searchAttrName
+          itemPropertyName:that.searchAttrName,
+          token:"awfa"
         }
         if(that.searchAttrName){
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.tableData==res.data.data;
+              that.searchAttrName = null;//清空收索内容
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

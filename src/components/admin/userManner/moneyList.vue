@@ -13,7 +13,7 @@
           <el-input v-model="searchUserId"></el-input>
         </el-form-item>
         <el-form-item label="时间：">
-          <el-date-picker v-model="searchDataPrev" type="daterange" placeholder="选择日期" :picker-options="pickerOptions0"></el-date-picker>
+          <el-date-picker v-model="searchDataPrev" type="daterange" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="searchAll">查询</el-button>

@@ -319,7 +319,7 @@
       items: {
         handler: function() {
           var that = this;
-          console.log('22');
+          // console.log('22');
         },
         deep: true
       },
@@ -578,13 +578,13 @@
         //   that.$message({
         //     type: 'info',
         //     message: '已取消删除'
-        //   });          
+        //   });
         // });
       },
       // logo跳转
       logo: function() {
         var that = this;
-        console.log('hh');
+        // console.log('hh');
         that.$router.push({ path: '/index' });
       },
       // 我的订单
@@ -615,7 +615,7 @@
             if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
               that.$router.push({ path: '/'})
             }
-            console.log(res);
+            // console.log(res);
             that.global.removeMsg()
             that.$message({
               message: '退出成功！',
@@ -742,7 +742,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              console.log(res);
+              // console.log(res);
             }
           })
         }
@@ -774,7 +774,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              console.log(res);
+              // console.log(res);
             }
           })
        }
@@ -806,7 +806,7 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              console.log(res);
+              // console.log(res);
             }
           })
         }
@@ -829,7 +829,7 @@
         }
         that.global.axiosPostReq('/user/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res);
+
             that.global.setToken(res.data.token)
             that.global.setUser(res.data.data)
             that.$message({
@@ -871,7 +871,8 @@
         }
         that.global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.token);
+            // console.log(res.data.token);
+            console.log(res,"查看token");
             that.global.setToken(res.data.token)
             that.global.setUser(res.data.data)
             that.$message({

@@ -34,13 +34,13 @@
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
             <el-form-item>
-              <el-input placeholder="请输入内容" >
+              <el-input placeholder="请输入内容" v-model="noBindSearchContent">
                 <el-select  slot="prepend" v-model="noBindSearchType">
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
                   <el-option label="单位名称" value="单位名称"></el-option>
                 </el-select>
-                <el-button slot="append" icon="search"></el-button>
+                <el-button slot="append" icon="search" @click="noBindSearch()"></el-button>
               </el-input>
             </el-form-item>
             <el-form-item style="font-size:40px;float:right">
@@ -55,7 +55,7 @@
             <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
-                <el-button type="primary" v-on:click="bindThisUser(scope.row)">绑定</el-button>
+                <el-button type="primary" v-on:click="bindThisUser(scope.row,scope.$index)">绑定</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -63,17 +63,17 @@
         <el-tab-pane label="已绑定" name="second">
           <el-form :inline="true" >
             <el-form-item>
-              <el-input placeholder="请输入内容" >
+              <el-input placeholder="请输入内容" v-model="BindSearchContent">
                 <el-select  slot="prepend" placeholder="请选择" v-model="BindSearchType">
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
                   <el-option label="单位名称" value="单位名称"></el-option>
                 </el-select>
-                <el-button slot="append" icon="search"></el-button>
+                <el-button slot="append" icon="search" @click="BindSearch()"></el-button>
               </el-input>
             </el-form-item>
             <el-form-item style="float:right">
-              <el-button type="primary" v-on:click="search()">取消绑定</el-button>
+              <el-button type="primary" v-on:click="cancleBindAlert()">取消绑定</el-button>
             </el-form-item>
           </el-form>
           <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="500">
@@ -84,7 +84,7 @@
             <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
-                <el-button type="primary" v-on:click="search()">取消绑定</el-button>
+                <el-button type="primary" v-on:click="cancleBindThisUser(scope.row,scope.$index)">取消绑定</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -157,6 +157,8 @@
       return {
         noBindSearchType:"手机号",
         BindSearchType:"手机号",
+        noBindSearchContent:null,
+        BindSearchContent:null,
         multipleSelection1: [],
         multipleSelection2: [],
         activeName2: 'first',
@@ -218,31 +220,88 @@
       }
     },
     watch:{
-
+      multipleSelection1:{
+        handler:function(){
+          var that = this;
+          console.log(that.multipleSelection1)
+        },
+        deep:true
+      }
     },
     methods: {
-      headSearch:function(){
+      BindSearch:function(){
+        var that = this;
+        if(that.BindSearchContent){
 
+          that.BindSearchContent = null;//清空搜索内容
+        }else{
+          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+        }
+      },
+      noBindSearch:function(){
+        var that = this;
+        if(that.noBindSearchContent){
+
+          that.noBindSearchContent = null;//清空搜索内容
+        }else{
+          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+        }
+      },
+      headSearch:function(){
+        var that = this;
+        var searchObj = {
+          searchUserType:that.searchUserType,
+          searchState:that.searchState
+        };
+        if(that.searchUserContent){
+          searchObj.searchUserContent = that.searchUserContent;
+
+
+          that.searchUserContent = null;//清空搜索内容
+        }else{
+          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+        }
       },
       bindAlertSearch:function(){
+        var that = this;
+        if(that.multipleSelection1.length==0){
+          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
+        }else{
 
+        }
       },
-      bindThisUser:function(arg){
-        console.log(arg)
+      cancleBindAlert:function(){
+        var that = this;
+        if(that.multipleSelection2.length==0){
+          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
+        }else{
+
+        }
+      },
+      bindThisUser:function(nowUser,index){
+        console.log(nowUser);
+        var that = this;
+        var obj = {};
+        if(nowUser==that.multipleSelection1[index]){
+
+        }else{
+          this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
+        }
+      },
+      cancleBindThisUser:function(nowUser,index){
+        var that = this;
+        var obj = {};
+        if(nowUser==that.multipleSelection2[index]){
+
+        }else{
+          this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
+        }
       },
       handleSelectionChange1:function(val) {
         this.multipleSelection1 = val;
-        console.log(this.multipleSelection1)
-        if(this.multipleSelection1.length=0){
-          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
-        }
-
       },
       handleSelectionChange2:function(val) {
         this.multipleSelection2 = val;
-      },
-      handleClick(tab, event) {
-        console.log(tab, event);
       },
       bindUser:function(index){
         this.bindSalseAlert = true;

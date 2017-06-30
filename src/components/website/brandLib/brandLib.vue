@@ -170,6 +170,7 @@
       seachDataFrombRrandLidPage:{
         handler:function(){
           var that = this;
+          that.searchWordFromIndex = that.seachDataFrombRrandLidPage[that.seachDataFrombRrandLidPage.length-1];
           if(that.seachDataFrombRrandLidPage){
             var length = that.seachDataFrombRrandLidPage.length;
             var arr = that.seachDataFrombRrandLidPage;
@@ -183,7 +184,6 @@
           }else{
               that.ifHaveData = false;
           }
-          // console.log("search",that.seachDataFrombRrandLidPage)
         },
         deep:true
       },
@@ -215,6 +215,7 @@
       },
       getNowClassfyAndBrandGoods:function(rule){
         var that = this;
+        that.searchWordFromIndex = null;
         var obj = {};
         if(that.searchOneStr!=null){
           if(that.searchOneStr!="不限"){

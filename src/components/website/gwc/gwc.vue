@@ -200,18 +200,15 @@
                 itemSKU:that.gwcGoods[i].itemSKU,
                 token:that.global.getToken()
               };
-              // that.global.axiosPostReq('/cart/star', obj)
-              // .then((res) => {
-              //   if (res.data.callStatus === 'SUCCEED') {
-              //     // this.gwcGoods.splice(index,1);
-              //     // this.$message({type: 'success',  message: '商品收藏成功!' });
-              //   } else {
-              //     that.$message.error('网络出错，请稍后再试！');
-              //   }
-              // })
+              that.global.axiosPostReq('/cart/star', obj)
+              .then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  this.gwcGoods=[];
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
             }
-            // this.gwcGoods = [];
-            // this.$message({type: 'success',message: '商品收藏成功!'});
           }).catch(() => {
             that.$message({type: 'info',message: '已取消'});
           });
@@ -233,8 +230,11 @@
         var that = this;
         if(this.gwcGoods[index].num!=1){
           this.gwcGoods[index].num--;
+          that.updataNum(this.gwcGoods[index].num,good);
+        }else{
+
         }
-        that.updataNum(this.gwcGoods[index].num,good);
+
       },
       addGood:function(index,good){
         var that = this;
@@ -248,7 +248,7 @@
         var obj = {
           phone:that.global.getUser().phone,
           num:num,
-          itemSKU:"11212121",
+          itemSKU:good.itemSKU,
           token:that.global.getToken()
         };
         // console.log(obj)
@@ -277,8 +277,7 @@
           var obj = {
             phone:that.global.getUser().phone,
             itemId:id,
-            itemSKU:"121212",
-            // itemSKU:that.gwcGoods[i].itemSKU,
+            itemSKU:that.gwcGoods[index].itemSKU,
             token:that.global.getToken()
           };
           that.global.axiosPostReq('/cart/star', obj)
@@ -290,9 +289,7 @@
               that.$message.error('网络出错，请稍后再试！');
             }
           })
-        }).catch(() => {
-          that.$message({  type: 'info',  message: '已取消'});
-        });
+        })
       },
       deleteOne:function(index,good){
         var that = this;
