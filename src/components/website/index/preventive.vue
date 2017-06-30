@@ -20,7 +20,14 @@
       <el-carousel :autoplay="true" :interval="5000" height="500px" trigger="click" arrow="never" indicator-position="none" ref="carousel">
         <el-carousel-item>
           <div class="brand_container">
-            <div class="brand_item" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
+            <div class="brand_item" v-for="oneBrand in filteredBrandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
+              <img :src="oneBrand.itemBrandLogo" alt="img">
+            </div>
+          </div>
+        </el-carousel-item>
+        <el-carousel-item>
+          <div class="brand_container">
+            <div class="brand_item" v-for="oneBrand in filteredBrandListData1" @click="goToThisBrand(oneBrand.itemBrandId)">
               <img :src="oneBrand.itemBrandLogo" alt="img">
             </div>
           </div>
@@ -61,12 +68,19 @@ export default {
       classifyItems: [],
       items: [],
       sideItems: [],
-      brandListData:[]
+      brandListData:[],
+      brandListData1: [],
     }
   },
   computed: {
     filteredItems: function () {
-      return this.items.slice(0, 7)
+      return this.items.slice(0, 8)
+    },
+    filteredBrandListData: function () {
+      return this.brandListData.slice(0, 8)
+    },
+    filteredBrandListData1: function () {
+      return this.brandListData1.slice(9, 17)
     }
   },
   created: function () {
@@ -173,6 +187,7 @@ export default {
         console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') {
           that.brandListData = res.data.data;
+          that.brandListData1 = res.data.data;
         } else {
           that.$message.error('网络出错，请稍后再试！');
         }
@@ -187,10 +202,12 @@ export default {
     prev() {
       var that = this;
       that.$refs.carousel.prev();
+      console.log('22');
     },
     next() {
       var that = this;
       that.$refs.carousel.next();
+      console.log('22');
     },
   }
 }
@@ -239,12 +256,12 @@ a {
   .prev {
     position: absolute;
     left: 0;
-/*    z-index: 998;*/
+    z-index: 998;
   }
   .next {
     position: absolute;
     right: 0;
-/*    z-index: 998;*/
+    z-index: 998;
   }
   .prev:hover, .next:hover{
     opacity: 0.8;

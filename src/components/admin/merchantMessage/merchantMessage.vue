@@ -102,7 +102,7 @@
         <el-radio class="radio" v-model="radio" label="2">不支持</el-radio> -->
       </el-form-item>
       <el-form-item label="商品属性">
-        <el-button type="primary" @click="chooseType()">选择属性</el-button>
+        <el-button type="primary" @click="chooseType()" :disabled="true">选择属性</el-button>
       </el-form-item>
       <table class="activeTable_box">
         <tr class="activeTable_title">
