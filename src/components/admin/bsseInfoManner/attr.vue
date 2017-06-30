@@ -176,7 +176,7 @@
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
-          }).catch(() => { this.$alert('网络出错，请稍后再试！', {confirmButtonText: '确定',});});
+          })
         }else{
           this.$alert('请输入属性名', {confirmButtonText: '确定',});
         }

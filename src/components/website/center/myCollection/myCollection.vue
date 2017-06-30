@@ -192,7 +192,7 @@ max-width: 100%;
 max-height: 100%;
 display: inline-block;
 vertical-align: middle;
-margin-left: 5px;
+/*margin-left: 5px;*/
 }
 .goodDetail .imgwrap span{
 height: 100%;

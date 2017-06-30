@@ -4,8 +4,10 @@
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
-        <span @click="goThisBrand('首页')" class="showBlueColor">首页</span><span>></span>
-        <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" v-if="firstClassfy">{{firstClassfy}}</span><span v-if="secondClassfy">></span>
+        <span @click="goThisBrand('首页')" class="showBlueColor">首页</span>
+        <span v-if="firstClassfy">></span>
+        <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" v-if="firstClassfy">{{firstClassfy}}</span>
+        <span v-if="secondClassfy">></span>
         <span @click="goThisBrand(secondClassfy,2)" class="showBlueColor" v-if="secondClassfy" >{{secondClassfy}}</span><span v-if="thirdClassfy">></span>
         <span @click="goThisBrand(thirdClassfy,3)" class="showBlueColor" v-if="thirdClassfy" >{{thirdClassfy}}</span><span v-if="haveBrand">></span>
         <span class="showBlueColor" v-if="haveBrand" >{{haveBrand}}</span><span v-if="searchWordFromIndex">></span>
@@ -173,11 +175,15 @@
             var arr = that.seachDataFrombRrandLidPage;
             var newarr = [];
             if(length>1){
+              that.ifHaveData = true;
               that.allGoods = arr.slice(0,length-1);
             }else{
               that.ifHaveData = false;
             }
+          }else{
+              that.ifHaveData = false;
           }
+          // console.log("search",that.seachDataFrombRrandLidPage)
         },
         deep:true
       },
@@ -187,7 +193,6 @@
       msgFromHeader: function(data) {
         var that = this;
         that.seachDataFrombRrandLidPage = data;
-        console.log(data)
       },
       getClassfytAndBrandList:function(){
         var that = this;

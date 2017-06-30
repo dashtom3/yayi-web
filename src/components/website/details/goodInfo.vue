@@ -29,9 +29,9 @@
           <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
           收藏
         </span>
-        <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)">
+        <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)" v-on:mouseenter="showShareCol(1)" v-on:mouseout="showShareCol(2)">
           <img style="position:relative;top:3px" v-if="copyUrl" src="../../../images/details/share.png" />
-          <img style="position:relative;top:3px" v-else src="../../../images/details/share2.jpg" />
+          <img style="position:relative;top:3px" v-else src="../../../images/details/share2.png" />
           分享
         </span>
       </div>
@@ -154,10 +154,8 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:"'"+userToken+"'"
         };
-        // console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          // console.log(res,'111111111111111111')
           this.ifshoucang = res.data.num;
           if (res.data.callStatus === 'SUCCEED') {
             that.nowGoodDetails = res.data.data;
@@ -165,7 +163,7 @@ import myAddress from './selectThree'
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
-        }).catch((err) => { this.$alert("网络出错，请稍后再试！", {confirmButtonText: '确定'});});
+        })
       },
       addGoodNum:function () {
           this.goodDefaultNum += 1;
@@ -190,10 +188,10 @@ import myAddress from './selectThree'
         var that = this;
         var obj = {
           itemId:that.nowGoodDetails.itemId,
-          // itemSKU:parseInt(Math.random()*100000),
+          phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-          that.global.axiosPostReq('/mystar/deleteOne',obj)
+          that.global.axiosPostReq('/mystar/deleteOne', obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               this.$alert("取消收藏成功！", {confirmButtonText: '确定'});
@@ -226,15 +224,22 @@ import myAddress from './selectThree'
             this.$alert("请先登录后再收藏！", {confirmButtonText: '确定'});
           }
         }
-        if(arg==2&&that.copyUrl==true){
+        if(arg==2){
           var url = window.location.href;
           window.prompt("请复制链接",url);
-          console.log(window)
           // var address = ''
           // address += url
           // window.clipboardData.setData("Text",address);
           // that.$alert("链接复制成功！", {confirmButtonText: '确定'});
           // that.copyUrl = false;
+        }
+      },
+      showShareCol:function(arg){
+        var that = this;
+        if(arg==1){
+          that.copyUrl = false;
+        }else{
+          that.copyUrl = true;
         }
       },
       addGwcThisGood:function(){
@@ -355,10 +360,10 @@ import myAddress from './selectThree'
   }
   .infoRight .attSty1{
   display:inline-block;
-    width:118px;
-    line-height:38px;
+    width:88px;
+    line-height:30px;
     text-align: center;
-    margin-left:38px;
+    margin-left:40px;
     border:1px solid #e5e5e5;
     cursor: pointer;
     margin-bottom: 20px;
