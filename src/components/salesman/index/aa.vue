@@ -42,10 +42,13 @@
       </div>
     </div>
     <div class="clearFloat"></div>
+    <div class="curOrder">本月订单</div>
+    <dataTable></dataTable>
   </div>
 </template>
 
 <script>
+  import dataTable from './dataTable'
   export default {
     name: 'aa',
     data () {
@@ -55,6 +58,7 @@
     },
     components: {
       // salesHead,
+      dataTable
     },
     created: function() {
       console.log("aaa")
@@ -72,8 +76,8 @@
   width: 1200px;
 
   margin: auto;
-    margin-top: 180px;
-    margin-bottom: 40px;
+  margin-top: 80px;
+  margin-bottom: 40px;
 }
 .clearFloat{
   clear: both;
@@ -174,5 +178,13 @@
 .mymoney .btnWrap span:nth-child(1){
   margin-left: 144px;
   margin-right: 70px;
+}
+.curOrder{
+  height: 30px;
+  line-height: 30px;
+  margin-top: 30px;
+  padding-left: 24px;
+  border-bottom: 1px dotted #ccc;
+  background: url(../../../images/salesman/arrow.png) 0 8px no-repeat;
 }
 </style>

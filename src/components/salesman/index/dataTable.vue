@@ -1,0 +1,223 @@
+<template>
+	<el-row class="brandWarp">
+		<el-col :span="24" class="warp-breadcrum">
+      <div id="myChart" :style="{width: '1200px', height: '600px', margin: 'auto' }"></div>
+    </el-col>
+    <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
+      <div class="grid-content bg-purple-dark fl">
+        <span>总收入：<i class="i_col_red">￥20000</i></span>
+        <span class="margin_l">待结算：<i class="i_col_red">￥18000</i></span>
+        <span class="margin_l">已结算：<i class="i_col_red">￥2000</i></span>
+      </div>
+      <div class="grid-content bg-purple-dark fr">
+        <span>订单总额：<i class="i_col_red">￥40000</i></span>
+        <span class="margin_l">订单量：<i class="i_col_red">￥4000</i></span>
+      </div>
+    </el-col>
+		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
+      <el-table :data="tableData" align="center" border style="width: 100%">
+        <el-table-column prop="orderTime" align="center" label="下单时间">
+        </el-table-column>
+        <el-table-column  prop="customerName" align="center" label="客户姓名">
+        </el-table-column>
+        <el-table-column prop="customerPhone" align="center" label="客户手机号">
+        </el-table-column>
+        <el-table-column prop="commodityInfo" align="center" label="商品信息">
+        </el-table-column>
+        <el-table-column prop="commodityTotal"  align="center"label="商品总价">
+        </el-table-column>
+        <el-table-column prop="refundAmt" align="center" label="已退款金额（元）">
+        </el-table-column>
+        <el-table-column prop="income" align="center" label="收入（元）">
+        </el-table-column>
+        <el-table-column prop="state" align="center" label="状态">
+        </el-table-column>
+        <el-table-column prop="cutoffTime" align="center" label="结算时间">
+        </el-table-column>
+        <el-table-column prop="handler" align="center" label="操作">
+          <template scope="scope">
+            <el-button
+              size="mini"
+              type="info"
+              @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+          </template>  
+        </el-table-column>
+      </el-table>
+    </el-col>
+	</el-row>
+</template>
+
+<script>
+let echarts = require('../../../../node_modules/echarts/lib/echarts')
+// 引入折线图组件
+require('echarts/lib/chart/line');
+// // 引入提示框和title组件
+require('echarts/lib/component/tooltip');
+require('echarts/lib/component/title');
+
+export default {
+	name: 'hello',
+  data() {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+      value: '',
+      tableData: [{
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      }, {
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      }, {
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      }, {
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      },{
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      },{
+        orderTime: '2016-05-02-17:00',
+        customerName: '李志芳',
+        customerPhone: '13861637946',
+        commodityInfo: '商品信息',
+        commodityTotal: 4000,
+        refundAmt: 200,
+        income: 10000,
+        state: '待结算',
+        cutoffTime: '2017-01-03-17:00'
+      }]
+    }
+  },
+  mounted() {
+    this.drawLine();
+  },
+	methods: {
+		drawLine(){
+			// 基于准备好的dom，初始化echarts实例
+      let myChart=document.getElementById('myChart')
+
+      let mainChart = echarts.init(myChart)// 基于准备好的dom，初始化echarts实例
+      // 绘制图表
+      mainChart.setOption({
+          title: {
+              text: '收入（元）'
+          },
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              data:['邮件营销']
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          toolbox: {
+              feature: {
+                  saveAsImage: {}
+              }
+          },
+          xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: ['0','5','10','15','20','25','30']
+          },
+          yAxis: {
+              type: 'value'
+          },
+          series: [
+              {
+                  name:'总收入',
+                  type:'line',
+                  stack: '总收入',
+                  data:[0, 500, 700, 2200, 1600, 3000, 3500]
+              }
+          ]
+      });
+
+		},
+    queryDetail(index, row){
+
+    }
+	}
+}
+</script>
+
+<style scope>
+	.brandWarp{
+    width: 1200px;
+    margin: auto;
+  }
+  .fl{
+    float:left;
+  }
+  .fr{
+    float: right;
+  }
+  .clearfix{
+    zoom:1;
+  }
+  .clearfix:after{
+    content:"";
+    clear:both;
+    display:block;
+  }
+  .i_col_red{
+    color: red;
+    font-weight: bold;
+    font-style: normal;
+  }
+  .margin_l{
+    margin-left: 20px;
+  }
+  .total_box{
+    width: 300px;
+    height: 44px;
+    font-size: 14px;
+    line-height: 44px;
+    background: #5db7e8;
+    color: #fff;
+    text-align: center;
+  }
+  .warp-breadcrum{
+    margin-top: 36px;
+  }
+</style>
