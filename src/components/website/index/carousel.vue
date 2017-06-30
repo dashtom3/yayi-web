@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import global from '../../global/global'
   export default {
     name: 'carousel',
     data () {
@@ -24,11 +23,12 @@
     },
     methods: {
       init(){
-        global.axiosGetReq('/adv/showAdv',{}).then((res) => {
+        var that = this;
+        that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.bannerList = res.data.data.splice(1)
+            that.bannerList = res.data.data.splice(1)
           }else{
-            this.$message.error('获取广告数据失败！');
+            that.$message.error('获取广告数据失败！');
           }
         })
       }

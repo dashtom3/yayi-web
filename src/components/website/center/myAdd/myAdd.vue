@@ -54,37 +54,13 @@
               <td class="des_operate">
                 <i class="el-icon-edit edit" @click="add_edit(add)"></i>
                 <i class="el-icon-delete remove" @click="add_remove(add)"></i>
-                <span v-if="add.isDefault" class="default_add">默认地址</span>
+                <div v-if="add.isDefault" class="default_add">默认地址</div>
                 <div class="set_default_add" @click="setDefaultAdd(add)">设为默认</div>
               </td>
             </tr>
           </table>
         </div>
         <!--  v-if end -->
-<!--         <div v-if="hasAddress" class="has_address_box">
-          <div class="no_address_header">
-            <div class="left add_people">收货人</div>
-            <div class="left add_place">所在地区</div>
-            <div class="left add_des">详细地址</div>
-            <div class="left add_mobile">手机号</div>
-            <div class="left add_operate">操作</div>
-          </div>
-          <div class="address_des" v-for="add in address" :key="add" style="position:relative;">
-            <div class="news des_people">{{add.receiverName}}</div>
-            <div class="news des_place">{{add.province}}{{add.city}}{{add.county}}</div>
-            <div class="news des_des" @mouseover="showAll(add)">
-              {{add.receiverDetail}}
-            </div>
-            <div class="news des_mobile">{{add.phone}}</div>
-            <div class="news des_operate">
-              <i class="el-icon-edit edit" @click="add_edit(add)"></i>
-              <i class="el-icon-delete remove" @click="add_remove(add)"></i>
-              <span v-if="add.isDefault" class="default_add">默认地址</span>
-              <span class="set_default_add" @click="setDefaultAdd(add)">设为默认</span>
-            </div>
-            <div class="clearfix"></div>
-          </div>
-        </div> -->
         <!--  v-else start -->
         <div v-else class="no_address_box">
           <div class="no_address_header">
@@ -161,8 +137,8 @@
         hasAddress: false,
         editAddVisible: false,
         removeVisible: false,
-        defaultAdd: true,
         allDetail: true,
+        defaultAdd: false,
         address:[],
         form: {
           region: '',
@@ -582,6 +558,7 @@ th,td {
 .des_operate {
   width: 157px;
   font-size: 14px;
+  position: relative;
 }
 .edit {
   color: #BFBFBF;
@@ -600,17 +577,27 @@ th,td {
 .default_add {
   color: #5DB7E7; 
   font-size:14px;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
 }
 .set_default_add {
   display: none;
-  float: left;
-  width: 50%;
+  position: absolute;
+  top: 50%;
+  bottom: 0px;
+  right: 5px;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 25px;
+  line-height: 25px;
   text-align: center;  
   border-radius: 6px; 
   color: #fff; 
   background-color: #5DB7E7; 
   font-size: 14px;
-  margin-left: 10px;
 }
 .all_detail {
   position: absolute;

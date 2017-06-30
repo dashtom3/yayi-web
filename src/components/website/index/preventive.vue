@@ -281,7 +281,8 @@ a {
     width: 163px;
     height: 163px;
     margin-top: 70px;
-    margin-left: 35px;
+    margin-left: 17.5px;
+    margin-right: 17.5px;
     border: 1px #e9e9e9 solid;
     border-radius: 50%;
     display:flex;

@@ -42,7 +42,7 @@
     <div class="log_box" v-show="changeForget1">
       <el-collapse-transition>
         <div v-show="showLogin1">
-          <div class="transition-box">
+          <div class="transition-box" v-bind:style="{ backgroundImage: bindBanner}">
             <div class="logIn_container">
               <div class="logIn_box">
                 <p class="ms_register" @click="ms_register" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">注册</p>
@@ -99,7 +99,7 @@
     <div class="log_box2" v-show="changeForget2">
       <el-collapse-transition>
         <div v-show="showLogin2">
-          <div class="transition-box">
+          <div class="transition-box" v-bind:style="{ backgroundImage: bindBanner}">
             <div class="logIn_container">
               <div class="forgetPwd_box">
                   <div>
@@ -145,7 +145,7 @@
     <div class="log_box" v-show="changeForget3">
       <el-collapse-transition>
         <div v-show="showLogin3">
-          <div class="transition-box">
+          <div class="transition-box" v-bind:style="{ backgroundImage: bindBanner}">
             <div class="logIn_container">
               <div class="register_box">
                   <p class="rg_logIn" @click="rg_logIn" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">登录</p>
@@ -212,6 +212,7 @@
     name: 'publicHeader',
     data () {
       return {
+        bindBanner: '',
         car_num: 0,
         arrowChange: true,
         hasLogin: true,
@@ -293,6 +294,7 @@
       } else {
         that.hasLogin = true;
       }
+      that.init();
       // console.log(that.global.getToken());
     },
     watch: {
@@ -420,6 +422,18 @@
       },
     },
     methods: {
+      //获取注册登录banner
+      init: function() {
+        var that = this;
+        that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.bindBanner = 'url(' + res.data.data[0].advImg + ')';
+            // console.log(that.bindBanner)
+          }else{
+            that.$message.error('获取广告数据失败！');
+          }
+        })
+      },
       menu: function() {
         var that = this;
         var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
@@ -1253,7 +1267,9 @@
   .transition-box {
     width: 100%;
     height: 500px;
-    background: url(../../../images/index/logBg.jpg) center no-repeat;
+    background-repeat: no-repeat;
+    background-position: center;
+/*    background: url(../../../images/index/logBg.jpg) center no-repeat;*/
     text-align: center;
   }
   .transition-box .logIn_container {
@@ -1518,7 +1534,7 @@
   .rg_pwd {
     width: 399px;
     height: 39px;
-    margin-top: 39px;
+    margin-top: 30px;
   }
   .rg_confirmPwd {
     width: 399px;
