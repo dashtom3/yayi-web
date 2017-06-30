@@ -116,6 +116,7 @@
       getAllClassify: function() {
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
+          console.log(res);
           if (res.data.callStatus === 'SUCCEED') {
             that.options = res.data.data.classifyList
             for (var i = 0; i < that.options.length; i++) {
@@ -129,7 +130,7 @@
                 }
               }
             }
-            console.log(that.options);
+            //console.log(that.options);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -144,10 +145,10 @@
       // 查询分类
       search:function () {
         var that = this;
-        if (that.searchClassfyName == '' || that.searchParentClassfyName == '') {
-          that.$message.error('请至少选择一项查询类型！');
-          return false
-        }
+        // if (that.searchClassfyName == '' && that.searchParentClassfyName == '') {
+        //   that.$message.error('请至少选择一项查询类型！');
+        //   return false
+        // }
         var obj = {
           itemClassifyName: that.searchClassfyName,
           itemPreviousClassify: that.searchParentClassfyName,

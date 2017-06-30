@@ -452,7 +452,6 @@
         }
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            //console.log(res.data.data);
             if (that.$router.history.current.name !== 'brandLib') {
               var data1 = res.data.data;
               var search_word = that.searchCargo;
