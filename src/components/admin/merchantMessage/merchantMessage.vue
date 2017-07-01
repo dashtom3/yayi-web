@@ -22,12 +22,12 @@
           <el-form-item label="品牌名称：">
             <el-input v-model="cargo.brand"></el-input>
           </el-form-item>
-<!--           <el-form-item label="乾币抵扣：">
+          <el-form-item label="推荐：">
             <el-select v-model="coinValue" placeholder="请选择">
               <el-option v-for="coin in options1" :key="coin.value" :label="coin.label" :value="coin.value">
               </el-option>
             </el-select>
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item label="商品状态：">
             <el-select v-model="stateValue" placeholder="请选择">
               <el-option v-for="state in options2" :key="state.value" :label="state.label" :value="state.value">
@@ -45,12 +45,12 @@
         <el-table-column label="商品名称" prop="name"></el-table-column>
         <el-table-column label="商品分类" prop="class"></el-table-column>
         <el-table-column label="品牌名称" prop="brand"></el-table-column>
-<!--         <el-table-column label="支持乾币抵扣">
+        <el-table-column label="推荐">
           <template scope="scope">
             <span v-if="scope.row.coin == 1">是</span>
             <span v-if="scope.row.coin == 0">否</span>
           </template> 
-        </el-table-column> -->
+        </el-table-column>
         <el-table-column label="商品状态">
           <template scope="scope">
             <span v-if="scope.row.state == true">已上架</span>
@@ -77,33 +77,34 @@
   <!-- 查看商品属性详情面板 开始 -->
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="商品编号" prop="cargoId">
-        <el-input v-model="ruleForm.cargoId" placeholder="默认的，不需要修改" style="width: 300px !important;" :disabled="true"></el-input>
-      </el-form-item>
-      <el-form-item label="商品名称" prop="name">
-        <el-input v-model="ruleForm.name" style="width: 300px !important;" :disabled="true"></el-input>
-      </el-form-item>
-      <el-form-item label="商品分类" prop="type">
-        <el-cascader :options="options4" :show-all-levels="false" v-model="ruleForm.type" :disabled="true"></el-cascader>
-<!--         <el-input v-model="ruleForm.classify" style="width: 300px;" icon="search" :on-icon-click="handleIconClick"></el-input> -->
-      </el-form-item>
-      <el-form-item label="品牌名称" prop="brand">
-        <el-select v-model="ruleForm.brand" placeholder="请选择" :disabled="true">
-          <el-option v-for="brand in options3" :key="brand.value" :label="brand.label" :value="brand.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="注册账号" prop="rgAcount">
-        <el-input v-model="ruleForm.rgAcount" style="width: 300px !important;" :disabled="true"></el-input>
-      </el-form-item>
-      <el-form-item label="乾币抵扣" prop="qian">
-        <el-input v-model="ruleForm.cargoId" placeholder="支持不支持" style="width: 100px !important;" :disabled="true"></el-input>
-<!--         <el-radio class="radio" v-model="radio" label="1">支持</el-radio>
-        <el-radio class="radio" v-model="radio" label="2">不支持</el-radio> -->
-      </el-form-item>
-      <el-form-item label="商品属性">
-        <el-button type="primary" @click="chooseType()" :disabled="true">选择属性</el-button>
-      </el-form-item>
+      <div class="detail_box">
+        <div class="detail_cargo">商品编号：</div>
+        <p class="detail_word">商品详情商品详情</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">商品名称：</div>
+        <p class="detail_word">商品详情商品详情商品详情商品</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">商品分类：</div>
+        <p class="detail_word">商品详情商品详情商品</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">品牌名称：</div>
+        <p class="detail_word">商品详情商品详情商品</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">注册账号：</div>
+        <p class="detail_word">商品详情商品详情商品</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">乾币抵扣：</div>
+        <p class="detail_word">商品详情商品详情商品</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">商品属性：</div>
+        <p class="detail_word">商品详情商品详情商品</p>
+      </div>
       <table class="activeTable_box">
         <tr class="activeTable_title">
           <th class="type1">属性一</th>
@@ -141,18 +142,16 @@
         </tr>
       </table>
       <div class="detail_box">
-        <div class="left detail_cargo">商品详情：</div>
-        <p class="left detail_word">商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情</p>
+        <div class="detail_cargo">商品详情：</div>
+        <p class="detail_word">商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情</p>
       </div>
-      <div class="clearfix"></div>
       <div class="detail_box">
-        <div class="left detail_cargo">图片说明：</div>
-        <p class="left detail_word">图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明</p>
+        <div class="detail_cargo">图片说明：</div>
+        <p class="detail_word">图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明</p>
       </div>
-      <div class="clearfix"></div>
       <div class="detail_box">
-        <div class="left detail_cargo">视频说明：</div>
-        <p class="left detail_word">视频说明</p>
+        <div class="detail_cargo">视频说明：</div>
+        <p class="detail_word">视频说明</p>
       </div>
     </el-form>
   </el-dialog>
@@ -176,10 +175,10 @@
           label: '全部',
           value: '1'
         },{
-          label: '支持',
+          label: '是',
           value: '2'
         },{
-          label: '不支持',
+          label: '否',
           value: '3'
         }],
         options2: [{
@@ -831,17 +830,18 @@
   border-bottom: 1px solid #dfe6ec;
 }
 .detail_box {
-  margin-top: 15px;
   width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
 }
 .detail_cargo {
-  width: 10%;
   font-size: 15px;
+  display: inline-block;
 }
 .detail_word {
-  width: 90%;
   font-size: 14px;
   color: #000;
   line-height: 25px;
+  display: inline-block;
 }
 </style>

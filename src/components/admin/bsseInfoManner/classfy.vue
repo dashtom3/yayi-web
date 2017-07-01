@@ -176,8 +176,10 @@
         }).then(() => {
           var obj = {
             itemClassifyId: scope.row.itemClassifyId,
+            itemClassifyName: scope.row.itemClassifyName,
+            itemClassifyGrade: scope.row.itemClassifyGrade,
           }
-          console.log(scope.row.itemClassifyId)
+          console.log(obj)
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data);
@@ -220,7 +222,20 @@
           that.ruleForm.classname = scope.row.itemClassifyName;
           that.ruleForm.itemId = scope.row.itemClassifyId;
         }
-        console.log(that.ruleForm.upClass);
+        // that.global.axiosPostReq('/item/updateItemClassify',obj).then((res) => {
+        //   if (res.data.callStatus === 'SUCCEED') {
+        //     console.log(res.data);
+        //     that.getClassify();
+        //     that.getAllClassify();
+        //     that.$message({
+        //       type: 'success',
+        //       message: '修改成功!'
+        //     });
+        //   } else {
+        //     that.$message.error('网络出错，请稍后再试！');
+        //   }
+        // })
+        // console.log(that.ruleForm.upClass);
       },
       // 保存商品分类
       saveOneAttrs: function(formName) {
@@ -228,27 +243,53 @@
         console.log(that.ruleForm);
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            var obj = {
-              itemClassifyName: that.ruleForm.classname,
-              itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
-              itemClassifyGrade: that.ruleForm.upClass.length,
-            }
-            that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                that.getClassify();
-                that.getAllClassify();
-                that.ruleForm.classname = '';
-                that.ruleForm.upClass = [];
-                that.dialogFormVisible = false;
-                that.$message({
-                  type: 'success',
-                  message: '添加成功成功!'
-                });
-                that.tableData = res.data.data;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
+            if (that.bindTitle = "添加商品分类") {
+              var obj = {
+                itemClassifyName: that.ruleForm.classname,
+                itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
+                itemClassifyGrade: that.ruleForm.upClass.length,
               }
-            })
+              that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.getClassify();
+                  that.getAllClassify();
+                  that.ruleForm.classname = '';
+                  that.ruleForm.upClass = [];
+                  that.dialogFormVisible = false;
+                  that.$message({
+                    type: 'success',
+                    message: '添加成功成功!'
+                  });
+                  that.tableData = res.data.data;
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            } else {
+              var obj = {
+                itemClassifyName: that.ruleForm.classname,
+                itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
+                itemPreviousClassify: '',
+                itemClassifyGrade: that.ruleForm.upClass.length,
+              }
+              console.log(obj);
+              // that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
+              //   if (res.data.callStatus === 'SUCCEED') {
+              //     that.getClassify();
+              //     that.getAllClassify();
+              //     that.ruleForm.classname = '';
+              //     that.ruleForm.upClass = [];
+              //     that.dialogFormVisible = false;
+              //     that.$message({
+              //       type: 'success',
+              //       message: '添加成功成功!'
+              //     });
+              //     that.tableData = res.data.data;
+              //   } else {
+              //     that.$message.error('网络出错，请稍后再试！');
+              //   }
+              // })
+            }
           } else {
             console.log('error submit!!');
             return false;

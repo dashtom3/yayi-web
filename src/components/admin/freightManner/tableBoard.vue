@@ -4,7 +4,7 @@
       <div class="allChoose_bigbox" v-for="item in items" :key="item">
         <div class="allChoose_box">
           <el-checkbox :indeterminate="isIndeterminate" v-model="item.allcheck" @change="handleCheckAllChange(item)" class="allchecked">{{item.area}}</el-checkbox>
-            <el-checkbox v-for="cities in item.place" :label="cities.city" :key="cities" v-model="cities.checked" @change="handleCheckedCitiesChange(cities)">{{cities.city}}</el-checkbox>
+            <el-checkbox v-for="cities in item.place" :label="cities.city" :key="cities" v-model="cities.checked" @change="handleCheckedCitiesChange(cities,item)">{{cities.city}}</el-checkbox>
           <div class="clearfix"></div>
         </div>
       </div>
@@ -62,15 +62,28 @@
                   place: [{city: '海外',checked: false}],
         }],
         submitCities: [],
+        watchItem: null,
       }
     },
     props:["childrenState"],
     watch: {
       childrenState:function(){
         var that = this;
-
         that.state2 = that.childrenState;
         console.log(that.childrenState)
+      },
+      items: {
+        handler: function() {
+          var that = this;
+          // for (var i = 0; i < that.items.length; i++) {
+          //   for (k in that.items[i].place)
+          //     if (that.items[i].place[k].checked == ) {
+          //       expression
+          //     }
+          // }
+          console.log(that.items,'2232323')
+        },
+        deep: true
       },
       checkedCities: {
         handler: function() {
@@ -100,7 +113,9 @@
             arr[i].checked = true;
             that.checkedCities.push(arr[i].city);
           }
-        } else {
+          return false
+        } 
+        if (item.allcheck == false) {
           for (var i = 0; i < arr.length; i++) {
             arr[i].checked = false;
             for (var j = 0; j < that.checkedCities.length; j++) {
@@ -108,15 +123,30 @@
                 that.checkedCities.splice(j, 1);
               }
             }
-            // that.checkedCities2 = [];
           }
+          return false
         }
       },
-      handleCheckedCitiesChange(cities) {
+      handleCheckedCitiesChange(cities,item) {
         var that = this;
         if (cities.checked == true) {
+          var a =[];
           that.checkedCities.push(cities.city)
+          for (var i = 0; i < item.place.length; i++) {
+            if (item.place[i].checked == true) {
+              a.push(item.place[i].checked);
+            }
+          }
+          if (a.length == item.place.length) {
+            item.allcheck = true;
+          }
+          //console.log(a,'ppp')
         } else {
+          for (var i = 0; i < item.place.length; i++) {
+            if (item.place[i].checked == false) {
+              item.allcheck = false
+            }
+          }
           for (var i = 0; i < that.checkedCities.length; i++) {
             if (that.checkedCities[i] == cities.city) {
               that.checkedCities.splice(i, 1);

@@ -1,25 +1,16 @@
 <template>
   <div class="secondStep">
     <el-form :inline="true" class="secondStep_box" style="margin-top: 20px;" v-show="secondStep">
-      <el-form-item label="品名">
-        <el-input></el-input>
-      </el-form-item>
       <el-form-item label="商家货号">
         <el-input></el-input>
       </el-form-item>
       <el-form-item label="器械类别">
         <el-input></el-input>
       </el-form-item>
-      <el-form-item label="品牌">
-        <el-input></el-input>
-      </el-form-item>
       <el-form-item label="单位">
         <el-input></el-input>
       </el-form-item>
       <el-form-item label="生产企业">
-        <el-input></el-input>
-      </el-form-item>
-      <el-form-item label="注册证号">
         <el-input></el-input>
       </el-form-item>
       <el-form-item label="注册证有效期／备案日期">

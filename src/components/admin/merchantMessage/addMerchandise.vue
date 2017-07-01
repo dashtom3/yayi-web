@@ -30,12 +30,15 @@
       <el-form-item label="注册账号" prop="rgAcount">
         <el-input v-model="ruleForm.rgAcount" style="width: 300px !important;"></el-input>
       </el-form-item>
-      <el-form-item label="乾币抵扣" prop="qian">
-        <el-radio class="radio" v-model="radio" label="1">支持</el-radio>
-        <el-radio class="radio" v-model="radio" label="2">不支持</el-radio>
+      <el-form-item label="推荐" prop="qian">
+        <el-radio class="radio" v-model="radio" label="1">是</el-radio>
+        <el-radio class="radio" v-model="radio" label="2">否</el-radio>
       </el-form-item>
-      <el-form-item label="商品属性">
-        <el-button type="primary" @click="chooseType()">选择属性</el-button>
+      <el-form-item label="商品属性" prop="qian">
+        <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
+        <el-radio class="radio" v-model="shopType" label="2">否</el-radio>
+        <el-button v-if="chooseShopType" type="primary" @click="chooseType()" :disabled='true'>选择属性</el-button>
+        <el-button v-else type="primary" @click="chooseType()">选择属性</el-button>
       </el-form-item>
       <div class="active_box" v-for="(item,index) in items" :key="item">
         <span class="choose_title">{{item.property}}</span>
@@ -47,6 +50,36 @@
 <!--         </el-checkbox-group> -->
       </div>
       <!--  添加属性变换表格 开始 -->
+      <table class="activeTable_box" v-show="no_active">
+        <tr class="activeTable_title">
+          <th class="skuCode">SKU代码</th>
+          <th class="price">价格</th>
+          <th class="percent">提成（%）</th>
+          <th class="coin">乾币（%）</th>
+          <th class="stock">库存</th>
+          <th class="enable">是否启用</th>
+        </tr>
+        <tr class="activeTable_des">
+          <td class="des_skuCode">
+            <el-input v-model="input_sku"></el-input>
+          </td>
+          <td class="des_price">
+            <el-input v-model="input_price"></el-input>
+          </td>
+          <td class="des_percent">
+            <el-input v-model="input_percent"></el-input>
+          </td>
+          <td class="des_coin">
+            <el-input v-model="input_coin"></el-input>
+          </td>
+          <td class="des_stock">
+            <el-input v-model="input_stock"></el-input>
+          </td>
+          <td class="des_enable">
+            <el-checkbox v-model="input_enable"></el-checkbox>
+          </td>
+        </tr>
+      </table>
       <table class="activeTable_box" v-show="active">
         <tr class="activeTable_title">
           <!-- <th class="type1" v-show="num[0].num1!==0">{{property1}}</th>
@@ -123,6 +156,8 @@
         addMerchandise: false,
         firstStep: true,
         secondStep: false,
+        shopType: '',
+        chooseShopType: true,
         options3: [{
           label: '哈哈',
           value: '1'
@@ -553,7 +588,8 @@
         dialogTableVisible: false,
         items: [],
         activeItems: [],
-        active: true,
+        active: false,
+        no_active: false,
         num : [{
           num1: 0
         },{
@@ -599,7 +635,19 @@
         if (that.activeTable.length == 0) {
           that.active = false;
         }
-      }
+      },
+      shopType: function() {
+        var that = this;
+        if (that.shopType == 1) {
+          that.chooseShopType = false;
+          that.active = true;
+          that.no_active = false;
+        } else { 
+          that.chooseShopType = true;
+          that.active = false;
+          that.no_active = true;
+        }
+      },
       // num: {
       //   handler: function() {
       //     var that = this;
