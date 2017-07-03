@@ -154,7 +154,6 @@ import myAddress from './selectThree'
           itemId:that.$route.params.goodId,
           token:"'"+userToken+"'"
         };
-        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
           console.log(res,"getNowGoodDetail")

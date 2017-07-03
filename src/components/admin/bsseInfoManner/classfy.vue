@@ -118,13 +118,13 @@
             that.$message.error('网络出错，请稍后再试！');
           }
         })
-        console.log(that.tableData,'hahahaha')
+        // console.log(that.tableData,'hahahaha')
       },
       //获取所有分类列表
       getAllClassify: function() {
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.callStatus === 'SUCCEED') {
             that.options = res.data.data.classifyList
             for (var i = 0; i < that.options.length; i++) {
@@ -185,7 +185,7 @@
           console.log(obj,'23232')
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data);
+              // console.log(res.data);
               that.getClassify();
               that.getAllClassify();
               that.$message({
@@ -226,7 +226,7 @@
         //   that.ruleForm.itemClassifyGrade = scope.row.itemClassifyGrade;
         //   that.addNew = false
         //   return false
-        // } 
+        // }
         // if (scope.row.itemClassifyGrade == 2) {
         //   that.ruleForm.upClass.push('根节点');
         //   that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
@@ -257,7 +257,7 @@
       // 保存商品分类
       saveOneAttrs: function(formName) {
         var that = this;
-        console.log(that.ruleForm);
+        // console.log(that.ruleForm);
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if (that.bindTitle == "添加商品分类") {
@@ -310,7 +310,7 @@
               })
             }
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });

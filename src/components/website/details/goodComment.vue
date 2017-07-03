@@ -12,7 +12,7 @@
         <div class="commentReplay" style="">
           <span class="sjhf">商家回复</span>
           <span class="sjhfnr">
-            {{comment.replyContent}}asdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsegeasdfgagsege
+            {{comment.replyContent}}
           </span>
           </div>
       </li>

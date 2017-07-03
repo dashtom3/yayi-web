@@ -172,8 +172,10 @@
         if(that.searchAttrName){
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
+            // console.log(res.data.data,"search")
             if (res.data.callStatus === 'SUCCEED') {
-              that.tableData==res.data.data;
+              that.tableData = res.data.data;
+              // console.log(that.tableData)
               that.searchAttrName = null;//清空收索内容
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -198,9 +200,7 @@
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
-          }).catch(() => {
-            that.$message({type: 'info',message: '已取消删除'});
-          });
+          })
         });
       },
       changeOneAttr:function(index,item){
@@ -220,12 +220,18 @@
           if(that.flag1){
             var obj={};
             obj.itemPropertyName = that.formData.addGoodAttrName;
-            obj.itempropertydList = that.addGoodAttrValues;
-            that.tableData.push(obj);
-            that.addGoodAttrValues = [];
-            that.formData.addGoodAttrName= null;
-            that.showAddGoodAttr  = false;
-
+            that.global.axiosPostReq('/item/addProperty',obj)
+            .then((res) => {
+              console.log(res,"addProperty")
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tableData.push(obj);
+                that.addGoodAttrValues = [];
+                that.formData.addGoodAttrName= null;
+                that.showAddGoodAttr  = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -246,9 +252,7 @@
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
-            }).catch(() => {
-              that.$message({type: 'info',message: '网络出错'});
-            });
+            })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -270,9 +274,7 @@
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
                 }
-            }).catch(() => {
-              that.$message({type: 'info',message: '已取消删除'});
-            });
+            })
           });
         }else{
           that.addGoodAttrValues.splice(index, 1);

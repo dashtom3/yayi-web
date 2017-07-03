@@ -62,7 +62,7 @@
         var that = this;
         that.global.axiosGetReq('/item/showClassify')
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.allClassfy = res.data.data;
 
@@ -242,6 +242,7 @@
     line-height: 20px;
     padding-bottom: 10px;
     padding-top: 10px;
+    min-height: 35px;
   }
   .details .detail li{
     display: inline-block;

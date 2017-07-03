@@ -16,32 +16,18 @@
         </el-form-item>
         <el-form-item label="订单状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
-				    <el-option
-				      v-for="item in orderStat"
-				      :key="item.value"
-				      :label="item.label"
-				      :value="item.value">
-				    </el-option>
+				    <el-option v-for="item in orderStat" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 				  </el-select>
         </el-form-item>
         <el-form-item label="是否退款" class="fl">
-          <el-select v-model="value1" placeholder="全部" class="fl t_select_width">
-				    <el-option
-				      v-for="item in drawback"
-				      :key="item.value1"
-				      :label="item.label1"
-				      :value="item.value1">
-				    </el-option>
+          <el-select v-model="value1" class="fl t_select_width">
+				    <el-option v-for="item in drawback" :key="item.value1" :label="item.label1" :value="item.value1"></el-option>
 				  </el-select>
         </el-form-item>
         <el-form-item label="下单时间" class="fl" style="width:300px;margin-right:12px;">
-	          <el-date-picker
-              v-model="value3"
-              type="daterange"
-              placeholder="选择时间范围">
-            </el-date-picker>
+	          <el-date-picker  v-model="value3"  type="daterange"  placeholder="选择时间范围">  </el-date-picker>
         </el-form-item>
-        <el-button type="primary" class="fl">查询</el-button>
+        <el-button type="primary" class="fl" @click="search()">查询</el-button>
       </el-form>
 
       <!--列表-->
@@ -66,7 +52,7 @@
             <span v-if="scope.row.orderStat == '4'">卖家已发货</span>
             <span v-if="scope.row.orderStat == '5'">交易成功</span>
             <span v-if="scope.row.orderStat == '6'">交易关闭</span>
-          </template>  
+          </template>
         </el-table-column>
         <el-table-column prop="logisticsInfo" label="物流信息" min-width="120" align="center" >
         </el-table-column>
@@ -80,6 +66,7 @@
               @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             <el-button
               size="mini"
+              v-show='scope.row.orderStat != "6"'
               @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
             <el-button
               size="mini"
@@ -198,11 +185,7 @@
       </el-dialog>
 
       <!-- 关闭交易 -->
-      <el-dialog
-        title="提示"
-        :visible.sync="dialogVisible"
-        size="tiny"
-        :before-close="handleClose">
+      <el-dialog  title="提示"  :visible.sync="dialogVisible"  size="tiny"  :before-close="handleClose">
         <span>这是一段信息</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -216,25 +199,18 @@
           <i class="i_col_red">*</i>
           <span>物流公司：</span>
           <template>
-            <el-select v-model="value" size="small" placeholder="全部">
-              <el-option
-                v-for="item in orderStat"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <el-select v-model="wuliu" size="small"></el-select>
           </template>
         </div>
         <div style="height:40px;padding-left:60px;">
           <i class="i_col_red">*</i>
           <span>快递单号：</span>
           <template>
-            <el-input style="width:215px;" size="small"></el-input>
+            <el-input v-model="wuLiuBianHao" style="width:215px;" size="small"></el-input>
           </template>
         </div>
         <div>
-          <el-button class="btn_">确定</el-button>
+          <el-button class="btn_" @click="sureFaHuo()">确定</el-button>
           <el-button type="primary" @click="deliveryVisible = false" style="margin-left:60px;">取消</el-button>
         </div>
       </el-dialog>
@@ -287,27 +263,32 @@
   export default {
     data() {
       return {
+        // wuliu:[
+        //   {value:"申通快递",label:"申通快递"}
+        // ],
+        wuLiuBianHao:null,
+        wuliu:"申通快递",
         //订单状态
         orderStat: [{
-          value: '0',
-          label: '全部'
-        }, {
-          value: '1',
-          label: '等待买家付款'
-        }, {
-          value: '2',
-          label: '买家已付款'
-        }, {
-          value: '3',
-          label: '订单已确认'
-        }, {
-          value: '4',
-          label: '卖家已发货'
-        }, {
-          value: '5',
-          label: '交易成功'
-        }, {
-          value: '6',
+            value: '0',
+            label: '全部'
+          }, {
+              value: '1',
+              label: '等待买家付款'
+            }, {
+              value: '2',
+              label: '买家已付款'
+            }, {
+              value: '3',
+              label: '订单已确认'
+            }, {
+              value: '4',
+              label: '卖家已发货'
+            }, {
+              value: '5',
+              label: '交易成功'
+            }, {
+              value: '6',
           label: '交易关闭'
         }],
         //是否退款
@@ -323,90 +304,91 @@
         }],
         orderCode: '',//订单编号
         buyerInfo: '',//买家信息
-        value: '',//订单状态的value
-        value1: '',//是否退款的value
-        value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
+        value: '全部',//订单状态的value
+        value1: '全部',//是否退款的value
+        value3:[],
+        // value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
         //订单列表
         orderList: [{
           "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "1",
-          "logisticsInfo": "",
-          "drawback": "否",
-          "handle": ""
-        },{
-          "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "2",
-          "logisticsInfo": "",
-          "drawback": "否",
-          "handle": ""
-        },{
-          "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "3",
-          "logisticsInfo": "",
-          "drawback": "否",
-          "handle": ""
-        },{
-          "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "4",
-          "logisticsInfo": "申通XXXXX",
-          "drawback": "是",
-          "handle": ""
-        },{
-          "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "5",
-          "logisticsInfo": "申通XXXXX",
-          "drawback": "否",
-          "handle": ""
-        },{
-          "orderCode": "ddbh2017053100001",
-          "totalPrice": 500,
-          "dryCurrency": 300,
-          "payment": 200,
-          "buyerInfo": "收件人+手机号",
-          "orderTime": "2017-05-31-17:00",
-          "orderStat": "6",
-          "logisticsInfo": "",
-          "drawback": "是",
-          "handle": ""
-        }],
-        detailVisible: false,//详情界面开关
-        dialogVisible: false,//关闭开关
-        deliveryVisible: false,//仓库发货开关
-        refundVisible: false,//退款处理开关
-        
-        
-        //收货信息
-        receivingInfo: [{
-          userCode: 'xxxxxx',
-          userName: '张三',
-          localtion: '上海市静安区',
-          detailAddr: '共和新路街道洛川中路1100弄31号103（居委会）'
-        }],
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "1",
+            "logisticsInfo": "",
+            "drawback": "否",
+            "handle": ""
+          },{
+            "orderCode": "ddbh2017053100001",
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "2",
+            "logisticsInfo": "",
+            "drawback": "否",
+            "handle": ""
+          },{
+            "orderCode": "ddbh2017053100001",
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "3",
+            "logisticsInfo": "",
+            "drawback": "否",
+            "handle": ""
+          },{
+            "orderCode": "ddbh2017053100001",
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "4",
+            "logisticsInfo": "申通XXXXX",
+            "drawback": "是",
+            "handle": ""
+          },{
+            "orderCode": "ddbh2017053100001",
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "5",
+            "logisticsInfo": "申通XXXXX",
+            "drawback": "否",
+            "handle": ""
+          },{
+            "orderCode": "ddbh2017053100001",
+            "totalPrice": 500,
+            "dryCurrency": 300,
+            "payment": 200,
+            "buyerInfo": "收件人+手机号",
+            "orderTime": "2017-05-31-17:00",
+            "orderStat": "6",
+            "logisticsInfo": "",
+            "drawback": "是",
+            "handle": ""
+          }],
+          detailVisible: false,//详情界面开关
+          dialogVisible: false,//关闭开关
+          deliveryVisible: false,//仓库发货开关
+          refundVisible: false,//退款处理开关
+
+
+          //收货信息
+          receivingInfo: [{
+            userCode: 'xxxxxx',
+            userName: '张三',
+            localtion: '上海市静安区',
+            detailAddr: '共和新路街道洛川中路1100弄31号103（居委会）'
+          }],
         //订单信息
         orderInfo: {
           orderDate: '2017-05-27',
@@ -447,24 +429,119 @@
         }
       }
     },
+    created:function(){
+      var that = this;
+      that.getOrderList();
+    },
     methods: {
+      sureFaHuo:function(){
+        var that = this;
+        var obj = {};
+        obj.logisticsName = that.wuliu;
+        obj.orderId = row.orderId;
+        obj.logisticsCode = that.wuLiuBianHao;
+        if(that.wuLiuBianHao){
+          that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.orderList[index].orderStat = "4";
+              that.deliveryVisible = true;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }else{
+          that.$alert('请填写物流编号！', {confirmButtonText: '确定',});
+        }
+      },
+      search:function(){
+        var that = this;
+        var obj = {};
+        var flag = false;
+        if(that.orderCode){
+          obj.orderId = that.orderCode;
+        }
+        if(that.buyerInfo){
+          obj.buyerInfo = that.buyerInfo;
+        }
+        if(that.value){
+          obj.value = that.value;
+        }
+        if(that.value3.length!=0){
+          var date1,date2;
+          date1 = that.value3[0].toLocaleString();
+          date2 = that.value3[1].toLocaleString();
+          date1 = date1.split(" ");
+          date2 = date2.split(" ");
+          date1 = date1[0].split("/").join("-");
+          date2 = date2[0].split("/").join("-");
+          obj.orderCTime = date1;
+          obj.orderETime = date2;
+        }
+        if(that.value1){
+          obj.isRefund = that.value1;
+        }
+        // that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
+        // .then((res) => {
+        //   console.log(res.data,"getOrderList")
+        //   if (res.data.callStatus === 'SUCCEED') {
+        //
+        //   } else {
+        //     that.$message.error('网络出错，请稍后再试！');
+        //   }
+        // })
+      },
+      getOrderList:function(){
+        var that = this;
+        that.global.axiosPostReq('/showUserOrderManage/showOrder')
+        .then((res) => {
+          console.log(res.data,"getOrderList")
+          if (res.data.callStatus === 'SUCCEED') {
+
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       //详情
       handleDetail(index, row) {
         this.detailVisible = true;
       },
       //关闭交易
       handleClose(index, row) {
-        this.$confirm('确认关闭交易吗？')
+        var that = this;
+        that.$confirm('确认关闭交易吗？')
           .then(_ => {
-            done();
+            var obj = {};
+            obj.orderId = row.orderId;
+            obj.flagBit = "0";
+            that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.orderList[index].orderStat = "6";
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           })
           .catch(_ => {});
       },
       //确认交易
       handleSure(index, row) {
-        this.$confirm('该订单的款已到账？')
+        var that = this;
+        that.$confirm('该订单的款已到账？')
           .then(_ => {
-            done();
+            var obj = {};
+            obj.orderId = row.orderId;
+            obj.flagBit = "1";
+            that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.orderList[index].orderStat = "3";
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           })
           .catch(_ => {});
       },
@@ -474,7 +551,8 @@
       },
       //仓库发货
       handleDelivery(index, row) {
-        this.deliveryVisible = true;
+        var that = this;
+        that.deliveryVisible = true;
       },
       reduceCount(index, item){
         if(item.checked && this.orderInfo.goodsInfo[index].count !== 1){
@@ -601,7 +679,7 @@
 }
 .refund_tb{
   width: 100%;
-  border-collapse: collapse;/* 边框合并属性  */ 
+  border-collapse: collapse;/* 边框合并属性  */
   border: none;
   margin-top: 20px;
 }
