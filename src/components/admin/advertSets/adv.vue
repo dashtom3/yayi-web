@@ -57,16 +57,6 @@
 					  list-type="picture">
 					  <el-button size="small" type="primary">选择</el-button>
 					</el-upload>
-
-					<!-- <el-upload
-            :on-success="uploadFile"
-            :action="qiNiuUrl"
-            class="avatar-uploader"
-            :show-file-list="false"
-            :data="qiNiuToken">
-            <el-button size="small" type="primary">选择</el-button>
-            <img v-if="img_src" :src="img_src" class="avatar">
-          </el-upload> -->
 		    </li>
 	    	<li class="clearfix">
 		    	<span class="fl span_nav"><span class="fr"><i class="i_col_red">*</i>链接：</span></span>
