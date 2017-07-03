@@ -1,5 +1,5 @@
 <template>
-	<el-row class="brandWarp">
+	<div>
 		<el-col :span="24" class="warp-breadcrum">
       <div id="myChart" :style="{width: '1200px', height: '600px', margin: 'auto' }"></div>
     </el-col>
@@ -44,7 +44,7 @@
         </el-table-column>
       </el-table>
     </el-col>
-	</el-row>
+	</div>
 </template>
 
 <script>
@@ -59,8 +59,6 @@ export default {
 	name: 'hello',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      value: '',
       tableData: [{
         orderTime: '2016-05-02-17:00',
         customerName: '李志芳',
@@ -161,14 +159,17 @@ export default {
               data: ['0','5','10','15','20','25','30']
           },
           yAxis: {
-              type: 'value'
+              type: 'value',
+              max: 4000,
+              min: 0,
+              splitNumber: 10,
           },
           series: [
               {
                   name:'总收入',
                   type:'line',
                   stack: '总收入',
-                  data:[0, 500, 700, 2200, 1600, 3000, 3500]
+                  data:[0, 500, 800, 2200, 1800, 3000, 3500]
               }
           ]
       });

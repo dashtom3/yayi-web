@@ -17,6 +17,7 @@
     <transition name="component-fade" mode="out-in">
       <component v-on:msgFromChild="getMsg" :is="currentView" keep-alive></component>
     </transition>
+    <div class="clearfix"></div>
     <salesFoot></salesFoot>
   </div>
 </template>
@@ -28,8 +29,9 @@
   import findClient from "./findClient"
   import myClient from "./myClient"
   import personalData from "./personalData"
-  import aa from "./aa"
+  import homePage from "./homePage"
   import myOrder from "./myorder"
+  import myWallet from "./myWallet"
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
   });
@@ -64,11 +66,11 @@
     components: {
       salesHead,
       salesFoot,
-      tab01: aa,
+      tab01: homePage,
       tab02: myOrder,
       tab03: findClient,
       tab04: myClient,
-      tab05: tab05,
+      tab05: myWallet,
       tab06: personalData,
       myOrder,
     },
