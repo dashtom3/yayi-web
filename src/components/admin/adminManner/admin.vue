@@ -14,20 +14,18 @@
           <el-input v-model="userName"></el-input>
         </el-form-item>
         <el-form-item class="fl">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="queryHandler">查询</el-button>
         </el-form-item>
 	    </el-form>
 			<el-button type="primary" class="add_btn" @click="adminAddHandler">+添加管理员</el-button>
 
 	    <!--回复列表-->
       <el-table :data="adminList" border>
-        <el-table-column prop="userName" label="用户名" :span="4" align="center" >
+        <el-table-column prop="phone" label="用户名" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="pwd" label="密码" :span="4" align="center" >
+        <el-table-column prop="adminstratorPwd" label="密码" :span="4" align="center" >
         </el-table-column>
-        <el-table-column prop="realName" label="真实姓名" :span="4" align="center" >
-        </el-table-column>
-        <el-table-column prop="registerTime" label="注册时间" :span="4" align="center" >
+        <el-table-column prop="trueName" label="真实姓名" :span="4" align="center" >
         </el-table-column>
         <el-table-column prop="handle" label="操作" :span="8" align="center">
           <template scope="scope">
@@ -44,7 +42,7 @@
       </el-table>
 			
       <!-- 回复弹窗 -->
-      <el-dialog :title="!userName1? '添加管理员': '修改管理员'" size="tiny" v-model="adminAddBtn" :close-on-click-modal="true">
+      <el-dialog :title="!isEdit? '添加管理员': '修改管理员'" size="tiny" v-model="adminAddBtn" :close-on-click-modal="true">
         <div class="admin_layout">
           <span>用户名：</span>
           <template>
@@ -64,7 +62,7 @@
           </template>
         </div>
         <div style="margin-top:30px;">
-          <el-button class="btn_" >确定</el-button>
+          <el-button class="btn_" @click="addOkHandler">确定</el-button>
           <el-button type="primary" @click="adminAddBtn = false" style="margin-left:60px;">取消</el-button>
         </div>
       </el-dialog>
@@ -73,6 +71,7 @@
 </template>
 
 <script>
+	import global from '../../global/global'
 	export default {
 		data(){
 			return {
@@ -85,38 +84,112 @@
 					userName: '某一',
 					pwd: '123456',
 					realName: '张三',
-					registerTime: '2017-04-03'
 				},{
 					userName: '某二',
 					pwd: '123456',
 					realName: '李四',
-					registerTime: '2017-04-03'
 				},{
 					userName: '某三',
 					pwd: '123456',
 					realName: '王五',
-					registerTime: '2017-04-03'
 				}],
-				adminAddBtn: false
+				adminAddBtn: false,
+				adminstratorId: '',
+				isEdit: false
 			}
 		},
+		created(){
+			this.queryHandler()
+		},
 		methods: {
+			queryHandler(){
+				let params = {
+					phone: this.userName,
+					trueName: this.realName
+				}
+				
+        global.axiosPostReq('/adminstrator/query',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.adminList = res.data.data
+          }else{
+            this.$message.error('查询评论失败！');
+          }
+        })
+			},
 			adminAddHandler(){
 				this.adminAddBtn = true;
 				this.userName1 = '';
 				this.pwd1 = '';
 				this.realName1 = '';
+				this.isEdit = false;
+			},
+			addOkHandler(){
+				//添加管理员
+				if(!this.isEdit){
+					let params = {
+						phone: this.userName1,
+						adminstratorPwd: this.pwd1,
+						trueName: this.realName1
+					}
+	        global.axiosPostReq('/adminstrator/add',params).then((res) => {
+	          if (res.data.callStatus === 'SUCCEED') { 
+	            this.$message({
+	              message: '添加成功',
+	              type: 'success'
+	            });
+	            this.adminAddBtn = false
+	            this.queryHandler()
+	          }else{
+	            this.$message.error('添加失败！');
+	          }
+	        })
+				}else if(this.isEdit){//修改管理员
+					let params = {
+						adminstratorId: this.adminstratorId,
+						phone: this.userName1,
+						adminstratorPwd: this.pwd1,
+						trueName: this.realName1
+					}
+	        global.axiosPostReq('/adminstrator/update',params).then((res) => {
+	          if (res.data.callStatus === 'SUCCEED') { 
+	            this.$message({
+	              message: '修改成功',
+	              type: 'success'
+	            });
+	            this.adminAddBtn = false
+	            this.queryHandler()
+	          }else{
+	            this.$message.error('修改失败！');
+	          }
+	        })
+				}
+				
 			},
 			handleEdit(index, row){
 				this.adminAddBtn = true;
-				this.userName1 = row.userName;
-				this.pwd1 = row.pwd;
-				this.realName1 = row.realName;
+				this.userName1 = row.phone;
+				this.pwd1 = row.adminstratorPwd;
+				this.realName1 = row.trueName;
+				this.adminstratorId = row.adminstratorId;
+				this.isEdit = true
 			},
 			handleDel(index, row){
 				this.$confirm('确定删除吗？')
           .then(_ => {
-            done();
+            let params = {
+							adminstratorId: row.adminstratorId,
+						}
+		        global.axiosPostReq('/adminstrator/delete',params).then((res) => {
+		          if (res.data.callStatus === 'SUCCEED') { 
+		            this.$message({
+		              message: '删除成功',
+		              type: 'success'
+		            });
+		            this.queryHandler()
+		          }else{
+		            this.$message.error('删除失败！');
+		          }
+		        })
           })
           .catch(_ => {});
 			}
