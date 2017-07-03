@@ -33,6 +33,7 @@ import bsseInfoManner_classfy from '@/components/admin/bsseInfoManner/classfy'
 
 // 商品信息管理
 import merchantMessage from '@/components/admin/merchantMessage/merchantMessage'
+import addMerchandise from '@/components/admin/merchantMessage/addMerchandise'
 import secondStep from '@/components/admin/merchantMessage/secondStep'
 
 //交易管理
@@ -163,6 +164,7 @@ let router = new Router({
       iconCls: 'iconfont icon-setting1', // 图标样式class
       children: [
         {path: '/admin/merchantMessage', component: merchantMessage, name: '商品信息管理', menuShow: true},
+        {path: '/admin/addMerchandise', component: addMerchandise, name: 'addMerchandise', menuShow: true},
         {path: '/admin/secondStep', component: secondStep, name: 'secondStep', menuShow: true},
       ]
     },

@@ -42,7 +42,7 @@
       <div class="clearfix"></div>
       <el-table :data="tableData" border style="margin-top: 26px;width: 100%">
         <el-table-column label="商品编号" prop="id"></el-table-column>
-        <el-table-column label="商品名称" prop="name"></el-table-column>
+        <el-table-column label="商品名称" prop="itemName"></el-table-column>
         <el-table-column label="商品分类" prop="class"></el-table-column>
         <el-table-column label="品牌名称" prop="brand"></el-table-column>
         <el-table-column label="推荐">
@@ -156,15 +156,16 @@
     </el-form>
   </el-dialog>
   <!-- 查看商品属性详情面板 结束 -->
-  <addMerchandise v-on:listenToChildEvent="showMsgFromChild" v-show="addMerchandise"></addMerchandise>
+<!--   <addMerchandise v-on:listenToChildEvent="showMsgFromChild" v-show="addMerchandise"></addMerchandise> -->
 </div>
 </template>
 <script>
   import util from '../../../common/util'
-  import addMerchandise from './addMerchandise'
+  // import addMerchandise from './addMerchandise'
   export default{
     data () {
       return {
+        tableData: [],
         cargo: {
           id: '',
           name: '',
@@ -191,30 +192,8 @@
           label: '已下架',
           value: '3'
         }],
-        tableData: [{
-          id: '1122334455667788',
-          name: '朗力 口洁宝抑菌含漱液',
-          class: '漱口水',
-          brand: '武汉朗力生物',
-          coin: 1,
-          state: true,
-        }, {
-          id: '1122334455667788',
-          name: '武汉金光 脸颊牵开器-T型 小',
-          class: '漱口水',
-          brand: '武汉朗力生物',
-          coin: 0,
-          state: true,
-        }, {
-          id: '1122334455667788',
-          name: '朗力 口洁宝抑菌含漱液',
-          class: '漱口水',
-          brand: '武汉朗力生物',
-          coin: 0,
-          state: false,
-        }],
         list: true,
-        addMerchandise: false,
+        // addMerchandise: false,
         coinValue: '',
         stateValue: '',
         dialogTableVisible: false,
@@ -656,8 +635,12 @@
         input_enable: false,
       }
     },
-    components: {
-      addMerchandise,
+    // components: {
+    //   addMerchandise,
+    // },
+    created: function() {
+      var that = this;
+      that.getItemInfo();
     },
     mounted: function() {
       var that = this;
@@ -669,6 +652,18 @@
       }
     },
     methods: {
+      // 获取商品列表
+      getItemInfo: function() {
+        var that = this;
+        that.global.axiosPostReq('/item/itemInfoList').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+            console.log(that.tableData);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       // 组件传值
       showMsgFromChild: function(data) {
         var that = this;
@@ -683,7 +678,7 @@
       add: function() {
         var that = this;
         that.list = false;
-        that.addMerchandise = true;
+        that.$router.push({ path: '/admin/addMerchandise'});
       },
       //编辑商品属性
       edit: function() {

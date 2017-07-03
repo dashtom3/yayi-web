@@ -10,29 +10,29 @@
       </el-breadcrumb>
     </el-col>
     <div class="clearfix"></div>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-top: 20px;" v-show="firstStep">
-      <el-form-item label="商品编号" prop="cargoId">
-        <el-input v-model="ruleForm.cargoId" placeholder="默认的，不需要修改" style="width: 300px !important;"></el-input>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="margin-top: 20px;">
+      <el-form-item label="商品编号" prop="itemId">
+        <el-input v-model="ruleForm.itemId" style="width: 300px !important;" :disabled="true"></el-input>
       </el-form-item>
-      <el-form-item label="商品名称" prop="name">
-        <el-input v-model="ruleForm.name" style="width: 300px !important;"></el-input>
+      <el-form-item label="商品名称" prop="itemName">
+        <el-input v-model="ruleForm.itemName" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="商品分类" prop="type">
-        <el-cascader :options="options4" :show-all-levels="false" v-model="ruleForm.type"></el-cascader>
-<!--         <el-input v-model="ruleForm.classify" style="width: 300px;" icon="search" :on-icon-click="handleIconClick"></el-input> -->
+        <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.type" change-on-select>
+        </el-cascader>
       </el-form-item>
-      <el-form-item label="品牌名称" prop="brand">
-        <el-select v-model="ruleForm.brand" placeholder="请选择">
-          <el-option v-for="brand in options3" :key="brand.value" :label="brand.label" :value="brand.value">
+      <el-form-item label="品牌名称" prop="itemBrandName">
+        <el-select v-model="ruleForm.itemBrandName" placeholder="请选择">
+          <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand.itemBrandName">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="注册账号" prop="rgAcount">
-        <el-input v-model="ruleForm.rgAcount" style="width: 300px !important;"></el-input>
+      <el-form-item label="注册证号" prop="registerId">
+        <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="推荐" prop="qian">
-        <el-radio class="radio" v-model="radio" label="1">是</el-radio>
-        <el-radio class="radio" v-model="radio" label="2">否</el-radio>
+        <el-radio class="radio" v-model="ruleForm.radio" label="1">是</el-radio>
+        <el-radio class="radio" v-model="ruleForm.radio" label="2">否</el-radio>
       </el-form-item>
       <el-form-item label="商品属性" prop="qian">
         <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
@@ -152,258 +152,43 @@
     name: 'addMerchandise',
     data () {
       return {
+        options: [],
+        brandOptions: [],
         list: true,
-        addMerchandise: false,
-        firstStep: true,
         secondStep: false,
         shopType: '',
         chooseShopType: true,
-        options3: [{
-          label: '哈哈',
-          value: '1'
-        },{
-          label: '嘿嘿',
-          value: '2'
-        },{
-          label: '呵呵',
-          value: '3'
-        }],
-        options4: [{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, {
-          value: 'zujian',
-          label: '组件',
-          children: [{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-          }, {
-            value: 'form',
-            label: 'Form',
-            children: [{
-              value: 'radio',
-              label: 'Radio 单选框'
-            }, {
-              value: 'checkbox',
-              label: 'Checkbox 多选框'
-            }, {
-              value: 'input',
-              label: 'Input 输入框'
-            }, {
-              value: 'input-number',
-              label: 'InputNumber 计数器'
-            }, {
-              value: 'select',
-              label: 'Select 选择器'
-            }, {
-              value: 'cascader',
-              label: 'Cascader 级联选择器'
-            }, {
-              value: 'switch',
-              label: 'Switch 开关'
-            }, {
-              value: 'slider',
-              label: 'Slider 滑块'
-            }, {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器'
-            }, {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器'
-            }, {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器'
-            }, {
-              value: 'upload',
-              label: 'Upload 上传'
-            }, {
-              value: 'rate',
-              label: 'Rate 评分'
-            }, {
-              value: 'form',
-              label: 'Form 表单'
-            }]
-          }, {
-            value: 'data',
-            label: 'Data',
-            children: [{
-              value: 'table',
-              label: 'Table 表格'
-            }, {
-              value: 'tag',
-              label: 'Tag 标签'
-            }, {
-              value: 'progress',
-              label: 'Progress 进度条'
-            }, {
-              value: 'tree',
-              label: 'Tree 树形控件'
-            }, {
-              value: 'pagination',
-              label: 'Pagination 分页'
-            }, {
-              value: 'badge',
-              label: 'Badge 标记'
-            }]
-          }, {
-            value: 'notice',
-            label: 'Notice',
-            children: [{
-              value: 'alert',
-              label: 'Alert 警告'
-            }, {
-              value: 'loading',
-              label: 'Loading 加载'
-            }, {
-              value: 'message',
-              label: 'Message 消息提示'
-            }, {
-              value: 'message-box',
-              label: 'MessageBox 弹框'
-            }, {
-              value: 'notification',
-              label: 'Notification 通知'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'menu',
-              label: 'NavMenu 导航菜单'
-            }, {
-              value: 'tabs',
-              label: 'Tabs 标签页'
-            }, {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑'
-            }, {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单'
-            }, {
-              value: 'steps',
-              label: 'Steps 步骤条'
-            }]
-          }, {
-            value: 'others',
-            label: 'Others',
-            children: [{
-              value: 'dialog',
-              label: 'Dialog 对话框'
-            }, {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示'
-            }, {
-              value: 'popover',
-              label: 'Popover 弹出框'
-            }, {
-              value: 'card',
-              label: 'Card 卡片'
-            }, {
-              value: 'carousel',
-              label: 'Carousel 走马灯'
-            }, {
-              value: 'collapse',
-              label: 'Collapse 折叠面板'
-            }]
-          }]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [{
-            value: 'axure',
-            label: 'Axure Components'
-          }, {
-            value: 'sketch',
-            label: 'Sketch Templates'
-          }, {
-            value: 'jiaohu',
-            label: '组件交互文档'
-          }]
-        }],
         ruleForm: {
-          cargoId: '',
-          name: '',
-          type: [],
-          brand: '',
-          rgAcount:'',
-          qian: '',
+          itemId: '', //商品编号
+          itemName: '', //商品名称
+          type: [], //商品分类
+          oneClassify: '', //商品一级分类
+          twoClassify: '', //商品二级分类
+          threeClassify: '', //商品三级分类
+          itemBrandName: '', //品牌名称
+          registerId:'', //商品注册证号
+          radio: '',
         },
         rules: {
-          cargoId: [
+          itemId: [
             { required: true, message: '请填写商品编号', trigger: 'blur' }
           ],
-          name: [
+          itemName: [
             { required: true, message: '请填写商品名称', trigger: 'blur' }
           ],
           type: [
-            { required: true, message: '请选择商品分类', trigger: 'change' }
+            { type: 'array', required: true, message: '请选择商品分类', trigger: 'blur' }
           ],
-          brand: [
-            { required: true, message: '请选择品牌名称', trigger: 'change' }
+          itemBrandName: [
+            { required: true, message: '请选择品牌名称', trigger: 'blur' }
           ],
-          rgAcount: [
-            { required: true, message: '请填写注册账号', trigger: 'blur' }
+          registerId: [
+            { required: true, message: '请填写注册证号', trigger: 'blur' }
           ],
           qian: [
             { required: true, message: '请选择是否乾币抵扣状态', trigger: 'change' }
-          ],
-          date1: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-          type: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-          ],
-          desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' }
           ]
         },
-        radio: '',
         labelPosition: 'right',
         tableData2: [{
           property: '工作电压',
@@ -614,9 +399,6 @@
         input_stock: '',
         input_enable: false,
         activeTable: [],
-        ggId1: null,
-        ggId2: null,
-        ggId3: null,
         property1: '',
         property2: '',
         property3: '',
@@ -648,37 +430,69 @@
           that.no_active = true;
         }
       },
-      // num: {
-      //   handler: function() {
-      //     var that = this;
-      //     var sum = 1;
-      //     var nn = that.num;
-      //     for (var i = 0; i < nn.length; i++) {
-      //       let aa = '';
-      //       for (aa in nn[i]) {
-      //         // console.log(aa);
-      //       }
-      //       // console.log(nn[i][aa]);
-      //       if (nn[i][aa] !== 0) {
-      //         sum *= nn[i][aa]
-      //       }
-      //       //console.log('num' + (i +1));
-      //     }
-      //     that.number = sum;
-      //   },
-      //   deep: true
-      // },
+      ruleForm: {
+        handler: function() {
+          var that = this;
+          if (that.ruleForm.type.length !== 0) {
+            that.ruleForm.oneClassify = that.ruleForm.type[0];
+            that.ruleForm.twoClassify = that.ruleForm.type[1];
+            that.ruleForm.threeClassify = that.ruleForm.type[2];
+            return false
+          }
+          console.log(that.ruleForm)
+        },
+        deep: true
+      },
     },
     created: function() {
+      var that = this;
+      console.log(that.$route.params.ruleForm,'223232323');
+      //that.ruleForm = that.$route.params.ruleForm;
+      that.getItemId();
+      that.getAllClassify();
       //console.log(this.num.num1);
     },
     methods: {
+      //获取获取商品编号
+      getItemId: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/getItemId').then((res) => {
+          //console.log(res,'22222');
+          if (res.data.callStatus === 'SUCCEED') {
+            that.ruleForm.itemId = res.data.msg;
+            console.log(that.ruleForm.itemId);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      //获取所有分类列表
+      getAllClassify: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.options = res.data.data.classifyList;
+            that.brandOptions = res.data.data.itemBrandList;
+            for (var i = 0; i < that.options.length; i++) {
+              that.options[i].label = that.options[i].oneClassify
+              that.options[i].children = that.options[i].classifyTwoList
+              for (var k in that.options[i].children) {
+                that.options[i].children[k].label = that.options[i].children[k].classifyTwoName
+                that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
+                for (var j in that.options[i].children[k].children) {
+                  that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
+                }
+              }
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       //返回商品列表
       retrunList: function() {
         var that = this
-        that.list = true
-        that.addMerchandise = false
-        that.$emit('listenToChildEvent',that.list)
+        that.$router.push({path: '/admin/merchantMessage'});
       },
       // 组件传值
       showMsgFromSecondStep: function(data) {
@@ -742,7 +556,7 @@
       },
       nextToFirst: function() {
         var that = this;
-        that.$router.push({ path: '/admin/secondStep' });
+        that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
       }
     },
   }
