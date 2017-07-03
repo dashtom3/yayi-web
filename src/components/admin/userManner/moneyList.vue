@@ -16,7 +16,7 @@
           <el-date-picker v-model="searchDataPrev" type="daterange" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="searchAll">查询</el-button>
+          <el-button type="primary" v-on:click="searchAll" :loading='loadingCheckHead'>查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -43,7 +43,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="search">查询</el-button>
+          <el-button type="primary" v-on:click="search" :loading='loadingCheck'>查询</el-button>
         </el-form-item>
       </el-form>
       <el-form :inline="true" >
@@ -78,6 +78,8 @@
         yayiCoin: '',
         selectSearchType:"手机号",
         showChangeUserMoney:false,
+        loadingCheck: false,
+        loadingCheckHead: false,
         moneyList:[],
       }
     },
@@ -121,16 +123,24 @@
             endDate: '',
             token: ''
           }
-          console.log(obj);
+          that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               if (res.data.data.length == 0) {
+                that.loadingCheckHead = false;
                 that.$message.error('查询无结果！');
+              } else {
+                that.loadingCheckHead = false;
+                that.moneyList = res.data.data;
+                for (var i = 0; i < that.moneyList.length; i++) {
+                  that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+                }
+                console.log(that.moneyList,'2222222222')
               }
-              that.moneyList = res.data.data;
               // that.searchUserId = '';
               // that.searchDataPrev = [];
             } else {
+              that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');
             }
           })
@@ -143,15 +153,23 @@
             endDate: endDate,
             token: ''
           }
+          that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               if (res.data.data.length == 0) {
+                that.loadingCheckHead = false;
                 that.$message.error('查询无结果！');
+              } else {
+                that.loadingCheckHead = false;
+                that.moneyList = res.data.data;
+                for (var i = 0; i < that.moneyList.length; i++) {
+                  that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+                }
               }
-              that.moneyList = res.data.data;
               // that.searchUserId = '';
               // that.searchDataPrev = [];
             } else {
+              that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');
             }
           })
@@ -170,17 +188,20 @@
           endDate: '',
           token: ''
         }
+        that.loadingCheck = true;
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length == 0) {
+              that.loadingCheck = false;
               that.$message.error('手机号不存在！');
               // that.nowUserMoneyNum = '';
             } else {
-              console.log(res.data.data[res.data.data.length-1].qbBalances, 'frisco');
-              console.log(res.data.data);
+              //console.log(res.data.data[res.data.data.length-1].qbBalances, 'frisco');
+              that.loadingCheck = false;
               that.yayiCoin = res.data.data[res.data.data.length-1].qbBalances;
             }
           } else {
+            that.loadingCheck = false;
             that.$message.error('网络出错，请稍后再试！');
           }
         })

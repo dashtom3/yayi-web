@@ -40,10 +40,13 @@
     </el-col>
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
-        <el-form-item label="上级分类：" prop="upClass" :label-width="formLabelWidth">
+        <el-form-item label="上级分类：" prop="upClass" :label-width="formLabelWidth" v-if="addNew">
           <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.upClass"change-on-select>
             <el-button slot="append" icon="search"></el-button>
           </el-cascader>
+        </el-form-item>
+        <el-form-item label="上级分类：" :label-width="formLabelWidth" v-else>
+          <p>{{PreviousClassify}}</p>
         </el-form-item>
         <el-form-item label="分类名称：" prop="classname" :label-width="formLabelWidth">
           <el-input v-model="ruleForm.classname" auto-complete="off"></el-input>
@@ -62,10 +65,13 @@
         ruleForm:{
           upClass: [],
           classname: '',
+          oldClassname: '',
           itemId: null,
+          itemClassifyGrade: null,
         },
         searchClassfyName: '',
         searchParentClassfyName: '',
+        PreviousClassify: '',
         // 1是增加，2是修改
         classfyOperaType:1,
         classfyChangeIndex:null,
@@ -84,6 +90,7 @@
           ],
         },
         a: [],
+        addNew: true,
         // formLabelWidth: '120px'
         // -----------------------------------
       }
@@ -106,7 +113,7 @@
         that.global.axiosGetReq('/item/showItemClassify').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            console.log(that.tableData)
+            // console.log(that.tableData)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -125,10 +132,6 @@
               that.options[i].children = that.options[i].classifyTwoList
               for (var k in that.options[i].children) {
                 that.options[i].children[k].label = that.options[i].children[k].classifyTwoName
-                // that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
-                // for (var j in that.options[i].children[k].children) {
-                //   that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
-                // }
               }
             }
             var optionsNew = [{
@@ -137,7 +140,6 @@
             }]
             optionsNew[0].children = that.options
             that.options = optionsNew;
-            // console.log(that.options);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -148,6 +150,7 @@
         var that = this;
         that.bindTitle = "添加商品分类";
         that.dialogFormVisible = true;
+        that.addNew = true;
       },
       // 查询分类
       search:function () {
@@ -159,7 +162,7 @@
         that.global.axiosPostReq('/item/showItemClassify',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            // console.log(that.tableData)
+            console.log(that.tableData,'23232323')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -179,7 +182,7 @@
             itemClassifyName: scope.row.itemClassifyName,
             itemClassifyGrade: scope.row.itemClassifyGrade,
           }
-          console.log(obj)
+          console.log(obj,'23232')
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data);
@@ -203,39 +206,53 @@
       // 修改商品分类
       changeOneAttr: function(scope) {
         var that = this;
-        console.log(scope.row,'22');
-        if (scope.row.itemPreviousClassify == '根节点') {
-          that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
-          that.bindTitle = "修改商品分类";
-          that.dialogFormVisible = true;
-          that.ruleForm.classname = scope.row.itemClassifyName;
-          that.ruleForm.itemId = scope.row.itemClassifyId;
-          return false
-        } 
-        if (scope.row.itemPreviousClassify !== '根节点') {
-          that.ruleForm.upClass.push('根节点');
-          that.ruleForm.upClass.push('2');
-          that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
-          // that.ruleForm.upClass.push(scope.row.itemClassifyName)
-          that.bindTitle = "修改商品分类";
-          that.dialogFormVisible = true;
-          that.ruleForm.classname = scope.row.itemClassifyName;
-          that.ruleForm.itemId = scope.row.itemClassifyId;
-        }
-        // that.global.axiosPostReq('/item/updateItemClassify',obj).then((res) => {
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //     console.log(res.data);
-        //     that.getClassify();
-        //     that.getAllClassify();
-        //     that.$message({
-        //       type: 'success',
-        //       message: '修改成功!'
-        //     });
-        //   } else {
-        //     that.$message.error('网络出错，请稍后再试！');
-        //   }
-        // })
-        // console.log(that.ruleForm.upClass);
+        console.log(scope.row);
+        //that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+        that.bindTitle = "修改商品分类";
+        that.dialogFormVisible = true;
+        that.PreviousClassify = scope.row.itemPreviousClassify;
+        that.ruleForm.classname = scope.row.itemClassifyName;
+        that.ruleForm.oldClassname = scope.row.itemClassifyName;
+        that.ruleForm.itemId = scope.row.itemClassifyId;
+        that.ruleForm.itemClassifyGrade = scope.row.itemClassifyGrade;
+        that.addNew = false
+        // if (scope.row.itemClassifyGrade == 1) {
+        //   that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+        //   that.bindTitle = "修改商品分类";
+        //   that.dialogFormVisible = true;
+        //   that.ruleForm.classname = scope.row.itemClassifyName;
+        //   that.ruleForm.oldClassname = scope.row.itemClassifyName;
+        //   that.ruleForm.itemId = scope.row.itemClassifyId;
+        //   that.ruleForm.itemClassifyGrade = scope.row.itemClassifyGrade;
+        //   that.addNew = false
+        //   return false
+        // } 
+        // if (scope.row.itemClassifyGrade == 2) {
+        //   that.ruleForm.upClass.push('根节点');
+        //   that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+        //   that.bindTitle = "修改商品分类";
+        //   that.dialogFormVisible = true;
+        //   that.ruleForm.classname = scope.row.itemClassifyName;
+        //   that.ruleForm.oldClassname = scope.row.itemClassifyName;
+        //   that.ruleForm.itemId = scope.row.itemClassifyId;
+        //   that.ruleForm.itemClassifyGrade = scope.row.itemClassifyGrade;
+        //   that.addNew = false
+        //   return false
+        // }
+        // if (scope.row.itemClassifyGrade == 3) {
+        //   console.log('333333');
+        //   that.ruleForm.upClass.push('根节点');
+        //   that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
+        //   that.bindTitle = "修改商品分类";
+        //   that.dialogFormVisible = true;
+        //   that.ruleForm.classname = scope.row.itemClassifyName;
+        //   that.ruleForm.oldClassname = scope.row.itemClassifyName;
+        //   that.ruleForm.itemId = scope.row.itemClassifyId;
+        //   that.ruleForm.itemClassifyGrade = scope.row.itemClassifyGrade;
+        //   that.addNew = false
+        //   //console.log(scope.row);
+        //   return false
+        // }
       },
       // 保存商品分类
       saveOneAttrs: function(formName) {
@@ -243,7 +260,7 @@
         console.log(that.ruleForm);
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            if (that.bindTitle = "添加商品分类") {
+            if (that.bindTitle == "添加商品分类") {
               var obj = {
                 itemClassifyName: that.ruleForm.classname,
                 itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
@@ -258,7 +275,7 @@
                   that.dialogFormVisible = false;
                   that.$message({
                     type: 'success',
-                    message: '添加成功成功!'
+                    message: '添加成功!'
                   });
                   that.tableData = res.data.data;
                 } else {
@@ -267,28 +284,30 @@
               })
             } else {
               var obj = {
+                itemClassifyId: that.ruleForm.itemId,
                 itemClassifyName: that.ruleForm.classname,
-                itemPreviousClassify: that.ruleForm.upClass.slice(-1)[0],
-                itemPreviousClassify: '',
-                itemClassifyGrade: that.ruleForm.upClass.length,
+                itemOldName: that.ruleForm.oldClassname,
+                itemClassifyGrade: that.ruleForm.itemClassifyGrade,
               }
-              console.log(obj);
-              // that.global.axiosPostReq('/item/addItemClassify',obj).then((res) => {
-              //   if (res.data.callStatus === 'SUCCEED') {
-              //     that.getClassify();
-              //     that.getAllClassify();
-              //     that.ruleForm.classname = '';
-              //     that.ruleForm.upClass = [];
-              //     that.dialogFormVisible = false;
-              //     that.$message({
-              //       type: 'success',
-              //       message: '添加成功成功!'
-              //     });
-              //     that.tableData = res.data.data;
-              //   } else {
-              //     that.$message.error('网络出错，请稍后再试！');
-              //   }
-              // })
+              console.log(that.ruleForm,'22222222');
+              that.global.axiosPostReq('/item/updateItemClassify',obj).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.getClassify();
+                  that.getAllClassify();
+                  that.ruleForm.classname = '';
+                  that.ruleForm.upClass = [];
+                  that.ruleForm.itemId = null;
+                  that.ruleForm.itemClassifyGrade = null;
+                  that.dialogFormVisible = false;
+                  that.$message({
+                    type: 'success',
+                    message: '修改成功!'
+                  });
+                  that.tableData = res.data.data;
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
             }
           } else {
             console.log('error submit!!');
@@ -301,6 +320,8 @@
         var that = this;
         that.ruleForm.classname = '';
         that.ruleForm.upClass = [];
+        that.ruleForm.itemId = null;
+        that.ruleForm.itemClassifyGrade = null;
         that.dialogFormVisible = false;
       }
     },
