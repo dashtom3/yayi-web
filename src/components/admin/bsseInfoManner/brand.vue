@@ -163,7 +163,6 @@
         global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.tableData = res.data.data;
-            console.log(this.tableData)
           }else{
             this.$message.error('查询商品品牌失败！');
           }
