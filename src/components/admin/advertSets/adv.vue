@@ -148,7 +148,7 @@
 				this.fileList[0].url = this.img_src;
 			},
       handlePreview(file) {
-        // clearFiles();
+        
       },
       uploadFile(res, file) {
         this.advUrl = global.qiniuShUrl + file.response.key

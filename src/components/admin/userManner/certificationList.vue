@@ -6,7 +6,7 @@
         <el-breadcrumb-item>资质列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
-    <el-col  class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
+    <el-col class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
       <el-form :inline="true" >
         <el-form-item>
             <el-input v-model="searchUserContent">
