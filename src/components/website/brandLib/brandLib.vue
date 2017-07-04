@@ -513,6 +513,9 @@ border-radius: 3px;
 .towClassfy{
   padding: 30px 0;
 }
+.towClassfy ul{
+  line-height: 40px;
+}
 .threeClassfy{
   padding: 30px 0;
 }
@@ -604,7 +607,7 @@ margin: 0 auto;
   margin-right: 50px;
   line-height: 52px;
   text-align: center;
-  width: 93px;
+  /*width: 93px;*/
 }
 .brandLine{
   border-bottom: 1px solid #e5e5e5;
