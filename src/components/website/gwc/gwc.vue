@@ -167,12 +167,10 @@
           }
           sendData.details = that.sendDataList;
           window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-          console.log(sendData);
-          // that.$router.push({path: '/suborder'})
+          that.$router.push({path: '/suborder'})
         }else{
           that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
         }
-        // this.$router.push({path: '/suborder'})
       },
       deleteAll:function(){
         var that = this;

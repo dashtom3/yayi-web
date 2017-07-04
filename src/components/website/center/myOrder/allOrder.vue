@@ -69,7 +69,7 @@
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" @click="cancel_order">取消订单</p>
         </div>
-      </div>  
+      </div>
     </div>
 <!--     <paging0></paging0> -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
@@ -85,13 +85,13 @@
         <p class="comment_des">爱丽丝 #标准</p>
         <div class="clearfix"></div>
         <div class="score_box">
-          <div class="score_word">评分：</div>  
+          <div class="score_word">评分：</div>
           <el-rate v-model="value2" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
           <div class="getScore" v-show="getScore"><span style="color: #D81E06">{{score}}</span>分</div>
         </div>
         <div class="clearfix"></div>
         <div class="comment_word_box">
-          <div class="comment_word_des">评价：</div>  
+          <div class="comment_word_des">评价：</div>
           <el-input type="textarea" :rows="5" placeholder="请输入评价内容~" v-model="textarea" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
           </el-input>
         </div>
@@ -213,11 +213,11 @@
       //显示所有订单
       getAllOrder: function() {
         var that = this;
-        that.global.axiosPostReq('/showUserOrderManage/showOrder').then((res) => {
+        that.global.axiosPostReq('/OrderDetails/show').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res);
           } else {
-            that.$message.error('保存地址失败！');
+            that.$message.error('网络错误！');
           }
         })
       },
@@ -308,25 +308,25 @@
     width: 110px;
     height: 40px;
     text-align: center;
-    line-height: 40px; 
+    line-height: 40px;
   }
   .now_pay {
     width: 183px;
     height: 40px;
     text-align: center;
-    line-height: 40px; 
+    line-height: 40px;
   }
   .deal_state {
     width: 108px;
     height: 40px;
     text-align: center;
-    line-height: 40px; 
+    line-height: 40px;
   }
   .deal_operate {
     width: 109px;
     height: 40px;
     text-align: center;
-    line-height: 40px; 
+    line-height: 40px;
   }
   .order_item {
     width: 1067px;
@@ -432,7 +432,7 @@
   .cancelBtn:hover {
     cursor: pointer;
     color: #D81E06;
-    transition: all ease 0.2s; 
+    transition: all ease 0.2s;
   }
 /* 暂无订单,没有符合条件的订单*/
   .order_table_spe {
@@ -449,7 +449,7 @@
     text-align: center;
     font-size: 20px;
     color: #000;
-    margin-top: 30px; 
+    margin-top: 30px;
     border: 1px solid #D7D7D7;
   }
 /* 评论评分框 */
