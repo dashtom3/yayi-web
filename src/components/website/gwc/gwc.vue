@@ -20,6 +20,9 @@
         <span>小计(元)</span>
         <span>操作</span>
       </div>
+      <div style="min-height:402px">
+
+
       <div class="oneGood" v-for="(good,index) in gwcGoods">
         <div class="">
           <el-checkbox v-model="good.checked"></el-checkbox>
@@ -54,6 +57,7 @@
         </div>
         <div style="clear:both"> </div>
       </div>
+</div>
       <div class="goodsFooter">
         <div class="selectaLLFooter cursorPointer" v-on:click="checkAll()">
           <el-checkbox v-model="selectaLL">全选</el-checkbox>
@@ -174,16 +178,16 @@
       },
       deleteAll:function(){
         var that = this;
-        if(that.selectaLL==false){
-            that.$alert("请点击全选按钮", {confirmButtonText: '确定'});
+        if(that.sendDataList.length==0){
+            that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
         }else{
           that.$confirm('此操作将移除所有商品, 是否继续?', '删除所有商品', {
             confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
           }).then(() => {
-            for(let i in that.gwcGoods){
+            for(let i in that.sendDataList){
               var obj = {
                 phone:that.global.getUser().phone,
-                itemSKU:that.gwcGoods[i].itemSKU,
+                itemSKU:that.sendDataList[i].itemSKU,
                 token:that.global.getToken()
               };
               that.global.axiosPostReq('/cart/delete', obj)
@@ -203,17 +207,17 @@
       },
       saveAll:function(){
         var that = this;
-        if(that.selectaLL==false){
-            that.$alert("请点击全选按钮", {confirmButtonText: '确定'});
+        if(that.sendDataList.length==0){
+            that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
         }else{
           that.$confirm('添加至收藏夹后，商品将不在购物车显示，是否全部添加到收藏夹', '全部添加至收藏夹', {
             confirmButtonText: '确定',cancelButtonText: '取消', type: 'warning'
           }).then(() => {
-            for(let i in that.gwcGoods){
+            for(let i in that.sendDataList){
               var obj = {
                 phone:that.global.getUser().phone,
-                itemId:that.gwcGoods[i].itemId,
-                itemSKU:that.gwcGoods[i].itemSKU,
+                itemId:that.sendDataList[i].itemId,
+                itemSKU:that.sendDataList[i].itemSKU,
                 token:that.global.getToken()
               };
               that.global.axiosPostReq('/cart/star', obj)

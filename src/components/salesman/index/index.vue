@@ -78,11 +78,16 @@
     },
     methods: {
       getMsg:function(data){
+        console.log(data)
         var that = this;
         if(data=="goToMyClient"){
           that.changeActive4(that.tab04Text);
         }else if(data=="goToFindClient"){
           that.changeActive3(that.tab03Text);
+        }else if(data=="editMyPersData"){
+          that.changeActive6(that.tab06Text);
+        }else if(data=="getMyMoney"){
+          that.changeActive5(that.tab05Text);
         }
 
       },

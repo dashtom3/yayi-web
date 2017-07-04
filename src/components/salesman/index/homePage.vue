@@ -64,9 +64,18 @@
       console.log("aaa")
     },
     methods: {
-      immediateDoIt:function(){},
-      cash:function(){},
-      lookDetais:function(){},
+      immediateDoIt:function(){
+        var that = this;
+        that.$emit('msgFromChild', 'editMyPersData' );
+      },
+      cash:function(){
+        var that = this;
+        that.$emit('msgFromChild', 'getMyMoney' );
+      },
+      lookDetais:function(){
+        var that = this;
+        that.$emit('msgFromChild', 'getMyMoney' );
+      },
     }
   }
 </script>

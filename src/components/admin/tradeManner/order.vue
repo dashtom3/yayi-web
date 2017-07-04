@@ -251,7 +251,7 @@
             </tr>
           </table>
           <div class="btn_box">
-            <el-button class="_btn" type="primary">保存</el-button>
+            <el-button class="_btn" type="primary" @goToBackMoney()>保存</el-button>
             <el-button class="_btn" @click="refundVisible = false">取消</el-button>
           </div>
       </el-dialog>
@@ -465,7 +465,7 @@
           obj.buyerInfo = that.buyerInfo;
         }
         if(that.value){
-          obj.value = that.value;
+          obj.orderState = that.value;
         }
         if(that.value3.length!=0){
           var date1,date2;
@@ -481,15 +481,15 @@
         if(that.value1){
           obj.isRefund = that.value1;
         }
-        // that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
-        // .then((res) => {
-        //   console.log(res.data,"getOrderList")
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //
-        //   } else {
-        //     that.$message.error('网络出错，请稍后再试！');
-        //   }
-        // })
+        that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
+        .then((res) => {
+          console.log(res.data,"getOrderList")
+          if (res.data.callStatus === 'SUCCEED') {
+
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       getOrderList:function(){
         var that = this;
@@ -497,7 +497,7 @@
         .then((res) => {
           console.log(res.data,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {
-            
+
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -563,8 +563,10 @@
         if(item.checked && this.orderInfo.goodsInfo[index].count < this.orderInfo.goodsInfo[index].goodsNum){
           this.orderInfo.goodsInfo[index].count += 1;
         }
-      }
+      },
+      goToBackMoney:function(){
 
+      },
     }
   }
 </script>

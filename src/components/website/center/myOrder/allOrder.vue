@@ -175,10 +175,10 @@
     },
     created: function() {
       var that = this;
+      that.getAllOrder();
     },
     mounted: function() {
       var that = this;
-      // console.log(that.items);
     },
     watch: {
       value2: function() {
@@ -213,9 +213,13 @@
       //显示所有订单
       getAllOrder: function() {
         var that = this;
-        that.global.axiosPostReq('/OrderDetails/show').then((res) => {
+        var obj = {
+          phone:that.global.getUser().phone
+        };
+        console.log(obj)
+        that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res);
+            console.log(res,"getAllOrder");
           } else {
             that.$message.error('网络错误！');
           }

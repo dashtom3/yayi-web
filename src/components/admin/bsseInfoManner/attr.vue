@@ -250,16 +250,16 @@
               itemPropertyName:that.formData.addGoodAttrName
             };
             console.log(that.tableData[that.changAttrIndex])
-            // that.global.axiosPostReq('/item/updateProperty',obj2)
-            // .then((res) => {
-            //   if (res.data.callStatus === 'SUCCEED') {
-            //     that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
-            //     that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
-            //     that.showAddGoodAttr  = false;
-            //   } else {
-            //     that.$message.error('网络出错，请稍后再试！');
-            //   }
-            // })
+            that.global.axiosPostReq('/item/updateProperty',obj2)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
+                that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
+                that.showAddGoodAttr  = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -297,6 +297,9 @@
             that.addGoodAttrValues.push(aa);
             that.formData.addGoodAttrOneVal = null;
             that.flag1 = true;
+            if(that.attOperaType==2){
+              
+            }
           } else {
             that.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
             that.flag1 = false;
