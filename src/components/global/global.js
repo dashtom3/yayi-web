@@ -66,6 +66,10 @@ export default {
     //axios.defaults.headers['token'] = this.getToken()
     return axios.post(this.baseUrl + url, this.postHttpData(data))
   },
+  axiosPostReq2 (url, data) {
+    //axios.defaults.headers['token'] = this.getToken()
+    return axios.post(this.baseUrl + url, this.postHttpData(data))
+  },
   axiosGetReq (url, getParamsObj) {
     return axios.get(this.baseUrl + url ,{params:getParamsObj})
   },

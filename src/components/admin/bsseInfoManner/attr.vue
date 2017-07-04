@@ -101,7 +101,7 @@
         },
         addAttrShow:[],
         tableData:[
-          {itemPropertyName:"sdfg",itempropertydList:[{id:1,name:"1"},{id:1,name:"1"},{id:1,name:"1"}]},
+          {itemPropertyName:"sdfg",itempropertydList:[{name:"1"},{name:"1"},{name:"1"}]},
         ],
         showAddGoodAttr: false,
         channgAttrId:null,
@@ -219,19 +219,42 @@
           //添加
           if(that.flag1){
             var obj={};
-            obj.itemPropertyName = that.formData.addGoodAttrName;
-            that.global.axiosPostReq('/item/addProperty',obj)
-            .then((res) => {
-              console.log(res,"addProperty")
-              if (res.data.callStatus === 'SUCCEED') {
-                that.tableData.push(obj);
-                that.addGoodAttrValues = [];
-                that.formData.addGoodAttrName= null;
-                that.showAddGoodAttr  = false;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            var arr = [];
+            for(let i in that.addGoodAttrValues){
+              arr.push(that.addGoodAttrValues[i].itemPparam);
+            }
+            // obj.itemPparams = JSON.stringify(arr);
+            // function addRole () {
+                // var token = document.getElementById('token').value
+                // var name = 'test'
+                console.log(arr)
+                var subitem = JSON.stringify(arr)
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://192.168.1.103:8081/api/item/addPropertydAndPropertyName?itemPropertyName="+that.formData.addGoodAttrName)
+                xhr.setRequestHeader("Content-Type", "application/json")
+                xhr.send(subitem);
+                xhr.onreadystatechange = function(){
+                  if(xhr.readyState == 4){
+                    console.log(xhr)
+
+                  }
+                };
+            // }
+            // obj.itemPparams = arr;
+            // obj.itemPropertyName = that.formData.addGoodAttrName;
+            // console.log(obj)
+            // that.global.axiosPostReq('/item/addPropertydAndPropertyName?itemPropertyName='+that.formData.addGoodAttrName,obj)
+            // .then((res) => {
+            //   console.log(res,"addPropertydAndPropertyName")
+            //   if (res.data.callStatus === 'SUCCEED') {
+            //     that.tableData.push(obj);
+            //     that.addGoodAttrValues = [];
+            //     that.formData.addGoodAttrName= null;
+            //     that.showAddGoodAttr  = false;
+            //   } else {
+            //     that.$message.error('网络出错，请稍后再试！');
+            //   }
+            // })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -261,7 +284,7 @@
       deleOneAttrVal:function(index,item){
         var that = this;
         if(that.attOperaType==2){
-          that.$confirm('确定删除该属性吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
+          that.$confirm('确定删除该属性值吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
           .then(() => {
               var obj = {
                 itemSKU:item.itemSKU
@@ -286,7 +309,6 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             var aa= {};
-            aa.id="1",
             aa.itemPparam = that.formData.addGoodAttrOneVal;
             that.addGoodAttrValues.push(aa);
             that.formData.addGoodAttrOneVal = null;

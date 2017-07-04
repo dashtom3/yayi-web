@@ -168,10 +168,7 @@
       },
       tab1_saveOne:function(index,one){
         var that = this;
-        var obj = {
-          postFeeId:one.postFeeId
-          // postFeeId:"2"
-        };
+        var obj = {};
         var str = null;
         if(one.firstNum<0){
           str = "请填写首件数！";
@@ -201,14 +198,27 @@
         if(str){
           this.$alert(str, {confirmButtonText: '确定'});
         }else{
-          that.global.axiosPostReq('/freightManage/customFreight',obj)
-          .then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              that.tab1_tableData[index].changeState = false;
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
+          if(one.postFeeId){
+            obj.postFeeId=one.postFeeId;
+            that.global.axiosPostReq('/freightManage/customFreight',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tab1_tableData[index].changeState = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          }else{
+            that.global.axiosPostReq('/freightManage//addCustomFreight',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tab1_tableData[index].changeState = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          }
+
         }
       },
       tab1_changeOne:function(index){
