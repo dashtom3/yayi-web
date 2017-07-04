@@ -150,10 +150,12 @@ import myAddress from './selectThree'
       getNowGoodDetail:function(){
         var that = this;
         var userToken = that.global.getToken();
+        console.log(userToken)
         var obj = {
           itemId:that.$route.params.goodId,
-          token:"'"+userToken+"'"
+          token:userToken
         };
+        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
           console.log(res,"getNowGoodDetail")

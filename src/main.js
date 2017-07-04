@@ -54,5 +54,7 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
-
+// Vue.nextTick(function(){
+//   console.log("asdas")
+// });
 //#5DB7E7;#5ed6dc;#04D8DD;红色#D81E06;

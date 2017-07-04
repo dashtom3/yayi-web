@@ -90,7 +90,8 @@
         allMoeny:0,
         haveSelectedGoodNum:0,
         selectaLL:false,
-        gwcGoods:[]
+        gwcGoods:[],
+        sendDataList:[]
       }
     },
     components: {
@@ -113,11 +114,13 @@
       gwcGoods:{
         handler:function(){
           this.allMoeny = 0;
+          var sendDataList = [];
           this.haveSelectedGoodNum = 0;
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
               this.haveSelectedGoodNum+= this.gwcGoods[a].num;
+              sendDataList.push(this.gwcGoods[i]);
             }else{
               this.selectaLL = false;
             }
@@ -154,7 +157,22 @@
         })
       },
       goToSuborder:function(){
-        this.$router.push({path: '/suborder'})
+        var that = this;
+        var sendData = {};
+        if(that.sendDataList.length>0){
+          sendData.allMoney = that.allMoeny;
+          // var sendDataList = [];
+          for(let i in that.sendDataList){
+              that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
+          }
+          sendData.details = that.sendDataList;
+          window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+          // console.log(sendData);
+          that.$router.push({path: '/suborder'})
+        }else{
+          that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
+        }
+        // this.$router.push({path: '/suborder'})
       },
       deleteAll:function(){
         var that = this;
@@ -284,7 +302,6 @@
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
-              that.$message({type: 'success',  message: '商品收藏成功!' });
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
@@ -303,10 +320,8 @@
           };
           that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
-            console.log(res,"deleOne")
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
-              that.$message({  type: 'success',  message: '删除成功!'});
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

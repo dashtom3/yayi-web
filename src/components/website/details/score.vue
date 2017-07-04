@@ -4,7 +4,7 @@
       <img v-if="computedblackStar>0" src="../../../images/details/score2.jpg" alt="" v-for="item2 in computedblackStar">
     </span> -->
     <span class="score">
-      <el-rate v-model="value1"></el-rate>
+      <el-rate disabled v-model="value1"></el-rate>
     </span>
 </template>
 

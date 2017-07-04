@@ -37,9 +37,10 @@
               <el-input v-model="scope.row.addMoney" :disabled="!scope.row.changeState"></el-input>
             </template>
           </el-table-column>
-          <el-table-column align="center"   :label="tab1_operaName"  width="200">
+          <el-table-column align="center" prop="changeState"   width="200">
             <template scope="scope"  >
-              <el-button v-if="!scope.row.changeState" v-on:click="tab1_changeOne(scope.$index)" type="text">修改</el-button>
+              <!-- <span>{{!scope.row.changeState}}</span> -->
+              <el-button v-if="scope.row.changeState==false" v-on:click="tab1_changeOne(scope.$index)" type="text">修改</el-button>
               <el-button v-else v-on:click="tab1_saveOne(scope.$index,scope.row)" type="text">保存</el-button>
               <el-button v-on:click="tab1_delete(scope.$index,scope.row)" type="text">删除</el-button>
             </template>
@@ -68,7 +69,7 @@
               <span>元包邮</span>
             </template>
           </el-table-column>
-          <el-table-column  prop="firstMoney" align="center"  label="状态"  width="200">
+          <el-table-column  prop="state" align="center"  label="状态"  width="200">
             <template scope="scope">
               <el-select :disabled="tab2_allInputDisable" v-model="scope.row.state">
                 <el-option value="停用" name="停用">停用</el-option>
@@ -128,18 +129,28 @@
           // console.log(res.data.data,"getSelfFreightList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tab2_tableData = res.data.data;
+            if(that.tab2_tableData[0].state==1){
+              that.tab2_tableData[0].state =  "启用";
+            }else{
+              that.tab2_tableData[0].state =  "停用";
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
       getFreeFreightList:function(){
+        //自定义
         var that = this;
         that.global.axiosPostReq('/freightManage/show')
         .then((res) => {
           // console.log(res.data.data,"showFreeShipp")
           if (res.data.callStatus === 'SUCCEED') {
             that.tab1_tableData = res.data.data;
+            for(let i in that.tab1_tableData){
+              that.tab1_tableData[i].changeState = false;
+            }
+            console.log(that.tab1_tableData)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -193,13 +204,15 @@
         if(one.postCity[0]=="未添加地区"){
           str = "请选择地区！";
         }else{
-          obj.postCity = one.postCity.join(",");
+          // console.log(one.postCity)
+          obj.postCity = one.postCity;
         }
         if(str){
           this.$alert(str, {confirmButtonText: '确定'});
         }else{
           if(one.postFeeId){
             obj.postFeeId=one.postFeeId;
+            // console.log(one.postCity)
             that.global.axiosPostReq('/freightManage/customFreight',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
@@ -223,7 +236,10 @@
       },
       tab1_changeOne:function(index){
         var that = this;
-        that.tab1_tableData[index].changeState = true;
+        // console.log(index)
+        var obj = that.tab1_tableData[index];
+        obj.changeState = true;
+        that.tab1_tableData.splice(index,1,obj);
       },
       tab1_addOneFreight:function(){
         var obj = {postCity:["未添加地区"],firstNum:1,firstMoney:0,addNum:0,addMoney:0,changeState:true};
@@ -231,18 +247,21 @@
       },
       tab1_delete:function(index,one){
         var that = this;
-        var obj = {
-          postFeeId:one.postFeeId
-        };
-        that.global.axiosPostReq('/freightManage/deleteCustomFreight')
-        .then((res) => {
-          console.log(res.data.data,"deleteCustomFreight")
-          if (res.data.callStatus === 'SUCCEED') {
-            that.tab1_tableData.splice(index,0);
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
+        if(one.postFeeId){
+          var obj = {
+            postFeeId:one.postFeeId
+          };
+          that.global.axiosPostReq('/freightManage/deleteCustomFreight')
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.tab1_tableData.splice(index,1);
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }else{
+          that.tab1_tableData.splice(index,1);
+        }
       },
       tab1_editThis:function(index){
         var that = this;
@@ -259,10 +278,11 @@
         that.state = true;
       },
       tab2_save:function(index,one){
-        console.log(one)
-        this.tab2_allInputDisable = true;
+        var that = this;
+        that.tab2_allInputDisable = true;
         var obj = {};
         var str = null;
+        obj.freePostId = one.freePostId;
         if(one.freeShippingMoney>=0){
           obj.freeShippingMoney = one.freeShippingMoney.toString();
         }else{
@@ -279,9 +299,10 @@
           obj.postCity = one.postCity.join(",");
         }
         if(str){
-          this.$alert(str, {confirmButtonText: '确定'});
+          that.$alert(str, {confirmButtonText: '确定'});
         }else{
-          that.global.axiosPostReq('/freightManage/updateFreeShipp')
+          console.log(obj)
+          that.global.axiosPostReq('/freightManage/updateFreeShipp',obj)
           .then((res) => {
             console.log(res.data.data,"tab2_save")
             if (res.data.callStatus === 'SUCCEED') {

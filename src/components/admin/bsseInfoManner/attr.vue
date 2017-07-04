@@ -23,7 +23,6 @@
         <el-button type="text" @click="addGoodAttr()">+添加商品属性</el-button>
       </el-col>
 
-
       <!--列表-->
       <el-table  :data="tableData"  border  style="width: 100%">
         <el-table-column  type="index"  width="200px"  align="center"label="序号"></el-table-column>
@@ -61,9 +60,9 @@
             <el-input :minlength="5" @blur="changThisAttrVal(scope.$index,$event,scope.row)" :disabled="scope.$index!=changeThisAll" :value="scope.row.itemPparam"></el-input>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="操作" width="100">
           <template scope="scope">
-            <el-button  type="text"  v-on:click="changeThisAttr(scope.$index,scope.row)">修改</el-button>
+            <!-- <el-button  type="text"  v-on:click="changeThisAttr(scope.$index,scope.row)">修改</el-button> -->
             <el-button  v-on:click="deleOneAttrVal(scope.$index,scope.row)"  type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -101,7 +100,7 @@
         },
         addAttrShow:[],
         tableData:[
-          {itemPropertyName:"sdfg",itempropertydList:[{name:"1"},{name:"1"},{name:"1"}]},
+          // {itemPropertyName:"sdfg",itempropertydList:[{name:"1"},{name:"1"},{name:"1"}]},
         ],
         showAddGoodAttr: false,
         channgAttrId:null,
@@ -220,41 +219,25 @@
           if(that.flag1){
             var obj={};
             var arr = [];
+            var arr2 = [];
             for(let i in that.addGoodAttrValues){
               arr.push(that.addGoodAttrValues[i].itemPparam);
+              arr2.push({name:that.addGoodAttrValues[i].itemPparam});
             }
-            // obj.itemPparams = JSON.stringify(arr);
-            // function addRole () {
-                // var token = document.getElementById('token').value
-                // var name = 'test'
-                console.log(arr)
-                var subitem = JSON.stringify(arr)
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "http://192.168.1.103:8081/api/item/addPropertydAndPropertyName?itemPropertyName="+that.formData.addGoodAttrName)
-                xhr.setRequestHeader("Content-Type", "application/json")
-                xhr.send(subitem);
-                xhr.onreadystatechange = function(){
-                  if(xhr.readyState == 4){
-                    console.log(xhr)
-
-                  }
-                };
-            // }
-            // obj.itemPparams = arr;
-            // obj.itemPropertyName = that.formData.addGoodAttrName;
-            // console.log(obj)
-            // that.global.axiosPostReq('/item/addPropertydAndPropertyName?itemPropertyName='+that.formData.addGoodAttrName,obj)
-            // .then((res) => {
-            //   console.log(res,"addPropertydAndPropertyName")
-            //   if (res.data.callStatus === 'SUCCEED') {
-            //     that.tableData.push(obj);
-            //     that.addGoodAttrValues = [];
-            //     that.formData.addGoodAttrName= null;
-            //     that.showAddGoodAttr  = false;
-            //   } else {
-            //     that.$message.error('网络出错，请稍后再试！');
-            //   }
-            // })
+            obj.itemPparamList = arr;
+            obj.itemPropertyName = that.formData.addGoodAttrName;
+            that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                obj.itempropertydList = arr2;
+                that.tableData.push(obj);
+                that.addGoodAttrValues = [];
+                that.formData.addGoodAttrName= null;
+                that.showAddGoodAttr  = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -266,16 +249,17 @@
               itemPropertyId:that.channgAttrId,
               itemPropertyName:that.formData.addGoodAttrName
             };
-            that.global.axiosPostReq('/item/updateProperty',obj2)
-            .then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
-                that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
-                that.showAddGoodAttr  = false;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            console.log(that.tableData[that.changAttrIndex])
+            // that.global.axiosPostReq('/item/updateProperty',obj2)
+            // .then((res) => {
+            //   if (res.data.callStatus === 'SUCCEED') {
+            //     that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
+            //     that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
+            //     that.showAddGoodAttr  = false;
+            //   } else {
+            //     that.$message.error('网络出错，请稍后再试！');
+            //   }
+            // })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }

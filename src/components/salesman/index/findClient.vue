@@ -77,6 +77,7 @@
 .findClient{
   width: 1200px;
   margin: auto;
+  min-height: 580px;
 }
 .clientList{
   margin-bottom: 100px;
