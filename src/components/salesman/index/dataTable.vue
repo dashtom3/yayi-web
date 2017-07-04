@@ -44,6 +44,41 @@
         </el-table-column>
       </el-table>
     </el-col>
+
+    <!-- 详情 -->
+    <el-dialog
+      :visible.sync="detailVisible"
+      size="small">
+      <div class="detail_title">订单详情</div>
+      <div class="custInfo">客户信息</div>
+      <div class="custContent"><b>客户姓名：</b><span>李志芳</span><b style="margin-left:80px;">客户手机号：</b><span>13861637946</span></div>
+      <div class="custInfo">订单信息</div>
+      <table class="datail_tb">
+        <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
+        <tr class="trs">
+          <td>商品名称</td>
+          <td>价格（元）</td>
+          <td>数量</td>
+          <td>小计</td>
+          <td>退款金额（元）</td>
+          <td>收入状态</td>
+          <td>总收入元</td>
+        </tr>
+        <tr class="trs" v-for="(item, index) in infoList" :key="index">
+          <td>{{item.goodsName}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.num}}</td>
+          <td>{{item.totalPrice}}</td>
+          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+          <td :rowspan="infoList.length" v-if="index == 0">已结算</td>
+          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+        </tr>
+      </table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="detailVisible = false">取 消</el-button>
+        <el-button type="primary" @click="detailVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
 	</div>
 </template>
 
@@ -59,6 +94,7 @@ export default {
 	name: 'hello',
   data() {
     return {
+      detailVisible: false,
       tableData: [{
         orderTime: '2016-05-02-17:00',
         customerName: '李志芳',
@@ -119,6 +155,22 @@ export default {
         income: 10000,
         state: '待结算',
         cutoffTime: '2017-01-03-17:00'
+      }],
+      infoList: [{
+        goodsName: '商品名称1',
+        price: 30,
+        num: 2,
+        totalPrice: 60
+      },{
+        goodsName: '商品名称2',
+        price: 30,
+        num: 2,
+        totalPrice: 60
+      },{
+        goodsName: '商品名称3',
+        price: 30,
+        num: 2,
+        totalPrice: 60
       }]
     }
   },
@@ -176,7 +228,7 @@ export default {
 
 		},
     queryDetail(index, row){
-
+      this.detailVisible = true
     }
 	}
 }
@@ -220,5 +272,44 @@ export default {
   }
   .warp-breadcrum{
     margin-top: 36px;
+  }
+  .pad_l_30{
+    padding-left: 30px;
+  }
+  .custInfo{
+    height: 30px;
+    line-height: 30px;
+    padding-left: 24px;
+    border-bottom: 1px dotted #ccc;
+    background: url(../../../images/salesman/arrow.png) 0 8px no-repeat;
+  }
+  .detail_title{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    background: url(../../../images/salesman/titlebg.png) 400px 34px no-repeat;
+  }
+  .datail_tb{
+    width: 100%;
+    border-collapse: collapse;/* 边框合并属性  */
+    border: none;
+    margin-top: 20px;
+  }
+  .custContent{
+    height: 70px;
+    line-height: 70px;
+    padding-left: 52px;
+  }
+  .datail_tb tr{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+  }
+  .trs td{
+    width: 100px;
+    text-align: center;
+    border: 1px solid #ccc;
   }
 </style>
