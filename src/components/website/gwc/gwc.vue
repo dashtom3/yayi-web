@@ -114,13 +114,12 @@
       gwcGoods:{
         handler:function(){
           this.allMoeny = 0;
-          var sendDataList = [];
           this.haveSelectedGoodNum = 0;
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
               this.haveSelectedGoodNum+= this.gwcGoods[a].num;
-              sendDataList.push(this.gwcGoods[i]);
+              this.sendDataList.push(this.gwcGoods[a]);
             }else{
               this.selectaLL = false;
             }
