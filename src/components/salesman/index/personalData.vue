@@ -364,6 +364,7 @@
 .perDataRight{
   margin-left: 130px;
   border: 1px solid #eeeeee;
+  min-height: 580px;
   position: relative;
   margin-top: 80px;
 }

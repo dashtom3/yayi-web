@@ -1,9 +1,9 @@
 <template>
 	<el-row class="brandWarp">
-    <el-col :span="24" class="warp-breadcrum">
+    <el-col :span="24" class="warp-breadcrum1">
       <div class="grid-content bg-purple-dark">
         <span>钱包余额：<i class="i_col_red">￥700</i></span>
-        <el-button type="primary" class="margin_l">提现</el-button>
+        <el-button type="primary" class="margin_l" @click="withDrawHandler">提现</el-button>
       </div>
       <div class="curOrder">钱包明细</div>
       <ul class="sel_wrap">
@@ -20,18 +20,13 @@
         <li>
           <div class="block">
             <span class="demonstration">最近：</span>
-            <span class="nav_select margin_r_30 active_nav">1个月</span>
-            <span class="nav_select margin_r_30">3个月</span>
-            <span class="nav_select margin_r_30">半年</span>
-            <span class="nav_select">1年</span>
+            <span class="nav_select margin_r_30" v-for="(item, index) in selectDate" :key="index" :class="{active_nav: dateStat === index}" @click="choose(index)">{{item}}</span>
           </div>
         </li>
         <li>
           <div class="block">
             <span class="demonstration">分类：</span>
-            <span class="nav_select margin_r_30 active_nav">全部</span>
-            <span class="nav_select margin_r_30">进账</span>
-            <span class="nav_select">提现</span>
+            <span class="nav_select margin_r_30" v-for="(item, index) in classify" :key="index" :class="{active_nav: classStat === index}"  @click="selClass(index)">{{item}}</span>
           </div>
         </li>
       </ul>
@@ -66,6 +61,54 @@
         </el-table-column>
       </el-table>
     </el-col>
+    <!-- 提现设置 -->
+    <el-dialog
+      :visible.sync="withDrawSets"
+      size="tiny" style="text-align:center;">
+      <i class="el-icon-information" style="color:#fbb308;font-size:30px;margin-bottom:10px;"></i>
+      <div>请先设置提现方式</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="withDrawSets = false">取 消</el-button>
+        <el-button type="primary" @click="withDrawSets = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 状态提示 -->
+    <el-dialog
+      :visible.sync="statTip"
+      size="tiny" style="text-align:center;">
+      <i class="el-icon-information" style="color:#fbb308;font-size:30px;margin-bottom:10px;"></i>
+      <div>正在审核中，请耐心等待~~</div>
+    </el-dialog>
+
+    <!-- 银行卡提现 -->
+    <el-dialog
+      title="提现"
+      :visible.sync="withDrawBank"
+      size="tiny">
+      <el-row>
+        <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24" align="center"><div class="i_title"><span>姓名：招商银行：6225842322152325</span></div></el-col>
+      </el-row>
+      <el-form>
+        <el-form-item label="提现金额：">
+          <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号：" style="padding-left:14px;">
+          <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码：" style="padding-left:14px;">
+          <el-input v-model="withDrawCode" class="item_c_input fl"></el-input>
+          <el-button type="primary">获取验证码</el-button>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-button class="withDrawBtn" type="primary" @click="withDrawBank = false">申请提现</el-button>
+        <el-button class="withDrawBtn" @click="withDrawBank = false">取 消</el-button>
+      </div>
+    </el-dialog>
 	</el-row> 
 </template>
 
@@ -99,7 +142,28 @@
           income: 8888,
           withDrawals: -2000,
           account: 2000
-        }]
+        }],
+        selectDate: ['1个月','2个月','半年','1年'],
+        classify: ['全部','进账','提现'],
+        dateStat: 0,
+        classStat: 0,
+        withDrawSets: false,
+        statTip: false,
+        withDrawBank: false,
+        withDrawAccount: '',
+        withDrawPhone: '',
+        withDrawCode: ''
+      }
+    },
+    methods: {
+      choose(index){
+        this.dateStat = index;
+      },
+      selClass(index){
+        this.classStat = index;
+      },
+      withDrawHandler(){
+        this.withDrawBank = true
       }
     }
   }
@@ -143,7 +207,7 @@
   .margin_l{
     margin-left: 20px;
   }
-  .warp-breadcrum{
+  .warp-breadcrum1{
     margin-top: 36px;
   }
   .wallet_title{
@@ -182,5 +246,23 @@
   }
   .sel_wrap li{
     margin-top: 20px;
+  }
+  .item_w_input{
+    width: 350px;
+  }
+  .item_c_input{
+    width: 230px;
+    margin-right: 20px;
+  }
+  .i_red{
+    color: red;
+  }
+  .i_title{
+    height: 30px;
+    line-height: 30px;
+  }
+  .withDrawBtn{
+    width: 140px;
+    margin-left: 100px;
   }
 </style>
