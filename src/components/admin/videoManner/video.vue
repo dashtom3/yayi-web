@@ -64,9 +64,7 @@
 	export default {
 		data(){
 			return {
-				videoList: [{
-					vidName: 'xxxxxxx'
-				}],
+				videoList: [],
 				qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
 				videoVisible: false,
@@ -119,6 +117,16 @@
         	url: this.video_link
         })
       },
+      validate(){
+      	if(!this.input_video){
+      		this.$message.error('请填写视频名称！');
+          return false;
+      	}
+      	if(!this.video_link){
+      		this.$message.error('请完成视频上传！');
+          return false;
+      	}
+      },
 			saveVideo(){
 				if(!this.isEdit){
 					let params = {
@@ -126,6 +134,7 @@
 						videoType: this.radio,
 						vidRoute: this.video_link
 					}
+					this.validate();
 	        global.axiosPostReq('/vid/insertVid',params).then((res) => {
 	          if (res.data.callStatus === 'SUCCEED') { 
 	            this.$message({
@@ -147,6 +156,7 @@
 						vidType: this.radio,
 						vidRoute: this.video_link
 					}
+					this.validate();
 	        global.axiosPostReq('/vid/updateVid',params).then((res) => {
 	          if (res.data.callStatus === 'SUCCEED') { 
 	            this.$message({
@@ -191,10 +201,7 @@
 		        })
           })
           .catch(_ => {});
-			},
-			handleRemove(file, fileList) {
-        console.log(file, fileList);
-      }
+			}
 		}
 	}
 </script>

@@ -75,38 +75,38 @@
 	export default {
 		data(){
 			return {
-				// advertList: [],
-				advertList:[{
-					advId: 1,
-					advName: '登录注册页',
-					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advType: '登录注册页'
-				},{
-					advId: 2,
-					advName: '首页轮播',
-					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advType: '首页轮播'
-				},{
-					advId: 3,
-					advName: '首页轮播',
-					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advType: '首页轮播'
-				},{
-					advId: 4,
-					advName: '首页轮播',
-					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advType: '首页轮播'
-				},{
-					advId: 5,
-					advName: '首页轮播',
-					advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-					advType: '首页轮播'
-				}],
+				advertList: [],
+				// advertList:[{
+				// 	advId: 1,
+				// 	advName: '登录注册页',
+				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advType: '登录注册页'
+				// },{
+				// 	advId: 2,
+				// 	advName: '首页轮播',
+				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advType: '首页轮播'
+				// },{
+				// 	advId: 3,
+				// 	advName: '首页轮播',
+				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advType: '首页轮播'
+				// },{
+				// 	advId: 4,
+				// 	advName: '首页轮播',
+				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advType: '首页轮播'
+				// },{
+				// 	advId: 5,
+				// 	advName: '首页轮播',
+				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
+				// 	advType: '首页轮播'
+				// }],
 				qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
 				advertVisible: false,
@@ -132,7 +132,7 @@
 			init(){
 				global.axiosGetReq('/adv/showAdv',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.advertList = res.data.data || this.advertList
+            this.advertList = res.data.data
             this.img_src = res.data.data.advImg;
           }else{
             this.$message.error('获取广告数据失败！');
@@ -166,6 +166,16 @@
       		advUrl: this.img_src,
       		advType: this.advertType,
       		advId: this.advNo 
+      	}
+      	//验证表单
+      	if(!this.input_adv){
+      		this.$message.error('请填写广告名称！');
+          return false;
+      	}
+
+      	if(!this.img_src){
+      		this.$message.error('请上传广告图片！');
+          return false;
       	}
       	//保存广告设置
         global.axiosPostReq('/adv/updateAdv', params).then((res) => {
