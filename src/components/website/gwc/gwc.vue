@@ -115,6 +115,7 @@
         handler:function(){
           this.allMoeny = 0;
           this.haveSelectedGoodNum = 0;
+          this.sendDataList = [];
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
@@ -166,8 +167,8 @@
           }
           sendData.details = that.sendDataList;
           window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-          // console.log(sendData);
-          that.$router.push({path: '/suborder'})
+          console.log(sendData);
+          // that.$router.push({path: '/suborder'})
         }else{
           that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
         }
