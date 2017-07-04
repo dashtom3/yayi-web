@@ -16,10 +16,10 @@
             <div class="clearfix"></div>
             <div class="first left">寄送至：</div>
             <div class="second left">
-              <el-radio class="radio" v-model="radio" :label="item.num">{{item.province}} {{item.city}} {{item.county}} {{item.receiverDetail}} ({{item.receiverName}} 收) {{item.phone}}</el-radio>
+              <el-radio class="radio" v-model="radio" :label="item" @click="chooseAdd(item)">{{item.province}} {{item.city}} {{item.county}} {{item.receiverDetail}} ({{item.receiverName}} 收) {{item.phone}}</el-radio>
             </div>
-            <i class="el-icon-edit third" @click="add_edit"></i>
-            <i class="el-icon-delete fouth" @click="add_remove"></i>
+            <i class="el-icon-edit third" @click="add_edit(item)"></i>
+            <i class="el-icon-delete fouth" @click="add_remove(item)"></i>
           </div>
         </div>
       </div>
@@ -48,13 +48,15 @@
         <div class="qianbi_title">钱币抵扣</div>
         <div class="qianbi_des">
           <el-checkbox v-model="checked1">使用钱币（1钱币=1元）</el-checkbox>
-          <span style="margin-left: 50px;font-size:14px;">做多可使用<span style="color:#D81E06;">200</span>钱币</span>  
+          <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span> 
+          <div><input type="text" class="qianbi_word" v-show="qianbi_word" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">0</span>元</span></div> 
         </div>
       </div>
       <div class="qianbi_box">
         <div class="qianbi_title">发票</div>
         <div class="qianbi_des">
-          <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox><input type="text" class="tax_word" v-show="tax_word" v-model="tax_des">
+          <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox>
+          <div><input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称"></div>
         </div>
       </div>
       <div class="qianbi_box">
@@ -65,7 +67,7 @@
       </div>
       <div class="leave_message">
         <div class="leave_title">订单留言</div>
-        <input class="leave_word" type="text" placeholder="对本次交易的说明">
+        <input class="leave_word" v-model="leave_des" type="text" placeholder="对本次交易的说明">
       </div>
       <div class="checked_box">
         <p class="first_p"><span style="margin-right: 50px;">共5件商品</span><span>商品总额：¥245.00</span></p>
@@ -79,8 +81,8 @@
       <div class="clearfix"></div>
       <div class="submit_btn" @click="submit_order">提交订单</div>
       <div class="clearfix"></div>
-      <!-- 修改地址弹出框开始 -->
-      <el-dialog title="修改收货信息" v-model="editAddVisible">
+      <!-- 新增／修改地址弹出框开始 -->
+      <el-dialog :title="diaTitle" v-model="editAddVisible">
         <el-form :model="form">
           <el-form-item label="收货人" :label-width="formLabelWidth">
             <el-input v-model="form.name" auto-complete="off" style="width:180px;"></el-input>
@@ -89,7 +91,7 @@
             </transition>
           </el-form-item>
           <el-form-item label="所在区域" :label-width="formLabelWidth">
-            <myAddress></myAddress>
+            <myAddress v-on:listenToChild="showFromChild" :selected="this.xRegion"></myAddress>
             <transition name="shake">
               <span v-show="placeAlert" style="margin-left: 20px; color: #D0011B;">请选择所在区域！</span>
             </transition>
@@ -113,65 +115,14 @@
             </transition>
           </el-form-item>
           <el-form-item  :label-width="formLabelWidth">
-            <el-checkbox v-model="setDefault2">设为默认地址</el-checkbox>
+            <el-checkbox v-model="setDefault">设为默认地址</el-checkbox>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" class="savePeo" @click="save()">保存修改</el-button>
         </div>
       </el-dialog>
-      <!-- 修改地址弹出框结束 -->
-      <!-- 删除地址弹出框开始 -->
-      <el-dialog title="删除收货信息" :visible.sync="removeVisible" size="tiny">
-        <span>是否确定删除收货地址?</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="removeVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
-        </span>
-      </el-dialog>
-      <!-- 删除地址弹出框结束 -->
-      <!-- 新增地址弹出框开始 -->
-      <el-dialog title="添加收货信息" v-model="addNewVisible">
-        <el-form :model="form">
-          <el-form-item label="收货人" :label-width="formLabelWidth">
-            <el-input v-model="form.name" auto-complete="off" style="width:180px;"></el-input>
-            <transition name="shake">
-              <span v-show="realAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人！</span>
-            </transition>
-          </el-form-item>
-          <el-form-item label="所在区域" :label-width="formLabelWidth">
-            <myAddress></myAddress>
-            <transition name="shake">
-              <span v-show="placeAlert1" style="margin-left: 20px; color: #D0011B;">请选择所在区域！</span>
-            </transition>
-          </el-form-item>
-          <el-form-item label="手机号码" :label-width="formLabelWidth">
-            <el-input v-model="form.mobile" auto-complete="off" style="width:180px;"></el-input>
-            <transition name="shake">
-              <span v-show="phoneAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人手机号码！</span>
-            </transition>
-          </el-form-item>
-          <el-form-item label="固定电话" :label-width="formLabelWidth">
-            <el-input v-model="form.gmobile" auto-complete="off" style="width:180px;"></el-input>
-            <transition name="shake">
-              <span v-show="gphoneAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人固定电话号码！</span>
-            </transition>
-          </el-form-item>
-          <el-form-item label="详细地址" :label-width="formLabelWidth">
-            <el-input v-model="form.address" auto-complete="off" style="width:70%;"></el-input>
-            <transition name="shake">
-              <span v-show="addAlert1" style="margin-left: 20px; color: #D0011B;">请填写收货人地址！</span>
-            </transition>
-          </el-form-item>
-          <el-form-item  :label-width="formLabelWidth">
-            <el-checkbox v-model="setDefault2">设为默认地址</el-checkbox>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" class="savePeo" @click="save()">保存修改</el-button>
-        </div>
-      </el-dialog>
-      <!-- 新增地址弹出框结束 -->
+      <!-- 新增／修改地址弹出框结束 -->
     </div>
     <publicFooter></publicFooter>
   </div>
@@ -384,6 +335,7 @@
           "ProRemark": "特别行政区"
         }], //省市地址
         radio: '',
+        diaTitle: '',
         checked1: false,
         checked2: false,
         checked3: false,
@@ -395,11 +347,6 @@
         placeAlert: false,
         phoneAlert: false,
         gphoneAlert: false,
-        realAlert1: false,
-        addAlert1: false,
-        placeAlert1: false,
-        phoneAlert1: false,
-        gphoneAlert1: false,
         form: {
           name: '',
           region: '',
@@ -410,18 +357,88 @@
           resource: '',
         },
         formLabelWidth: '120px',
-        setDefault2: false,
+        setDefault: false,
         tax_des: '',
+        qianbi_des: '',
         tax_word: false,
+        qianbi_word: false,
+        leave_des: '',
+        xRegion: [],
+        editAdd: {},
+        nowQb: '',
+        hasCount: false,
+        leave_word: null,
       }
     },
     watch: {
+      xRegion: function() {
+        var that = this;
+        if (that.xRegion !== []) {
+          that.placeAlert = false;
+          // that.placeAlert1 = false;
+        }
+      },
+      form: {
+        handler: function() {
+         var that = this;
+         if (that.form.name !== '') {
+          that.realAlert = false;
+         }
+         if (that.form.mobile !== '') {
+          that.phoneAlert = false;
+         }
+         if (that.form.address !== '') {
+          that.addAlert = false;
+         }
+        },
+        deep: true
+      },
+      items: function() {
+        var that = this;
+        if (that.items.length == 0) {
+          that.diaTitle = '新增收货信息';
+          that.editAddVisible = true;
+        }
+      },
+      checked1: function() {
+        var that = this;
+        if (that.checked1 == true) {
+          that.qianbi_word = true;
+        } else {
+          that.qianbi_word = false;
+        }
+      },
       checked2: function() {
         var that = this;
         if (that.checked2 == true) {
           that.tax_word = true;
         } else {
           that.tax_word = false;
+        }
+      },
+      checked3: function() {
+        var that = this;
+        if (that.checked3 == false) {
+          that.leave_word = 0;
+        } else {
+          that.leave_word = 1;
+        }
+      },
+      qianbi_des: function() {
+        var that = this;
+        if (that.qianbi_des !== '') {
+          var obj = {
+            phone: that.global.getUser().phone,
+            qbnum: parseInt(that.qianbi_des),
+          };
+          that.global.axiosPostReq('/po/Ded', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.$message(res.data.msg);
+              that.hasCount = true;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }
       }
     },
@@ -432,51 +449,208 @@
     },
     created: function () {
       var that = this;
-      var obj = {
-        phone:that.global.getUser().phone,
-      };
-      that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
-        if (res.data.callStatus === 'SUCCEED') {
-          console.log(res.data.data);
-          that.items = res.data.data;
-          // if (res.data.data.length == 0) {
-          //   that.hasAddress = false;
-          // } else {
-          //   that.hasAddress = true;
-          //   that.address = res.data.data;
-          // }
-          //this.getData = res.data.data;
-        } else {
-          that.$message.error('网络出错，请稍后再试！');
-        }
-      })
+      that.getMyAdd();
+      that.nowQb = that.global.getUser().qbBalance;
     },
     methods: {
       // 新增收货地址按钮
       addNew: function() {
         var that = this;
-        that.addNewVisible = true;
-      },
-      // 修改收货地址按钮
-      add_edit: function() {
-        var that = this;
+        that.diaTitle = '新增收货信息';
         that.editAddVisible = true;
       },
-      // 删除收货地址按钮
-      add_remove: function() {
+      // 修改收货地址按钮
+      add_edit: function(item) {
         var that = this;
-        that.removeVisible = true;
+        that.diaTitle = '修改收货信息';
+        var place = [];
+        place.push(item.province);
+        place.push(item.city);
+        place.push(item.county);
+        that.xRegion = place;
+        that.editAdd = item;
+        that.form.name = item.receiverName;
+        that.form.address = item.receiverDetail;
+        that.form.mobile = item.phone;
+        that.form.gmobile = item.landlineNumber;
+        that.setDefault = item.isDefault;
+        that.editAddVisible = true;
       },
-      // 确定取消
-      confirm_cancel: function() {
+      // 获取我的地址
+      getMyAdd: function() {
         var that = this;
-        that.removeVisible = false;
-        that.$message('删除地址成功！');
+        var obj = {
+          phone:that.global.getUser().phone,
+        };
+        that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data);
+            that.items = res.data.data;
+            if (res.data.data.length == 0) {
+              that.diaTitle = '新增收货信息';
+              that.editAddVisible = true;
+              return false
+            }
+            //this.getData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      // 删除地址
+      add_remove: function(item) {
+        var that = this;
+        that.$confirm('此操作将删除该收货地址, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          var obj = {
+            receiverId: item.receiverId,
+          }
+          that.global.axiosGetReq('/shoppingAdress/deleteShippingAddress', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.getMyAdd();
+              that.$message(res.data.msg);
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });  
+      },
+      // 选择所在区域
+      showFromChild: function(data) {
+        var that = this;
+        that.xRegion = data;
+        //console.log(that.xRegion,'22');
+      },
+      // 保存地址
+      save: function() {
+        var that = this;
+        if (that.diaTitle == '新增收货信息') {
+          if(that.form.name == '') {
+            that.realAlert = true;
+            return false
+          }
+          if(that.xRegion == [] || that.xRegion.length == 0) {
+            that.placeAlert = true;
+            return false
+          }
+          if(that.form.mobile == '') {
+            that.phoneAlert = true;
+            return false
+          }
+          if(that.form.address == '') {
+            that.addAlert = true;
+            return false
+          }
+          var obj = {
+            newPhone: that.global.getUser().phone,
+            province: that.xRegion[0],
+            city: that.xRegion[1],
+            county: that.xRegion[2],
+            receiverName: that.form.name,
+            receiverDetail: that.form.address,
+            landlineNumber: that.form.gmobile,
+            phone: that.form.mobile,
+            isDefault: that.setDefault,
+          }
+          that.global.axiosPostReq('/shoppingAdress/insert', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              // console.log(that.xRegion,'frisco');
+              that.xRegion = [];
+              that.form.name = '';
+              that.form.address = '';
+              that.form.gmobile = '';
+              that.form.mobile = '';
+              that.setDefault = false;
+              that.$message('保存地址成功！');
+              that.getMyAdd();
+              that.editAddVisible = false;
+            } else {
+              that.$message.error('保存地址失败！');
+            }
+          })
+        } else {
+          if(that.form.name == '') {
+            that.realAlert = true;
+            return false
+          }
+          if(that.xRegion == [] || that.xRegion.length == 0) {
+            that.placeAlert = true;
+            return false
+          }
+          if(that.form.mobile == '') {
+            that.phoneAlert = true;
+            return false
+          }
+          if(that.form.address == '') {
+            that.addAlert = true;
+            return false
+          }
+          var obj = {
+            newPhone: that.global.getUser().phone,
+            receiverId: that.editAdd.receiverId,
+            province: that.xRegion[0],
+            city: that.xRegion[1],
+            county: that.xRegion[2],
+            receiverName: that.form.name,
+            receiverDetail: that.form.address,
+            landlineNumber: that.form.gmobile,
+            phone: that.form.mobile,
+            isDefault: that.setDefault,
+          }
+          that.global.axiosPostReq('/shoppingAdress/update', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              // console.log(that.xRegion,'frisco');
+              that.xRegion = [];
+              that.form.name = '';
+              that.form.address = '';
+              that.form.gmobile = '';
+              that.form.mobile = '';
+              that.setDefault = false;
+              that.$message('修改地址成功！');
+              that.getMyAdd();
+              that.editAddVisible = false;
+            } else {
+              that.$message.error('保存地址失败！');
+            }
+          })
+        }
+      },
+      // 选择地址
+      chooseAdd: function(item) {
+        var that = this;
+        console.log(item,'kkk');
       },
       // 提交订单按钮
       submit_order: function() {
         var that = this;
-        that.$router.push({ path:'/pay' });
+        var obj = {
+          phone: '',
+          receiverId: '',
+          invoiceHand: that.tax_des,
+          isRegister: that.leave_word,
+          qbDed: '',
+          buyerMessage: that.leave_des,
+          landlineNumber: '',
+          price: '',
+          actualPay: '',
+        }
+        console.log(obj);
+        // that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
+        //   if (res.data.callStatus === 'SUCCEED') {
+        //     console.log(res)
+        //   } else {
+        //     that.$message.error('保存地址失败！');
+        //   }
+        // })
+        //that.$router.push({ path:'/pay' });
       }
     }
   }
@@ -684,13 +858,19 @@ input:focus {
   font-size: 14px;
 }
 .qianbi_des {
-  position: absolute;
-  left: 150px;
-  bottom: 0px;
+   margin-top: 20px;
+   margin-left: 70px;
 }
 .tax_word {
-  transform: translateY(1px); 
-  margin-left: 26px;
+   margin-top: 10px;
+   width: 200px;
+   height: 30px;
+}
+.qianbi_word {
+   margin-top: 10px;
+   width: 200px;
+   height: 30px;
+   margin-right: 13px;
 }
 .leave_message {
   width: 1200px;

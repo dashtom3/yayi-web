@@ -14,13 +14,14 @@
         <el-input v-model="secondForm.producePompany"></el-input>
       </el-form-item>
       <el-form-item label="注册证有效期／备案日期">
-        <el-input v-model="secondForm.registerDate"></el-input>
+        <el-date-picker v-model="secondForm.registerDate" type="date" placeholder="选择日期">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="产品包装">
         <el-input v-model="secondForm.itemPacking"></el-input>
       </el-form-item>
       <el-form-item label="产品标准">
-        <el-input v-model="secondForm.storeItemId"></el-input>
+        <el-input v-model="secondForm.itemLevels"></el-input>
       </el-form-item>
       <el-form-item label="使用范围">
         <el-input v-model="secondForm.itemRange"></el-input>
@@ -48,7 +49,7 @@
           producePompany: '', //生产单位
           registerDate: '', //注册日期
           itemPacking: '', //商品包装
-          //产品标准
+          itemLevels:'', //产品标准
           itemRange: '', //商品使用范围
         },
         ruleForm: {},
@@ -62,12 +63,14 @@
     created: function() {
       var that = this;
       that.ruleForm = that.$route.params.ruleForm;
-      console.log(that.ruleForm);
+      //console.log(that.ruleForm);
     },
     methods: {
       nextToThird: function() {
         var that = this;
         Object.assign(that.newForm,that.secondForm,that.ruleForm);
+        that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+        console.log(that.newForm,'ppppppp');
         that.secondStep = false;
         that.thirdStep = true;
       },

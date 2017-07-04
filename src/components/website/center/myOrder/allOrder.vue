@@ -173,6 +173,9 @@
     components: {
       paging0,
     },
+    created: function() {
+      var that = this;
+    },
     mounted: function() {
       var that = this;
       // console.log(that.items);
@@ -207,6 +210,17 @@
       }
     },
     methods: {
+      //显示所有订单
+      getAllOrder: function() {
+        var that = this;
+        that.global.axiosPostReq('/showUserOrderManage/showOrder').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+          } else {
+            that.$message.error('保存地址失败！');
+          }
+        })
+      },
       // 取消订单
       cancel_order: function() {
         var that = this;

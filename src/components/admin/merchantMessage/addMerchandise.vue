@@ -22,8 +22,8 @@
         </el-cascader>
       </el-form-item>
       <el-form-item label="品牌名称" prop="itemBrandName">
-        <el-select v-model="ruleForm.itemBrandName" placeholder="请选择">
-          <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand.itemBrandName">
+        <el-select v-model="ruleForm.itemBrand" placeholder="请选择" @change="getBrandId">
+          <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand">
           </el-option>
         </el-select>
       </el-form-item>
@@ -31,8 +31,8 @@
         <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="推荐" prop="qian">
-        <el-radio class="radio" v-model="ruleForm.radio" label="1">是</el-radio>
-        <el-radio class="radio" v-model="ruleForm.radio" label="2">否</el-radio>
+        <el-radio class="radio" v-model="ruleForm.isThrow" label="1">是</el-radio>
+        <el-radio class="radio" v-model="ruleForm.isThrow" label="0">否</el-radio>
       </el-form-item>
       <el-form-item label="商品属性" prop="qian">
         <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
@@ -41,11 +41,11 @@
         <el-button v-else type="primary" @click="chooseType()">选择属性</el-button>
       </el-form-item>
       <div class="active_box" v-for="(item,index) in items" :key="item">
-        <span class="choose_title">{{item.property}}</span>
+        <span class="choose_title">{{item.itemPropertyName}}</span>
         <el-button type="primary" @click="removeDes(index)">删除</el-button>
 <!--         <el-checkbox-group v-model="item.checkItem" class="choose_des"> -->
         <div style="margin-top: 15px;">
-          <el-checkbox v-for="sitem in item.type" :label="sitem" :key="item" v-model="sitem.checked" @change="checkAllActive()">{{sitem.des}}</el-checkbox>
+          <el-checkbox v-for="sitem in item.itempropertydList" :label="sitem" :key="item" v-model="sitem.checked" @change="checkAllActive()">{{sitem.itemPparam}}</el-checkbox>
         </div>
 <!--         </el-checkbox-group> -->
       </div>
@@ -61,7 +61,7 @@
         </tr>
         <tr class="activeTable_des">
           <td class="des_skuCode">
-            <el-input v-model="input_sku"></el-input>
+            <el-input v-model="input_sku" :disabled="true"></el-input>
           </td>
           <td class="des_price">
             <el-input v-model="input_price"></el-input>
@@ -85,7 +85,7 @@
           <!-- <th class="type1" v-show="num[0].num1!==0">{{property1}}</th>
           <th class="type2" v-show="num[1].num2!==0">{{property2}}</th>
           <th class="type3" v-show="num[2].num3!==0">{{property3}}</th> -->
-          <th v-if="item.hasItem" v-for="item in items">{{item.property}}</th>
+          <th v-if="item.hasItem" v-for="item in items">{{item.itemPropertyName}}</th>
           <th class="skuCode">SKU代码</th>
           <th class="price">价格</th>
           <th class="percent">提成（%）</th>
@@ -94,24 +94,24 @@
           <th class="enable">是否启用</th>
         </tr>
         <tr class="activeTable_des" v-for="activeItem in activeItems" :key="">
-          <td v-for="item in activeItem">{{item.des}}</td>
+          <td v-for="item in activeItem">{{item.itemPparam}}</td>
           <td class="des_skuCode">
-            <el-input v-model="input_sku"></el-input>
+            <el-input v-model="input_sku1"></el-input>
           </td>
           <td class="des_price">
-            <el-input v-model="input_price"></el-input>
+            <el-input v-model="input_price1"></el-input>
           </td>
           <td class="des_percent">
-            <el-input v-model="input_percent"></el-input>
+            <el-input v-model="input_percent1"></el-input>
           </td>
           <td class="des_coin">
-            <el-input v-model="input_coin"></el-input>
+            <el-input v-model="input_coin1"></el-input>
           </td>
           <td class="des_stock">
-            <el-input v-model="input_stock"></el-input>
+            <el-input v-model="input_stock1"></el-input>
           </td>
           <td class="des_enable">
-            <el-checkbox v-model="input_enable"></el-checkbox>
+            <el-checkbox v-model="input_enable1"></el-checkbox>
           </td>
         </tr>
       </table>
@@ -125,11 +125,11 @@
         <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column prop="property" label="属性名称">
+          <el-table-column prop="itemPropertyName" label="属性名称">
           </el-table-column>
-          <el-table-column prop="type" label="规格值">
+          <el-table-column prop="itempropertydList" label="规格值">
             <template scope="scope">
-              <span v-for="type in scope.row.type" :key="type">{{type.des}}/ </span>
+              <span v-for="type in scope.row.itempropertydList" :key="type">{{type.itemPparam}}/ </span>
             </template>
           </el-table-column>
         </el-table>
@@ -140,14 +140,12 @@
       </el-dialog>
       <!-- 选择属性弹出框 结束 -->
     </el-form>
-    <secondStep v-on:listenToChildEvent="showMsgFromSecondStep" v-show="secondStep"></secondStep>
   </el-row>
   <!--   添加商品开始 结束  -->
   </div>
 </template>
 
 <script>
-  import secondStep from './secondStep';
   export default {
     name: 'addMerchandise',
     data () {
@@ -155,7 +153,6 @@
         options: [],
         brandOptions: [],
         list: true,
-        secondStep: false,
         shopType: '',
         chooseShopType: true,
         ruleForm: {
@@ -165,9 +162,11 @@
           oneClassify: '', //商品一级分类
           twoClassify: '', //商品二级分类
           threeClassify: '', //商品三级分类
+          itemBrand: '',
           itemBrandName: '', //品牌名称
+          itemBrandId: '', //商品品牌ID
           registerId:'', //商品注册证号
-          radio: '',
+          isThrow: '', //是否推荐
         },
         rules: {
           itemId: [
@@ -188,203 +187,15 @@
           qian: [
             { required: true, message: '请选择是否乾币抵扣状态', trigger: 'change' }
           ]
-        },
+        }, //验证规则
         labelPosition: 'right',
-        tableData2: [{
-          property: '工作电压',
-          type: [
-            {
-              des: '12V',
-              checked: false,
-              typeId: 1,
-            },{
-              des: '24V',
-              checked: false,
-              typeId: 1,
-            },{
-              des: '36V',
-              checked: false,
-              typeId: 1,
-            },{
-              des: '48V',
-              checked: false,
-              typeId: 1,
-            },{
-              des: '60V',
-              checked: false,
-              typeId: 1,
-            },{
-              des: '72V',
-              checked: false,
-              typeId: 1,
-            }],
-            checkItem: [],
-        }, {
-          property: '额定电流',
-          type: [
-            {
-              des: '50A',
-              checked: false,
-              typeId: 2,
-            },{
-              des: '100A',
-              checked: false,
-              typeId: 2,
-            },{
-              des: '150A',
-              checked: false,
-              typeId: 2,
-            },{
-              des: '200A',
-              checked: false,
-              typeId: 2,
-            },{
-              des: '300A',
-              checked: false,
-              typeId: 2,
-            },{
-              des: '400A',
-              checked: false,
-              typeId: 2,
-            }],
-            checkItem: [],
-        }, {
-          property: '品牌类别',
-          type: [{
-              des: '进口品牌',
-              checked: false,
-              typeId: 3,
-            },{
-              des: '国产品牌',
-              checked: false,
-              typeId: 3,
-            },{
-              des: 'OEM',
-              checked: false,
-              typeId: 3,
-            }],
-            checkItem: [],
-        }, {
-          property: '产品类别',
-          type: [
-            {
-              des: '原厂配套件',
-              checked: false,
-              typeId: 4,
-            },{
-              des: '副厂件',
-              checked: false,
-              typeId: 4,
-            }],
-            checkItem: [],
-        }, {
-          property: '车辆吨位',
-          type: [
-            {
-              des: '1T以下',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '1-1.8T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '2-2.5T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '3-3.5T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '4-4.5T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '5-7T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '8-10T',
-              checked: false,
-              typeId: 5,
-            },{
-              des: '10T以上',
-              checked: false,
-              typeId: 5,
-            }],
-            checkItem: [],
-        }, {
-          property: '动力分类',
-          type: [
-            {
-              des: '铅酸蓄电池',
-              checked: false,
-              typeId: 6,
-            },{
-              des: '柴油车',
-              checked: false,
-              typeId: 6,
-            },{
-              des: '汽油车',
-              checked: false,
-              typeId: 6,
-            },{
-              des: '液化天然气',
-              checked: false,
-              typeId: 6,
-            },{
-              des: '锂电池',
-              checked: false,
-              typeId: 6,
-            }],
-            checkItem: [],
-        }, {
-          property: '车型分类',
-          type: [
-            {
-              des: '四支点平衡重',
-              checked: false,
-              typeId: 7,
-            },{
-              des: '三支点平衡重',
-              checked: false,
-              typeId: 7,
-            },{
-              des: '前移式叉车',
-              checked: false,
-              typeId: 7,
-            },{
-              des: '托盘搬运车',
-              checked: false,
-              typeId: 7,
-            },{
-              des: '托盘堆垛车',
-              checked: false,
-              typeId: 7,
-            },{
-              des: '牵引车',
-              checked: false,
-              typeId: 7,
-            }],
-            checkItem: [],
-        }],
+        tableData2: [],
         multipleSelection: [],
         dialogTableVisible: false,
         items: [],
         activeItems: [],
         active: false,
         no_active: false,
-        num : [{
-          num1: 0
-        },{
-          num2: 0
-        },{
-          num3: 0
-        }],
-        num1: 0,
-        num2: 0,
-        num3: 0,
         number: null,
         Type1: true,
         Type2: true,
@@ -393,22 +204,24 @@
         desType2: false,
         desType3: false,
         input_sku: '',
-        input_price: '',
+        input_price: null,
         input_percent: '',
         input_coin: '',
-        input_stock: '',
+        input_stock: null,
         input_enable: false,
+        input_sku1: '',
+        input_price1: null,
+        input_percent1: '',
+        input_coin1: '',
+        input_stock1: null,
+        input_enable1: false,
         activeTable: [],
         property1: '',
         property2: '',
         property3: '',
-        des1: [],
-        des2: [],
-        des3: [],
       }
     },
     components: {
-      secondStep,
     },
     watch: {
       //监听属性变换表格
@@ -439,28 +252,28 @@
             that.ruleForm.threeClassify = that.ruleForm.type[2];
             return false
           }
-          console.log(that.ruleForm)
+          // console.log(that.ruleForm)
         },
         deep: true
       },
     },
     created: function() {
       var that = this;
-      console.log(that.$route.params.ruleForm,'223232323');
+      //console.log(that.$route.params.ruleForm,'223232323');
       //that.ruleForm = that.$route.params.ruleForm;
       that.getItemId();
       that.getAllClassify();
-      //console.log(this.num.num1);
+      that.getAllProperty();
     },
     methods: {
       //获取获取商品编号
       getItemId: function() {
         var that = this;
         that.global.axiosGetReq('/item/getItemId').then((res) => {
-          //console.log(res,'22222');
           if (res.data.callStatus === 'SUCCEED') {
             that.ruleForm.itemId = res.data.msg;
-            console.log(that.ruleForm.itemId);
+            that.input_sku =  that.ruleForm.itemId + '1';
+            // console.log(that.ruleForm.itemId);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -489,6 +302,28 @@
           }
         })
       },
+      //获取商品属性列表
+      getAllProperty: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/queryProperty').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData2 = res.data.data;
+            for (var i = 0; i < that.tableData2.length; i++) {
+              for(var k in that.tableData2[i].itempropertydList) {
+                that.tableData2[i].itempropertydList[k].checked = false;
+              }
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      // 获取商品品牌ID
+      getBrandId: function(key) {
+        var that = this;
+        that.ruleForm.itemBrandId = parseInt(key.itemBrandId);
+        that.ruleForm.itemBrandName = key.itemBrandName;
+      },
       //返回商品列表
       retrunList: function() {
         var that = this
@@ -510,6 +345,7 @@
       handleSelectionChange(val) {
         var that = this
         that.multipleSelection = val
+        console.log(that.multipleSelection,'222');
       },
       //确定商品属性
       confirm_type: function() {
@@ -517,6 +353,7 @@
         that.items = that.multipleSelection.slice(0)
         that.multipleSelection.splice(0, that.multipleSelection.length)
         that.dialogTableVisible = false
+        that.checkAllActive()
       },
       //删除已选属性
       removeDes: function(index) {
@@ -532,9 +369,9 @@
       },
       setActiveItems: function(tempItem, tempK) {
         var temp = 0
-        for(var i = 0; i < this.items[tempK].type.length; i++) {
-          if (this.items[tempK].type[i].checked == true) {
-            tempItem.push(this.items[tempK].type[i])
+        for(var i = 0; i < this.items[tempK].itempropertydList.length; i++) {
+          if (this.items[tempK].itempropertydList[i].checked == true) {
+            tempItem.push(this.items[tempK].itempropertydList[i])
             temp++
             this.items[tempK].hasItem = true
             if (tempK < this.items.length-1) {
@@ -556,6 +393,34 @@
       },
       nextToFirst: function() {
         var that = this;
+        var obj = {
+          itemId: that.ruleForm.itemId,
+          itemSKU: that.input_sku,
+          itemSkuPrice: parseInt(that.input_price),
+          tiChen: parseInt(that.input_percent),
+          itemQb: parseInt(that.input_coin),
+          stockNum: parseInt(that.input_stock),
+          canUse: parseInt(that.input_enable),
+          itemValueId: '',
+          itemPropertyName: '',
+          itemPropertyInfo: '',
+          itemPropertyNameTwo: '',
+          itemPropertyTwoValue: '',
+          itemPropertyNameThree: '',
+          itemPropertyThreeValue: '',
+          itemPropertyFourName: '',
+          itemPropertyFourValue: '',
+          itemPropertyFiveName: '',
+          itemPropertyFiveValue: '',
+          itemPropertySixName: '',
+          itemPropertySixValue: '',
+        }
+        var subitem = [];
+        subitem.push(obj);
+        // var subitem = JSON.stringify(obj)
+        that.ruleForm.itemValueList = subitem;
+        that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
+        console.log(that.ruleForm,'223355');
         that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
       }
     },
