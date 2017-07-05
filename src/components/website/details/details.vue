@@ -1,9 +1,9 @@
 <template>
   <div class="details">
-    <publicHeader></publicHeader>
+    <publicHeader :msgFromGoodInfo="msgFromGoodInfoDetails"></publicHeader>
     <classify></classify>
     <detailsBar></detailsBar>
-    <goodInfo></goodInfo>
+    <goodInfo v-on:goodInfoSay="getGoodInfoSay"></goodInfo>
     <publicFooter></publicFooter>
     <backToTop></backToTop>
   </div>
@@ -21,7 +21,7 @@
     name: 'details',
     data () {
       return {
-
+        msgFromGoodInfoDetails:null,
       }
     },
     components: {
@@ -36,7 +36,12 @@
       window.scroll(0,0);
     },
     methods: {
-
+      getGoodInfoSay:function(data){
+        var that = this;
+        console.log(data)
+        that.msgFromGoodInfoDetails = data;
+        // that.$emit("goodInfoSay",data);
+      },
     }
   }
 </script>

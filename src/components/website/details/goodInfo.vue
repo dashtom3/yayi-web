@@ -57,11 +57,20 @@
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
       <div class="shuxingWrap" style="height:auto">
-        <span style="float:left">属性：</span>
+        <div class="" v-for="(item, index1) in items" v-if="item.propertyName" style="line-height: 50px;">
+          <span style="float:left">{{item.propertyName}}：</span>
+          <div class="shuxing">
+            <span :class="{ attSty2: index2 == item.propertyInfoList.checkWhich }"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList">
+              {{oneAttrVal}}
+            </span>
+            <div class="clearFloat"></div>
+          </div>
+        </div>
+        <!-- <span style="float:left">属性：</span>
         <div class="shuxing">
           <span :class="{ attSty2: index === ite }"  class="attSty1" v-on:click="changeAttSty(index,item)" v-for="(item, index) in items">{{item.itemPropertyInfo}}</span>
           <div class="clearFloat"></div>
-        </div>
+        </div> -->
         <div class="clearFloat"></div>
       </div>
       <div style="line-height:40px;margin-top:20px;">
@@ -105,6 +114,8 @@ import myAddress from './selectThree'
     data () {
       return {
         currentView:"goodIntroduce",
+        attrLength:0,
+        attrVal:[],
         ifshoucang:0,
         nowGoodDetails:{},
         itemBrand:{},
@@ -135,7 +146,7 @@ import myAddress from './selectThree'
           this.goodAllImgs[4] = this.nowGoodDetails.itemDetail.itemPice;
           // console.log(this.goodAllImgs)
           this.bigImgUrl = this.goodAllImgs[0];
-          this.items = this.nowGoodDetails.itemValueList;
+          this.items = this.nowGoodDetails.propertyList;
           this.commentList = this.nowGoodDetails.commentList;
           this.instructions = this.nowGoodDetails.itemDetail;
           this.instructions.addName = this.nowGoodDetails.itemName;
@@ -150,20 +161,25 @@ import myAddress from './selectThree'
       getNowGoodDetail:function(){
         var that = this;
         var userToken = that.global.getToken();
-        console.log(userToken)
+        if(!userToken){
+          userToken = "111";
+        }
         var obj = {
           itemId:that.$route.params.goodId,
           token:userToken
         };
-        console.log(obj)
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
           console.log(res,"getNowGoodDetail")
-
           if (res.data.callStatus === 'SUCCEED') {
             this.ifshoucang = res.data.num;
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
+            for(let i in that.nowGoodDetails.propertyList){
+              if(that.nowGoodDetails.propertyList.propertyName){
+                that.attrLength+=1;
+              }
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -181,9 +197,56 @@ import myAddress from './selectThree'
         this.goodInforWord = arg;
         this.currentView = view;
       },
-      changeAttSty:function(index,item){
-        this.ite = index;
+      changeAttSty:function(indexC,item,indexP){
+        var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
+        var nowPrice;
+        var that = this;
+        // that.attrVal[item.propertyName] = item.propertyInfoList[indexC];
+        that.attrVal[indexP] = item.propertyInfoList[indexC];
+        this.ite = indexC;
         this.sureGoodAttr = item.itemPropertyInfo;
+        var data = that.items[indexP];
+        data.propertyInfoList.checkWhich = indexC;
+        that.items.splice(indexP,1,data);
+        var LIST = that.nowGoodDetails.itemValueList;
+          if(that.attrVal.length==1){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }else if(that.attrVal.length==2){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }else  if(that.attrVal.length==3){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }else  if(that.attrVal.length==4){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }else  if(that.attrVal.length==5){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }else  if(that.attrVal.length==6){
+            for(let i in LIST){
+              if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue&&that.attrVal[5]==LIST[i].itemPropertyFiveValue){
+                nowPrice = LIST[i].itemSkuPrice;
+              }
+            }
+          }
+        that.nowGoodDetails.itemPrice = nowPrice;
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
@@ -269,7 +332,17 @@ import myAddress from './selectThree'
               }
             });
         }else{
-          that.$alert("未登录，请先登录！", {confirmButtonText: '确定'});
+          that.$alert('未登录，请先登录！',  {
+          confirmButtonText: '确定',
+          callback: action => {
+            that.$emit("goodInfoSay","sayToLogin");
+          }
+        });
+        //   that.$alert("未登录，请先登录！", {confirmButtonText: '确定',callback: action => {
+        //     that.$emit("goodInfoSay","sayToLogin");
+        //   }
+        // }
+          // });
         }
       }
     },
@@ -285,7 +358,7 @@ import myAddress from './selectThree'
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .onePxLine{
-    border: none;border-top: 1px solid #e5e5e5;background:#e5e5e5;border-color:#e5e5e5;
+    border: none;border-top: 1px solid #e5e5e5;background:#e5e5e5;border-color:#e5e5e5;margin-bottom: 8px;
   }
   .btnDef{
     background: #e5e5e5;
@@ -295,7 +368,6 @@ import myAddress from './selectThree'
   .fullCut{
     color: #8d8d8d;
     font-size: 14px;
-    /*margin-left: 70px;*/
     float: right;
   }
   .infoRight h3{
@@ -303,15 +375,10 @@ import myAddress from './selectThree'
   }
   .infoRight .shuxingWrap{
     min-height:30px;
-    padding-top: 30px;
-
   }
   .infoRight .shuxing{
-    float:right;
-    margin-left:24px;
     height:auto;
     line-height: 50px;
-  margin-top: -35px;
   }
   .infoRight h3 .ifdikou{
   position: absolute;
@@ -370,7 +437,7 @@ import myAddress from './selectThree'
     margin-left:40px;
     border:1px solid #e5e5e5;
     cursor: pointer;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
   }
   .infoLeft_1{
     width:400px;
@@ -504,7 +571,5 @@ import myAddress from './selectThree'
   .nowGoodMore{
     border-bottom: 2px solid #5db7e8;
   }
-
-
 
 </style>

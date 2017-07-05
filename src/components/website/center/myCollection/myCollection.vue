@@ -46,7 +46,6 @@
     },
     created:function(){
       this.getMyCollection();
-      console.log(".....")
     },
     methods: {
       goToThisDetail:function(id){
@@ -60,7 +59,9 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
+        console.log(obj)
         that.global.axiosPostReq('/mystar/shows', obj).then((res) => {
+          console.log(res,"getMyCollection")
           if (res.data.callStatus === 'SUCCEED') {
             this.allGoods = res.data.data;
           } else {

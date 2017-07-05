@@ -59,7 +59,7 @@
         <el-table-column  label="操作" align="center">
           <template scope="scope">
             <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index)">取消绑定</el-button>
-            <el-button v-else  type="text"  v-on:click="addBindSale(scope.$index)">绑定销售</el-button>
+            <el-button v-else  type="text"  v-on:click="addBindSale(scope.$index,scope.row)">绑定销售</el-button>
             <el-button type="text" v-on:click="details(scope.$index,scope.row)">详情</el-button>
           </template>
         </el-table-column>
@@ -84,7 +84,7 @@
         <el-table-column align="center" property="saleName" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="hehushu" label="操作">
           <template scope="scope">
-            <el-button type="text" v-on:click="bandThisSale(scope.$index)">绑定</el-button>
+            <el-button type="text" v-on:click="bandThisSale(scope.$index,scope.row)">绑定</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,7 +111,7 @@
       <div class="certification">
         <h3>资质认证</h3>
         <div class="">
-          <span>类型：{{someOneUserDetails.type}}</span>
+          <span>类型：{{someOneUserDetails.type | calculateUserType}}</span>
           <span>单位名称：{{someOneUserDetails.companyName}}</span>
         </div>
         <div class="">
@@ -153,6 +153,7 @@
     data(){
       return {
         needBindSaleUserIndex:null,
+        needBindUserPhone:null,
         showBindSalAlert:false,
         showUserDetailInfor:false,
         searchUserContent:null,
@@ -197,6 +198,17 @@
       that.getUserList();
       that.getSalesList();
     },
+    filters: {
+      calculateUserType:function(data){
+        var str = "";
+        if(data==1){
+          str = "个人";
+        }else{
+          str = "机构";
+        }
+        return str;
+      }
+    },
     methods: {
       getUserList:function(){
         var that = this;
@@ -222,7 +234,6 @@
       getSalesList:function(){
         var that = this;
         var obj = {
-          // token:that.global.getToken()
           salePhone:'',
           saleName:'',
           token:"111"
@@ -240,7 +251,6 @@
       getOneUserDetails:function(userPhone){
         var that = this;
         var obj = {
-          // token:that.global.getToken()
           phone:userPhone,
           token:"1111"
         };
@@ -261,14 +271,31 @@
           }
         })
       },
-      bandThisSale:function(index){
-        this.userList[this.needBindSaleUserIndex].isBindSale = "是";
-        this.userList[this.needBindSaleUserIndex].saleName = this.salesList[index].name;
-        this.showBindSalAlert = false;
+      bandThisSale:function(index,one){
+        var that = this;
+
+        var obj = {
+          token:"1211",
+          // token:that.global.getToken()
+          salePhone:one.salePhone,
+          userPhone:that.needBindUserPhone
+        };
+        that.global.axiosGetReq('/userManageList/bind',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.userList[that.needBindSaleUserIndex].isBindSale = "是";
+            that.userList[that.needBindSaleUserIndex].saleName = that.salesList[index].name;
+            that.showBindSalAlert = false;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
-      addBindSale:function(index){
-        this.needBindSaleUserIndex = index;
-        this.showBindSalAlert = true;
+      addBindSale:function(index,one){
+        var that = this;
+        that.needBindUserPhone = one.phone;
+        that.needBindSaleUserIndex = index;
+        that.showBindSalAlert = true;
       },
       details:function(index,user){
         var that = this;
@@ -276,12 +303,29 @@
         that.getOneUserDetails(user.phone);
       },
       searchSalse:function(){
+        // bindSaleSearchType
+        // that.bindSaleSearchCont
         var that = this;
         var obj = {
           token:"111"
         };
-        // bindSaleSearchType
-        // console.log(that.bindSaleSearchCont)
+        if(that.bindSaleSearchCont){
+          if(that.bindSaleSearchType == "手机号"){
+            obj.salePhone = that.bindSaleSearchCont;
+          }else{
+            obj.saleName = that.bindSaleSearchCont;
+          }
+          that.global.axiosGetReq('/userManageList/salelist',obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.salesList = res.data.data;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }else{
+          this.$alert('请输入查找内容', {confirmButtonText: '确定',});
+        }
       },
       search:function(){
         var flag = true;
@@ -303,16 +347,10 @@
           obj.phone = "";
           obj.trueName = that.searchUserContent;
           obj.companyName = "";
-        }else{
-          obj.phone = "";
-          obj.trueName = "";
-          obj.companyName = "";
-          flag = false;
         }
         //类型
         if(that.searchtype=="全部"){
           obj.type = "";
-          flag = false;
         }else if(that.searchtype=="个人"){
           obj.type = 1;
         }else if(that.searchtype=="机构"){
@@ -321,28 +359,27 @@
         //是否绑定销售
         if(that.searchisBindSale=="全部"){
           obj.isBindSale = "";
-          flag = false;
         }else if(that.searchisBindSale=="是"){
           obj.isBindSale = 1;
         }else if(that.searchisBindSale=="否"){
           obj.isBindSale = 2;
         }
         if(!that.searchSaleName){
-          flag = false;
+          that.searchSaleName = "";
         }
-        if(flag){
+        // console.log(obj)
           that.global.axiosGetReq('/userManageList/userlist',obj)
           .then((res) => {
-            console.log(res,"searchList")
+            // console.log(res,"searchList")
             if (res.data.callStatus === 'SUCCEED') {
-
+              that.userList = res.data.data;
+              //清空搜寻项目
+              that.searchSaleName = "";
+              that.searchUserContent = "";
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
-        }else{
-          that.$alert('请输入至少一项搜索项内容',{confirmButtonText: '确定'});
-        }
       },
       cancelBindSale:function(index){
         console.log(index);
