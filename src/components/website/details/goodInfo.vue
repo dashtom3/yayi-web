@@ -332,12 +332,7 @@ import myAddress from './selectThree'
               }
             });
         }else{
-          that.$alert('未登录，请先登录！',  {
-          confirmButtonText: '确定',
-          callback: action => {
-            that.$emit("goodInfoSay","sayToLogin");
-          }
-        });
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
         }
       },
       nowToBuyThis:function(){
@@ -346,11 +341,7 @@ import myAddress from './selectThree'
         if(userToken){
 
         }else{
-          that.$alert('未登录，请先登录！',  {
-          confirmButtonText: '确定',
-          callback: action => {
-            that.$emit("goodInfoSay","sayToLogin");
-          }
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
         }
       },
     },
