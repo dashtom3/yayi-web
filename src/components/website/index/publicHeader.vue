@@ -210,6 +210,7 @@
   var crypto = require('crypto');
   export default {
     name: 'publicHeader',
+    props:['msgFromGoodInfo'],
     data () {
       return {
         bindBanner: '',
@@ -298,6 +299,17 @@
       // console.log(that.global.getToken());
     },
     watch: {
+      msgFromGoodInfo() {
+        var that = this;
+        if (that.msgFromGoodInfo == 'sayToLogin') {
+          that.changeForget1 = true;
+          that.changeForget2 = false;
+          that.changeForget3 = false;
+          that.showLogin1 = true;
+          
+        }
+        console.log(that.msgFromGoodInfo,'2222');
+      },
       //购物车
       Gtoken: function() {
         var that = this;
@@ -660,6 +672,7 @@
         that.showLogin2 = false;
         that.showLogin3 = false;
         that.showLogin1 = !that.showLogin1;
+        // that.msgFromGoodInfo = ''
       },
       // 页头点击注册按钮
       register: function() {

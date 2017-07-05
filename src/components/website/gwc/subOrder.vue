@@ -70,10 +70,10 @@
         <input class="leave_word" v-model="leave_des" type="text" placeholder="对本次交易的说明">
       </div>
       <div class="checked_box">
-        <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}</span></p>
-        <p class="second_p">运费：¥8.00</p>
+        <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}.00</span></p>
+        <p class="second_p">运费：¥{{freight}}.00</p>
         <p class="third_p">钱币抵扣：¥{{qbdk}}</p>
-        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}</span></p>
+        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}.00</span></p>
         <p class="fifth_p">本次可获得钱币：¥?.00</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
@@ -353,6 +353,7 @@
         county: '',
         receiverDetail: '',
         receiverId: '',
+        freight: '',
       }
     },
     watch: {
@@ -486,7 +487,7 @@
       getMyAdd: function() {
         var that = this;
         var obj = {
-          phone:that.global.getUser().phone,
+          token:that.global.getToken(),
         };
         that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -510,7 +511,8 @@
             }
             that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                console.log(res.data,'yunfei')
+                that.freight = res.data.data.postFee
+                console.log(that.freight,'yunfei')
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
@@ -685,12 +687,12 @@
         console.log(obj);
         that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res)
+            console.log(res.data);
+            that.$router.push({ path:'/pay' });
           } else {
             that.$message.error('保存地址失败！');
           }
         })
-        //that.$router.push({ path:'/pay' });
       }
     }
   }

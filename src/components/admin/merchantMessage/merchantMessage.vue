@@ -41,14 +41,14 @@
     </el-col>
       <div class="clearfix"></div>
       <el-table :data="tableData" border style="margin-top: 26px;width: 100%">
-        <el-table-column label="商品编号" prop="id"></el-table-column>
+        <el-table-column label="商品编号" prop="itemId"></el-table-column>
         <el-table-column label="商品名称" prop="itemName"></el-table-column>
-        <el-table-column label="商品分类" prop="class"></el-table-column>
-        <el-table-column label="品牌名称" prop="brand"></el-table-column>
+        <el-table-column label="商品分类" prop="oneClassify"></el-table-column>
+        <el-table-column label="品牌名称" prop="itemBrand.itemBrandName"></el-table-column>
         <el-table-column label="推荐">
           <template scope="scope">
-            <span v-if="scope.row.coin == 1">是</span>
-            <span v-if="scope.row.coin == 0">否</span>
+            <span v-if="scope.row.isThrow == 1">是</span>
+            <span v-if="scope.row.isThrow == 0">否</span>
           </template> 
         </el-table-column>
         <el-table-column label="商品状态">
@@ -79,31 +79,31 @@
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <div class="detail_box">
         <div class="detail_cargo">商品编号：</div>
-        <p class="detail_word">商品详情商品详情</p>
+        <p class="detail_word">{{details.itemId}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品名称：</div>
-        <p class="detail_word">商品详情商品详情商品详情商品</p>
+        <p class="detail_word">{{details.itemName}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品分类：</div>
-        <p class="detail_word">商品详情商品详情商品</p>
+        <p class="detail_word">{{details.oneClassify}}/{{details.twoClassify}}/{{details.threeClassify}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">品牌名称：</div>
-        <p class="detail_word">商品详情商品详情商品</p>
+        <p class="detail_word">{{details.itemBrand.itemBrandName}}</p>
       </div>
       <div class="detail_box">
-        <div class="detail_cargo">注册账号：</div>
-        <p class="detail_word">商品详情商品详情商品</p>
+        <div class="detail_cargo">注册证号：</div>
+        <p class="detail_word">{{details.itemBrand.itemBrandName}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">乾币抵扣：</div>
-        <p class="detail_word">商品详情商品详情商品</p>
+        <p class="detail_word">{{details.itemDetail.video}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品属性：</div>
-        <p class="detail_word">商品详情商品详情商品</p>
+        <p class="detail_word">{{details.itemBrand.itemBrandName}}</p>
       </div>
       <table class="activeTable_box">
         <tr class="activeTable_title">
@@ -151,7 +151,7 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
-        <p class="detail_word">视频说明</p>
+        <p class="detail_word">{{details.itemDetail.video}}</p>
       </div>
     </el-form>
   </el-dialog>
@@ -194,211 +194,6 @@
         coinValue: '',
         stateValue: '',
         dialogTableVisible: false,
-        options3: [{
-          label: '哈哈',
-          value: '1'
-        },{
-          label: '嘿嘿',
-          value: '2'
-        },{
-          label: '呵呵',
-          value: '3'
-        }],
-        options4: [{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, {
-          value: 'zujian',
-          label: '组件',
-          children: [{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-          }, {
-            value: 'form',
-            label: 'Form',
-            children: [{
-              value: 'radio',
-              label: 'Radio 单选框'
-            }, {
-              value: 'checkbox',
-              label: 'Checkbox 多选框'
-            }, {
-              value: 'input',
-              label: 'Input 输入框'
-            }, {
-              value: 'input-number',
-              label: 'InputNumber 计数器'
-            }, {
-              value: 'select',
-              label: 'Select 选择器'
-            }, {
-              value: 'cascader',
-              label: 'Cascader 级联选择器'
-            }, {
-              value: 'switch',
-              label: 'Switch 开关'
-            }, {
-              value: 'slider',
-              label: 'Slider 滑块'
-            }, {
-              value: 'time-picker',
-              label: 'TimePicker 时间选择器'
-            }, {
-              value: 'date-picker',
-              label: 'DatePicker 日期选择器'
-            }, {
-              value: 'datetime-picker',
-              label: 'DateTimePicker 日期时间选择器'
-            }, {
-              value: 'upload',
-              label: 'Upload 上传'
-            }, {
-              value: 'rate',
-              label: 'Rate 评分'
-            }, {
-              value: 'form',
-              label: 'Form 表单'
-            }]
-          }, {
-            value: 'data',
-            label: 'Data',
-            children: [{
-              value: 'table',
-              label: 'Table 表格'
-            }, {
-              value: 'tag',
-              label: 'Tag 标签'
-            }, {
-              value: 'progress',
-              label: 'Progress 进度条'
-            }, {
-              value: 'tree',
-              label: 'Tree 树形控件'
-            }, {
-              value: 'pagination',
-              label: 'Pagination 分页'
-            }, {
-              value: 'badge',
-              label: 'Badge 标记'
-            }]
-          }, {
-            value: 'notice',
-            label: 'Notice',
-            children: [{
-              value: 'alert',
-              label: 'Alert 警告'
-            }, {
-              value: 'loading',
-              label: 'Loading 加载'
-            }, {
-              value: 'message',
-              label: 'Message 消息提示'
-            }, {
-              value: 'message-box',
-              label: 'MessageBox 弹框'
-            }, {
-              value: 'notification',
-              label: 'Notification 通知'
-            }]
-          }, {
-            value: 'navigation',
-            label: 'Navigation',
-            children: [{
-              value: 'menu',
-              label: 'NavMenu 导航菜单'
-            }, {
-              value: 'tabs',
-              label: 'Tabs 标签页'
-            }, {
-              value: 'breadcrumb',
-              label: 'Breadcrumb 面包屑'
-            }, {
-              value: 'dropdown',
-              label: 'Dropdown 下拉菜单'
-            }, {
-              value: 'steps',
-              label: 'Steps 步骤条'
-            }]
-          }, {
-            value: 'others',
-            label: 'Others',
-            children: [{
-              value: 'dialog',
-              label: 'Dialog 对话框'
-            }, {
-              value: 'tooltip',
-              label: 'Tooltip 文字提示'
-            }, {
-              value: 'popover',
-              label: 'Popover 弹出框'
-            }, {
-              value: 'card',
-              label: 'Card 卡片'
-            }, {
-              value: 'carousel',
-              label: 'Carousel 走马灯'
-            }, {
-              value: 'collapse',
-              label: 'Collapse 折叠面板'
-            }]
-          }]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [{
-            value: 'axure',
-            label: 'Axure Components'
-          }, {
-            value: 'sketch',
-            label: 'Sketch Templates'
-          }, {
-            value: 'jiaohu',
-            label: '组件交互文档'
-          }]
-        }],
         ruleForm: {
           cargoId: '',
           name: '',
@@ -441,185 +236,6 @@
         },
         radio: '',
         labelPosition: 'right',
-        tableData2: [{
-          property: '工作电压',
-          type: [
-            { 
-              des: '12V',
-              checked: false,
-              typeId: 1,
-            },{ 
-              des: '24V',
-              checked: false,
-              typeId: 1,
-            },{ 
-              des: '36V',
-              checked: false,
-              typeId: 1,
-            },{ 
-              des: '48V',
-              checked: false,
-              typeId: 1,
-            },{ 
-              des: '60V',
-              checked: false,
-              typeId: 1,
-            },{ 
-              des: '72V',
-              checked: false,
-              typeId: 1,
-            }],
-            checkItem: [],
-        }, {
-          property: '额定电流',
-          type: [
-            { 
-              des: '50A',
-              checked: false,
-              typeId: 2,
-            },{ 
-              des: '100A',
-              checked: false,
-              typeId: 2,
-            },{ 
-              des: '150A',
-              checked: false,
-              typeId: 2,
-            },{ 
-              des: '200A',
-              checked: false,
-              typeId: 2,
-            },{ 
-              des: '300A',
-              checked: false,
-              typeId: 2,
-            },{ 
-              des: '400A',
-              checked: false,
-              typeId: 2,
-            }],
-            checkItem: [],
-        }, {
-          property: '品牌类别',
-          type: [{ 
-              des: '进口品牌',
-              checked: false,
-              typeId: 3,
-            },{ 
-              des: '国产品牌',
-              checked: false,
-              typeId: 3,
-            },{ 
-              des: 'OEM',
-              checked: false,
-              typeId: 3,
-            }],
-            checkItem: [],
-        }, {
-          property: '产品类别',
-          type: [
-            { 
-              des: '原厂配套件',
-              checked: false,
-              typeId: 4,
-            },{ 
-              des: '副厂件',
-              checked: false,
-              typeId: 4,
-            }],
-            checkItem: [],
-        }, {
-          property: '车辆吨位',
-          type: [
-            { 
-              des: '1T以下',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '1-1.8T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '2-2.5T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '3-3.5T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '4-4.5T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '5-7T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '8-10T',
-              checked: false,
-              typeId: 5,
-            },{ 
-              des: '10T以上',
-              checked: false,
-              typeId: 5,
-            }],
-            checkItem: [],
-        }, {
-          property: '动力分类',
-          type: [
-            { 
-              des: '铅酸蓄电池',
-              checked: false,
-              typeId: 6,
-            },{ 
-              des: '柴油车',
-              checked: false,
-              typeId: 6,
-            },{ 
-              des: '汽油车',
-              checked: false,
-              typeId: 6,
-            },{ 
-              des: '液化天然气',
-              checked: false,
-              typeId: 6,
-            },{ 
-              des: '锂电池',
-              checked: false,
-              typeId: 6,
-            }],
-            checkItem: [],
-        }, {
-          property: '车型分类',
-          type: [
-            { 
-              des: '四支点平衡重',
-              checked: false,
-              typeId: 7,
-            },{ 
-              des: '三支点平衡重',
-              checked: false,
-              typeId: 7,
-            },{ 
-              des: '前移式叉车',
-              checked: false,
-              typeId: 7,
-            },{ 
-              des: '托盘搬运车',
-              checked: false,
-              typeId: 7,
-            },{ 
-              des: '托盘堆垛车',
-              checked: false,
-              typeId: 7,
-            },{ 
-              des: '牵引车',
-              checked: false,
-              typeId: 7,
-            }],
-            checkItem: [],
-        }],
         multipleSelection: [],
         dialogTableVisible: false,
         items: [],
@@ -630,6 +246,7 @@
         input_coin: '',
         input_stock: '',
         input_enable: false,
+        details: [],
       }
     },
     created: function() {
@@ -695,8 +312,19 @@
         that.addMerchandise = true;
       },
       //商品属性详情
-      detail: function() {
+      detail: function(scope) {
         var that = this;
+        var obj = {
+          itemId: scope.row.itemId,
+        }
+        that.global.axiosPostReq('/item/itemDetailDes',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.details = res.data.data
+            console.log(that.details,'ppp');
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
         that.dialogTableVisible = true;
       },
       //上架
@@ -708,11 +336,11 @@
           type: 'warning'
         }).then(() => {
           var obj = {
-            itemId: scope.row,
+            itemId: scope.row.itemId,
           }
           that.global.axiosPostReq('/item/up',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data);
+              that.getItemInfo();
               that.$message({
                 type: 'success',
                 message: '上架成功!'
@@ -737,11 +365,11 @@
           type: 'warning'
         }).then(() => {
           var obj = {
-            itemId: scope.row,
+            itemId: scope.row.itemId,
           }
           that.global.axiosPostReq('/item/down',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data);
+              that.getItemInfo();
               that.$message({
                 type: 'success',
                 message: '下架成功!'
@@ -768,7 +396,7 @@
           var obj = {
             itemId: scope.row.itemId,
           }
-          that.global.axiosPostReq('/item/down',obj).then((res) => {
+          that.global.axiosPostReq('/item/delete',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data);
               that.getItemInfo();

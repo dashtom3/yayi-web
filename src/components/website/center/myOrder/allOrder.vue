@@ -217,7 +217,7 @@
           phone:that.global.getUser().phone
         };
         console.log(obj)
-        that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
+        that.global.axiosPostReq('/showUserOrderManage/showOrder',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res,"getAllOrder");
           } else {
