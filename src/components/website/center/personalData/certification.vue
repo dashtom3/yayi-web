@@ -86,6 +86,7 @@
           }
         }
       })
+      console.log(this.certiData)
     },
     components:{
       selectThree
@@ -94,7 +95,7 @@
       state:function(){
         if(this.state == 2){
           this.certificateState = this.userData.state;
-          this.ert(this.userData.failReason);
+          this.ert(this.certiData.failReason);
         }
       },
       certiData: {
@@ -122,6 +123,8 @@
           doctorPic: this.imageUrl,
           judge: this.certiData.ifOnce
         }
+        console.log(params)
+        console.log('-----------------','我要改变状态')
         //验证单位名称必输
         if(!this.certiData.companyName){
           this.companyName_validate = true;
@@ -139,10 +142,15 @@
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.$message({
-              message: '您的认证信息我们会尽快审核，请耐心等待~',
-              type: 'success'
-            });
+            //第一次提交
+            if(params.judge == '0'){
+              this.$message({
+                message: '您的认证信息我们会尽快审核，请耐心等待~',
+                type: 'success'
+              });
+            }else{
+              return false;
+            }
             this.btnVisible = false;
           }else{
             this.$message.error('资质认证修改失败！');
@@ -160,32 +168,44 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1){
-          this.$alert('您的认证信息我们会尽快审核，请耐心等待~',{
+        if(this.certificateState==1 && this.certiData.ifOnce==='0'){
+          this.$confirm('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           }).then(() => {
             //提交后台改变状态
             this.certiData.ifOnce = "1";
             this.savePerInfo();
-          });
+          }).catch(() => {});
           this.ifPass = true;
           this.btnVisible = false;
         }else if(this.certificateState==1 && this.certiData.ifOnce==='1'){
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2){
-          this.$alert('您的认证信息已审核通过',{
+        }else if(this.certificateState==2 && this.certiData.ifOnce==='0'){
+          this.$confirm('您的认证信息已审核通过',{
             confirmButtonText: '确定',
-          });
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.certiData.ifOnce = "1";
+            this.savePerInfo();
+          }).catch(() => {});
           this.ifPass = true;
           this.btnVisible = false;
         }else if(this.certificateState==2 && this.certiData.ifOnce==='1'){
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==3){
-          this.$alert('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
+        }else if(this.certificateState==3 && this.certiData.ifOnce==='0'){
+          this.$confirm('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
-          });
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.certiData.ifOnce = "1";
+            this.savePerInfo();
+          }).catch(() => {});
           this.btnVisible = true;
         }else if(this.certificateState==3 && this.certiData.ifOnce==='1'){
           this.btnVisible = true;

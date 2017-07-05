@@ -122,7 +122,6 @@
             this.$message.error('个人信息修改失败！');
           }
         })
-        this.$emit('listentoChild',this.userData);
       },
       uploadFile(res, file) {
         this.personData.userPic = global.qiniuShUrl + file.response.key

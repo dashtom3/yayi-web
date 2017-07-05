@@ -40,11 +40,15 @@
 
     <el-table :data="certificationList"  border style="width: 100%">
       <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
-      <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号"> 
+      <!-- <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号"> 
         <template scope="scope">
             <span>{{scope.row.trueName}}</span><span>{{scope.row.phone}}</span>
         </template>
-       </el-table-column>
+       </el-table-column> -->
+      <el-table-column  prop="trueName"  align="center"  label="真实姓名"> 
+      </el-table-column>
+      <el-table-column  prop="phone"  align="center"  label="手机号"> 
+      </el-table-column>
       <el-table-column  prop="certification.type"  align="center"  label="类型"> 
         <template scope="scope">
           <span v-if='scope.row.certification.type === 1'>个人</span>
@@ -52,10 +56,17 @@
         </template>
        </el-table-column>
       <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
-      <el-table-column  align="center"  label="所在地+详细地址"> 
+      <!-- <el-table-column  align="center"  label="所在地+详细地址"> 
         <template scope="scope">
             <span>{{scope.row.certification.part}}</span><span>{{scope.row.certification.workAddress}}</span>
         </template>
+      </el-table-column> -->
+      <el-table-column  align="center"  label="所在地"> 
+        <template scope="scope">
+            <span>{{scope.row.certification.part}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="certification.workAddress" align="center"  label="详细地址"> 
       </el-table-column>
       <el-table-column  prop="certification.doctorPic"  align="center"  label="资格证" class-name="imgWrap">
         <template scope="scope">
@@ -148,7 +159,7 @@
         }else{
           params = {
             phone: '',
-            trueName: '',
+            trueName: this.searchUserContent,
             companyName: '',
             type: this.searchType,
             state: this.searchState,
@@ -182,6 +193,7 @@
                 type: 'success',
                 message: '审核通过!'
               });
+              this.search();
             }else{
               this.$message({
                 type: 'info',
@@ -210,6 +222,7 @@
                 type: 'success',
                 message: '审核不通过!'
               });
+              this.search();
             }else{
               this.$message({
                 type: 'info',

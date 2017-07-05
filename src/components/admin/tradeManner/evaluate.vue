@@ -11,7 +11,7 @@
 	    	<el-form-item label="订单编号" class="fl t_input_width">
           <el-input v-model="orderCode"></el-input>
         </el-form-item>
-        <el-form-item label="用户编号" class="fl t_input_width">
+        <el-form-item label="用户名" class="fl t_input_width">
           <el-input v-model="userCode"></el-input>
         </el-form-item>
         <el-form-item label="回复状态" class="fl">
@@ -25,28 +25,28 @@
 				  </el-select>
         </el-form-item>
         <el-form-item class="fl">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="queryHandler">查询</el-button>
         </el-form-item>
 	    </el-form>
 
 	    <!--回复列表-->
       <el-table :data="replayList" border>
-        <el-table-column prop="SKUCode" label="sku代码" :span="3" align="center">
+        <el-table-column prop="sku" label="sku代码" :span="3" align="center">
         </el-table-column>
-        <el-table-column prop="goodsInfo" label="商品名称+属性" width="170" align="center" >
+        <el-table-column prop="nameAddAttribute" label="商品名称+属性" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="comment" label="评论内容" :span="3" align="center" >
+        <el-table-column prop="commentContent" label="评论内容" :span="3" align="center" >
         </el-table-column>
-        <el-table-column prop="deuce" label="评分" width="70" align="center" >
+        <el-table-column prop="score" label="评分" width="70" align="center" >
         </el-table-column>
-        <el-table-column prop="orderCode" label="订单编号" width="170" align="center" >
+        <el-table-column prop="OrderId" label="订单编号" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="userCode" label="用户编号" width="170" align="center" >
+        <el-table-column prop="userId" label="用户名" width="170" align="center" >
         </el-table-column>
-        <el-table-column prop="replayStat" label="回复状态" :span="3" align="center" >
+        <el-table-column prop="recoveryState" label="回复状态" :span="3" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.replayStat == '1'">已回复</span>
-            <span v-if="scope.row.replayStat == '2'">未回复</span>
+            <span v-if="scope.row.recoveryState == '0'">未回复</span>
+            <span v-if="scope.row.recoveryState == '1'">已回复</span>
           </template>  
         </el-table-column>
         <el-table-column prop="replayInfo" label="回复内容" :span="3" align="center" >
@@ -56,7 +56,7 @@
             <el-button
               size="small"
               type="info"
-              @click="handleReplay(scope.$index, scope.row)">回复</el-button>
+              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.recoveryState == '0'">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,20 +79,21 @@
 </template>
 
 <script>
+  import global from '../../global/global'
 	export default {
 		data(){
 			return {
 				orderCode: "",
 				userCode: "",
 				replayStat: [{
-          value: '0',
+          value: '',
           label: '全部'
+        },{
+          value: '0',
+          label: '未回复'
         },{
           value: '1',
           label: '已回复'
-        }, {
-          value: '2',
-          label: '未回复'
         }],
         value: '',
         //回复列表
@@ -104,7 +105,7 @@
         	orderCode: 'FJDKS64236764',
         	userCode: 'FIOPOP753287',
         	replayInfo: '',
-        	replayStat: 2
+        	recoveryState: '0'
         },{
         	SKUCode: 'xxxxx',
         	goodsInfo: '商品名称+属性',
@@ -113,7 +114,7 @@
         	orderCode: 'FJDKS64236764',
         	userCode: 'FIOPOP753287',
         	replayInfo: '',
-        	replayStat: 2
+        	recoveryState: '0'
         },{
         	SKUCode: 'xxxxx',
         	goodsInfo: '商品名称+属性',
@@ -122,17 +123,55 @@
         	orderCode: 'FJDKS64236764',
         	userCode: 'FIOPOP753287',
         	replayInfo: '我回复完了',
-        	replayStat: 1
+        	recoveryState: '1'
         }],
         replayBtn: false,
-        replayText: ''
+        replayText: '',
+        orderId: '',
+        itemId: ''
 			}
 		},
+    created(){
+      this.queryHandler()
+    },
 		methods: {
-			handleReplay(){
+      queryHandler(){
+        let params = {
+          phone: global.getUser().phone,
+          orderId: this.orderCode,
+          userId: this.userCode,
+          recoveryState: this.value
+        }
+        console.log(params)
+        global.axiosPostReq('/commentManage/show',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.replayList = res.data.data
+          }else{
+            this.$message.error('查询评论失败！');
+          }
+        })
+      },
+			handleReplay(index, row){
+        console.log(index, row)
+        this.orderId = row.OrderId;
+        this.itemId = row.sku;
 				this.replayBtn = true;
 			},
 			replayOkHandler(){
+        let params = {
+          orderId: this.OrderId,
+          itemId: this.sku,
+          data: this.replayText
+        }
+        console.log(params)
+        global.axiosPostReq('/commentManage/reply',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            console.log(res.data.data)
+          }else{
+            this.$message.error('回复评论失败！');
+          }
+        })
+
 				this.replayBtn = false;
 			}
 		}
@@ -140,9 +179,6 @@
 </script>
 
 <style scoped>
-.el-table th>.cell{
-  text-align: center;
-}
 .fl{
 	float:left;
 }

@@ -110,7 +110,6 @@
         var params;
         if(this.sel_value == '1'){
           params = {
-            // itemName: encodeURI(this.sel_input),
             itemName: this.sel_input,
             itemId: '',
             itemSKU: '',

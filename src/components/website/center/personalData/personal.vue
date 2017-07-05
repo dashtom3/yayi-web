@@ -4,9 +4,7 @@
       <span :class="{nowTabActive:1==currentTabs}" v-on:click="changeTabs(1)">个人信息</span>
       <span :class="{nowTabActive:2==currentTabs}" v-on:click="changeTabs(2)">资质认证</span>
       <span :class="{nowTabActive:3==currentTabs}" v-on:click="changeTabs(3)">绑定销售员</span>
-      <div style="clear:both" class="">
-
-      </div>
+      <div style="clear:both"></div>
     </div>
     <div style="height:745px;" v-if="!personInfo.phone"></div>
     <personalData :userData="personInfo" v-show="1==currentTabs" v-if="personInfo.phone"></personalData>
@@ -52,8 +50,10 @@
             this.personInfo = res.data.data;
             this.personInfo.birthday = util.formatDate.format(new Date(res.data.data.birthday));
             this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString();
-            this.personInfo.type = res.data.data.sex && res.data.data.type.toString();
+            this.personInfo.type = res.data.data.type && res.data.data.type.toString();
             this.personInfo.part = res.data.data.part && res.data.data.part.split(",");
+
+            console.log('------------------',this.personInfo)
           }else{
             this.$message.error('个人信息查询失败！');
           }
