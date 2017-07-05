@@ -60,15 +60,15 @@
         <el-table-column label="操作">
           <template scope="scope">
             <div v-if="scope.row.state == true">
-              <el-button size="small" @click="detail()">详情</el-button>
-              <el-button size="small" @click="soldOut()">下架</el-button>
+              <el-button size="small" @click="detail(scope)">详情</el-button>
+              <el-button size="small" @click="soldOut(scope)">下架</el-button>
             </div>
             <div v-else>
-              <el-button size="small" @click="detail()">详情</el-button>
-              <el-button size="small" @click="edit()">编辑</el-button>
-              <el-button size="small" @click="preview()">预览</el-button>
-              <el-button size="small" @click="grounding()">上架</el-button>
-              <el-button size="small" type="danger" @click="remove()">删除</el-button>
+              <el-button size="small" @click="detail(scope)">详情</el-button>
+              <el-button size="small" @click="edit(scope)">编辑</el-button>
+              <el-button size="small" @click="preview(scope)">预览</el-button>
+              <el-button size="small" @click="grounding(scope)">上架</el-button>
+              <el-button size="small" type="danger" @click="remove(scope)">删除</el-button>
             </div>
           </template>
         </el-table-column>
@@ -156,12 +156,10 @@
     </el-form>
   </el-dialog>
   <!-- 查看商品属性详情面板 结束 -->
-<!--   <addMerchandise v-on:listenToChildEvent="showMsgFromChild" v-show="addMerchandise"></addMerchandise> -->
 </div>
 </template>
 <script>
   import util from '../../../common/util'
-  // import addMerchandise from './addMerchandise'
   export default{
     data () {
       return {
@@ -193,7 +191,6 @@
           value: '3'
         }],
         list: true,
-        // addMerchandise: false,
         coinValue: '',
         stateValue: '',
         dialogTableVisible: false,
@@ -635,9 +632,6 @@
         input_enable: false,
       }
     },
-    // components: {
-    //   addMerchandise,
-    // },
     created: function() {
       var that = this;
       that.getItemInfo();
@@ -673,6 +667,20 @@
       },
       search: function() {
         var that = this;
+        var obj = {
+          itemId: that.cargo.id,
+          itemName: that.cargo.name,
+          itemClassify: that.cargo.class,
+          itemBrandName: that.cargo.brand,
+          state: '',
+        }
+        that.global.axiosPostReq('/item/update',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data);
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       //添加商品
       add: function() {
@@ -692,17 +700,27 @@
         that.dialogTableVisible = true;
       },
       //上架
-      grounding: function() {
+      grounding: function(scope) {
         var that = this;
         that.$confirm('确定上架该商品吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '上架成功!'
-          });
+          var obj = {
+            itemId: scope.row,
+          }
+          that.global.axiosPostReq('/item/up',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
+              that.$message({
+                type: 'success',
+                message: '上架成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -711,17 +729,27 @@
         });
       },
       //下架
-      soldOut: function() {
+      soldOut: function(scope) {
         var that = this;
         that.$confirm('确定下架该商品吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '下架成功!'
-          });
+          var obj = {
+            itemId: scope.row,
+          }
+          that.global.axiosPostReq('/item/down',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
+              that.$message({
+                type: 'success',
+                message: '下架成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -730,17 +758,28 @@
         });
       },
       //删除
-      remove: function() {
+      remove: function(scope) {
         var that = this;
         that.$confirm('确定删除该商品吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          var obj = {
+            itemId: scope.row.itemId,
+          }
+          that.global.axiosPostReq('/item/down',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
+              that.getItemInfo();
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
           that.$message({
             type: 'info',

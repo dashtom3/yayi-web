@@ -1242,15 +1242,18 @@
   .total_box {
     width: 100%;
     height: 100%;
+    color: #000;
   }
   .fir {
     font-weight: bold;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-right: 20px;
+    color: #000;
   }
   .sec {
     font-weight: bold;
-    margin-top: 15px;
+    margin-top: 10px;
+    color: #000;
   }
   .gotocar {
     width: 70px;
@@ -1259,7 +1262,7 @@
     background-color: #5DB7E7;
     text-align: center;
     border-radius: 6px;
-    margin-top: 10px;
+    margin-top: 13px;
     color: #fff;
   }
 /*------------页面购物车hover样式 end----------------*/

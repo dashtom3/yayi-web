@@ -170,6 +170,7 @@
               that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
           }
           sendData.details = that.sendDataList;
+          sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
           window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
           that.$router.push({path: '/suborder'})
         }else{

@@ -14,7 +14,7 @@
         <el-input v-model="secondForm.producePompany"></el-input>
       </el-form-item>
       <el-form-item label="注册证有效期／备案日期">
-        <el-date-picker v-model="secondForm.registerDate" type="date" placeholder="选择日期">
+        <el-date-picker format="yyyy-MM-dd" v-model="secondForm.registerDate" type="date" placeholder="选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="产品包装">
@@ -36,6 +36,7 @@
 </template>
 <script>
   import thirdStep from './thirdStep'
+  import util from '../../../common/util'
   export default{
     name: 'secondStep',
     data () {
@@ -68,9 +69,9 @@
     methods: {
       nextToThird: function() {
         var that = this;
+        that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
         Object.assign(that.newForm,that.secondForm,that.ruleForm);
         that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
-        console.log(that.newForm,'ppppppp');
         that.secondStep = false;
         that.thirdStep = true;
       },

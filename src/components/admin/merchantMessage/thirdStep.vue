@@ -93,7 +93,7 @@
         var img_src = global.qiniuShUrl + file.response.key;
         // console.log(img_src);
         var b = that.fileList.filter(function(ele,index,arr) {
-            console.log(ele,'3333333');
+            //console.log(ele,'3333333');
             return ele !== img_src;   
         });
         that.fileList = b;
@@ -107,33 +107,77 @@
         that.thirdForm.itemPicd = that.fileList[3];
         that.thirdForm.itemPice = that.fileList[4];
         Object.assign(that.thirdForm,that.message);
-        // console.log(that.message,'third');
         delete that.thirdForm.itemBrand
         delete that.thirdForm.type
-        console.log(that.thirdForm,'333')
-          axios({
-            method: 'post',
-            url: 'http://192.168.1.103:8081/api/item/insert',
-            data: that.thirdForm
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        // global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
-        //   console.log(res,'22222');
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //     console.log('333');
-        //   } else {
-        //     that.$message.error('网络出错，请稍后再试！');
-        //   }
-        // })
+        var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
+        console.log(itemValueList)
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+        xhr.setRequestHeader("Content-Type", "application/json")
+        xhr.send(itemValueList)
+        xhr.onreadystatechange = function(){
+        // var succeed = JSON.parse(xhr.response.callStatus)
+        // console.log(succeed)
+        var succeed = JSON.parse(xhr.response)
+          if(succeed.callStatus == 'SUCCEED') {
+            delete that.thirdForm.itemValueList
+            global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
+              console.log(res,'22222');
+              if (res.data.callStatus === 'SUCCEED') {
+                console.log('333');
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          }
+        }
+        // var qq = {
+        //   apparatusType:2,
+        //   isThrow:0,
+        //   itemBrandId:3,
+        //   itemBrandName:"武汉高登",
+        //   itemDesc:"<p>rfgrfrfrfrfr</p>",
+        //   itemId: '1707040002',
+        //   itemLevels:"12323",
+        //   itemName:"123",
+        //   itemPacking:"12323",
+        //   itemPica:"http://orl5769dk.bkt.clouddn.com/Fjn3NulDVDHq_SX19BC6QOJvwV_r",
+        //   itemPicb: "http://orl5769dk.bkt.clouddn.com/Fvc7rLFt0gJaqR080CJ1KYiq3igO",
+        //   itemPicc:"http://orl5769dk.bkt.clouddn.com/FrqX_ttOVVOLwz5ee22hgsZ_hrY6",
+        //   itemPicd:"http://orl5769dk.bkt.clouddn.com/FrF-erbJV1hYHD-6ACiKUShG4l1j",
+        //   itemPice :"http://orl5769dk.bkt.clouddn.com/Fvstw2BuoZh6dk8Px8PxD8LMbMLw",
+        //   itemRange:"231232",
+        //   itemUse:"<p>frfrfrfrfr</p>",
+        //   itemValueList:[{canUse:1,itemPropertyFiveName:"",itemPropertyFiveValue:"",itemPropertyFourName:"",itemPropertyFourValue:"",itemPropertyInfo:"",itemPropertyName:"",itemPropertyNameThree:"",itemPropertyNameTwo:"",itemPropertySixName:"",itemPropertySixValue:"",itemPropertyThreeValue:"",itemPropertyTwoValue:"",itemQb:12,itemSKU:"17070500071",itemSkuPrice:123,itemValueId:"",stockNum:12,tiChen:12}],
+        //   oneClassify:"预防护理",
+        //   producePompany:"12323",
+        //   registerDate:"2017-07-12",
+        //   registerId:"123123",
+        //   storeItemId:"12323",
+        //   threeClassify:"漱口水",
+        //   twoClassify:"日常护理",
+        //   unit:"21323",
+        //   video:"http://orl5769dk.bkt.clouddn.com/FqCsIFokMKOikya4XeF0wCFw0JTg"
+        // };
+        // var arr = [{canUse:1,itemId:"1707050007",itemPropertyFiveName:"",itemPropertyFiveValue:"",itemPropertyFourName:"",itemPropertyFourValue:"",itemPropertyInfo:"",itemPropertyName:"",itemPropertyNameThree:"",itemPropertyNameTwo:"",itemPropertySixName:"",itemPropertySixValue:"",itemPropertyThreeValue:"",itemPropertyTwoValue:"",itemQb:12,itemSKU:"17070500071",itemSkuPrice:123,itemValueId:"",stockNum:12,tiChen:12}]
+        // var itemValueList = JSON.stringify(arr)
+        // console.log(itemValueList,'22222');
+          // axios({
+          //   method: 'post',
+          //   url: 'http://192.168.1.103:8081/api/item/insert',
+          //   data: qq
+          // })
+          // .then(function (response) {
+          //   console.log(response);
+          // })
+          // .catch(function (error) {
+          //   console.log(error);
+          // });
+       // console.log(qq);
         // that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
       },
       // 返回上一步
-      returnSecond: function(){
+      returnSecond: function() {
         var that = this;
         that.thirdStep = false;
         that.$emit('listenToSecond',that.thirdStep);

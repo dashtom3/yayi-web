@@ -93,25 +93,29 @@
           <th class="stock">库存</th>
           <th class="enable">是否启用</th>
         </tr>
-        <tr class="activeTable_des" v-for="activeItem in activeItems" :key="">
-          <td v-for="item in activeItem">{{item.itemPparam}}</td>
+        <tr class="activeTable_des" v-for="(activeItem,index) in activeItems" :key="">
+        <!-- <span>{{activeItem}}</span> -->
+          <!-- <td v-for="(item,index) in activeItem">{{item.itemPparam}}</td> -->
+          <td v-for="(item,key) in activeItem">{{item}}</td>
           <td class="des_skuCode">
-            <el-input v-model="input_sku1"></el-input>
+<!--             <el-input :value="ruleForm.itemId" :disabled="true"></el-input> -->
+            <span>{{ruleForm.itemId+(index+1)}}</span>
           </td>
           <td class="des_price">
-            <el-input v-model="input_price1"></el-input>
+            <el-input v-model="activeItem.itemSkuPrice"></el-input>
           </td>
           <td class="des_percent">
-            <el-input v-model="input_percent1"></el-input>
+            <el-input v-model="activeItem.tiChen"></el-input>
           </td>
           <td class="des_coin">
-            <el-input v-model="input_coin1"></el-input>
+            <el-input v-model="activeItem.itemQb"></el-input>
           </td>
           <td class="des_stock">
-            <el-input v-model="input_stock1"></el-input>
+            <el-input v-model="activeItem.stockNum"></el-input>
           </td>
           <td class="des_enable">
-            <el-checkbox v-model="input_enable1"></el-checkbox>
+            <input class="elcheck" type="checkbox" v-model="activeItem.canUse">
+<!--             <el-checkbox></el-checkbox> -->
           </td>
         </tr>
       </table>
@@ -188,7 +192,6 @@
             { required: true, message: '请选择是否乾币抵扣状态', trigger: 'change' }
           ]
         }, //验证规则
-        labelPosition: 'right',
         tableData2: [],
         multipleSelection: [],
         dialogTableVisible: false,
@@ -196,29 +199,14 @@
         activeItems: [],
         active: false,
         no_active: false,
-        number: null,
-        Type1: true,
-        Type2: true,
-        Type3: true,
-        desType1: false,
-        desType2: false,
-        desType3: false,
         input_sku: '',
         input_price: null,
         input_percent: '',
         input_coin: '',
         input_stock: null,
         input_enable: false,
-        input_sku1: '',
-        input_price1: null,
-        input_percent1: '',
-        input_coin1: '',
-        input_stock1: null,
-        input_enable1: false,
+        canUse: 0,
         activeTable: [],
-        property1: '',
-        property2: '',
-        property3: '',
       }
     },
     components: {
@@ -256,6 +244,14 @@
         },
         deep: true
       },
+      input_enable: function() {
+        var that = this;
+        if (that.input_enable == false) {
+          that.canUse = 0;
+        } else {
+          that.canUse = 1;
+        }
+      }
     },
     created: function() {
       var that = this;
@@ -311,6 +307,7 @@
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {
                 that.tableData2[i].itempropertydList[k].checked = false;
+                that.tableData2[i].itempropertydList[k].canUse = false;
               }
             }
           } else {
@@ -365,21 +362,24 @@
       checkAllActive: function() {
         var that = this
         that.activeItems = []
-        that.setActiveItems([], 0)
+        that.setActiveItems({}, 0)
       },
       setActiveItems: function(tempItem, tempK) {
         var temp = 0
         for(var i = 0; i < this.items[tempK].itempropertydList.length; i++) {
           if (this.items[tempK].itempropertydList[i].checked == true) {
-            tempItem.push(this.items[tempK].itempropertydList[i])
+            // tempItem.push(this.items[tempK].itempropertydList[i])
+            tempItem[this.items[tempK].itemPropertyName] = this.items[tempK].itempropertydList[i].itemPparam
+            console.log(this.items[tempK])
             temp++
             this.items[tempK].hasItem = true
             if (tempK < this.items.length-1) {
               this.setActiveItems(tempItem, tempK + 1)
             } else {
-              this.activeItems.push(tempItem.slice(0))
+              // this.activeItems.push(tempItem.slice(0))
+              this.activeItems.push(tempItem)
             }
-            tempItem.pop()
+            // tempItem.pop()
           }
         }
         if (temp == 0) {
@@ -387,41 +387,53 @@
           if (tempK < this.items.length-1) {
             this.setActiveItems(tempItem, ++tempK)
           } else {
-            this.activeItems.push(tempItem.slice(0))
+            // this.activeItems.push(tempItem.slice(0))
+            this.activeItems.push(tempItem)
           }
         }
       },
       nextToFirst: function() {
         var that = this;
-        var obj = {
-          itemId: that.ruleForm.itemId,
-          itemSKU: that.input_sku,
-          itemSkuPrice: parseInt(that.input_price),
-          tiChen: parseInt(that.input_percent),
-          itemQb: parseInt(that.input_coin),
-          stockNum: parseInt(that.input_stock),
-          canUse: parseInt(that.input_enable),
-          itemValueId: '',
-          itemPropertyName: '',
-          itemPropertyInfo: '',
-          itemPropertyNameTwo: '',
-          itemPropertyTwoValue: '',
-          itemPropertyNameThree: '',
-          itemPropertyThreeValue: '',
-          itemPropertyFourName: '',
-          itemPropertyFourValue: '',
-          itemPropertyFiveName: '',
-          itemPropertyFiveValue: '',
-          itemPropertySixName: '',
-          itemPropertySixValue: '',
+        if (that.shopType !== '1') {
+          var obj = {
+            itemId: that.ruleForm.itemId,
+            itemSKU: that.input_sku,
+            itemSkuPrice: parseInt(that.input_price),
+            tiChen: parseInt(that.input_percent),
+            itemQb: parseInt(that.input_coin),
+            stockNum: parseInt(that.input_stock),
+            canUse: parseInt(that.canUse),
+            itemPropertyName: '',
+            itemPropertyInfo: '',
+            itemPropertyNameTwo: '',
+            itemPropertyTwoValue: '',
+            itemPropertyNameThree: '',
+            itemPropertyThreeValue: '',
+            itemPropertyFourName: '',
+            itemPropertyFourValue: '',
+            itemPropertyFiveName: '',
+            itemPropertyFiveValue: '',
+            itemPropertySixName: '',
+            itemPropertySixValue: '',
+          }
+          var subitem = [];
+          subitem.push(obj);
+          // var subitem = JSON.stringify(obj)
+          that.ruleForm.itemValueList = subitem;
+          that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
+          console.log(that.ruleForm,'223355');
+          that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
+        } else {
+          for (var i = 0; i < that.activeItems.length; i++) {
+            that.activeItems[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
+            that.activeItems[i].tiChen = parseInt(that.activeItems[i].tiChen);
+            that.activeItems[i].itemQb = parseInt(that.activeItems[i].itemQb);
+            that.activeItems[i].stockNum = parseInt(that.activeItems[i].stockNum);
+            //console.log(that.activeItems[i])
+            that.activeItems[i].canUse = that.activeItems[i].canUse;
+          }
+          console.log(that.activeItems,'p');
         }
-        var subitem = [];
-        subitem.push(obj);
-        // var subitem = JSON.stringify(obj)
-        that.ruleForm.itemValueList = subitem;
-        that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
-        console.log(that.ruleForm,'223355');
-        that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
       }
     },
   }
@@ -484,24 +496,6 @@ td {
   line-height: 40px;
   border-bottom: 1px solid #dfe6ec;
 }
-.type1, .des_type1{
-  width: 8%;
-  text-align: center;
-  font-size: 14px;
-  border-right: 1px solid #dfe6ec;
-}
-.type2, .des_type2{
-  width: 8%;
-  text-align: center;
-  font-size: 14px;
-  border-right: 1px solid #dfe6ec;
-}
-.type3, .des_type3{
-  width: 8%;
-  text-align: center;
-  font-size: 14px;
-  border-right: 1px solid #dfe6ec;
-}
 .skuCode, .des_skuCode{
   width: 12.5%;
   text-align: center;
@@ -542,5 +536,17 @@ td {
   /*height: 100px;*/
   /*line-height: 100px;*/
   border-bottom: 1px solid #dfe6ec;
+}
+.elcheck {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #bfcbd9;
+  border-radius: 4px;
+  background-color: #fff;
+  z-index: 1;
+  transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
+}
+.elcheck:hover {
+  border-color: #20a0ff;
 }
 </style>

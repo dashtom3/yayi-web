@@ -120,7 +120,7 @@ export default {
       } else {
         that.isActive = false;
       }
-      var num = parseInt((scroll-650)/800);
+      var num = parseInt((scroll-742)/800);
       that.yayi = num;
       // console.log(scroll);
     },
@@ -141,9 +141,16 @@ export default {
         isTop = false;
       }
       timer = setInterval(function(){
-        var osTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+        var osTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop; //网页被卷去的高
         var hei = total - osTop;
+        var a = document.documentElement.clientHeight; //网页可见区域高
+        var c = document.documentElement.scrollHeight; //网页正文全文高
         // var ispeed = Math.floor(-hei / 6);
+        console.log(total,'hei')
+        if (osTop+a == c) {
+          clearInterval(timer);
+          //isTop = false;
+        }
         if( hei > 0) {
           document.documentElement.scrollTop = document.body.scrollTop = osTop + 15;
           isTop = true;

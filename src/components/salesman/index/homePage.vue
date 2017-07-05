@@ -83,9 +83,8 @@
 <style scoped>
 .index_personal_mymoney{
   width: 1200px;
-
   margin: auto;
-  margin-top: 80px;
+  margin-top: 60px;
   margin-bottom: 40px;
 }
 .clearFloat{

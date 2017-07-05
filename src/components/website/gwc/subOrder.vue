@@ -12,11 +12,11 @@
           <p class="right_word" @click="addNew">新增收货地址</p>
         </div>
         <div class="add_des_box">
-          <div class="add_item" v-for="item in items" :key="item">
+          <div class="add_item" v-for="(item,index) in items" :key="item" @click="chooseAdd(item)">
             <div class="clearfix"></div>
             <div class="first left">寄送至：</div>
             <div class="second left">
-              <el-radio class="radio" v-model="radio" :label="item" @click="chooseAdd(item)">{{item.province}} {{item.city}} {{item.county}} {{item.receiverDetail}} ({{item.receiverName}} 收) {{item.phone}}</el-radio>
+              <el-radio class="radio" v-model="radio" :label="index">{{item.province}} {{item.city}} {{item.county}} {{item.receiverDetail}} ({{item.receiverName}} 收) {{item.phone}}</el-radio>
             </div>
             <i class="el-icon-edit third" @click="add_edit(item)"></i>
             <i class="el-icon-delete fouth" @click="add_remove(item)"></i>
@@ -33,11 +33,11 @@
         </div>
         <div class="list_des" v-for="cargo in cargos">
           <div class="left des_img">
-            <img src="../../../images/center/order.png" alt="img">
+            <img :src=cargo.pic alt="img">
           </div>
           <div class="left des_p">
-            <p style="margin-bottom: 40px;">{{cargo.des}}</p>
-            <p>{{cargo.color}}</p>
+            <p style="margin-bottom: 40px;">{{cargo.name}}</p>
+            <p>{{cargo.itemPropertyNamea}}</p>
           </div>
           <div class="left des_price">¥{{cargo.price}}</div>
           <div class="left des_num">{{cargo.num}}</div>
@@ -49,7 +49,7 @@
         <div class="qianbi_des">
           <el-checkbox v-model="checked1">使用钱币（1钱币=1元）</el-checkbox>
           <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span> 
-          <div><input type="text" class="qianbi_word" v-show="qianbi_word" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">0</span>元</span></div> 
+          <div><input type="text" class="qianbi_word" v-show="qianbi_word" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span></div> 
         </div>
       </div>
       <div class="qianbi_box">
@@ -70,13 +70,13 @@
         <input class="leave_word" v-model="leave_des" type="text" placeholder="对本次交易的说明">
       </div>
       <div class="checked_box">
-        <p class="first_p"><span style="margin-right: 50px;">共5件商品</span><span>商品总额：¥245.00</span></p>
+        <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}</span></p>
         <p class="second_p">运费：¥8.00</p>
-        <p class="third_p">钱币抵扣：¥20.00</p>
-        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥96.00</span></p>
-        <p class="fifth_p">本次可获得钱币：¥6.00</p>
-        <p class="sixth_p"><b>收货人：</b>李子林 13611890909</p>
-        <p class="seventh_p"><b>寄送至：</b>上海 杨浦区 城区 中国创业者公共实训基地1号楼-国定东路200号中国创业者公共实训基地903室</p>
+        <p class="third_p">钱币抵扣：¥{{qbdk}}</p>
+        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}</span></p>
+        <p class="fifth_p">本次可获得钱币：¥?.00</p>
+        <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
+        <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>
       <div class="clearfix"></div>
       <div class="submit_btn" @click="submit_order">提交订单</div>
@@ -137,32 +137,7 @@
     data () {
       return {
         items: [],
-        cargos: [{
-          des: '爱丽丝 标准#',
-          color: '红色厚',
-          price: 134,
-          num: 1,
-        },{
-          des: '爱丽丝 标准#',
-          color: '红色厚',
-          price: 134,
-          num: 1,
-        },{
-          des: '爱丽丝 标准#',
-          color: '红色厚',
-          price: 134,
-          num: 1,
-        },{
-          des: '爱丽丝 标准#',
-          color: '红色厚',
-          price: 134,
-          num: 1,
-        },{
-          des: '爱丽丝 标准#',
-          color: '红色厚',
-          price: 134,
-          num: 1,
-        }],
+        cargos: [],
         place:[{
           "ProID": 1,
           "name": "北京市",
@@ -334,7 +309,7 @@
           "ProSort": 34,
           "ProRemark": "特别行政区"
         }], //省市地址
-        radio: '',
+        radio: null,
         diaTitle: '',
         checked1: false,
         checked2: false,
@@ -360,6 +335,7 @@
         setDefault: false,
         tax_des: '',
         qianbi_des: '',
+        qbdk: '0.00',
         tax_word: false,
         qianbi_word: false,
         leave_des: '',
@@ -367,7 +343,16 @@
         editAdd: {},
         nowQb: '',
         hasCount: false,
-        leave_word: null,
+        leave_word: 0,
+        gwcTotal:'',
+        haveSelectedGoodNum: '',
+        name: '',
+        phone: '',
+        province: '',
+        city: '',
+        county: '',
+        receiverDetail: '',
+        receiverId: '',
       }
     },
     watch: {
@@ -406,6 +391,7 @@
           that.qianbi_word = true;
         } else {
           that.qianbi_word = false;
+          that.qianbi_des = '';
         }
       },
       checked2: function() {
@@ -426,20 +412,6 @@
       },
       qianbi_des: function() {
         var that = this;
-        if (that.qianbi_des !== '') {
-          var obj = {
-            phone: that.global.getUser().phone,
-            qbnum: parseInt(that.qianbi_des),
-          };
-          that.global.axiosPostReq('/po/Ded', obj).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              that.$message(res.data.msg);
-              that.hasCount = true;
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }
       }
     },
     components: {
@@ -451,8 +423,42 @@
       var that = this;
       that.getMyAdd();
       that.nowQb = that.global.getUser().qbBalance;
+      var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+      that.cargos = arr.details;
+      that.gwcTotal = arr.allMoney;
+      that.haveSelectedGoodNum = arr.haveSelectedGoodNum
     },
     methods: {
+      //失去焦点时
+      qbDed: function() {
+        var that = this;
+        if (that.qianbi_des !== '') {
+          if (that.qianbi_des > that.gwcTotal) {
+            that.$message.error('乾币数量大于商品总额！');
+            that.hasCount = false;
+            that.qbdk = '0.00';
+            return false
+          }
+          var obj = {
+            token:that.global.getToken(),
+            qbnum: parseInt(that.qianbi_des),
+          };
+          that.global.axiosPostReq('/po/Ded', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
+              if (res.data.msg == '余额充足') {
+                that.hasCount = true;
+                that.qbdk = that.qianbi_des;
+              } else {
+                that.$message.error(res.data.msg);
+                that.hasCount = false;
+              }
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
+      },
       // 新增收货地址按钮
       addNew: function() {
         var that = this;
@@ -486,6 +492,34 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data);
             that.items = res.data.data;
+            var a = that.items.filter(function(ele,index,arr) {
+                return ele.isDefault == true;   
+            })
+            that.name = a[0].receiverName
+            that.phone = a[0].phone
+            that.province = a[0].province
+            that.city = a[0].city
+            that.county = a[0].county
+            that.receiverDetail = a[0].receiverDetail
+            that.receiverId = a[0].receiverId
+            var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+            var freight = {
+              receiverId: a[0].receiverId,
+              sumPrice: arr.allMoney,
+              itemSum: arr.haveSelectedGoodNum,
+            }
+            that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                console.log(res.data,'yunfei')
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+            for (var i = 0; i < that.items.length; i++) {
+              if(that.items[i].isDefault == true) {
+                that.radio = i;
+              }
+            }
             if (res.data.data.length == 0) {
               that.diaTitle = '新增收货信息';
               that.editAddVisible = true;
@@ -626,30 +660,36 @@
       // 选择地址
       chooseAdd: function(item) {
         var that = this;
-        console.log(item,'kkk');
+        that.name = item.receiverName
+        that.phone = item.phone
+        that.province = item.province
+        that.city = item.city
+        that.county = item.county
+        that.receiverDetail = item.receiverDetail
+        that.receiverId = item.receiverId
+        // console.log(that.radio)
       },
       // 提交订单按钮
       submit_order: function() {
         var that = this;
         var obj = {
-          phone: '',
-          receiverId: '',
+          token:that.global.getToken(),
+          receiverId: parseInt(that.receiverId),
           invoiceHand: that.tax_des,
           isRegister: that.leave_word,
-          qbDed: '',
+          qbDed: that.qianbi_des,
           buyerMessage: that.leave_des,
-          landlineNumber: '',
-          price: '',
-          actualPay: '',
+          price: that.gwcTotal,
+          actualPay: parseInt(that.gwcTotal-that.qianbi_des),
         }
         console.log(obj);
-        // that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //     console.log(res)
-        //   } else {
-        //     that.$message.error('保存地址失败！');
-        //   }
-        // })
+        that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res)
+          } else {
+            that.$message.error('保存地址失败！');
+          }
+        })
         //that.$router.push({ path:'/pay' });
       }
     }
