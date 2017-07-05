@@ -84,7 +84,7 @@
       </div>
       <div class="goodBtn">
         <span @click="addGwcThisGood()">加入购物车</span>
-        <span>立即购买</span>
+        <span @click="nowToBuyThis()">立即购买</span>
       </div>
     </div>
     <div class="clearFloat"></div>
@@ -338,13 +338,21 @@ import myAddress from './selectThree'
             that.$emit("goodInfoSay","sayToLogin");
           }
         });
-        //   that.$alert("未登录，请先登录！", {confirmButtonText: '确定',callback: action => {
-        //     that.$emit("goodInfoSay","sayToLogin");
-        //   }
-        // }
-          // });
         }
-      }
+      },
+      nowToBuyThis:function(){
+        var that = this;
+        var userToken = that.global.getToken();
+        if(userToken){
+
+        }else{
+          that.$alert('未登录，请先登录！',  {
+          confirmButtonText: '确定',
+          callback: action => {
+            that.$emit("goodInfoSay","sayToLogin");
+          }
+        }
+      },
     },
     components: {
       goodIntroduce,
