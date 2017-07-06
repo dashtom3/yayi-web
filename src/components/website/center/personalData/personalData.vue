@@ -68,7 +68,7 @@
           userPic: this.userData.userPic || '',
           trueName: this.userData.trueName || '',
           sex: this.userData.sex || '1',
-          birthday: this.userData.birthday || '1970-01-01',
+          birthday: this.userData.birthday || '1990-01-01',
           qq: this.userData.qq || '',
         }
       }

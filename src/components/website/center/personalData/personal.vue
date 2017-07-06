@@ -52,8 +52,6 @@
             this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString();
             this.personInfo.type = res.data.data.type && res.data.data.type.toString();
             this.personInfo.part = res.data.data.part && res.data.data.part.split(",");
-
-            console.log('------------------',this.personInfo)
           }else{
             this.$message.error('个人信息查询失败！');
           }

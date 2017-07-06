@@ -1,7 +1,7 @@
 <template>
   <div class="certification">
     <div class="content">
-      <el-form ref="certiData" :model="certiData" label-width="250px">
+      <el-form :model="certiData" label-width="250px">
         <el-form-item label="类型：">
           <el-select v-model="certiData.type" :change="adsf(certiData.type)" :disabled="ifPass">
             <el-option label="个人" value="1"></el-option>
@@ -17,7 +17,7 @@
         <el-form-item label="单位所在地：">
           <selectThree @listenToChild="showFromChild" :selected="this.certiData.part" v-show="!ifPass"></selectThree>
           <template>  
-            <el-input v-model="certiData.part" :disabled="ifPass" v-if="ifPass"></el-input>
+            <el-input v-model="partStr" :disabled="ifPass" v-if="ifPass"></el-input>
           </template>
         </el-form-item>
         <el-form-item label="详细地址：">
@@ -65,6 +65,7 @@
         qiNiuUrl: global.qiNiuUrl,
         btnVisible: true,
         ifPass: false,
+        partStr: '',
         certiData: {
           phone: global.getUser().phone,
           token: global.getToken(),
@@ -94,8 +95,12 @@
       state:function(){
         if(this.state == 2){
           this.certificateState = this.userData.state;
-          // alert(this.certificateState)
           this.ert(this.certiData.failReason);
+        }
+      },
+      ifPass: function(){
+        if(this.ifPass){
+          this.partStr = this.certiData.part.join('/')
         }
       },
       certiData: {
@@ -111,6 +116,25 @@
       }
     },
     methods:{
+      saveJudge(){
+        var params = {
+          phone: global.getUser().phone,
+          token: global.getToken(),
+          type: this.certiData.type,
+          companyName: this.certiData.companyName,
+          part: (this.certiData.part).join(","),
+          workAddress: this.certiData.workAddress,
+          doctorPic: this.imageUrl,
+          judge: this.certiData.ifOnce
+        }
+        //保存个人信息
+        global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.ifPass = true;
+            this.btnVisible = false;
+          }
+        })
+      },
       //编辑个人信息
       savePerInfo(){
         var params = {
@@ -141,18 +165,13 @@
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            //第一次提交
-            if(params.judge == 0){
-              this.$message({
-                message: '您的认证信息我们会尽快审核，请耐心等待~',
-                type: 'success'
-              });
-              this.ifPass = true;
-              this.btnVisible = false;
-            }else{
-              return false;
-            }
+            this.$message({
+              message: '您的认证信息我们会尽快审核，请耐心等待~',
+              type: 'success'
+            });
+            this.ifPass = true;
             this.btnVisible = false;
+
           }else{
             this.$message.error('资质认证修改失败！');
           }
@@ -172,13 +191,13 @@
         if(this.certificateState==1 && this.certiData.ifOnce===0){
           this.$confirm('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            //提交后台改变状态
-            this.certiData.ifOnce = 1;
-            this.savePerInfo();
-          }).catch(() => {});
+            type: 'warning',
+            callback: action => {
+              //提交后台改变状态
+              this.certiData.ifOnce = 1;
+              this.saveJudge();
+            }
+          })
           this.ifPass = true;
           this.btnVisible = false;
         }else if(this.certificateState==1 && this.certiData.ifOnce===1){
@@ -187,12 +206,13 @@
         }else if(this.certificateState==2 && this.certiData.ifOnce===0){
           this.$confirm('您的认证信息已审核通过',{
             confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.certiData.ifOnce = 1;
-            this.savePerInfo();
-          }).catch(() => {});
+            type: 'warning',
+            callback: action => {
+              //提交后台改变状态
+              this.certiData.ifOnce = 1;
+              this.saveJudge();
+            }
+          })
           this.ifPass = true;
           this.btnVisible = false;
         }else if(this.certificateState==2 && this.certiData.ifOnce===1){
@@ -201,12 +221,13 @@
         }else if(this.certificateState==3 && this.certiData.ifOnce===0){
           this.$confirm('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.certiData.ifOnce = 1;
-            this.savePerInfo();
-          }).catch(() => {});
+            type: 'warning',
+            callback: action => {
+              //提交后台改变状态
+              this.certiData.ifOnce = 1;
+              this.saveJudge();
+            }
+          })
           this.ifPass = false;
           this.btnVisible = true;
         }else{
