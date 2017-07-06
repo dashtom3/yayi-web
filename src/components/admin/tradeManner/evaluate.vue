@@ -137,15 +137,18 @@
 		methods: {
       queryHandler(){
         let params = {
-          phone: global.getUser().phone,
+          token: global.getUser().phone,
           orderId: this.orderCode,
           userId: this.userCode,
-          recoveryState: this.value
+          recoveryState: this.value,
+          currentPage: 1,
+          numberPerpage: 10
         }
         console.log(params)
         global.axiosPostReq('/commentManage/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.replayList = res.data.data
+            console.log(res.data.data)
           }else{
             this.$message.error('查询评论失败！');
           }
@@ -159,14 +162,16 @@
 			},
 			replayOkHandler(){
         let params = {
-          orderId: this.OrderId,
-          itemId: this.sku,
-          data: this.replayText
+          orderId: this.orderId,
+          itemId: this.itemId,
+          data: this.replayText,
+          recoveryState: '1'
         }
         console.log(params)
         global.axiosPostReq('/commentManage/reply',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            console.log(res.data.data)
+            this.replayBtn = false;
+            this.queryHandler()
           }else{
             this.$message.error('回复评论失败！');
           }

@@ -133,7 +133,6 @@
             token: global.getToken()
           }
         }
-        console.log('------------------',params)
         global.axiosGetReq('/itemStatistics/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.goodsList = res.data.data

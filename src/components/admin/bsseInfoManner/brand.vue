@@ -51,6 +51,7 @@
           </el-table-column>
         </el-table>
     </el-col>
+    <div class="clearfix"></div>
 
     <!-- Form -->
 
@@ -91,7 +92,6 @@
 </template>
 <script>
   import global from '../../global/global'
-
   export default{
     data(){
       return {
@@ -289,6 +289,14 @@
 </script>
 
 <style>
+.clearfix{
+  zoom:1;
+}
+.clearfix:after{
+  content:"";
+  clear:both;
+  display:block;
+}
 .brandWarp .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
