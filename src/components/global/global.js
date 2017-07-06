@@ -35,6 +35,13 @@ export default {
 　　　　}
 　　　　return c;
 　},
+  copyArr(arr) {
+      let res = []
+      for (let i = 0; i < arr.length; i++) {
+       res.push(arr[i])
+      }
+      return res
+  },
   postHttpData (data) {
     var formData = new FormData()
     for (let i in data) {

@@ -30,11 +30,11 @@
       <el-form-item label="注册证号" prop="registerId">
         <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
-      <el-form-item label="推荐" prop="qian">
+      <el-form-item label="推荐" prop="isThrow">
         <el-radio class="radio" v-model="ruleForm.isThrow" label="1">是</el-radio>
         <el-radio class="radio" v-model="ruleForm.isThrow" label="0">否</el-radio>
       </el-form-item>
-      <el-form-item label="商品属性" prop="qian">
+      <el-form-item label="商品属性" prop="shopType">
         <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
         <el-radio class="radio" v-model="shopType" label="2">否</el-radio>
         <el-button v-if="chooseShopType" type="primary" @click="chooseType()" :disabled='true'>选择属性</el-button>
@@ -98,8 +98,8 @@
           <!-- <td v-for="(item,index) in activeItem">{{item.itemPparam}}</td> -->
           <td v-for="(item,key) in activeItem">{{item}}</td>
           <td class="des_skuCode">
-            <el-input v-model="activeItem.itemSKU" :disabled="true"></el-input>
-<!--             <span>{{ruleForm.itemId+(index+1)}}</span> -->
+<!--             <el-input  placeholder="" :disabled="true"></el-input> -->
+            <span>{{ruleForm.itemId+(index+1)}}</span>
           </td>
           <td class="des_price">
             <el-input v-model="activeItem.itemSkuPrice"></el-input>
@@ -120,7 +120,7 @@
       </table>
       <!--  添加属性变换表格 结束 -->
       <el-form-item style="margin-top:50px;">
-        <el-button type="primary" @click="nextToFirst()">下一步</el-button>
+        <el-button type="primary" @click="nextToFirst('ruleForm')">下一步</el-button>
 <!--         <el-button @click="resetForm('ruleForm')">重置</el-button> -->
       </el-form-item>
       <!-- 选择属性弹出框 开始 -->
@@ -187,9 +187,12 @@
           registerId: [
             { required: true, message: '请填写注册证号', trigger: 'blur' }
           ],
-          qian: [
-            { required: true, message: '请选择是否乾币抵扣状态', trigger: 'change' }
-          ]
+          isThrow: [
+            { required: true, message: '请选择是否推荐', trigger: 'blur' }
+          ],
+          // shopType: [
+          //   { required: true, message: '请选择是否添加商品属性', trigger: 'blur' }
+          // ]
         }, //验证规则
         tableData2: [],
         multipleSelection: [],
@@ -393,131 +396,155 @@
           }
         }
       },
-      nextToFirst: function() {
+      nextToFirst: function(formName) {
         var that = this;
-        if (that.shopType !== '1') {
-          var obj = {
-            itemId: that.ruleForm.itemId,
-            itemSKU: that.input_sku,
-            itemSkuPrice: parseInt(that.input_price),
-            tiChen: parseInt(that.input_percent),
-            itemQb: parseInt(that.input_coin),
-            stockNum: parseInt(that.input_stock),
-            canUse: parseInt(that.canUse),
-            itemPropertyName: '',
-            itemPropertyInfo: '',
-            itemPropertyNameTwo: '',
-            itemPropertyTwoValue: '',
-            itemPropertyNameThree: '',
-            itemPropertyThreeValue: '',
-            itemPropertyFourName: '',
-            itemPropertyFourValue: '',
-            itemPropertyFiveName: '',
-            itemPropertyFiveValue: '',
-            itemPropertySixName: '',
-            itemPropertySixValue: '',
-          }
-          var subitem = [];
-          subitem.push(obj);
-          // var subitem = JSON.stringify(obj)
-          that.ruleForm.itemValueList = subitem;
-          that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
-          console.log(that.ruleForm,'223355');
-          that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
-        } else {
-          var subitem = that.activeItems;
-          for (var i = 0; i < that.activeItems.length; i++) {
-            // subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
-            // subitem[i].tiChen = parseInt(that.activeItems[i].tiChen);
-            // subitem[i].itemQb = parseInt(that.activeItems[i].itemQb);
-            // subitem[i].stockNum = parseInt(that.activeItems[i].stockNum);
-              // if (subitem[i].canUse == true) {
-              //   subitem[i].canUse = 1
-              // } else {
-              //   subitem[i].canUse = 0
-              // }
-              //subitem[i].itemSKU = 12345 + (i+1)
-              // subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
-              // subitem[i].itemId = that.ruleForm.itemId
-              delete subitem[i].itemSkuPrice
-              delete subitem[i].tiChen
-              delete subitem[i].itemQb
-              delete subitem[i].stockNum
-              delete subitem[i].canUse
-              // delete that.activeItems[i].itemPropertyName
-              var a = 0
-              // arr = [['itemPropertyName','itemPropertyInfo'],['itemPropertyNameTwo','itemPropertyTwoValue'],['itemPropertyNameThree','itemPropertyThreeValue'],['itemPropertyFourName','itemPropertyFourValue'],['itemPropertyFiveName','itemPropertyFiveValue'],['itemPropertySixName','itemPropertySixValue']]
-              for ( var k in that.activeItems[i]) {
-                if (a == 0) {
-                  subitem[i].itemPropertyName = k
-                  subitem[i].itemPropertyInfo = that.activeItems[i][k]
-                  subitem[i].itemPropertyNameTwo = ''
-                  subitem[i].itemPropertyTwoValue = ''
-                  subitem[i].itemPropertyNameThree = ''
-                  subitem[i].itemPropertyThreeValue = ''
-                  subitem[i].itemPropertyFourName = ''
-                  subitem[i].itemPropertyFourValue = ''
-                  subitem[i].itemPropertyFiveName = ''
-                  subitem[i].itemPropertyFiveValue = ''
-                  subitem[i].itemPropertySixName = ''
-                  subitem[i].itemPropertySixValue = ''
-                } else if (a == 1){
-                  subitem[i].itemPropertyNameTwo = k
-                  subitem[i].itemPropertyTwoValue = that.activeItems[i][k]
-                  subitem[i].itemPropertyNameThree = ''
-                  subitem[i].itemPropertyThreeValue = ''
-                  subitem[i].itemPropertyFourName = ''
-                  subitem[i].itemPropertyFourValue = ''
-                  subitem[i].itemPropertyFiveName = ''
-                  subitem[i].itemPropertyFiveValue = ''
-                  subitem[i].itemPropertySixName = ''
-                  subitem[i].itemPropertySixValue = ''
-                } else if (a == 2){
-                  subitem[i].itemPropertyNameThree = k
-                  subitem[i].itemPropertyThreeValue = that.activeItems[i][k]
-                  subitem[i].itemPropertyFourName = ''
-                  subitem[i].itemPropertyFourValue = ''
-                  subitem[i].itemPropertyFiveName = ''
-                  subitem[i].itemPropertyFiveValue = ''
-                  subitem[i].itemPropertySixName = ''
-                  subitem[i].itemPropertySixValue = ''
-                } else if (a == 3){
-                  subitem[i].itemPropertyFourName = k
-                  subitem[i].itemPropertyFourValue = that.activeItems[i][k]
-                  subitem[i].itemPropertyFiveName = ''
-                  subitem[i].itemPropertyFiveValue = ''
-                } else if (a == 4){
-                  subitem[i].itemPropertyFiveName = k
-                  subitem[i].itemPropertyFiveValue = that.activeItems[i][k]
-                  subitem[i].itemPropertySixName = ''
-                  subitem[i].itemPropertySixValue = ''
-                } else if (a == 5){
-                  subitem[i].itemPropertySixName = k
-                  subitem[i].itemPropertySixValue = that.activeItems[i][k]
-                }
-                // console.log(that.activeItems[i],"pp")
-                a += 1;
-                // console.log(subitem[i].itemPropertyName)
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (that.shopType !== '1') {
+              var obj = {
+                itemId: that.ruleForm.itemId,
+                itemSKU: that.input_sku,
+                itemSkuPrice: parseInt(that.input_price),
+                tiChen: parseInt(that.input_percent),
+                itemQb: parseInt(that.input_coin),
+                stockNum: parseInt(that.input_stock),
+                canUse: parseInt(that.canUse),
+                itemPropertyName: '',
+                itemPropertyInfo: '',
+                itemPropertyNameTwo: '',
+                itemPropertyTwoValue: '',
+                itemPropertyNameThree: '',
+                itemPropertyThreeValue: '',
+                itemPropertyFourName: '',
+                itemPropertyFourValue: '',
+                itemPropertyFiveName: '',
+                itemPropertyFiveValue: '',
+                itemPropertySixName: '',
+                itemPropertySixValue: '',
               }
-              //that.activeItems[i].itemPropertyName = that.activeItems[i]
+              var subitem = [];
+              subitem.push(obj);
+              // var subitem = JSON.stringify(obj)
+              that.ruleForm.itemValueList = subitem;
+              that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
+              console.log(that.ruleForm,'223355');
+              that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
+            } else {
+              var subitem = that.activeItems;
+              for (var i = 0; i < that.activeItems.length; i++) {
+                subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
+                subitem[i].itemId = that.ruleForm.itemId
+                subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
+                subitem[i].tiChen = parseInt(that.activeItems[i].tiChen);
+                subitem[i].itemQb = parseInt(that.activeItems[i].itemQb);
+                subitem[i].stockNum = parseInt(that.activeItems[i].stockNum);
+                if (subitem[i].canUse == true) {
+                  subitem[i].canUse = 1
+                } else {
+                  subitem[i].canUse = 0
+                }
+                // subitem[i].itemPropertyName = ''
+                // subitem[i].itemPropertyInfo = ''
+                // subitem[i].itemPropertyNameTwo = ''
+                // subitem[i].itemPropertyTwoValue = ''
+                // subitem[i].itemPropertyNameThree = ''
+                // subitem[i].itemPropertyThreeValue = ''
+                // subitem[i].itemPropertyFourName = ''
+                // subitem[i].itemPropertyFourValue = ''
+                // subitem[i].itemPropertyFiveName = ''
+                // subitem[i].itemPropertyFiveValue = ''
+                // subitem[i].itemPropertySixName = ''
+                // subitem[i].itemPropertySixValue = ''
+              }
+              window.sessionStorage.setItem('property', JSON.stringify(subitem))
+              for (var i = 0; i < subitem.length; i++) {
+                  delete subitem[i].itemSkuPrice
+                  delete subitem[i].tiChen
+                  delete subitem[i].itemQb
+                  delete subitem[i].stockNum
+                  delete subitem[i].canUse
+                  delete subitem[i].itemId
+                  delete subitem[i].itemSKU
+                  delete subitem[i].itemPropertyName
+                  delete subitem[i].itemPropertyInfo
+                  delete subitem[i].itemPropertyNameTwo
+                  delete subitem[i].itemPropertyTwoValue
+                  delete subitem[i].itemPropertyNameThree
+                  delete subitem[i].itemPropertyThreeValue
+                  delete subitem[i].itemPropertyFourName
+                  delete subitem[i].itemPropertyFourValue
+                  delete subitem[i].itemPropertyFiveName
+                  delete subitem[i].itemPropertyFiveValue
+                  delete subitem[i].itemPropertySixName
+                  delete subitem[i].itemPropertySixValue
+                  var a = 0
+                  for ( var k in subitem[i]) {
+                    if (a == 0) {
+                      subitem[i].itemPropertyName = k
+                      subitem[i].itemPropertyInfo = subitem[i][k]
+                      subitem[i].itemPropertyNameTwo = ''
+                      subitem[i].itemPropertyTwoValue = ''
+                      subitem[i].itemPropertyNameThree = ''
+                      subitem[i].itemPropertyThreeValue = ''
+                      subitem[i].itemPropertyFourName = ''
+                      subitem[i].itemPropertyFourValue = ''
+                      subitem[i].itemPropertyFiveName = ''
+                      subitem[i].itemPropertyFiveValue = ''
+                      subitem[i].itemPropertySixName = ''
+                      subitem[i].itemPropertySixValue = ''
+                    } else if (a == 1){
+                      subitem[i].itemPropertyNameTwo = k
+                      subitem[i].itemPropertyTwoValue = subitem[i][k]
+                      subitem[i].itemPropertyNameThree = ''
+                      subitem[i].itemPropertyThreeValue = ''
+                      subitem[i].itemPropertyFourName = ''
+                      subitem[i].itemPropertyFourValue = ''
+                      subitem[i].itemPropertyFiveName = ''
+                      subitem[i].itemPropertyFiveValue = ''
+                      subitem[i].itemPropertySixName = ''
+                      subitem[i].itemPropertySixValue = ''
+                    } else if (a == 2){
+                      subitem[i].itemPropertyNameThree = k
+                      subitem[i].itemPropertyThreeValue = subitem[i][k]
+                      subitem[i].itemPropertyFourName = ''
+                      subitem[i].itemPropertyFourValue = ''
+                      subitem[i].itemPropertyFiveName = ''
+                      subitem[i].itemPropertyFiveValue = ''
+                      subitem[i].itemPropertySixName = ''
+                      subitem[i].itemPropertySixValue = ''
+                    } else if (a == 3){
+                      subitem[i].itemPropertyFourName = k
+                      subitem[i].itemPropertyFourValue = subitem[i][k]
+                      subitem[i].itemPropertyFiveName = ''
+                      subitem[i].itemPropertyFiveValue = ''
+                    } else if (a == 4){
+                      subitem[i].itemPropertyFiveName = k
+                      subitem[i].itemPropertyFiveValue = subitem[i][k]
+                      subitem[i].itemPropertySixName = ''
+                      subitem[i].itemPropertySixValue = ''
+                    } else if (a == 5){
+                      subitem[i].itemPropertySixName = k
+                      subitem[i].itemPropertySixValue = subitem[i][k]
+                    }
+                    a += 1;
+                  }
+              }
+              that.newArr = JSON.parse(window.sessionStorage.getItem('property'));
+              console.log(subitem,'lll')
+                for (var i = 0; i < subitem.length; i++) {
+                  that.newArr[i] = Object.assign(subitem[i],that.newArr[i]);
+                }
+                console.log(that.newArr ,'sheng')
+                that.ruleForm.itemValueList = that.newArr;
+                that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
+                //console.log(that.ruleForm, that.newArr,'223355');
+                that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
             }
-            console.log(that.activeItems,'lll')
-            // console.log(subitem,'p');
-            that.ruleForm.itemValueList = subitem;
-            that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
-            console.log(that.ruleForm,'223355');
-            //that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
-            // console.log(that.activeItems[i].canUse,'ee');
-            // that.activeItems[i].canUse = that.activeItems[i].canUse;
-            // that.get()
-          //   for ( var k in that.activeItems[i]) {
-          //     console.log(k,that.activeItems[i][k])
-          //     subitem[i].itemPropertyName = k;
-          //     subitem[i].itemPropertyInfo = that.activeItems[i][k]
-          //     // var str = k + '=' + that.activeItems[i][k]
-          //     // that.newArr.push(str);
-          // }
-        }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       }
     },
   }

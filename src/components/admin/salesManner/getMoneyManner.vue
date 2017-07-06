@@ -16,39 +16,38 @@
           </el-form-item>
           <el-form-item label="提现状态：">
             <el-select v-model="searchType" placeholder="请选择">
-              <el-option label="全部" value="全部"></el-option>
-              <el-option label="申请中" value="申请中"></el-option>
-              <el-option label="提现失败" value="提现失败"></el-option>
-              <el-option label="提现成功" value="提现成功"></el-option>
+              <el-option label="全部" value=""></el-option>
+              <el-option label="申请中" value="0"></el-option>
+              <el-option label="提现成功" value="1"></el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item>
             <el-button type="primary" v-on:click="search">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
 
-
-
       <!--列表-->
-      <el-table :data="getMoneyList"  border style="width: 100%">
-        <!-- <el-table-column  prop="userId"   align="center"  label="销售员编号"></el-table-column> -->
-        <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
-        <el-table-column  prop="userPhone"  align="center"  label="手机号"> </el-table-column>
-        <el-table-column  prop="getNum"  align="center"  label="提现金额">  </el-table-column>
-
-        <el-table-column  prop="getNum"  align="center"  label="类型">  </el-table-column>
-        <el-table-column  prop="getNum"  align="center"  label="开户者">  </el-table-column>
-        <el-table-column  prop="getNum"  align="center"  label="银行">  </el-table-column>
-
-        <el-table-column  prop="zhufubaoCount"  align="center"  label="账号">  </el-table-column>
-        <el-table-column  prop="time"  align="center"  label="申请时间">  </el-table-column>
-        <el-table-column  prop="state" align="center"  label="提现状态">  </el-table-column>
-        <el-table-column  label="操作" align="center">
+      <el-table :data="getMoneyList" border style="width: 100%">
+        <!-- <el-table-column prop="userId" align="center" label="销售员编号"></el-table-column> -->
+        <el-table-column prop="realName" align="center" label="真实姓名"></el-table-column>
+        <el-table-column prop="phone" align="center" label="手机号"></el-table-column>
+        <el-table-column prop="cashMoney" align="center" label="提现金额"></el-table-column>
+        <el-table-column prop="type" align="center" label="类型"></el-table-column>
+        <el-table-column prop="accountUser" align="center" label="开户者"></el-table-column>
+        <el-table-column prop="bank" align="center" label="银行"></el-table-column>
+        <el-table-column prop="zhufubaoCount" align="center" label="账号"></el-table-column>
+        <el-table-column prop="appTime" align="center" label="申请时间"></el-table-column>
+        <el-table-column prop="cashState" align="center" label="提现状态">
           <template scope="scope">
-            <span v-if="scope.row.state!='提现成功'">
-              <el-button  type="text"  v-on:click="passThisGet(scope.$index)">通过</el-button>
+            <span v-if="scope.row.cashState == 1">提现成功</span>
+            <span v-if="scope.row.cashState == 0">申请中</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template scope="scope">
+            <span v-if="scope.row.cashState == 0">
+              <el-button type="text" v-on:click="passThisGet(scope)">通过</el-button>
               <!-- <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button> -->
             </span>
           </template>
@@ -64,56 +63,80 @@
     data(){
       return {
         searchUserContent:null,
-        searchType:"全部",
-        getMoneyList:[
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'提现成功'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'提现成功'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-          {userId:"1",userName:"小酱",userPhone:'1234565787912',getNum:"13241232",zhufubaoCount:"13414141341",time:"是",state:'小酱'},
-        ],
+        searchType: '',
+        state: '',
+        getMoneyList: [],
       }
     },
+    created: function() {
+      var that = this;
+      that.getAllMoney();
+    },
     methods: {
+      //获取提现列表
+      getAllMoney: function() {
+        var that = this;
+        that.global.axiosGetReq('/witManage/query').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.getMoneyList = res.data.data;
+            console.log(that.getMoneyList,'222');
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      //查询
       search:function(){
-
+        var that = this;
+        if (that.searchType == '') {
+          that.state = '';
+        }else if (that.searchType == 1) {
+          that.state = 1
+        }else if (that.searchType == 0) {
+          that.state = 0
+        }
+        var obj = {
+          state: that.state,
+          message: '',
+        }
+        that.global.axiosPostReq('/witManage/query',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.getMoneyList = res.data.data;
+            console.log(that.getMoneyList,'222');
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
-      dotPassThisGet:function(index){
-        this.$confirm('不通过该用户的提现申请？', {
+      //通过操作
+      passThisGet:function(scope){
+        var that = this;
+        that.$confirm('确定通过将打款至该支付宝账户，是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '该申请未通过!'
-          });
+          var obj = {
+            cashId: scope.row.cashId,
+          }
+          that.global.axiosGetReq('/witManage/oper',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.getAllMoney();
+              that.$message({
+                type: 'success',
+                message: '打款成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '操作已经取消'
-          });
-        });
-      },
-      passThisGet:function(index){
-        this.$confirm('确定通过将打款至该支付宝账户，是否继续?', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '打款成功!'
-          });
-        }).catch(() => {
-          this.$message({
+          that.$message({
             type: 'info',
             message: '打款取消'
           });
         });
       },
-
     },
   }
 </script>

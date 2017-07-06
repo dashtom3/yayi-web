@@ -95,21 +95,15 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">注册证号：</div>
-        <p class="detail_word">{{}}</p>
-      </div>
-      <div class="detail_box">
-        <div class="detail_cargo">乾币抵扣：</div>
-        <p class="detail_word">{{}}</p>
+        <p class="detail_word">{{details.itemDetail.registerId}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品属性：</div>
-        <p class="detail_word">{{}}</p>
+<!--         <p class="detail_word">{{}}</p> -->
       </div>
-      <table class="activeTable_box">
+      <table class="activeTable_box" border="1">
         <tr class="activeTable_title">
-          <th class="type1">属性一</th>
-          <th class="type2">属性二</th>
-          <th class="type3">属性三</th>
+          <th class="type1" v-for="property in propertyList">{{property.propertyName}}</th>
           <th class="skuCode">SKU代码</th>
           <th class="price">价格</th>
           <th class="percent">提成（%）</th>
@@ -117,37 +111,38 @@
           <th class="stock">库存</th>
           <th class="enable">是否启用</th>
         </tr>
-        <tr class="activeTable_des" v-for="(table,index) in 8" :key="table">
-          <td v-if="index == 0 || index == 4" :rowspan="4">11</td>
-          <td v-if="index == 0 || index == 2 || index ==4 || index==6" :rowspan="2" class="des_type2">22</td>
-          <td class="des_type3">33</td>
+        <tr class="activeTable_des" v-for="(table,index) in details.itemValueList" :key="table">
+          <td v-for="name in propertyList">
+           <span>{{name.propertyInfoList[index]}}</span>
+      <!--       <span v-for="pp in name.propertyInfoList">{{pp}}</span> -->
+          </td>
           <td class="des_skuCode">
-            <el-input v-model="input_sku"></el-input>
+            <span>{{table.itemSKU}}</span>
           </td>
           <td class="des_price">
-            <el-input v-model="input_price"></el-input>
+            <span>{{table.itemSkuPrice}}</span>
           </td>
           <td class="des_percent">
-            <el-input v-model="input_percent"></el-input>
+            <span>{{table.tiChen}}</span>
           </td>
           <td class="des_coin">
-            <el-input v-model="input_coin"></el-input>
+            <span>{{table.itemQb}}</span>
           </td>
           <td class="des_stock">
-            <el-input v-model="input_stock"></el-input>
+            <span>{{table.stockNum}}</span>
           </td>
           <td class="des_enable">
-            <el-checkbox v-model="input_enable"></el-checkbox>
+            <span>{{table.canUse}}</span>
           </td>
         </tr>
       </table>
       <div class="detail_box">
         <div class="detail_cargo">商品详情：</div>
-        <p class="detail_word">商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情商品详情</p>
+        <p class="detail_word" v-html="details.itemDetail.itemDesc"></p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">图片说明：</div>
-        <p class="detail_word">图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明图片说明</p>
+        <p class="detail_word" v-html="details.itemDetail.itemUse"></p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
@@ -165,10 +160,10 @@
       return {
         tableData: [],
         cargo: {
-          id: '',
-          name: '',
-          class: '',
-          brand: '',
+          id: null,
+          name: null,
+          class: null,
+          brand: null,
         },
         options1: [{
           label: '全部',
@@ -182,13 +177,13 @@
         }],
         options2: [{
           label: '全部',
-          value: '1'
+          value: null,
         },{
           label: '已上架',
-          value: '2'
+          value: '1'
         },{
           label: '已下架',
-          value: '3'
+          value: '0'
         }],
         list: true,
         coinValue: '',
@@ -255,6 +250,7 @@
             video:'',
           },
         },
+        propertyList: [],
       }
     },
     created: function() {
@@ -297,11 +293,17 @@
           itemName: that.cargo.name,
           itemClassify: that.cargo.class,
           itemBrandName: that.cargo.brand,
-          state: '',
+          state: that.stateValue,
         }
-        that.global.axiosPostReq('/item/update',obj).then((res) => {
+        that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data);
+            that.tableData = res.data.data;
+            // that.cargo.id = null;
+            // that.cargo.name = null;
+            // that.cargo.class = null;
+            // that.cargo.brand = null;
+            // that.stateValue = null;
+            console.log(that.tableData);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -324,10 +326,16 @@
         var that = this;
         var obj = {
           itemId: scope.row.itemId,
+          token: null,
         }
         that.global.axiosPostReq('/item/itemDetailDes',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.details = res.data.data
+            var a = that.details.propertyList;
+            that.propertyList = a.filter(function(ele,index,arr) {
+                // console.log(ele);
+                return ele.propertyName !== '';   
+            });
             console.log(that.details,'ppp');
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -427,6 +435,13 @@
   }
 </script>
 <style scoped>
+table {
+ border-collapse:collapse;
+ border-spacing:0;
+}
+th,td {
+ padding: 0;
+}
 .left {
   float: left;
 }
@@ -446,7 +461,7 @@
   font-size: 14px;
   border-right: 1px solid #dfe6ec;
 }
-.type2, .des_type2{
+/*.type2, .des_type2{
   width: 8%;
   text-align: center;
   font-size: 14px;
@@ -457,7 +472,7 @@
   text-align: center;
   font-size: 14px;
   border-right: 1px solid #dfe6ec;
-}
+}*/
 .skuCode, .des_skuCode{
   width: 12.5%;
   text-align: center;

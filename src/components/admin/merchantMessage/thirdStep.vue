@@ -101,36 +101,73 @@
       // 保存新增商品
       save: function() {
         var that = this;
-        that.thirdForm.itemPica = that.fileList[0];
-        that.thirdForm.itemPicb = that.fileList[1];
-        that.thirdForm.itemPicc = that.fileList[2];
-        that.thirdForm.itemPicd = that.fileList[3];
-        that.thirdForm.itemPice = that.fileList[4];
-        Object.assign(that.thirdForm,that.message);
-        delete that.thirdForm.itemBrand
-        delete that.thirdForm.type
-        var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-        console.log(itemValueList)
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(itemValueList)
-        xhr.onreadystatechange = function(){
-        // var succeed = JSON.parse(xhr.response.callStatus)
-        // console.log(succeed)
-        var succeed = JSON.parse(xhr.response)
-          if(succeed.callStatus == 'SUCCEED') {
-            delete that.thirdForm.itemValueList
-            global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
-              console.log(res,'22222');
-              if (res.data.callStatus === 'SUCCEED') {
-                console.log('333');
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
-          }
+        var imgReg = /<img.*?(?:>|\/>)/gi;
+        var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        var arr = that.thirdForm.itemDesc.match(imgReg);
+        var src =[]
+        for (var i = 0; i < arr.length; i++) {
+         src.push(arr[i].match(srcReg));
+         //获取图片地址
+        //  if(src[1]){
+        //     console.log('已匹配的图片地址'+(i+1)+'：'+src[1]);
+        //  }
+        //  //当然你也可以替换src属性
+        //  if (src[0]) {
+        //   var t = src[0].replace(/src/i, "href");
+        //   //alert(t);
+        //  }
         }
+        //console.log(src);
+
+        for (var i = 0; i <  src.length; i++) {
+          // var formData = new FormData()
+          // formData.append('pic',src[i][1].split('base64,')[1])
+          var pic = src[i][1].replace(/^.*?,/, '');
+          // var pic = .split('base64,')[1]
+          console.log(pic);
+          var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange=function(){
+            console.log(xhr,'22')
+          }
+          xhr.open("POST", url, true);
+          xhr.setRequestHeader("Content-Type", "application/octet-stream");
+          xhr.setRequestHeader("Authorization", "UpToken " + that.qiNiuToken);
+          xhr.send(pic); 
+        }
+        //console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
+        // that.thirdForm.itemPica = that.fileList[0];
+        // that.thirdForm.itemPicb = that.fileList[1];
+        // that.thirdForm.itemPicc = that.fileList[2];
+        // that.thirdForm.itemPicd = that.fileList[3];
+        // that.thirdForm.itemPice = that.fileList[4];
+        // Object.assign(that.thirdForm,that.message);
+        // delete that.thirdForm.itemBrand
+        // delete that.thirdForm.type
+        // var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
+        // console.log(itemValueList)
+        // var xhr = new XMLHttpRequest();
+        // xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+        // xhr.setRequestHeader("Content-Type", "application/json")
+        // xhr.send(itemValueList)
+        // xhr.onreadystatechange = function(){
+        //   // var succeed = JSON.parse(xhr.response.callStatus)
+        //   // console.log(succeed)
+        //   var succeed = JSON.parse(xhr.response)
+        //   if(succeed.callStatus == 'SUCCEED') {
+        //     delete that.thirdForm.itemValueList
+        //     global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
+        //       if (res.data.callStatus === 'SUCCEED') {
+        //         console.log(res,'22222');
+        //         that.$message('保存成功！');
+        //         that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
+        //       } else {
+        //         that.$message.error('网络出错，请稍后再试！');
+        //       }
+        //     })
+        //   }
+        // }
+
         // var qq = {
         //   apparatusType:2,
         //   isThrow:0,

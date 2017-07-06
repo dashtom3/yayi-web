@@ -112,10 +112,6 @@
       // 头部查询
       searchAll: function() {
         var that = this;
-        // if (that.searchUserId == '' && that.searchDataPrev.length == 0) {
-        //   that.$message.error('请输入手机号或时间！');
-        //   return false
-        // }
         if (that.searchDataPrev.length == 0) {
           var obj = {
             phone: that.searchUserId,
@@ -166,8 +162,8 @@
                   that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
                 }
               }
-              // that.searchUserId = '';
-              // that.searchDataPrev = [];
+              that.searchUserId = '';
+              that.searchDataPrev = [];
             } else {
               that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');

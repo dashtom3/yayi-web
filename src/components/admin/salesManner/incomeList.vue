@@ -18,22 +18,22 @@
           </el-input>
         </el-form-item>
         <el-form-item label="签收已过7天：">
-          <el-select v-model="searchGetType" >
-            <el-option label="全部" value="全部"></el-option>
-            <el-option label="是" value="是"></el-option>
-            <el-option label="否" value="否"></el-option>
+          <el-select v-model="searchGetType">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="是" value="1"></el-option>
+            <el-option label="否" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="收入状态：">
           <el-select v-model="searchMoneyType">
-            <el-option label="全部" value="全部"></el-option>
-            <el-option label="待结算" value="待结算"></el-option>
-            <el-option label="已结算" value="已结算"></el-option>
-            <el-option label="已取消" value="已取消"></el-option>
+            <el-option label="全部" value=""></el-option>
+            <el-option label="待结算" value="1"></el-option>
+            <el-option label="已结算" value="2"></el-option>
+            <el-option label="已取消" value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="结算日期：">
-          <el-date-picker  v-model="searchDataPrev"  type="daterange"  placeholder="选择日期" > </el-date-picker>
+          <el-date-picker v-model="searchDataPrev" type="daterange" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <!-- <el-form-item label="~">
           <el-date-picker  v-model="searchDataNext"  type="date"  placeholder="选择日期"  :picker-options="pickerOptions1"> </el-date-picker>
@@ -44,81 +44,84 @@
       </el-form>
       <!-- <el-form :inline="true" >
 
-      </el-form> -->
-    </el-col>
-    <el-table :data="getMoneyList"  border style="width: 100%">
-      <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
-      <el-table-column  prop="name"  align="center"  label="真实姓名">  </el-table-column>
-      <el-table-column  prop="phone"  align="center"  label="手机号"> </el-table-column>
-      <el-table-column  prop="orderId"  align="center"  label="订单编号">  </el-table-column>
-      <el-table-column  prop="orderState"  align="center"  label="订单状态">  </el-table-column>
-      <el-table-column  prop="orderTime"  align="center"  label="下单日期">  </el-table-column>
-      <el-table-column  prop="getOver7"  align="center"  label="签收已过7天">  </el-table-column>
-      <el-table-column  prop="getMoney"  align="center"  label="收入">  </el-table-column>
-      <el-table-column  prop="getState"  align="center"  label="收入状态">  </el-table-column>
-      <el-table-column  prop="getTime"  align="center"  label="结算日期">  </el-table-column>
-      <el-table-column  align="center"  label="操作">
-        <template scope="scope">
-          <el-button v-on:click="incomeList(scope.$index)">详情</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    </el-form> -->
+  </el-col>
+  <el-table :data="getMoneyList"  border style="width: 100%">
+    <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
+    <el-table-column prop="saleName" align="center" label="真实姓名"></el-table-column>
+    <el-table-column prop="salePhone" align="center" label="手机号"></el-table-column>
+    <el-table-column prop="saleId" align="center" label="订单编号"></el-table-column>
+    <el-table-column prop="orderVoList.orderState" align="center" label="订单状态">
+      <template scope="scope">
+        <span v-if="scope.row.getState == 0">订单取消</span>
+        <span v-if="scope.row.getState == 1">待付款</span>
+        <span v-if="scope.row.getState == 2">待发货</span>
+        <span v-if="scope.row.getState == 3">待收货</span>
+        <span v-if="scope.row.getState == 4">待评价</span>
+        <span v-if="scope.row.getState == 5">订单确认</span>
+        <span v-if="scope.row.getState == 6">退款退货中</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="orderTime" align="center" label="下单日期"></el-table-column>
+    <el-table-column prop="signLateSeven" align="center" label="签收已过7天"></el-table-column>
+    <el-table-column prop="getMoey" align="center" label="收入"></el-table-column>
+    <el-table-column prop="getState" align="center" label="收入状态">
+      <template scope="scope">
+        <span v-if="scope.row.getState == 1">待结算</span>
+        <span v-if="scope.row.getState == 2">已结算</span>
+        <span v-if="scope.row.getState == 3">已取消</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="getUpdated" align="center" label="结算日期"></el-table-column>
+    <el-table-column align="center" label="操作">
+      <template scope="scope">
+        <el-button v-on:click="incomeList(scope)">详情</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 
 
-    <el-dialog custom-class="asgagewgf" title="收入详情" :visible.sync="showIncomeInfor">
-      <div class="personalInfor">
-        <h3>销售员信息</h3>
-        <div class="">
-          <span>销售员编号：{{someOneUserDetails.info.bianhao}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
-        </div>
+  <el-dialog custom-class="asgagewgf" title="收入详情" :visible.sync="showIncomeInfor">
+    <div class="personalInfor">
+      <h3>销售员信息</h3>
+      <div class="">
+        <span>销售员编号：{{someOneUserDetails.saleId}}</span>
+        <span>销售员姓名：{{someOneUserDetails.saleName}}</span>
+        <span>销售员手机号：{{someOneUserDetails.salePhone}}</span>
       </div>
-      <div class="certification">
-        <h3>用户信息</h3>
-        <div class="">
-          <span>销售员编号：{{someOneUserDetails.info.bianhao}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
-        </div>
+    </div>
+    <div class="certification">
+      <h3>用户信息</h3>
+      <div class="">
+        <span>用户编号：{{someOneUserDetails.userId}}</span>
+        <span>用户姓名：{{someOneUserDetails.userName}}</span>
+        <span>用户手机号：{{someOneUserDetails.userPhone}}</span>
       </div>
-      <h3>订单信息</h3>
-      <div class="ordertable">
-        <table style="width:100%;border-color:#dfe6ec;" cellpadding="0" cellspacing="0" border="1">
-          <tr>
-            <td colspan="6">
-              <span>订单编号：xxxxxxxxxxxxx</span>
-              <span>订单状态：交易成功</span>
-            </td>
-            <td>签收时间：1234134143</td>
-          </tr>
-          <tr class="maniCont">
-            <td>商品名称</td>
-            <td>sku代码</td>
-            <td>价格（元）</td>
-            <td>数量</td>
-            <td>小计（元）</td>
-            <td>已退款金额（元）</td>
-            <td>收入（元）</td>
-          </tr>
-          <tr class="maniCont">
-            <td>1111111</td>
-            <td>111111</td>
-            <td>1111</td>
-            <td>1111</td>
-            <td>111</td>
-            <td>11111</td>
-            <td>111111</td>
-          </tr>
-          <tr class="lastTr" style="border:none">
-            <td colspan="6">
-              <span>收入状态：已结算</span>
-              <span>结算日期：2017-07-11 17:00</span>
-            </td>
-            <td>总收入：￥10</td>
-          </tr>
-        </table>
-      </div>
+    </div>
+    <h3>订单信息</h3>
+    <div class="ordertable">
+      <table class="datail_tb">
+        <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
+        <tr class="trs">
+          <td>商品名称</td>
+          <td>价格（元）</td>
+          <td>数量</td>
+          <td>小计</td>
+          <td>退款金额（元）</td>
+          <td>收入状态</td>
+          <td>总收入元</td>
+        </tr>
+        <tr class="trs" v-for="(item, index) in infoList" :key="index">
+          <td>{{item.goodsName}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.num}}</td>
+          <td>{{item.totalPrice}}</td>
+          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+          <td :rowspan="infoList.length" v-if="index == 0">已结算</td>
+          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+        </tr>
+      </table>
+    </div>
       <!-- <el-table :data="someOneUserDetails.bindUsers" border>
         <el-table-column align="center" property="bianhao" label="用户编号" width="150"></el-table-column>
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
@@ -129,44 +132,12 @@
   </el-row>
 </template>
 <script>
+  import util from '../../../common/util'
   export default{
     data(){
       return {
-        someOneUserDetails:{
-          info:{
-            bianhao:"123134",
-            name:"23545",
-            phone:"1234",
-            sex:'aef',
-            ID:"134141341431341414",
-            time:"1234-12-12",
-            leaveMoney:'2112',
-            bindUserNum:123,
-            saleImg:"1.png"
-          },
-          getMoneyStyle:{
-            type:"a",
-            count:1231313123
-          },
-          bindUsers:[
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-          ]
-
-        },
-        getMoneyList:[
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-          {id:12,name:'ada',phone:'adf',orderId:'adfa',orderState:'ad',ordreTime:"dsfadfa",getOver7:'adf',getMoney:"adsfa",getState:'aaaf',getTime:'sdadafaf'},
-        ],
+        someOneUserDetails:{},
+        getMoneyList:[],
         pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -177,25 +148,103 @@
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
+        infoList: [{
+          goodsName: '商品名称1',
+          price: 30,
+          num: 2,
+          totalPrice: 60
+        },{
+          goodsName: '商品名称2',
+          price: 30,
+          num: 2,
+          totalPrice: 60
+        },{
+          goodsName: '商品名称3',
+          price: 30,
+          num: 2,
+          totalPrice: 60
+        }],
         showIncomeInfor:false,
-        searchSaleContent:null,
-        searchDataPrev:null,
+        searchSaleContent: '',
+        searchDataPrev:[],
         searchDataNext:null,
         searchSaleType:"手机号",
-        searchMoneyType:"全部",
-        searchGetType:"全部",
+        searchMoneyType: "",
+        searchGetType: "",
         nowUserMoneyNum:null,
         // selectSearchType:"用户编号",
         showChangeUserMoney:false,
       }
     },
+    created: function() {
+      var that = this;
+      that.getAllIn();
+    },
     methods: {
-      incomeList:function(index){
-        console.log(index);
-        this.showIncomeInfor = true;
+      //获取收入列表
+      getAllIn: function() {
+        var that = this;
+        var obj = {
+          saleId: '',
+          saleName: '',
+          salePhone: '',
+          orderId: '',
+          signLateSeven : '',
+          getState: '',
+          startDate: '',
+          endDate: '',
+          currentPage: '',
+          numberPerPage: '',
+          token: ''
+        }
+        that.global.axiosGetReq('/saleIncomeList/query',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.getMoneyList = res.data.data;
+            console.log(that.getMoneyList,'222');
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      incomeList:function(scope){
+        var that = this;
+        console.log(scope.row,'scope');
+        that.someOneUserDetails = scope.row;
+        that.showIncomeInfor = true;
       },
       search:function(){
-
+        var that = this;
+        if (that.searchDataPrev.length == 0) {
+          var startDate = ''
+          var endDate = ''
+        } else {
+          var startDate = util.formatDate.format(new Date(that.searchDataPrev[0]));
+          var endDate = util.formatDate.format(new Date(that.searchDataPrev[1]));
+        }
+        if (that.searchSaleType == '手机号') {
+          var salePhone = that.searchSaleContent
+          var saleName = ''
+        } else {
+          var saleName = that.searchSaleContent
+          var salePhone = ''
+        }
+        var obj = {
+          saleName: saleName,
+          salePhone: salePhone,
+          signLateSeven : that.searchGetType,
+          getState: that.searchMoneyType,
+          startDate: startDate,
+          endDate: endDate,
+          token: ''
+        }
+        that.global.axiosPostReq('/saleIncomeList/query',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.getMoneyList = res.data.data;
+            console.log(that.getMoneyList,'222');
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       changeUserMoney:function(){
         this.showChangeUserMoney = true;
@@ -203,7 +252,6 @@
       saveUserMoney:function(){
         this.showChangeUserMoney = false;
       },
-
     },
   }
 </script>
@@ -211,28 +259,28 @@
 <style>
 
   .incomeWrap   .asgagewgf h3{
-      font-weight: 500;
-      line-height: 50px;
-      color: #20a0ff;
-    }
-    .incomeWrap .el-select .el-input{
-      width: 120px;
-    }
+    font-weight: 500;
+    line-height: 50px;
+    color: #20a0ff;
+  }
+  .incomeWrap .el-select .el-input{
+    width: 120px;
+  }
   .incomeWrap   .asgagewgf .personalInfor{
-      position: relative;
-    }
+    position: relative;
+  }
   .incomeWrap   .asgagewgf .personalInfor img{
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 150px;
-    }
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+  }
   .incomeWrap   .asgagewgf  span{
-      width: 30%;
-      display: inline-block;
-      line-height: 35px;
-    }
+    width: 30%;
+    display: inline-block;
+    line-height: 35px;
+  }
   .incomeWrap .asgagewgf .ordertable span{
     display: inline-block;
     width: auto;
@@ -244,11 +292,28 @@
   .incomeWrap .asgagewgf .ordertable .maniCont{
     text-align: center;
   }
-.incomeWrap .asgagewgf .ordertable  .lastTr{
-  color: red;
-}
-.incomeWrap .asgagewgf .ordertable  .lastTr td:nth-child(2){
-  text-align: right;
-  padding-right: 10px;
-}
+  .incomeWrap .asgagewgf .ordertable  .lastTr{
+    color: red;
+  }
+  .incomeWrap .asgagewgf .ordertable  .lastTr td:nth-child(2){
+    text-align: right;
+    padding-right: 10px;
+  }
+  .datail_tb{
+    width: 100%;
+    border-collapse: collapse;/* 边框合并属性  */
+    border: none;
+    margin-top: 20px;
+  }
+  .datail_tb tr{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+  }
+  .datail_tb td{
+    width: 100px;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
 </style>
