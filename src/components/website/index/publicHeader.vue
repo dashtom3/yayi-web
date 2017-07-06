@@ -301,13 +301,20 @@
     watch: {
       msgFromGoodInfo() {
         var that = this;
-        if (that.msgFromGoodInfo == 'sayToLogin') {
+        // if (that.msgFromGoodInfo == 'sayToLogin') {
+          // that.changeForget1 = true;
+          // that.changeForget2 = false;
+          // that.changeForget3 = false;
+          // that.showLogin2 = false;
+          // that.showLogin3 = false;
+          // that.showLogin1 = !that.showLogin1;
+
           that.changeForget1 = true;
           that.changeForget2 = false;
           that.changeForget3 = false;
           that.showLogin1 = true;
-          
-        }
+          // that.msgFromGoodInfo = "";
+        // }
         console.log(that.msgFromGoodInfo,'2222');
       },
       //购物车

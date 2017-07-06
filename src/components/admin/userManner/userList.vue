@@ -58,7 +58,7 @@
         <el-table-column  prop="saleName" align="center"  label="销售员姓名">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
-            <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index)">取消绑定</el-button>
+            <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index,scope.row)">取消绑定</el-button>
             <el-button v-else  type="text"  v-on:click="addBindSale(scope.$index,scope.row)">绑定销售</el-button>
             <el-button type="text" v-on:click="details(scope.$index,scope.row)">详情</el-button>
           </template>
@@ -80,8 +80,8 @@
         </el-form-item>
       </el-form>
       <el-table height="500"  :data="salesList" border>
-        <el-table-column align="center" property="salePhone" label="手机号"></el-table-column>
-        <el-table-column align="center" property="saleName" label="真实姓名" width="200"></el-table-column>
+        <el-table-column align="center" property="phone" label="手机号"></el-table-column>
+        <el-table-column align="center" property="trueName" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="hehushu" label="操作">
           <template scope="scope">
             <el-button type="text" v-on:click="bandThisSale(scope.$index,scope.row)">绑定</el-button>
@@ -257,6 +257,7 @@
         that.global.axiosGetReq('/userManageList/detail',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,"getOneUserDetails")
             that.someOneUserDetails = res.data.data;
             var boj2 = {
               name:that.someOneUserDetails.saleName,
@@ -273,11 +274,10 @@
       },
       bandThisSale:function(index,one){
         var that = this;
-
         var obj = {
           token:"1211",
           // token:that.global.getToken()
-          salePhone:one.salePhone,
+          salePhone:one.phone,
           userPhone:that.needBindUserPhone
         };
         that.global.axiosGetReq('/userManageList/bind',obj)
@@ -381,21 +381,32 @@
             }
           })
       },
-      cancelBindSale:function(index){
-        console.log(index);
-        this.$confirm('确定取消该绑定吗?', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+      cancelBindSale:function(index,one){
+        var that = this;
+        that.$confirm('确定取消该绑定吗?', {  confirmButtonText: '确定',  cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.userList[index].isBindSale = "否";
-          this.userList[index].saleName = "";
-          this.$message({
-            type: 'success',
-            message: '解除成功!'
-          });
+          var obj = {
+            token:"1211",
+            // token:that.global.getToken()
+            salePhone:one.salePhone,
+            userPhone:one.phone
+          };
+          that.global.axiosGetReq('/userManageList/disBind',obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.userList[index].isBindSale = "否";
+              that.userList[index].saleName = "";
+              that.$message({
+                type: 'success',
+                message: '解除成功!'
+              });
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }).catch(() => {
-          this.$message({
+          that.$message({
             type: 'info',
             message: '已取消解除'
           });

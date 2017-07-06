@@ -187,7 +187,7 @@
       },
       DELEONE:function(index,item){
         var that = this;
-        that.$confirm('确定删除该属性吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
+        that.$confirm('确定删除该属性吗?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
         .then(() => {
             var obj = {
               itemPropertyId:item.itemPropertyId
@@ -293,21 +293,20 @@
         var that = this;
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            // var aa= {};
-            // aa.itemPparam = that.formData.addGoodAttrOneVal;
-            // that.addGoodAttrValues.push(aa);
-            // that.formData.addGoodAttrOneVal = null;
-            // that.flag1 = true;
+
             if(that.attOperaType==2){
               var obj = {
-                itemId:taht.tableData[taht.changAttrIndex].itemId,
+                itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
                 itemPparam:that.formData.addGoodAttrOneVal
               };
-              that.global.axiosPostReq('/item/addToPropretyd',obj)
+              that.global.axiosPostReq('/item/addToPropertyd',obj)
               .then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
-                  // that.addGoodAttrValues.splice(index, 1);
-                  // that.changeThisAll = null;
+                  var aa= {};
+                  aa.itemPparam = that.formData.addGoodAttrOneVal;
+                  that.addGoodAttrValues.push(aa);
+                  that.formData.addGoodAttrOneVal = null;
+                  that.flag1 = true;
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
                 }

@@ -115,6 +115,7 @@ import myAddress from './selectThree'
       return {
         currentView:"goodIntroduce",
         attrLength:0,
+        nowGoodSKU:null,
         attrVal:[],
         ifshoucang:0,
         nowGoodDetails:{},
@@ -134,25 +135,76 @@ import myAddress from './selectThree'
       }
     },
     watch:{
-      nowGoodDetails:{
-        handler:function(){
-          this.itemBrand = this.nowGoodDetails.itemBrand;
-          this.itemDetail = this.nowGoodDetails.itemDetail;
-          this.commentList = this.nowGoodDetails.commentList;
-          this.goodAllImgs[0] = this.nowGoodDetails.itemDetail.itemPica;
-          this.goodAllImgs[1] = this.nowGoodDetails.itemDetail.itemPicb;
-          this.goodAllImgs[2] = this.nowGoodDetails.itemDetail.itemPicc;
-          this.goodAllImgs[3] = this.nowGoodDetails.itemDetail.itemPicd;
-          this.goodAllImgs[4] = this.nowGoodDetails.itemDetail.itemPice;
-          // console.log(this.goodAllImgs)
-          this.bigImgUrl = this.goodAllImgs[0];
-          this.items = this.nowGoodDetails.propertyList;
-          this.commentList = this.nowGoodDetails.commentList;
-          this.instructions = this.nowGoodDetails.itemDetail;
-          this.instructions.addName = this.nowGoodDetails.itemName;
-        },
-        deep:true
-      }
+      nowGoodSKU:function(){
+        var that =this;
+        var obj = {};
+        var LIST = that.nowGoodDetails.itemValueList;
+        for(let i in LIST){
+          if(LIST[i].itemSKU == that.nowGoodSKU){
+            obj =LIST[i];
+            break;
+          }
+        }
+        var LIST2 = that.nowGoodDetails.propertyList;
+            for(let m in LIST2[0].propertyInfoList){
+              if(obj.itemPropertyInfo==LIST2[0].propertyInfoList[m]){
+                var aa = LIST2[0];
+                aa.propertyInfoList.checkWhich = m;
+                that.nowGoodDetails.propertyList.splice(0,1,aa);
+                break;
+              }
+            }
+            if(LIST2[1].propertyName){
+              for(let m in LIST2[1].propertyInfoList){
+                if(obj.itemPropertyTwoValue==LIST2[1].propertyInfoList[m]){
+                  var aa = LIST2[1];
+                  aa.propertyInfoList.checkWhich = m;
+                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  break;
+                }
+              }
+            }
+            if(LIST2[2].propertyName){
+              for(let m in LIST2[2].propertyInfoList){
+                if(obj.itemPropertyThreeValue==LIST2[2].propertyInfoList[m]){
+                  var aa = LIST2[2];
+                  aa.propertyInfoList.checkWhich = m;
+                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  break;
+                }
+              }
+            }
+            if(LIST2[3].propertyName){
+              for(let m in LIST2[3].propertyInfoList){
+                if(obj.itemPropertyFourValue==LIST2[3].propertyInfoList[m]){
+                  var aa = LIST2[3];
+                  aa.propertyInfoList.checkWhich = m;
+                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  break;
+                }
+              }
+            }
+            if(LIST2[4].propertyName){
+              for(let m in LIST2[4].propertyInfoList){
+                if(obj.itemPropertyFiveValue==LIST2[4].propertyInfoList[m]){
+                  var aa = LIST2[4];
+                  aa.propertyInfoList.checkWhich = m;
+                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  break;
+                }
+              }
+            }
+            if(LIST2[5].propertyName){
+              for(let m in LIST2[5].propertyInfoList){
+                if(obj.itemPropertySixValue==LIST2[5].propertyInfoList[m]){
+                  var aa = LIST2[5];
+                  aa.propertyInfoList.checkWhich = m;
+                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  break;
+                }
+              }
+            }
+      },
     },
     created:function(){
       this.getNowGoodDetail();
@@ -172,9 +224,23 @@ import myAddress from './selectThree'
         .then((res) => {
           console.log(res,"getNowGoodDetail")
           if (res.data.callStatus === 'SUCCEED') {
-            this.ifshoucang = res.data.num;
+            that.ifshoucang = res.data.num;
+            that.nowGoodSKU = res.data.msg;
             that.nowGoodDetails = res.data.data;
             that.sureGoodAttr = that.nowGoodDetails.itemValueList[0].itemPropertyInfo;
+            that.itemBrand = that.nowGoodDetails.itemBrand;
+            that.itemDetail = that.nowGoodDetails.itemDetail;
+            that.commentList = that.nowGoodDetails.commentList;
+            that.goodAllImgs[0] = that.nowGoodDetails.itemDetail.itemPica;
+            that.goodAllImgs[1] = that.nowGoodDetails.itemDetail.itemPicb;
+            that.goodAllImgs[2] = that.nowGoodDetails.itemDetail.itemPicc;
+            that.goodAllImgs[3] = that.nowGoodDetails.itemDetail.itemPicd;
+            that.goodAllImgs[4] = that.nowGoodDetails.itemDetail.itemPice;
+            that.bigImgUrl = that.goodAllImgs[0];
+            that.items = that.nowGoodDetails.propertyList;
+            that.commentList = that.nowGoodDetails.commentList;
+            that.instructions = that.nowGoodDetails.itemDetail;
+            that.instructions.addName = that.nowGoodDetails.itemName;
             for(let i in that.nowGoodDetails.propertyList){
               if(that.nowGoodDetails.propertyList.propertyName){
                 that.attrLength+=1;
@@ -332,7 +398,9 @@ import myAddress from './selectThree'
               }
             });
         }else{
-          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
+          var num = Math.random();
+          // that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
         }
       },
       nowToBuyThis:function(){
