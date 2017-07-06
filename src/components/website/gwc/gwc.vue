@@ -146,7 +146,7 @@
         };
         that.global.axiosGetReq('/cart/list', obj)
         .then((res) => {
-          // console.log(res)
+          console.log(res,"getGwcList")
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             for(let i in data){

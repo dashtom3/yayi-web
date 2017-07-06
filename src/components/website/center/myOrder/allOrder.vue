@@ -46,12 +46,12 @@
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
-        <div class="left des_img">
-          <img src="../../../../images/center/order.png" alt="img">
+        <div class="left des_img" style="width:81px;height:85px;">
+          <img :src="cargo.picPath" alt="img">
         </div>
         <div class="left des_p">
-          <p style="margin-bottom: 20px;">{{cargo.des}}</p>
-          <p>{{cargo.color}}</p>
+          <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+          <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -61,13 +61,14 @@
       <div class="order_des_right">
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
-          <p>（含运费：￥6.00）</p>
-          <p>（乾币已抵扣：￥2.00）</p>
+          <p>（含运费：￥{{item.qbDed}}）</p>
+          <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <div class="left operate_des" v-if="item.state!==1">
+        <div class="left operate_des" v-if="item.state!==0">
+          <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" @click="cancel_order">取消订单</p>
+          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
@@ -75,8 +76,21 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
       <span>确定取消订单吗？</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm_cancel">确 定</el-button>
+        <el-button @click="dialogVisible=false">取 消</el-button>
+        <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogVisibleHaveALookAtWuLiu" size="tiny">
+      则是物流信息
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogVisibleGetGood" size="tiny">
+      <span>确定确认收货吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleGetGood=false">取 消</el-button>
+        <el-button type="primary" @click="sureGetGood()">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
@@ -99,7 +113,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleComment = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="sureCommentThisOrder()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -112,48 +126,48 @@
     data () {
       return {
         items: [{
-          date: '2017-05-17',
-          orderId : '19877240650895924',
-          state: 0,
-          total: 368,
-          cargo: [{
-            des: '爱丽丝 标准#',
-            color: '红色厚',
-            price: '134',
-            num: '1',
+            date: '2017-05-17',
+            orderId : '19877240650895924',
+            state: 0,
+            total: 368,
+            cargo: [{
+              des: '爱丽丝 标准#',
+              color: '红色厚',
+              price: '134',
+              num: '1',
+            },{
+              des: '爱丽丝 标准#',
+              color: '红色厚',
+              price: '134',
+              num: '1',
+            },{
+              des: '爱丽丝 标准#',
+              color: '红色厚',
+              price: '100',
+              num: '1',
+            }],
           },{
-            des: '爱丽丝 标准#',
-            color: '红色厚',
-            price: '134',
-            num: '1',
+            date: '2017-05-07',
+            orderId : '19877240650895924',
+            state: 1,
+            total: 22220,
+            cargo: [{
+              des: '爱丽丝 标准#',
+              color: '红色厚',
+              price: '2222',
+              num: '10',
+            }],
           },{
-            des: '爱丽丝 标准#',
-            color: '红色厚',
-            price: '100',
-            num: '1',
-          }],
-        },{
-          date: '2017-05-07',
-          orderId : '19877240650895924',
-          state: 1,
-          total: 22220,
-          cargo: [{
-            des: '爱丽丝 标准#',
-            color: '红色厚',
-            price: '2222',
-            num: '10',
-          }],
-        },{
-          date: '2017-05-01',
-          orderId : '19877240650895924',
-          total: 1500,
-          state: 2,
-          cargo: [{
-            des: '爱丽丝 标准#',
-            color: '红色厚',
-            price: '500',
-            num: '3',
-          }],
+            date: '2017-05-01',
+            orderId : '19877240650895924',
+            total: 1500,
+            state: 2,
+            cargo: [{
+              des: '爱丽丝 标准#',
+              color: '红色厚',
+              price: '500',
+              num: '3',
+            }],
         }],
         cargos: [],
         // no_find: '暂无订单～',
@@ -168,6 +182,8 @@
         textarea: '',
         score : '',
         getScore: false,
+        dialogVisibleGetGood:false,
+        dialogVisibleHaveALookAtWuLiu:false
       }
     },
     components: {
@@ -219,22 +235,87 @@
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
            console.log(res,"getAllOrder");
           if (res.data.callStatus === 'SUCCEED') {
-            //that.items = res.data.data;
+            that.items = res.data.data;
+            if(that.items.length==0){
+              that.no_order = true;
+            }
           } else {
             that.$message.error('网络错误！');
           }
         })
       },
       // 取消订单
-      cancel_order: function() {
+      cancel_order: function(item) {
         var that = this;
+        that.cancleOrderItemId = item.orderId;
         that.dialogVisible = true;
+      },
+      sureGetGood:function () {
+        var that = this;
+        var obj = {
+          token:that.global.getToken(),
+          orderId:that.nowToOperateItem.orderId
+        };
+        that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
+           console.log(res,"sureGetGood");
+          if (res.data.callStatus === 'SUCCEED') {
+            that.dialogVisibleGetGood = false;
+          } else {
+            that.$message.error('网络错误！');
+          }
+        })
+      },
+      haveALookAtWuLiu:function(item){
+        var that = this;
+        var obj = {
+          token:that.global.getToken(),
+          orderId:that.nowToOperateItem.orderId
+        };
+        that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
+           console.log(res,"sureGetGood");
+          if (res.data.callStatus === 'SUCCEED') {
+            that.dialogVisibleHaveALookAtWuLiu = true;
+          } else {
+            that.$message.error('网络错误！');
+          }
+        })
+      },
+      sureCommentThisOrder:function () {
+        var that = this;
+        var obj = {
+          token:that.global.getToken(),
+          orderId:that.nowToOperateItem.orderId,
+          itemId:that.nowToOperateItem.orderitemList[0].itemId,
+          score:that.value2,
+          data:taht.textarea
+        };
+        that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
+           console.log(res,"makeSureCom");
+          if (res.data.callStatus === 'SUCCEED') {
+            that.dialogVisibleComment = false;
+            that.$alert('评论成功！',  {confirmButtonText: '确定',});
+          } else {
+            that.$message.error('网络错误！');
+          }
+        })
       },
       // 确定取消
       confirm_cancel: function() {
         var that = this;
-        that.dialogVisible = false;
-        that.$message('取消订单成功！');
+        var obj = {
+          token:that.global.getToken(),
+          itemId:that.cancleOrderItemId
+        };
+        console.log(obj)
+        that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
+           console.log(res,"sureCancleOrder");
+          if (res.data.callStatus === 'SUCCEED') {
+            that.dialogVisible = false;
+            that.$message('取消订单成功！');
+          } else {
+            that.$message.error('网络错误！');
+          }
+        })
       },
       handleClose: function() {
         var that = this;
@@ -242,9 +323,31 @@
       // 交易操作
       operate: function(item) {
         var that = this;
-        console.log(item.state);
-        if(item.state == 2) {
+        that.nowToOperateItem = item;
+        var obj = {
+          token:that.global.getToken(),
+          orderId:item.orderId
+        };
+        // if(value == 0) {
+        // 	var hh = '交易关闭'
+
+        // if (value == 2) {
+        // 	var ee = '待发货'
+
+        // if (value == 5) {
+        // 	var ee = '确定定单'
+
+        // if (value == 6) {
+        // 	var ee = '退货中'
+        if(item.state == 4) {
+          // 评论
           that.dialogVisibleComment = true;
+        }else if(item.state == 1){
+          // 支付
+          that.$router.push({ path:'/pay' });
+        }else if(item.state == 3){
+          // 确认收货
+          that.dialogVisibleGetGood = true;
         }
       },
     }

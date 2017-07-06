@@ -19,30 +19,50 @@ Vue.prototype.global = Global
 
 Vue.filter('frisco', function (value) {
     if(value == 0) {
-    	var hh = '待付款'
+    	var hh = '交易关闭'
     	return hh
     }
     if (value == 1) {
-    	var aa = '交易关闭'
+    	var aa = '待付款'
     	return aa
     }
     if (value == 2) {
-    	var ee = '交易成功'
+    	var ee = '待发货'
+    	return ee
+    }
+    if (value == 3) {
+    	var ee = '待收货'
+    	return ee
+    }
+    if (value == 4) {
+    	var ee = '待评价'
+    	return ee
+    }
+    if (value == 5) {
+    	var ee = '确定定单'
+    	return ee
+    }
+    if (value == 6) {
+    	var ee = '退货中'
     	return ee
     }
 })
 
 Vue.filter('operate', function (value) {
-    if(value == 0) {
+    if(value == 1) {
       var hh = '付款'
       return hh
     }
-    if (value == 1) {
-      var aa = '无'
-      return aa
-    }
-    if (value == 2) {
+    // if (value == 1) {
+    //   var aa = '无'
+    //   return aa
+    // }
+    if (value == 4) {
       var ee = '评价'
+      return ee
+    }
+    if (value == 3) {
+      var ee = '待收货'
       return ee
     }
     // return middleState2

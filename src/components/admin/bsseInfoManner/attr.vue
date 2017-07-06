@@ -204,6 +204,10 @@
           })
         });
       },
+      alertMsg:function(msg){
+        var that = this;
+        that.$alert(msg, {confirmButtonText: '确定',});
+      },
       changeOneAttr:function(index,item){
         var that = this;
         that.bindTitle = "修改商品属性";
@@ -297,31 +301,51 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if(that.attOperaType==2){
-              var obj = {
-                itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
-                itemPparam:that.formData.addGoodAttrOneVal
-              };
-              that.global.axiosPostReq('/item/addToPropertyd',obj)
-              .then((res) => {
-                if (res.data.callStatus === 'SUCCEED') {
-                  var aa= {};
-                  aa.itemPparam = that.formData.addGoodAttrOneVal;
-                  that.addGoodAttrValues.push(aa);
-                  that.formData.addGoodAttrOneVal = null;
-                  that.flag1 = true;
-                } else {
-                  that.$message.error('网络出错，请稍后再试！');
+              var msg = true;
+              for(let i in that.addGoodAttrValues){
+                if(that.addGoodAttrValues[i].itemPparam==that.formData.addGoodAttrOneVal){
+                  msg = "填写的属性值有重复项，请重新填写";
                 }
-              })
+              }
+              if(msg==true){
+                var obj = {
+                  itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
+                  itemPparam:that.formData.addGoodAttrOneVal
+                };
+                that.global.axiosPostReq('/item/addToPropertyd',obj)
+                .then((res) => {
+                  if (res.data.callStatus === 'SUCCEED') {
+                    var aa= {};
+                    aa.itemPparam = that.formData.addGoodAttrOneVal;
+                    that.addGoodAttrValues.push(aa);
+                    that.formData.addGoodAttrOneVal = null;
+                    that.flag1 = true;
+                  } else {
+                    that.$message.error('网络出错，请稍后再试！');
+                  }
+                })
+              }else{
+                that.alertMsg(msg);
+              }
             }else{
-              var aa= {};
-              aa.itemPparam = that.formData.addGoodAttrOneVal;
-              that.addGoodAttrValues.push(aa);
-              that.formData.addGoodAttrOneVal = null;
-              that.flag1 = true;
+              var msg = true;
+              for(let i in that.addGoodAttrValues){
+                if(that.addGoodAttrValues[i].itemPparam==that.formData.addGoodAttrOneVal){
+                  msg = "填写的属性值有重复项，请重新填写";
+                }
+              }
+              if(msg==true){
+                var aa= {};
+                aa.itemPparam = that.formData.addGoodAttrOneVal;
+                that.addGoodAttrValues.push(aa);
+                that.formData.addGoodAttrOneVal = null;
+                that.flag1 = true;
+              }else{
+                that.alertMsg(msg);
+              }
             }
           } else {
-            that.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
+            that.alertMsg("请填写完整商品的属性名或属性值!");
             that.flag1 = false;
             return false;
           }

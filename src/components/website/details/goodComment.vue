@@ -4,12 +4,12 @@
       <li v-for="comment in comments">
         <div >
           <span class="name">{{comment.userName}}</span>
-          <!-- <span class="phone">{{comment.userPhone}}</span> -->
+          <span class="phone">{{comment.userPhone | matUserPhone}}</span>
           <score :thisscore="comment.commentGrade"></score>
           <span class="time">{{comment.created}}</span>
         </div>
         <div class="commentContents">{{comment.commentContent}}</div>
-        <div class="commentReplay" style="">
+        <div class="commentReplay" v-if="comment.replyContent">
           <span class="sjhf">商家回复</span>
           <span class="sjhfnr">
             {{comment.replyContent}}
@@ -36,6 +36,18 @@ import global from '../../global/global'
     },
     components:{
       score
+    },
+    filters:{
+      matUserPhone:function(val){
+        var arr = val.split("");
+        console.log(arr)
+        for(let i in arr){
+          if(i>2 && i<7){
+            arr[i]="*";
+          }
+        }
+        return arr.join("");
+      }
     },
     props:["comments"],
     created:function(){

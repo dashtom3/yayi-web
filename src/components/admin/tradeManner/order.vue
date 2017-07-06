@@ -32,7 +32,7 @@
 
       <!--列表-->
       <el-table :data="orderList" border>
-        <el-table-column prop="orderId" label="订单编号" width="120" align="center" ></el-table-column>
+        <el-table-column prop="orderId" label="订单编号" width="180" align="center" ></el-table-column>
         <el-table-column prop="totalFee" label="总价（元）" width="120" align="center" ></el-table-column>
         <el-table-column prop="qbDed" label="乾币抵扣（元）" width="140" align="center" ></el-table-column>
         <el-table-column prop="actualPay" label="实际付款（元）" width="140" align="center" ></el-table-column>
@@ -40,17 +40,22 @@
         <el-table-column prop="created" label="下单时间" min-width="120" align="center" ></el-table-column>
         <el-table-column prop="state" label="订单状态" min-width="120" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.orderStat == '1'">等待买家付款</span>
-            <span v-if="scope.row.orderStat == '2'">买家已付款</span>
-            <span v-if="scope.row.orderStat == '3'">订单已确认</span>
-            <span v-if="scope.row.orderStat == '4'">卖家已发货</span>
-            <span v-if="scope.row.orderStat == '5'">交易成功</span>
-            <span v-if="scope.row.orderStat == '6'">交易关闭</span>
+            <span v-if="scope.row.state == '1'">等待买家付款</span>
+            <span v-if="scope.row.state == '2'">买家已付款</span>
+            <span v-if="scope.row.state == '3'">订单已确认</span>
+            <span v-if="scope.row.state == '4'">卖家已发货</span>
+            <span v-if="scope.row.state == '5'">交易成功</span>
+            <span v-if="scope.row.state == '6'">交易关闭</span>
           </template>
         </el-table-column>
         <el-table-column prop="shippingName" label="物流信息" min-width="120" align="center" >  </el-table-column>
         <!-- <result property="shippingCode" column="shipping_code" />物流编号 -->
-        <el-table-column prop="refund" label="是否退款" min-width="120" align="center" ></el-table-column>
+        <el-table-column prop="refund" label="是否退款" min-width="120" align="center" >
+          <template scope="scope">
+            <span v-if="scope.row.refund == '0'">否</span>
+            <span v-if="scope.row.refund == '1'">是</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="handle" label="操作" min-width="180" align="center" >
           <template scope="scope">
             <el-button  size="mini"  type="info"  @click="handleDetail(scope.$index, scope.row)">详情</el-button>
@@ -284,18 +289,20 @@
         value3:[],
         // value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
         //订单列表
-        orderList: [{
-          "orderCode": "ddbh2017053100001",
-            "totalPrice": 500,
-            "dryCurrency": 300,
-            "payment": 200,
-            "buyerInfo": "收件人+手机号",
-            "orderTime": "2017-05-31-17:00",
-            "orderStat": "3",
-            "logisticsInfo": "",
-            "drawback": "否",
-            "handle": ""
-          }],
+        orderList: [
+          // {
+          // "orderCode": "ddbh2017053100001",
+          //   "totalPrice": 500,
+          //   "dryCurrency": 300,
+          //   "payment": 200,
+          //   "buyerInfo": "收件人+手机号",
+          //   "orderTime": "2017-05-31-17:00",
+          //   "orderStat": "3",
+          //   "logisticsInfo": "",
+          //   "drawback": "否",
+          //   "handle": ""
+          // }
+        ],
           detailVisible: false,//详情界面开关
           dialogVisible: false,//关闭开关
           deliveryVisible: false,//仓库发货开关
@@ -383,7 +390,12 @@
           obj.buyerInfo = that.buyerInfo;
         }
         if(that.value){
-          obj.orderState = that.value;
+          // 订单状态
+              for(let b in that.orderStat){
+                if(that.orderStat[b].label==that.value&&that.orderStat[b].value!="0"){
+                  obj.orderState = that.orderStat[b].value;
+                }
+              }
         }
         if(that.value3.length!=0){
           var date1,date2;
@@ -397,8 +409,14 @@
           obj.orderETime = date2;
         }
         if(that.value1){
-          obj.isRefund = that.value1;
+          // 退款状态
+            for(let a in that.drawback){
+              if(that.value1 == that.drawback[a].label1&&that.drawback[a].value1!="0"){
+                obj.isRefund = that.drawback[a].value1;
+              }
+            }
         }
+        console.log(obj,"searchObj")
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
           console.log(res,"searchOrderList")
@@ -421,7 +439,7 @@
         };
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
-          console.log(res,"getOrderList")
+          console.log(res,"getOneOrderDetailsById")
           if (res.data.callStatus === 'SUCCEED') {
             // that.orderInfo = res.data.data;
           } else {
@@ -439,7 +457,7 @@
           orderETime:"",
           isRefund:""
         };
-        that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
+        that.global.axiosPostReq('/showUserOrderManage/showOrder')
         .then((res) => {
           console.log(res,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {

@@ -121,6 +121,7 @@
 }
 .big_box {
   width: 1200px;
+  min-height: 583px;
 /*  height: 1000px;*/
   margin: auto;
   margin-bottom: 50px;
