@@ -586,7 +586,7 @@
             return false
           }
           var obj = {
-            newPhone: that.global.getUser().phone,
+            token:that.global.getToken(),
             province: that.xRegion[0],
             city: that.xRegion[1],
             county: that.xRegion[2],
@@ -630,7 +630,7 @@
             return false
           }
           var obj = {
-            newPhone: that.global.getUser().phone,
+            token:that.global.getToken(),
             receiverId: that.editAdd.receiverId,
             province: that.xRegion[0],
             city: that.xRegion[1],

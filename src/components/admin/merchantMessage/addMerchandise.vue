@@ -98,8 +98,8 @@
           <!-- <td v-for="(item,index) in activeItem">{{item.itemPparam}}</td> -->
           <td v-for="(item,key) in activeItem">{{item}}</td>
           <td class="des_skuCode">
-<!--             <el-input :value="ruleForm.itemId" :disabled="true"></el-input> -->
-            <span>{{ruleForm.itemId+(index+1)}}</span>
+            <el-input v-model="activeItem.itemSKU" :disabled="true"></el-input>
+<!--             <span>{{ruleForm.itemId+(index+1)}}</span> -->
           </td>
           <td class="des_price">
             <el-input v-model="activeItem.itemSkuPrice"></el-input>
@@ -115,7 +115,6 @@
           </td>
           <td class="des_enable">
             <input class="elcheck" type="checkbox" v-model="activeItem.canUse">
-<!--             <el-checkbox></el-checkbox> -->
           </td>
         </tr>
       </table>
@@ -207,6 +206,7 @@
         input_enable: false,
         canUse: 0,
         activeTable: [],
+        newArr: [],
       }
     },
     components: {
@@ -307,7 +307,7 @@
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {
                 that.tableData2[i].itempropertydList[k].checked = false;
-                that.tableData2[i].itempropertydList[k].canUse = false;
+                // that.tableData2[i].itempropertydList[k].canUse = false;
               }
             }
           } else {
@@ -365,21 +365,21 @@
         that.setActiveItems({}, 0)
       },
       setActiveItems: function(tempItem, tempK) {
+        var that = this
         var temp = 0
         for(var i = 0; i < this.items[tempK].itempropertydList.length; i++) {
           if (this.items[tempK].itempropertydList[i].checked == true) {
             // tempItem.push(this.items[tempK].itempropertydList[i])
             tempItem[this.items[tempK].itemPropertyName] = this.items[tempK].itempropertydList[i].itemPparam
-            console.log(this.items[tempK])
             temp++
             this.items[tempK].hasItem = true
             if (tempK < this.items.length-1) {
               this.setActiveItems(tempItem, tempK + 1)
             } else {
               // this.activeItems.push(tempItem.slice(0))
-              this.activeItems.push(tempItem)
+              this.activeItems.push(that.global.extendCopy(tempItem))
+              //console.log(this.activeItems)
             }
-            // tempItem.pop()
           }
         }
         if (temp == 0) {
@@ -388,7 +388,8 @@
             this.setActiveItems(tempItem, ++tempK)
           } else {
             // this.activeItems.push(tempItem.slice(0))
-            this.activeItems.push(tempItem)
+            this.activeItems.push(that.global.extendCopy(tempItem))
+            //console.log(this.activeItems)
           }
         }
       },
@@ -424,15 +425,98 @@
           console.log(that.ruleForm,'223355');
           that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
         } else {
+          var subitem = that.activeItems;
           for (var i = 0; i < that.activeItems.length; i++) {
-            that.activeItems[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
-            that.activeItems[i].tiChen = parseInt(that.activeItems[i].tiChen);
-            that.activeItems[i].itemQb = parseInt(that.activeItems[i].itemQb);
-            that.activeItems[i].stockNum = parseInt(that.activeItems[i].stockNum);
-            //console.log(that.activeItems[i])
-            that.activeItems[i].canUse = that.activeItems[i].canUse;
-          }
-          console.log(that.activeItems,'p');
+            // subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
+            // subitem[i].tiChen = parseInt(that.activeItems[i].tiChen);
+            // subitem[i].itemQb = parseInt(that.activeItems[i].itemQb);
+            // subitem[i].stockNum = parseInt(that.activeItems[i].stockNum);
+              // if (subitem[i].canUse == true) {
+              //   subitem[i].canUse = 1
+              // } else {
+              //   subitem[i].canUse = 0
+              // }
+              //subitem[i].itemSKU = 12345 + (i+1)
+              // subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
+              // subitem[i].itemId = that.ruleForm.itemId
+              delete subitem[i].itemSkuPrice
+              delete subitem[i].tiChen
+              delete subitem[i].itemQb
+              delete subitem[i].stockNum
+              delete subitem[i].canUse
+              // delete that.activeItems[i].itemPropertyName
+              var a = 0
+              // arr = [['itemPropertyName','itemPropertyInfo'],['itemPropertyNameTwo','itemPropertyTwoValue'],['itemPropertyNameThree','itemPropertyThreeValue'],['itemPropertyFourName','itemPropertyFourValue'],['itemPropertyFiveName','itemPropertyFiveValue'],['itemPropertySixName','itemPropertySixValue']]
+              for ( var k in that.activeItems[i]) {
+                if (a == 0) {
+                  subitem[i].itemPropertyName = k
+                  subitem[i].itemPropertyInfo = that.activeItems[i][k]
+                  subitem[i].itemPropertyNameTwo = ''
+                  subitem[i].itemPropertyTwoValue = ''
+                  subitem[i].itemPropertyNameThree = ''
+                  subitem[i].itemPropertyThreeValue = ''
+                  subitem[i].itemPropertyFourName = ''
+                  subitem[i].itemPropertyFourValue = ''
+                  subitem[i].itemPropertyFiveName = ''
+                  subitem[i].itemPropertyFiveValue = ''
+                  subitem[i].itemPropertySixName = ''
+                  subitem[i].itemPropertySixValue = ''
+                } else if (a == 1){
+                  subitem[i].itemPropertyNameTwo = k
+                  subitem[i].itemPropertyTwoValue = that.activeItems[i][k]
+                  subitem[i].itemPropertyNameThree = ''
+                  subitem[i].itemPropertyThreeValue = ''
+                  subitem[i].itemPropertyFourName = ''
+                  subitem[i].itemPropertyFourValue = ''
+                  subitem[i].itemPropertyFiveName = ''
+                  subitem[i].itemPropertyFiveValue = ''
+                  subitem[i].itemPropertySixName = ''
+                  subitem[i].itemPropertySixValue = ''
+                } else if (a == 2){
+                  subitem[i].itemPropertyNameThree = k
+                  subitem[i].itemPropertyThreeValue = that.activeItems[i][k]
+                  subitem[i].itemPropertyFourName = ''
+                  subitem[i].itemPropertyFourValue = ''
+                  subitem[i].itemPropertyFiveName = ''
+                  subitem[i].itemPropertyFiveValue = ''
+                  subitem[i].itemPropertySixName = ''
+                  subitem[i].itemPropertySixValue = ''
+                } else if (a == 3){
+                  subitem[i].itemPropertyFourName = k
+                  subitem[i].itemPropertyFourValue = that.activeItems[i][k]
+                  subitem[i].itemPropertyFiveName = ''
+                  subitem[i].itemPropertyFiveValue = ''
+                } else if (a == 4){
+                  subitem[i].itemPropertyFiveName = k
+                  subitem[i].itemPropertyFiveValue = that.activeItems[i][k]
+                  subitem[i].itemPropertySixName = ''
+                  subitem[i].itemPropertySixValue = ''
+                } else if (a == 5){
+                  subitem[i].itemPropertySixName = k
+                  subitem[i].itemPropertySixValue = that.activeItems[i][k]
+                }
+                // console.log(that.activeItems[i],"pp")
+                a += 1;
+                // console.log(subitem[i].itemPropertyName)
+              }
+              //that.activeItems[i].itemPropertyName = that.activeItems[i]
+            }
+            console.log(that.activeItems,'lll')
+            // console.log(subitem,'p');
+            that.ruleForm.itemValueList = subitem;
+            that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
+            console.log(that.ruleForm,'223355');
+            //that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
+            // console.log(that.activeItems[i].canUse,'ee');
+            // that.activeItems[i].canUse = that.activeItems[i].canUse;
+            // that.get()
+          //   for ( var k in that.activeItems[i]) {
+          //     console.log(k,that.activeItems[i][k])
+          //     subitem[i].itemPropertyName = k;
+          //     subitem[i].itemPropertyInfo = that.activeItems[i][k]
+          //     // var str = k + '=' + that.activeItems[i][k]
+          //     // that.newArr.push(str);
+          // }
         }
       }
     },

@@ -41,11 +41,11 @@
     <!--  查询无数据订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.date}}</span>
+        <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
       </div>
       <!--  订单详情item 开始 -->
-      <div class="order_des" v-for="cargo in item.cargo" :key="cargo">
+      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
         <div class="left des_img">
           <img src="../../../../images/center/order.png" alt="img">
         </div>
@@ -60,7 +60,7 @@
       <!--  订单详情item 结束 -->
       <div class="order_des_right">
         <div class="left now_pay_des">
-          <p class="spe_p">￥{{item.total}}</p>
+          <p class="spe_p">￥{{item.actualPay}}</p>
           <p>（含运费：￥6.00）</p>
           <p>（乾币已抵扣：￥2.00）</p>
         </div>
@@ -214,12 +214,12 @@
       getAllOrder: function() {
         var that = this;
         var obj = {
-          phone:that.global.getUser().phone
+          token:that.global.getToken(),
         };
-        console.log(obj)
-        that.global.axiosPostReq('/showUserOrderManage/showOrder',obj).then((res) => {
+        that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
+           console.log(res,"getAllOrder");
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getAllOrder");
+            //that.items = res.data.data;
           } else {
             that.$message.error('网络错误！');
           }

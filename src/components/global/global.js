@@ -28,6 +28,13 @@ export default {
       }
     })
   },
+  extendCopy(p) {
+　　　　var c = {};
+　　　　for (var i in p) { 
+　　　　　　c[i] = p[i];
+　　　　}
+　　　　return c;
+　},
   postHttpData (data) {
     var formData = new FormData()
     for (let i in data) {

@@ -49,7 +49,7 @@
           <template scope="scope">
             <span v-if="scope.row.isThrow == 1">是</span>
             <span v-if="scope.row.isThrow == 0">否</span>
-          </template> 
+          </template>
         </el-table-column>
         <el-table-column label="商品状态">
           <template scope="scope">
@@ -95,15 +95,15 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">注册证号：</div>
-        <p class="detail_word">{{details.itemBrand.itemBrandName}}</p>
+        <p class="detail_word">{{}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">乾币抵扣：</div>
-        <p class="detail_word">{{details.itemDetail.video}}</p>
+        <p class="detail_word">{{}}</p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品属性：</div>
-        <p class="detail_word">{{details.itemBrand.itemBrandName}}</p>
+        <p class="detail_word">{{}}</p>
       </div>
       <table class="activeTable_box">
         <tr class="activeTable_title">
@@ -246,7 +246,15 @@
         input_coin: '',
         input_stock: '',
         input_enable: false,
-        details: [],
+        details: {
+          itemId:'',
+          itemBrand: {
+            itemBrandName:'',
+          },
+          itemDetail: {
+            video:'',
+          },
+        },
       }
     },
     created: function() {

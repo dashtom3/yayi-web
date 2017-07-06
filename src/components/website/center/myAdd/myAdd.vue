@@ -218,7 +218,7 @@
       getMyAdd: function() {
         var that = this;
         var obj = {
-          phone:that.global.getUser().phone,
+          token:that.global.getToken(),
         };
         that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -269,7 +269,7 @@
           return false
         }
         var obj = {
-          newPhone: that.global.getUser().phone,
+          token:that.global.getToken(),
           province: that.xRegion[0],
           city: that.xRegion[1],
           county: that.xRegion[2],
@@ -333,7 +333,7 @@
           return false
         }
         var obj = {
-          newPhone: that.global.getUser().phone,
+          token:that.global.getToken(),
           receiverId: that.editAdd.receiverId,
           province: that.xRegion1[0],
           city: that.xRegion1[1],
@@ -392,7 +392,7 @@
         var that = this;
         console.log(add);
         var obj = {
-          newPhone: that.global.getUser().phone,
+          token:that.global.getToken(),
           receiverId: add.receiverId,
           province: add.province,
           city: add.city,
