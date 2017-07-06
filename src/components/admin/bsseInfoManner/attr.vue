@@ -169,21 +169,21 @@
           itemPropertyName:that.searchAttrName,
           token:"awfa"
         }
-        if(that.searchAttrName){
+        // if(that.searchAttrName){
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
             // console.log(res.data.data,"search")
             if (res.data.callStatus === 'SUCCEED') {
               that.tableData = res.data.data;
               // console.log(that.tableData)
-              that.searchAttrName = null;//清空收索内容
+              // that.searchAttrName = null;//清空收索内容
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
-        }else{
-          this.$alert('请输入属性名', {confirmButtonText: '确定',});
-        }
+        // }else{
+        //   this.$alert('请输入属性名', {confirmButtonText: '确定',});
+        // }
       },
       DELEONE:function(index,item){
         var that = this;
@@ -192,7 +192,8 @@
             var obj = {
               itemPropertyId:item.itemPropertyId
             };
-            that.global.axiosGetReq('/item/deleteProperty',obj)
+            console.log(obj)
+            that.global.axiosPostReq('/item/deleteProperty',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 that.$message({type: 'success',message: '删除成功!'});
@@ -223,10 +224,11 @@
             var arr2 = [];
             for(let i in that.addGoodAttrValues){
               arr.push(that.addGoodAttrValues[i].itemPparam);
-              arr2.push({name:that.addGoodAttrValues[i].itemPparam});
+              arr2.push({itemPparam:that.addGoodAttrValues[i].itemPparam});
             }
             obj.itemPparamList = arr;
             obj.itemPropertyName = that.formData.addGoodAttrName;
+            console.log(obj)
             that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
@@ -274,6 +276,7 @@
               var obj = {
                 itemSKU:item.itemSKU
               };
+
               that.global.axiosPostReq('/item/deletePropertyd',obj)
               .then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
@@ -293,7 +296,6 @@
         var that = this;
         that.$refs[formName].validate((valid) => {
           if (valid) {
-
             if(that.attOperaType==2){
               var obj = {
                 itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
@@ -311,6 +313,12 @@
                   that.$message.error('网络出错，请稍后再试！');
                 }
               })
+            }else{
+              var aa= {};
+              aa.itemPparam = that.formData.addGoodAttrOneVal;
+              that.addGoodAttrValues.push(aa);
+              that.formData.addGoodAttrOneVal = null;
+              that.flag1 = true;
             }
           } else {
             that.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});

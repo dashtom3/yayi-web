@@ -163,16 +163,25 @@
       goToSuborder:function(){
         var that = this;
         var sendData = {};
+        var obj = {
+          token:that.global.getToken()
+        };
         if(that.sendDataList.length>0){
-          sendData.allMoney = that.allMoeny;
-          // var sendDataList = [];
-          for(let i in that.sendDataList){
-              that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
-          }
-          sendData.details = that.sendDataList;
-          sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
-          window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-          that.$router.push({path: '/suborder'})
+          that.global.axiosPostReq('/po/buyNows', obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              sendData.allMoney = that.allMoeny;
+              for(let i in that.sendDataList){
+                  that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
+              }
+              sendData.details = that.sendDataList;
+              sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
+              window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+              that.$router.push({path: '/suborder'})
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
         }else{
           that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
         }
