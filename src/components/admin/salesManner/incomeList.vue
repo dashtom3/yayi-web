@@ -112,13 +112,13 @@
           <td>总收入元</td>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
-          <td>{{item.goodsName}}</td>
+          <td>{{item.itemName}}</td>
           <td>{{item.price}}</td>
           <td>{{item.num}}</td>
-          <td>{{item.totalPrice}}</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
-          <td :rowspan="infoList.length" v-if="index == 0">已结算</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+          <td>{{item.price*item.num}}</td>
+          <td :rowspan="infoList.length" v-if="index == 0">{{item.refundMoney}}</td>
+          <td :rowspan="infoList.length" v-if="index == 0">{{item.signUpdated}}</td>
+          <td :rowspan="infoList.length" v-if="index == 0">{{item.totalFee}}</td>
         </tr>
       </table>
     </div>
@@ -200,6 +200,7 @@
         that.global.axiosGetReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
+            that.infoList = res.data.data.orderVoList
             console.log(that.getMoneyList,'222');
           } else {
             that.$message.error('网络出错，请稍后再试！');
