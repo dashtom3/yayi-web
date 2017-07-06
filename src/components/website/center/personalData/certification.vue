@@ -94,6 +94,7 @@
       state:function(){
         if(this.state == 2){
           this.certificateState = this.userData.state;
+          // alert(this.certificateState)
           this.ert(this.certiData.failReason);
         }
       },
@@ -146,6 +147,8 @@
                 message: '您的认证信息我们会尽快审核，请耐心等待~',
                 type: 'success'
               });
+              this.ifPass = true;
+              this.btnVisible = false;
             }else{
               return false;
             }
@@ -204,8 +207,10 @@
             this.certiData.ifOnce = 1;
             this.savePerInfo();
           }).catch(() => {});
+          this.ifPass = false;
           this.btnVisible = true;
         }else{
+          this.ifPass = false;
           this.btnVisible = true;
         }
       },
