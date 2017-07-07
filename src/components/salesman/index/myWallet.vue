@@ -3,7 +3,7 @@
     <el-col :span="24" class="warp-breadcrum1">
       <div class="grid-content bg-purple-dark">
         <span>钱包余额：<i class="i_col_red">￥700</i></span>
-        <el-button type="primary" class="margin_l" @click="withDrawHandler">提现</el-button>
+        <button class="margin_l btn_col" @click="withDrawHandler">提现</button>
       </div>
       <div class="curOrder">钱包明细</div>
       <ul class="sel_wrap">
@@ -101,12 +101,12 @@
         </el-form-item>
         <el-form-item label="验证码：" style="padding-left:14px;">
           <el-input v-model="withDrawCode" class="item_c_input fl"></el-input>
-          <el-button type="primary">获取验证码</el-button>
+          <button class="btn_col">获取验证码</button>
         </el-form-item>
       </el-form>
       <div>
-        <el-button class="withDrawBtn" type="primary" @click="withDrawBank = false">申请提现</el-button>
-        <el-button class="withDrawBtn" @click="withDrawBank = false">取 消</el-button>
+        <button class="withDrawBtn btn_col" @click="withDrawBank = false">申请提现</button>
+        <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
       </div>
     </el-dialog>
 	</el-row> 
@@ -235,7 +235,21 @@
     margin-right: 30px;
   }
   .active_nav{
-    background: #20a0ff;
+    background: #56bff8;
+    color: #fff;
+  }
+  .btn_col{
+    width: 120px;
+    height: 36px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #5db7e8;
+    border: none;
+    color: #fff;
+  }
+  .btn_col:hover{
+    background: #57a5cf;
+    border: none;
     color: #fff;
   }
   .sel_wrap{
@@ -251,7 +265,7 @@
     width: 350px;
   }
   .item_c_input{
-    width: 230px;
+    width: 210px;
     margin-right: 20px;
   }
   .i_red{
@@ -263,6 +277,10 @@
   }
   .withDrawBtn{
     width: 140px;
-    margin-left: 100px;
+    margin-left: 82px;
+  }
+  .withDrawBtn1{
+    width: 140px;
+    margin-left: 66px;
   }
 </style>

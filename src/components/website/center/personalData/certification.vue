@@ -38,6 +38,9 @@
           <transition name="shake">
             <p v-show="doctorPic_validate" class="error">请上传真实的资格证书</p>
           </transition>
+          <transition name="shake">
+            <p v-show="audited_validate" class="adopt">资质审核通过！</p>
+          </transition>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="savePerInfo" v-show="btnVisible">提交</el-button>
@@ -65,6 +68,7 @@
         qiNiuUrl: global.qiNiuUrl,
         btnVisible: true,
         ifPass: false,
+        audited_validate: false,
         partStr: '',
         certiData: {
           phone: global.getUser().phone,
@@ -218,6 +222,7 @@
         }else if(this.certificateState==2 && this.certiData.ifOnce===1){
           this.ifPass = true;
           this.btnVisible = false;
+          this.audited_validate = true;
         }else if(this.certificateState==3 && this.certiData.ifOnce===0){
           this.$confirm('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
@@ -284,6 +289,12 @@
     left: 20px;
     font-size: 14px;
     color: #D81E06;
+  }
+  .adopt{
+    position: absolute;
+    left: 20px;
+    font-size: 14px;
+    color: #56bff8;
   }
   .content{
     padding-top: 40px;
