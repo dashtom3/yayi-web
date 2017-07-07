@@ -29,11 +29,11 @@
           <img style="position:relative;top:1px"   src="../../../images/details/collect.png" />
           收藏
         </span> -->
-        <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)" v-on:mouseenter="showShareCol(1)" v-on:mouseout="showShareCol(2)">
+        <!-- <span v-on:click="showCllect('连接复制成功，快去分享吧！',2)" v-on:mouseenter="showShareCol(1)" v-on:mouseout="showShareCol(2)">
           <img style="position:relative;top:3px" v-if="copyUrl" src="../../../images/details/share.png" />
           <img style="position:relative;top:3px" v-else src="../../../images/details/share2.png" />
           分享
-        </span>
+        </span> -->
       </div>
     </div>
   	<div class="infoRight">
@@ -47,10 +47,13 @@
       <div>
         品牌：{{itemBrand.itemBrandName}}
       </div>
-      <div style="margin:6px 0 22px 0;">
+      <!-- <div style="margin:6px 0 22px 0;">
         配送至：
             <myAddress></myAddress>
         <span class="fullCut">运费：8.00元，店铺满99.00免运费</span>
+      </div> -->
+      <div class="">
+        运费：全国满199元包邮
       </div>
       <div style="height:35px;">
         注册证号：{{itemDetail.registerId}}
@@ -134,18 +137,21 @@ import myAddress from './selectThree'
         goodAllImgs:[]
       }
     },
-    watch:{
-      nowGoodSKU:function(){
-        var that =this;
-        var obj = {};
-        var LIST = that.nowGoodDetails.itemValueList;
-        for(let i in LIST){
-          if(LIST[i].itemSKU == that.nowGoodSKU){
-            obj =LIST[i];
-            break;
-          }
-        }
-        var LIST2 = that.nowGoodDetails.propertyList;
+    created:function(){
+      this.getNowGoodDetail();
+    },
+    methods:{
+      nowGoodSKUDefault:function(){
+            var that =this;
+            var obj = {};
+            var LIST = that.nowGoodDetails.itemValueList;
+            for(let i in LIST){
+              if(LIST[i].itemSKU == that.nowGoodSKU){
+                obj =LIST[i];
+                break;
+              }
+            }
+            var LIST2 = that.nowGoodDetails.propertyList;
             for(let m in LIST2[0].propertyInfoList){
               if(obj.itemPropertyInfo==LIST2[0].propertyInfoList[m]){
                 var aa = LIST2[0];
@@ -159,7 +165,7 @@ import myAddress from './selectThree'
                 if(obj.itemPropertyTwoValue==LIST2[1].propertyInfoList[m]){
                   var aa = LIST2[1];
                   aa.propertyInfoList.checkWhich = m;
-                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  that.nowGoodDetails.propertyList.splice(1,1,aa);
                   break;
                 }
               }
@@ -169,7 +175,7 @@ import myAddress from './selectThree'
                 if(obj.itemPropertyThreeValue==LIST2[2].propertyInfoList[m]){
                   var aa = LIST2[2];
                   aa.propertyInfoList.checkWhich = m;
-                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  that.nowGoodDetails.propertyList.splice(2,1,aa);
                   break;
                 }
               }
@@ -179,7 +185,7 @@ import myAddress from './selectThree'
                 if(obj.itemPropertyFourValue==LIST2[3].propertyInfoList[m]){
                   var aa = LIST2[3];
                   aa.propertyInfoList.checkWhich = m;
-                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  that.nowGoodDetails.propertyList.splice(3,1,aa);
                   break;
                 }
               }
@@ -189,7 +195,7 @@ import myAddress from './selectThree'
                 if(obj.itemPropertyFiveValue==LIST2[4].propertyInfoList[m]){
                   var aa = LIST2[4];
                   aa.propertyInfoList.checkWhich = m;
-                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  that.nowGoodDetails.propertyList.splice(4,1,aa);
                   break;
                 }
               }
@@ -199,17 +205,13 @@ import myAddress from './selectThree'
                 if(obj.itemPropertySixValue==LIST2[5].propertyInfoList[m]){
                   var aa = LIST2[5];
                   aa.propertyInfoList.checkWhich = m;
-                  that.nowGoodDetails.propertyList.splice(0,1,aa);
+                  that.nowGoodDetails.propertyList.splice(5,1,aa);
                   break;
                 }
               }
             }
       },
-    },
-    created:function(){
-      this.getNowGoodDetail();
-    },
-    methods:{
+
       getNowGoodDetail:function(){
         var that = this;
         var userToken = that.global.getToken();
@@ -222,7 +224,7 @@ import myAddress from './selectThree'
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res,"getNowGoodDetail")
+          console.log(res.data.data.propertyList,"getNowGoodDetail")
           if (res.data.callStatus === 'SUCCEED') {
             that.ifshoucang = res.data.num;
             that.nowGoodSKU = res.data.msg;
@@ -246,6 +248,7 @@ import myAddress from './selectThree'
                 that.attrLength+=1;
               }
             }
+            that.nowGoodSKUDefault();
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -384,7 +387,8 @@ import myAddress from './selectThree'
             name:that.nowGoodDetails.itemName,
             pic:that.itemDetail.itemPica,
             num:that.goodDefaultNum,
-            itemSKU:parseInt(Math.random()*100000),
+            // itemSKU：
+            itemSKU:that.nowGoodDetails.itemSKU,
             price:that.nowGoodDetails.itemPrice,
             itemPropertyNamea:that.sureGoodAttr,
             token:that.global.getToken()

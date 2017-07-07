@@ -69,7 +69,7 @@
         <ul v-if="ifHaveData">
           <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
             <div class="imgWrap">
-              <img class="goodImg" :src="item.itemDetail" alt="">
+              <img class="goodImg" :src="item.itemDetail.itemPica" alt="">
               <span></span>
             </div>
             <p class="goodTitle">{{item.itemName}}</p>
@@ -669,22 +669,27 @@ margin: 0 auto;
 .allGoods li .imgWrap .goodImg{
   display: inline-block;
   vertical-align: middle;
-  max-width: 280px;
-  max-height: 280px;
+  max-width: 100%;
+  max-height: 100%;
+}
+.allGoods li .imgWrap:hover{
+  box-shadow: 7px 7px 28px #bcbcbc;
+  transition: all 0.5s ease;
 }
 .goodImg:hover{
-  box-shadow: 7px 7px 28px #bcbcbc;
-transition: all 0.5s ease;
+  /*box-shadow: 7px 7px 28px #bcbcbc;
+transition: all 0.5s ease;*/
 }
 .allGoods .blueBgc{
   color: white;
   background: #5db7e8;
 }
 .allGoods li .imgWrap{
-  width: 280px;
+  width: 270px;
   margin: auto;
-  height: 265px;
+  height: 255px;
   text-align: center;
+  margin-top: 4px;
 }
 .allGoods li .imgWrap span{
   display: inline-block;

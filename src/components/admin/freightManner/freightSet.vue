@@ -87,7 +87,7 @@
       </el-tab-pane>
     </el-tabs>
   </el-col>
-  <tableBoard :childrenState="state" v-on:listenChildren="listenChildrenFun"></tableBoard>
+  <tableBoard :defaultSelectedCity="palceSelected" :childrenState="state" v-on:listenChildren="listenChildrenFun"></tableBoard>
   </el-row >
   </div>
 </template>
@@ -255,7 +255,7 @@
           var obj = {
             postFeeId:one.postFeeId
           };
-          that.global.axiosPostReq('/freightManage/deleteCustomFreight')
+          that.global.axiosPostReq('/freightManage/deleteCustomFreight',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.tab1_tableData.splice(index,1);
@@ -272,6 +272,9 @@
         that.selectPlaceStale = 1;
         that.state = true;
         that.tab1_editIndex = index;
+        var data = that.tab1_tableData[index].postCity;
+        data = data.split(",");
+        that.palceSelected = data;
       },
       tab2_change:function(){
         this.tab2_allInputDisable = false;
@@ -280,6 +283,9 @@
         var that = this;
         that.selectPlaceStale = 2;
         that.state = true;
+        var data = that.tab2_tableData[index].postCity;
+        data = data.split(",");
+        that.palceSelected = data;
       },
       tab2_save:function(index,one){
         var that = this;

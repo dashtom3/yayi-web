@@ -18,14 +18,14 @@
     </div>
     <div class="clientList">
       <el-table :data="tableData" border :default-sort = "{prop: 'bindTime', order: 'descending'}" style="width: 100%;text-align:center">
-        <el-table-column align="center"  prop="userName" label="客户姓名"  ></el-table-column>
-        <el-table-column align="center"  prop="userPhone" label="客户手机号"  ></el-table-column>
-        <el-table-column align="center"  prop="company" label="单位名称"  ></el-table-column>
-        <el-table-column align="center"  prop="place" label="单位地址"  ></el-table-column>
-        <el-table-column align="center"  prop="orderCount" label="积累订单数"  ></el-table-column>
-        <el-table-column align="center"  prop="spendMoney" label="积累消费（元）"  ></el-table-column>
-        <el-table-column align="center"  prop="orderTime" label="最近一次下单时间" sortable width="200"  ></el-table-column>
-        <el-table-column align="center"  prop="bindTime" label="绑定时间" sortable  width="200"></el-table-column>
+        <el-table-column align="center"  prop="trueName" label="客户姓名"  ></el-table-column>
+        <el-table-column align="center"  prop="phone" label="客户手机号"  ></el-table-column>
+        <el-table-column align="center"  prop="companyName" label="单位名称"  ></el-table-column>
+        <el-table-column align="center"  prop="workAddress" label="单位地址"  ></el-table-column>
+        <el-table-column align="center"  prop="orderaCount" label="积累订单数"  ></el-table-column>
+        <el-table-column align="center"  prop="orderaMoneyCount" width="140" label="积累消费（元）"  ></el-table-column>
+        <el-table-column align="center"  prop="latelyOrderDate" label="最近一次下单时间" sortable width="200"  ></el-table-column>
+        <el-table-column align="center"  prop="bindSaleTime" label="绑定时间" sortable  width="200"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -39,12 +39,7 @@
         nowBtn:1,
         searchData:null,
         tableData:[
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-11 1:00',bindTime:'2017-11-16 2:00'},
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-12 2:00',bindTime:'2017-11-16 3:00'},
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-13 3:00',bindTime:'2017-11-13'},
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-14 4:00',bindTime:'2017-11-12'},
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-15 5:00',bindTime:'2017-11-11'},
-          {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-16 6:00',bindTime:'2017-11-10'}
+          // {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-11 1:00',bindTime:'2017-11-16 2:00'},
         ]
       }
     },
@@ -52,16 +47,24 @@
 
     },
     created: function() {
-
+      var that = this;
+      that.getMyClientList();
     },
     methods: {
-      changBtn:function(arg){
+      getMyClientList:function(){
         var that = this;
-        if(arg==1){
-          that.nowBtn = true;
-        }else{
-          that.nowBtn = false;
-        }
+        var obj = {
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq("/saleMyClient/myClient",obj)
+        .then((res) => {
+          console.log(res,"searchUserBySearchConet")
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       goToFindClient:function(){
         var that = this;
@@ -69,11 +72,23 @@
       },
       search:function(){
         var that = this;
-        if(that.searchData){
-
-        }else{
-          that.$alert('请输入搜索内容',  {confirmButtonText: '确定',});
-        }
+        // if(that.searchData){
+          var obj = {
+            value:that.searchData,
+            token:that.global.getToken()
+          };
+          that.global.axiosGetReq("/saleMyClient/myClient",obj)
+          .then((res) => {
+            console.log(res,"searchUserBySearchConet")
+            if (res.data.callStatus === 'SUCCEED') {
+              that.tableData = res.data.data;
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        // }else{
+        //   that.$alert('请输入搜索内容',  {confirmButtonText: '确定',});
+        // }
       }
     }
   }
@@ -83,7 +98,7 @@
 .myClient{
   width: 1200px;
   margin: auto;
-  min-height:580px;
+  min-height:676px;
 }
 .clientList{
   margin-bottom: 100px;

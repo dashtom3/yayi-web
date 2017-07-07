@@ -16,10 +16,10 @@
     </div>
     <div class="clientList">
       <el-table :data="tableData" border style="width: 100%;text-align:center">
-        <el-table-column align="center"  prop="companyName" label="单位名称"  ></el-table-column>
-        <el-table-column align="center" prop="companyPlace"  label="单位地址" ></el-table-column>
-        <el-table-column align="center" prop="linkMan"  label="联系人"></el-table-column>
-        <el-table-column align="center" prop="phone"  label="联系方式"></el-table-column>
+        <el-table-column align="center"  prop="unitName" label="单位名称"  ></el-table-column>
+        <el-table-column align="center" prop="unitAddress"  label="单位地址" ></el-table-column>
+        <el-table-column align="center" prop="contacts"  label="联系人"></el-table-column>
+        <el-table-column align="center" prop="contactsPhone"  label="联系方式"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -33,12 +33,8 @@
         nowBtn:1,
         searchData:null,
         tableData:[
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-          {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
+          // {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
+
         ]
       }
     },
@@ -46,28 +42,87 @@
 
     },
     created: function() {
+      var that = this;
+      that.getWaitBindUserList();
 
     },
     methods: {
+      getNoRegistUserList:function(){
+        var that =this;
+        // var obj = {
+        //   phone:"",
+        //   cusName:"",
+        //   cusAddress:""
+        // };
+        that.global.axiosPostReq('/findCus/unregistered')
+        .then((res) => {
+          console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      getWaitBindUserList:function(){
+        var that =this;
+        // var obj = {
+        //   phone:"",
+        //   cusName:"",
+        //   cusAddress:""
+        // };
+        that.global.axiosPostReq('/findCus/registered')
+        .then((res) => {
+          console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       changBtn:function(arg){
         var that = this;
         if(arg==1){
           that.nowBtn = true;
+          that.getWaitBindUserList();
         }else{
           that.nowBtn = false;
+          that.getNoRegistUserList();
         }
       },
       goToMyClient:function(){
         var that = this;
         that.$emit('msgFromChild', 'goToMyClient' )
       },
+      searchUserBySearchConet:function(content){
+        var that = this;
+        var searchUrl ;
+        var obj = {
+          state:content
+        };
+        if(that.nowBtn){
+          searchUrl = '/findCus/registered';
+        }else{
+          searchUrl = '/findCus/unregistered';
+        }
+        that.global.axiosPostReq(searchUrl, obj)
+        .then((res) => {
+          console.log(res,"searchUserBySearchConet")
+          if (res.data.callStatus === 'SUCCEED') {
+            that.tableData = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       search:function(){
         var that = this;
-        if(that.searchData){
-
-        }else{
-          that.$alert('请输入搜索内容',  {confirmButtonText: '确定',});
-        }
+        // if(that.searchData){
+          that.searchUserBySearchConet(that.searchData);
+        // }else{
+        //   that.$alert('请输入搜索内容',  {confirmButtonText: '确定',});
+        // }
       }
     }
   }
@@ -77,7 +132,7 @@
 .findClient{
   width: 1200px;
   margin: auto;
-  min-height: 580px;
+  min-height: 676px;
 }
 .clientList{
   margin-bottom: 100px;

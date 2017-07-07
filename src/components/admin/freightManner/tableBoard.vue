@@ -65,11 +65,35 @@
         watchItem: null,
       }
     },
-    props:["childrenState"],
+    props:["childrenState","defaultSelectedCity"],
     watch: {
       childrenState:function(){
         var that = this;
         that.state2 = that.childrenState;
+      },
+      defaultSelectedCity:{
+        handler:function(){
+          var that = this;
+          if(that.defaultSelectedCity.length>0){
+            for(let i in that.items){
+              var flag = true;
+              for(let n in that.items[i].place){
+                for(let m in that.defaultSelectedCity){
+                  if(that.defaultSelectedCity[m]==that.items[i].place[n].city){
+                    that.items[i].place[n].checked = true;
+                  }
+                }
+                if(that.items[i].place[n].checked==!true){
+                  flag = false;
+                }
+              }
+              if(flag){
+                that.items[i].allcheck = true;
+              }
+            }
+          }
+        },
+        deep:true
       },
       items: {
         handler: function() {

@@ -21,7 +21,7 @@
         <span>生产企业名称：{{instruction.producePompany}}</span>
       </div>
     </div>
-    <div v-html="instruction.itemDesc"></div>
+    <div class="instruction" v-html="instruction.itemDesc"></div>
   </div>
 </template>
 
@@ -49,6 +49,15 @@
   padding-bottom: 38px;
   margin-left: 37px;
   margin-right: 46px;
+}
+.instruction{
+  background: red;
+  width: 1200px;
+}
+.goodIntroduce .instruction img{
+  max-width: 100% !important;
+  display: block;
+  margin: auto;
 }
 .goodIntroduce div{
   line-height: 45px;

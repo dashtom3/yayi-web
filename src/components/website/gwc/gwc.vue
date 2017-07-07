@@ -2,7 +2,7 @@
   <div class="">
     <publicHeader></publicHeader>
     <img class="notLogin" v-if="gwcGoods.length<=0" src="../../../images/gwc/4.png" alt="">
-    <div v-else class="gwcWrap">
+    <div v-else class="gwcWrap" >
       <div class="lgoinConfirm" v-if="isLogin==false">
         您还没有登陆，登录后购物车的商品将保存到您账户中!
         <img src="../../../images/gwc/gwc3.png" alt="">
@@ -26,8 +26,8 @@
       <div class="oneGood" v-for="(good,index) in gwcGoods">
         <div class="">
           <el-checkbox v-model="good.checked"></el-checkbox>
-          <div class="imgWrap">
-              <img src="../../../images/gwc/small.png" alt="">
+          <div class="imgWrap" @click="goToThisDetail(good)">
+              <img :src="good.pic" alt="">
               <span></span>
           </div>
         </div>
@@ -52,7 +52,7 @@
             ￥{{good.price*good.num}}
         </div>
         <div class="operas">
-          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good.itemId)">收藏</span>
+          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good)">收藏</span>
           <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
         </div>
         <div style="clear:both"> </div>
@@ -299,15 +299,15 @@
       hideBlue:function(index){
         this.addBlueColor = null;
       },
-      saveOne:function(index,id){
+      saveOne:function(index,good){
         var that = this;
         that.$confirm('添加至收藏夹后，该商品将不在购物车显示!', '添加至收藏夹', {
           confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
           var obj = {
             phone:that.global.getUser().phone,
-            itemId:id,
-            itemSKU:that.gwcGoods[index].itemSKU,
+            itemId:good.itemId,
+            itemSKU:good.itemSKU,
             token:that.global.getToken()
           };
           that.global.axiosPostReq('/cart/star', obj)
@@ -337,10 +337,14 @@
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
+          })
         })
-      })
+      },
+      goToThisDetail:function(good){
+        var that = this;
+        that.$router.push({path:"/details/"+good.itemId});
+      },
     }
-  }
   }
 </script>
 
@@ -438,6 +442,7 @@ top: 5px;
     float: none;
     text-align: center;
     margin-left: 16px;
+    cursor: pointer;
   }
 .gwcWrap .oneGood .imgWrap span{
 display: inline-block;

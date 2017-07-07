@@ -1,6 +1,9 @@
 <template>
   <div class="goodComment">
-    <ul>
+    <div v-if="comments.length!=0" class="noComment">
+      「暂无评论」
+    </div>
+    <ul v-else>
       <li v-for="comment in comments">
         <div >
           <span class="name">{{comment.userName}}</span>
@@ -75,6 +78,11 @@ import global from '../../global/global'
       margin-left: 70px;
       margin-top: -30px;
       margin-right: 0;
+}
+.noComment{
+  line-height: 150px;
+  text-align: center;
+  font-weight: 600;
 }
 .goodComment li {
   border-bottom:1px solid #dcdcdc;

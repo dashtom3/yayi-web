@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="订单状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
-				    <el-option v-for="item in orderStat" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+				    <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 				  </el-select>
         </el-form-item>
         <el-form-item label="是否退款" class="fl">
@@ -37,20 +37,24 @@
         <el-table-column prop="qbDed" label="乾币抵扣（元）" width="140" align="center" ></el-table-column>
         <el-table-column prop="actualPay" label="实际付款（元）" width="140" align="center" ></el-table-column>
         <el-table-column prop="phone" label="买家信息" width="120" align="center" ></el-table-column>
-        <el-table-column prop="created" label="下单时间" min-width="120" align="center" ></el-table-column>
+        <el-table-column prop="created" label="下单时间" min-width="120" align="center" >
+          <template scope="scope">
+            <span>{{scope.row.created}}</span>
+          </template >
+        </el-table-column>
         <el-table-column prop="state" label="订单状态" min-width="120" align="center" >
           <template scope="scope">
             <span v-if="scope.row.state == '1'">等待买家付款</span>
             <span v-if="scope.row.state == '2'">买家已付款</span>
-            <span v-if="scope.row.state == '3'">订单已确认</span>
-            <span v-if="scope.row.state == '4'">卖家已发货</span>
-            <span v-if="scope.row.state == '5'">交易成功</span>
-            <span v-if="scope.row.state == '6'">交易关闭</span>
+            <span v-if="scope.row.state == '5'">订单已确认</span>
+            <span v-if="scope.row.state == '3'">卖家已发货</span>
+            <span v-if="scope.row.state == '4'">交易成功</span>
+            <span v-if="scope.row.state == '0'">交易关闭</span>
           </template>
         </el-table-column>
         <el-table-column prop="shippingName" label="物流信息" min-width="120" align="center" >  </el-table-column>
         <!-- <result property="shippingCode" column="shipping_code" />物流编号 -->
-        <el-table-column prop="refund" label="是否退款" min-width="120" align="center" >
+        <el-table-column prop="refund" label="是否退款" min-width="100" align="center" >
           <template scope="scope">
             <span v-if="scope.row.refund == '0'">否</span>
             <span v-if="scope.row.refund == '1'">是</span>
@@ -59,10 +63,10 @@
         <el-table-column prop="handle" label="操作" min-width="180" align="center" >
           <template scope="scope">
             <el-button  size="mini"  type="info"  @click="handleDetail(scope.$index, scope.row)">详情</el-button>
-            <el-button  size="mini"  v-show='scope.row.orderStat != "6"'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
-            <el-button  size="mini"  type="success"  v-show='scope.row.orderStat === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
-            <el-button  size="mini"  type="danger"  v-show='!(scope.row.orderStat === "1")'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
-            <el-button  size="mini"  type="primary"  v-show='scope.row.orderStat === "3"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
+            <el-button  size="mini"  v-show='scope.row.state!=0&&scope.row.state!=4'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
+            <el-button  size="mini"  type="success"  v-show='scope.row.state === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
+            <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
+            <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -164,15 +168,6 @@
         </div>
       </el-dialog>
 
-      <!-- 关闭交易 -->
-      <el-dialog  title="提示"  :visible.sync="dialogVisible"  size="tiny"  :before-close="handleClose">
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
-      </el-dialog>
-
       <!-- 仓库发货 -->
       <el-dialog title="发货" size="tiny" v-model="deliveryVisible" :close-on-click-modal="true">
         <div style="height:40px;padding-left:60px;">
@@ -249,38 +244,25 @@
         wuLiuBianHao:null,
         wuliu:"申通快递",
         //订单状态
-        orderStat: [{
-            value: '0',
-            label: '全部'
-          }, {
-              value: '1',
-              label: '等待买家付款'
-            }, {
-              value: '2',
-              label: '买家已付款'
-            }, {
-              value: '3',
-              label: '订单已确认'
-            }, {
-              value: '4',
-              label: '卖家已发货'
-            }, {
-              value: '5',
-              label: '交易成功'
-            }, {
-              value: '6',
-          label: '交易关闭'
-        }],
+        state: [
+            {value: '',label: '全部'},
+            {value: '1',label: '等待买家付款'},
+            {value: '2',label: '买家已付款'},
+            {value: '5',label: '订单已确认'},
+            {value: '3',label: '卖家已发货'},
+            {value: '4',label: '交易成功'},
+            {value: '0',label: '交易关闭'}
+          ],
         //是否退款
         drawback: [{
-          value1: '0',
-          label1: '全部'
-        },{
-          value1: '1',
-          label1: '是'
-        }, {
-          value1: '2',
-          label1: '否'
+            value1: '0',
+            label1: '全部'
+          },{
+            value1: '1',
+            label1: '是'
+          }, {
+            value1: '2',
+            label1: '否'
         }],
         orderCode: '',//订单编号
         buyerInfo: '',//买家信息
@@ -289,20 +271,7 @@
         value3:[],
         // value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
         //订单列表
-        orderList: [
-          // {
-          // "orderCode": "ddbh2017053100001",
-          //   "totalPrice": 500,
-          //   "dryCurrency": 300,
-          //   "payment": 200,
-          //   "buyerInfo": "收件人+手机号",
-          //   "orderTime": "2017-05-31-17:00",
-          //   "orderStat": "3",
-          //   "logisticsInfo": "",
-          //   "drawback": "否",
-          //   "handle": ""
-          // }
-        ],
+        orderList: [],
           detailVisible: false,//详情界面开关
           dialogVisible: false,//关闭开关
           deliveryVisible: false,//仓库发货开关
@@ -328,28 +297,28 @@
           //商品信息
           goodsInfo:[{
             goodsSrc: '',
-            goodsName: '商品名称1',
-            SKUCode: 'xxxxxxxxx',
-            price: 39,
-            goodsNum: 2,
-            checked: false,
-            count: 1//退款数量
-          },{
-            goodsSrc: '',
-            goodsName: '商品名称2',
-            SKUCode: 'xxxxxxxxx',
-            price: 39,
-            goodsNum: 1,
-            checked: false,
-            count: 1//退款数量
-          },{
-            goodsSrc: '',
-            goodsName: '商品名称3',
-            SKUCode: 'xxxxxxxxx',
-            price: 39,
-            goodsNum: 1,
-            checked: false,
-            count: 1//退款数量
+              goodsName: '商品名称1',
+              SKUCode: 'xxxxxxxxx',
+              price: 39,
+              goodsNum: 2,
+              checked: false,
+              count: 1//退款数量
+            },{
+              goodsSrc: '',
+              goodsName: '商品名称2',
+              SKUCode: 'xxxxxxxxx',
+              price: 39,
+              goodsNum: 1,
+              checked: false,
+              count: 1//退款数量
+            },{
+              goodsSrc: '',
+              goodsName: '商品名称3',
+              SKUCode: 'xxxxxxxxx',
+              price: 39,
+              goodsNum: 1,
+              checked: false,
+              count: 1//退款数量
           }]
         }
       }
@@ -363,13 +332,13 @@
         var that = this;
         var obj = {};
         obj.logisticsName = that.wuliu;
-        obj.orderId = row.orderId;
+        obj.orderId = that.faHuoOrder.orderId;
         obj.logisticsCode = that.wuLiuBianHao;
         if(that.wuLiuBianHao){
-          that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
+          that.global.axiosPostReq('/showUserOrderManage/warehouseDelivery',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.orderList[index].orderStat = "4";
+              that.orderList[that.fahuoIndex].state = "3";
               that.deliveryVisible = true;
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -391,11 +360,13 @@
         }
         if(that.value){
           // 订单状态
-              for(let b in that.orderStat){
-                if(that.orderStat[b].label==that.value&&that.orderStat[b].value!="0"){
-                  obj.orderState = that.orderStat[b].value;
-                }
-              }
+          // {value: '0',label: '全部'},
+              // for(let b in that.state){
+              //   if(that.state[b].label==that.value&&that.state[b].value!="0"){
+              //     obj.state = that.state[b].value;
+              //   }
+              // }
+              obj.state = that.value;
         }
         if(that.value3.length!=0){
           var date1,date2;
@@ -432,7 +403,7 @@
         var obj = {
           orderId:orderId,
           buyerInfo:"",
-          orderState:"",
+          state:"",
           orderCTime:"",
           orderETime:"",
           isRefund:""
@@ -452,7 +423,7 @@
         var obj = {
           orderId:"",
           buyerInfo:"",
-          orderState:"",
+          state:"",
           orderCTime:"",
           orderETime:"",
           isRefund:""
@@ -484,7 +455,7 @@
             that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                that.orderList[index].orderStat = "6";
+                that.orderList[index].state = "0";
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
@@ -492,18 +463,18 @@
           })
           .catch(_ => {});
       },
-      //确认交易
+      //确认订单
       handleSure(index, row) {
         var that = this;
         that.$confirm('该订单的款已到账？')
           .then(_ => {
             var obj = {};
             obj.orderId = row.orderId;
-            obj.flagBit = "1";
+            obj.flagBit = "5";
             that.global.axiosPostReq('/showUserOrderManage/closeTrading',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                that.orderList[index].orderStat = "3";
+                that.orderList[index].state = "5";
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
@@ -519,6 +490,8 @@
       handleDelivery(index, row) {
         var that = this;
         that.deliveryVisible = true;
+        that.faHuoOrder = row;
+        that.fahuoIndex = index;
       },
       reduceCount(index, item){
         if(item.checked && this.orderInfo.goodsInfo[index].count !== 1){

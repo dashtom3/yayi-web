@@ -149,7 +149,7 @@ export default {
         console.log(total,'hei')
         if (osTop+a == c) {
           clearInterval(timer);
-          isTop = false;
+          //isTop = false;
         }
         if( hei > 0) {
           document.documentElement.scrollTop = document.body.scrollTop = osTop + 15;
@@ -351,6 +351,10 @@ a {
   box-shadow: 7px 7px 28px #bcbcbc;
   transition: all 0.5s ease;
 }
+.preventive_item .item_img_box .item_img {
+  max-width: 100%;
+  max-height: 100%;
+}
 .preventive_item .item_des:hover {
   color: #5DB7E7;
   transition: all 0.5s ease;
@@ -370,10 +374,13 @@ a {
 .item_img_box {
   width: 263px;
   height: 200px;
+  background: white;
 }
- .item_img_box .item_img {
-  max-width: 100%;
-  max-height: 100%;
+.item_img {
+  /*max-width: 100%;
+  max-height: 100%;*/
+  max-width: 40%;
+  max-height: 40%;
   display: inline-block;
   vertical-align: middle;
 }

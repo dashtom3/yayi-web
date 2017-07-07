@@ -13,7 +13,7 @@
         <div class="my_order right" @click="myOrder">我的订单</div>
         <div class="shopping_car right">
           <img class="car_img" @click="gotocar" @mouseover="showCargo" src="../../../images/index/shopping_car.png" alt="img">
-          <p class="left gwcHeader" @click="gotocar" @mouseover="showCargo">购物车<span class="car_num">{{car_num}}</span></p>
+          <p class="left gwcHeader" @click="gotocar" @mouseover="showCargo">购物车<span style="margin-left:20px;" class="car_num">{{car_num}}</span></p>
           <div v-if="cargo_show" class="whiteLine"></div>
           <div v-else class="elseLine"></div>
           <div class="car_hover" v-if="cargo_show">
