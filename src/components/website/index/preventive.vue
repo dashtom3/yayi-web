@@ -43,7 +43,7 @@
         <p class="classifyName">{{classifyItem.oneClassify}}</p>
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-for="item in filteredItems[index]" :key="item" @click="toDetail(item)">
+        <div class="preventive_item" v-for="item in classifyItems.items" :key="item" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src=item.itemDetail.itemPica alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
@@ -66,16 +66,16 @@ export default {
       yayi: null,
       isActive: false,
       classifyItems: [],
-      items: [],
+      // items: [],
       sideItems: [],
       brandListData:[],
       brandListData1: [],
     }
   },
   computed: {
-    filteredItems: function () {
-      return this.items.slice(0, 8)
-    },
+    // filteredItems: function () {
+    //   return this.items.slice(0, 8)
+    // },
     filteredBrandListData: function () {
       return this.brandListData.slice(0, 8)
     },
@@ -88,23 +88,27 @@ export default {
     window.addEventListener('scroll', that.menu);
     that.getAllBrandList();
     that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-      console.log(res.data)
+      // console.log(res.data.data,'popopop')
       if (res.data.callStatus === 'SUCCEED') {
         that.classifyItems = res.data.data.classifyList;
         // console.log(that.classifyItems,'fff');
-        for (var i = 0; i < that.classifyItems.length; i++) {
-          // console.log(that.classifyItems[i].oneClassify);
+        for (let i = 0; i < that.classifyItems.length; i++) {
+          //console.log(that.classifyItems[i].oneClassify);
+          that.classifyItems[i].items = []
           var obj = {
             oneClassify: that.classifyItems[i].oneClassify,
           };
           that.global.axiosPostReq('/item/queryItemSearch', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.items.push(res.data.data);
+              that.classifyItems[i].items = res.data.data
+              //console.log(res.data.data,'ppp',i)
+              //that.items.push(res.data.data);
             } else {
               that.$message.error('网络出错，请稍后再试1！');
             }
           })
         }
+        console.log(that.classifyItems,'llllll')
         // console.log(that.items[i])
       } else {
         that.$message.error('网络出错，请稍后再试2！');

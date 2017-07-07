@@ -8,12 +8,37 @@
     <div class="clearfix"></div>
     <div class="second_box">
       <div class="secondTitle">商品详情：</div>
-<!--         <quill-editor ref="myTextEditor" v-model="content" :config="editorOption"></quill-editor> -->
-      <div id="editor"></div>
-<!--       <vue-editor id="editor1" v-model="thirdForm.itemDesc"></vue-editor> -->
+      <div id="toolbar1">
+        <select class="ql-size">
+          <option value="small"></option>
+          <option selected></option>
+          <option value="large"></option>
+          <option value="huge"></option>
+        </select>
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-script" value="sub"></button>
+          <button class="ql-script" value="super"></button>
+          <button class="ql-Image" @click="uploaImage">image</button>
+      </div>
+      <div id="editor1"></div>
     </div>
     <div class="third_box">
       <div class="thirdTitle">图片说明：</div>
+        <div id="toolbar2">
+          <select class="ql-size">
+            <option value="small"></option>
+            <option selected></option>
+            <option value="large"></option>
+            <option value="huge"></option>
+          </select>
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+            <button class="ql-Image" @click="uploaImage">image</button>
+        </div>
+        <div id="editor2"></div>
      <!--  <div id="editor" type="text/plain" style="width: 100%; height: 500px;"></div> -->
 <!--     <button @click="submits">保存</button>  -->
 <!--       <vue-editor id="editor2" v-model="thirdForm.itemUse"></vue-editor> -->
@@ -29,7 +54,17 @@
     <div style="margin-left: 30px; margin-top:50px;">
       <el-button type="primary" @click="save()">保存</el-button>
       <el-button @click="returnSecond()">返回</el-button>
-    </div>  
+    </div>
+    <el-dialog title="上传图片" :visible.sync="dialogVisible" size="small">
+      <el-upload class="avatar-uploader" :data="qiNiuToken" :action="qiNiuUrl" :show-file-list="false" :on-success="handleAvatarSuccess">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="insertImg">插入图片</el-button>
+      </span>
+    </el-dialog>  
   </div>
 </template>
 <script>
@@ -39,18 +74,6 @@
   import global from '../../global/global' 
   import axios from 'axios'
   //import Quill from 'quill'
-  // var quill = new Quill('#editor-container', {
-  //   modules: {
-  //     toolbar: [
-  //       [{ header: [1, 2, false] }],
-  //       ['bold', 'italic', 'underline'],
-  //       ['image', 'code-block']
-  //     ]
-  //   },
-  //   placeholder: 'Compose an epic...',
-  //   theme: 'snow'  // or 'bubble'
-  // });
-  // var editor = new Quill('#editor', options);
   export default{
     name: 'thirdStep',
     props: ['message'],
@@ -70,34 +93,57 @@
         },
         options: [],
         thirdStep: true,
-        qiNiuToken: null,
+        qiNiuToken: {},
         qiNiuUrl: global.qiNiuUrl,
+        dialogVisible: false,
+        imageUrl: '',
       }
     },
     created: function() {
       var that = this;
       // 获取七牛云token
-      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+      global.axiosGetReq('/file/getUpToken').then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           that.qiNiuToken = {
             token: res.data.msg
           }
+          console.log(that.qiNiuToken.token)
         }
       })
       that.queryHandler();
     },
     mounted: function() {
       var that = this;
-      // var IMGUR_CLIENT_ID = 'bcab3ce060640ba';
-      function imageHandler(image, callback) {
+      that.quill1 = new Quill('#editor1', {
+        modules: {
+        toolbar: '#toolbar1'
+      },
+        placeholder: '',
+        theme: 'snow',
+        // imageHandler: that.imageHandler
+      });
+      that.quill2 = new Quill('#editor2', {
+        modules: {
+        toolbar: '#toolbar2'
+      },
+        placeholder: '',
+        theme: 'snow',
+        // imageHandler: that.imageHandler
+      });
+    },
+    methods: {
+      imageHandler(image, callback) {
         var that = this;
+        var url = that.qiNiuUrl;
+        var token = that.qiNiuToken.token;
+        console.log('ppopopopop')
         var data = new FormData();
-        var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
         data.append('image', image);
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
-        xhr.setRequestHeader('Authorization', "UpToken " + that.qiNiuToken);
+        xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        xhr.setRequestHeader('Authorization', "UpToken " + token);
         xhr.onreadystatechange = function() {
           if (xhr.readyState === 4) {
             var response = JSON.parse(xhr.responseText);
@@ -113,19 +159,31 @@
           }
         }
         xhr.send(data);
-      }
-      var quill = new Quill('#editor', {
-        modules: {
-          toolbar: [
-            'image'
-          ]
-        },
-        placeholder: 'Insert an image...',
-        theme: 'snow',
-        imageHandler: imageHandler
-      });
-    },
-    methods: {
+      },
+      insertImg() {
+        var that = this;
+        var insert = {
+          image: that.imageUrl,
+        }
+        // var delta = that.quill1.getContents();
+        // delta.push(insert);
+        // console.log(delta,'ppp')
+        var i = that.quill1.getContents().ops.length;
+        // console.log(i,'333')
+        that.quill1.insertEmbed(0, 'image', that.imageUrl);
+        that.dialogVisible = false;
+      },
+      uploaImage: function() {
+         var that = this;
+         that.imageUrl = '';
+         that.dialogVisible = true;
+      },
+      handleAvatarSuccess(file, fileList) {
+        var that = this;
+        // console.log(file,fileList)
+        that.imageUrl = global.qiniuShUrl + file.key;
+        console.log(that.imageUrl)
+      },
       // 富文本上传图片至七牛云
       // imageHandler: function(image, callback) {
       //   var that = this;
@@ -185,72 +243,41 @@
       // 保存新增商品
       save: function() {
         var that = this;
-        var imgReg = /<img.*?(?:>|\/>)/gi;
-        var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
-        var arr = that.thirdForm.itemDesc.match(imgReg);
-        var src =[]
-        for (var i = 0; i < arr.length; i++) {
-         src.push(arr[i].match(srcReg));
-         //获取图片地址
-        //  if(src[1]){
-        //     console.log('已匹配的图片地址'+(i+1)+'：'+src[1]);
-        //  }
-        //  //当然你也可以替换src属性
-        //  if (src[0]) {
-        //   var t = src[0].replace(/src/i, "href");
-        //   //alert(t);
-        //  }
-        }
-        //console.log(src);
-
-        for (var i = 0; i <  src.length; i++) {
-          // var formData = new FormData()
-          // formData.append('pic',src[i][1].split('base64,')[1])
-          var pic = src[i][1].replace(/^.*?,/, '');
-          // var pic = .split('base64,')[1]
-          console.log(pic);
-          var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
-          var xhr = new XMLHttpRequest();
-          xhr.onreadystatechange=function(){
-            console.log(xhr,'22')
+        // that.quill1.insertText(1, 'Hello', 'bold', true);
+        that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
+        that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
+        console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
+        that.thirdForm.itemPica = that.fileList[0];
+        that.thirdForm.itemPicb = that.fileList[1];
+        that.thirdForm.itemPicc = that.fileList[2];
+        that.thirdForm.itemPicd = that.fileList[3];
+        that.thirdForm.itemPice = that.fileList[4];
+        Object.assign(that.thirdForm,that.message);
+        delete that.thirdForm.itemBrand
+        delete that.thirdForm.type
+        var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
+        console.log(itemValueList)
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+        xhr.setRequestHeader("Content-Type", "application/json")
+        xhr.send(itemValueList)
+        xhr.onreadystatechange = function(){
+          // var succeed = JSON.parse(xhr.response.callStatus)
+          // console.log(succeed)
+          var succeed = JSON.parse(xhr.response)
+          if(succeed.callStatus == 'SUCCEED') {
+            delete that.thirdForm.itemValueList
+            global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                console.log(res,'22222');
+                that.$message('保存成功！');
+                that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }
-          xhr.open("POST", url, true);
-          xhr.setRequestHeader("Content-Type", "application/octet-stream");
-          xhr.setRequestHeader("Authorization", "UpToken " + that.qiNiuToken);
-          xhr.send(pic); 
         }
-        //console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
-        // that.thirdForm.itemPica = that.fileList[0];
-        // that.thirdForm.itemPicb = that.fileList[1];
-        // that.thirdForm.itemPicc = that.fileList[2];
-        // that.thirdForm.itemPicd = that.fileList[3];
-        // that.thirdForm.itemPice = that.fileList[4];
-        // Object.assign(that.thirdForm,that.message);
-        // delete that.thirdForm.itemBrand
-        // delete that.thirdForm.type
-        // var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-        // console.log(itemValueList)
-        // var xhr = new XMLHttpRequest();
-        // xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
-        // xhr.setRequestHeader("Content-Type", "application/json")
-        // xhr.send(itemValueList)
-        // xhr.onreadystatechange = function(){
-        //   // var succeed = JSON.parse(xhr.response.callStatus)
-        //   // console.log(succeed)
-        //   var succeed = JSON.parse(xhr.response)
-        //   if(succeed.callStatus == 'SUCCEED') {
-        //     delete that.thirdForm.itemValueList
-        //     global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
-        //       if (res.data.callStatus === 'SUCCEED') {
-        //         console.log(res,'22222');
-        //         that.$message('保存成功！');
-        //         that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
-        //       } else {
-        //         that.$message.error('网络出错，请稍后再试！');
-        //       }
-        //     })
-        //   }
-        // }
 
         // var qq = {
         //   apparatusType:2,
@@ -295,7 +322,7 @@
           //   console.log(error);
           // });
        // console.log(qq);
-        // that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
+        that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
       },
       // 返回上一步
       returnSecond: function() {
@@ -337,5 +364,28 @@
 #editor-container {
   height: 375px;
 }
-
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+background: #eaeaea;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>

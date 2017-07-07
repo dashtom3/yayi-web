@@ -75,7 +75,7 @@
       </el-table>
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
-  <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="large">
+  <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="small">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <div class="detail_box">
         <div class="detail_cargo">商品编号：</div>
@@ -142,7 +142,7 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">图片说明：</div>
-        <p class="detail_word" v-html="details.itemDetail.itemUse"></p>
+        <p class="detail_word" style="width:100px;height:100px;" v-html="details.itemDetail.itemUse"></p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
@@ -533,5 +533,9 @@ th,td {
   color: #000;
   line-height: 25px;
   display: inline-block;
+}
+.detail_word p img {
+  width: 100px;
+  height: 100px;
 }
 </style>
