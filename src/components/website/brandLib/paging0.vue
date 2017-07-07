@@ -3,10 +3,10 @@
     <span class="pageRedue" v-on:click="prev()">上一页</span>
     <span calss="indexPage" v-show="currentPage>0" v-on:click="goIndex()">首页</span>
     <span class="noBorder" v-show="showPageBegin>0">...</span>
-    <span v-on:click="goToThisPage(index)" :class="{currentPageStyle:currentPage==index}" v-show="index >= showPageBegin && index <= showPageEnd" v-for="(item,index) in childmsg.pageNum">{{item}}</span>
+    <span v-on:click="goToThisPage(index)" :class="{currentPageStyle:currentPage==index}" v-show="index >= showPageBegin && index <= showPageEnd" v-for="(item,index) in childmsg.totalPage">{{item}}</span>
     <span class="noBorder" v-show="childmsg.pageNum>showPageNum && currentPage<childmsg.pageNum-1">...</span>
     <span class="pageAdd"  v-on:click="next()">下一页</span>
-    共{{childmsg.pageNum}}页，到第<input type="text" v-model="goToPage"><span class="sure" v-on:click="goToInputPage()">确定</span>
+    共{{childmsg.totalPage}}页，到第<input type="text" v-model="goToPage"><span class="sure" v-on:click="goToInputPage()">确定</span>
   </div>
 </template>
 <script>
@@ -45,7 +45,7 @@
         }
       },
       next:function(){
-        if(this.currentPage>=this.childmsg.pageNum-1){
+        if(this.currentPage>=this.childmsg.totalPage-1){
           this.$alert("已经是最后一页了！", {confirmButtonText: '确定'});
         }else{
           this.currentPage++;
@@ -64,7 +64,7 @@
           this.showPageEnd=7
           this.currentPage = num-1;
         }
-        if(this.goToPage>this.childmsg.pageNum){
+        if(this.goToPage>this.childmsg.totalPage){
           this.$alert("输入页码过大，请重新输入", {confirmButtonText: '确定'});
           this.currentPage = this.childmsg.pageNum-1;
         }else{

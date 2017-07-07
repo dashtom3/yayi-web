@@ -11,7 +11,6 @@
         <el-form-item>
             <el-input v-model="searchUserContent">
             <el-select v-model="searchUserType" slot="prepend" @change="selectOpt">
-              <!-- <el-option label="用户编号" value="用户编号"></el-option> -->
               <el-option label="真实姓名" value="真实姓名"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="单位名称" value="单位名称"></el-option>
@@ -39,12 +38,6 @@
 
 
     <el-table :data="certificationList"  border style="width: 100%">
-      <!-- <el-table-column  prop="userId"  width="200px"  align="center"  label="用户编号"></el-table-column> -->
-      <!-- <el-table-column  prop="trueName"  align="center"  label="真实姓名+手机号"> 
-        <template scope="scope">
-            <span>{{scope.row.trueName}}</span><span>{{scope.row.phone}}</span>
-        </template>
-       </el-table-column> -->
       <el-table-column  prop="trueName"  align="center"  label="真实姓名"> 
       </el-table-column>
       <el-table-column  prop="phone"  align="center"  label="手机号"> 
@@ -56,11 +49,6 @@
         </template>
        </el-table-column>
       <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
-      <!-- <el-table-column  align="center"  label="所在地+详细地址"> 
-        <template scope="scope">
-            <span>{{scope.row.certification.part}}</span><span>{{scope.row.certification.workAddress}}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column  align="center"  label="所在地"> 
         <template scope="scope">
             <span>{{scope.row.certification.part}}</span>
@@ -91,10 +79,12 @@
         </template>
       </el-table-column>
     </el-table>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
   import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -106,6 +96,10 @@
         certificationList:[],
         bigImgSrc: '',
         selectVal: '',
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         userTypes: [
           {value: '',label: '全部'},
           {value: 1,label: '个人'},
@@ -118,6 +112,9 @@
           {value: 3,label: '审核不通过'}
         ],
       }
+    },
+    components: {
+      paging
     },
     created(){
       this.search();
@@ -136,6 +133,8 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 4,
             token: ''
           }
         }else if(this.selectVal === "真实姓名"){
@@ -145,6 +144,8 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 4,
             token: ''
           }
         }else if(this.selectVal === "单位名称"){
@@ -154,6 +155,8 @@
             companyName: this.searchUserContent,
             type: this.searchType,
             state: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 4,
             token: ''
           }
         }else{
@@ -163,12 +166,15 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 4,
             token: ''
           }
         }
         global.axiosGetReq('/userCertificationList/list',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.certificationList = res.data.data
+            this.pageProps.totalPage = res.data.totalPage
           }else{
             this.$message.error('获取用户资质信息列表失败！');
           }
@@ -236,6 +242,10 @@
         this.ifShowBigImg = true;
         this.bigImgSrc = this.certificationList[index].certification.doctorPic;
       },
+      pageHandler:function(data){
+        this.pageProps.pageNum = data
+        this.search();
+      }
     },
   }
 </script>

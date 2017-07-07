@@ -47,11 +47,13 @@
       <el-table-column prop="latelyOrderDate" label="最近一次下单时间" sortable align="center" >
       </el-table-column>
     </el-table>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 
 <script>
   import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
   export default {
     data() {
       return {
@@ -62,6 +64,10 @@
           value: '2',
           label: '真实姓名'
         }],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         sel_value: '1',
         data_val: '',
         selectInput: '',
@@ -69,6 +75,9 @@
         endDate: '',
         elecList: []
       }
+    },
+    components: {
+      paging
     },
     created(){
       this.queryHandler()
@@ -87,6 +96,10 @@
           this.endDate = ''
         }
       },
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.queryHandler();
+      },
       queryHandler(){
         var params;
         if(this.sel_value == '1'){
@@ -95,6 +108,8 @@
             trueName: '',
             startDate: this.startDate,
             endDate: this.endDate,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
             token: global.getToken()
           }
         }else if(this.sel_value == '2'){
@@ -103,12 +118,15 @@
             trueName: this.selectInput,
             startDate: this.startDate,
             endDate: this.endDate,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
             token: global.getToken()
           }
         }
         global.axiosGetReq('/userStatistics/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.elecList = res.data.data
+            this.pageProps.totalPage = res.data.totalPage
           }
         })
       }

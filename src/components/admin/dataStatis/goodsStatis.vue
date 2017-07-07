@@ -54,11 +54,13 @@
       <el-table-column prop="refundNum" label="累计退款次数" align="center" >
       </el-table-column>
     </el-table>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 
 <script>
   import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
   export default {
     data() {
       return {
@@ -78,6 +80,10 @@
           value1: '',
           label1: '全部'
         }],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         sel_input: '',
         goodsList: []
       }
@@ -85,6 +91,9 @@
     created(){
       this.queryHandler()
       this.queryBrand()//查询所有品牌
+    },
+    components: {
+      paging
     },
     methods: {
       queryBrand(){
@@ -114,6 +123,8 @@
             itemId: '',
             itemSKU: '',
             itemBrandName: this.brandName,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
             token: global.getToken()
           }
         }else if(this.sel_value == '2'){
@@ -122,6 +133,8 @@
             itemId: this.sel_input,
             itemSKU: '',
             itemBrandName: this.brandName,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
             token: global.getToken()
           }
         }else if(this.sel_value == '3'){
@@ -130,18 +143,25 @@
             itemId: '',
             itemSKU: this.sel_input,
             itemBrandName: this.brandName,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
             token: global.getToken()
           }
         }
         global.axiosGetReq('/itemStatistics/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.goodsList = res.data.data
+            this.pageProps.totalPage = res.data.totalPage
           }
         })
       },
       selectOpt(key){
         this.sel_value = key;
         this.sel_input = '';
+      },
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.queryHandler();
       }
     }
   }
