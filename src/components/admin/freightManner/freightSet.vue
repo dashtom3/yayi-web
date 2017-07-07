@@ -216,7 +216,10 @@
             that.global.axiosPostReq('/freightManage/customFreight',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                that.tab1_tableData[index].changeState = false;
+                var data = that.tab1_tableData[index];
+                data.changeState = false;
+                that.tab1_tableData.splice(index,1,data);
+                // that.tab1_tableData.splice()[index].changeState = false;
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
@@ -246,6 +249,7 @@
         this.tab1_tableData.push(obj);
       },
       tab1_delete:function(index,one){
+        console.log(one)
         var that = this;
         if(one.postFeeId){
           var obj = {

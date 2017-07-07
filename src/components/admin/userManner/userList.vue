@@ -374,8 +374,8 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.userList = res.data.data;
               //清空搜寻项目
-              that.searchSaleName = "";
-              that.searchUserContent = "";
+              // that.searchSaleName = "";
+              // that.searchUserContent = "";
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

@@ -1,6 +1,6 @@
 <template>
   <div class="tableBoard">
-    <el-dialog title="选择区域" :visible.sync="state2">
+    <el-dialog title="选择区域" :visible.sync="state2" :before-close="handleClose" :show-close="false">
       <div class="allChoose_bigbox" v-for="item in items" :key="item">
         <div class="allChoose_box">
           <el-checkbox :indeterminate="isIndeterminate" v-model="item.allcheck" @change="handleCheckAllChange(item)" class="allchecked">{{item.area}}</el-checkbox>
@@ -70,7 +70,6 @@
       childrenState:function(){
         var that = this;
         that.state2 = that.childrenState;
-        console.log(that.childrenState)
       },
       items: {
         handler: function() {
@@ -81,7 +80,7 @@
           //       expression
           //     }
           // }
-          console.log(that.items,'2232323')
+          // console.log(that.items,'2232323')
         },
         deep: true
       },
@@ -105,6 +104,18 @@
       },
     },
     methods: {
+      returnDefault:function(){
+        var that = this;
+        for(let i in that.items){
+          that.items[i].allcheck = false;
+          for(let n in that.items[i].place){
+            that.items[i].place[n].checked = false;
+          }
+        }
+      },
+      handleClose:function(){
+        this.returnDefault();
+      },
       handleCheckAllChange(item) {
         var that = this;
         var arr = item.place;
@@ -114,7 +125,7 @@
             that.checkedCities.push(arr[i].city);
           }
           return false
-        } 
+        }
         if (item.allcheck == false) {
           for (var i = 0; i < arr.length; i++) {
             arr[i].checked = false;
@@ -160,12 +171,14 @@
         var arr = that.submitCities;
         that.$emit('listenChildren',arr);
         that.state2 = false;
+        this.returnDefault();
       },
       cancel: function() {
         var that = this;
         that.$emit('listenChildren',"1");
         that.state2 = false;
-      }
+        this.returnDefault();
+      },
     }
   }
 </script>

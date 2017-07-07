@@ -1,24 +1,27 @@
 <template>
-  <div class="goodIntroduce">
-    <div>
-      <span>品名：{{instruction.addName}}</span>
-      <span>单位：{{instruction.unit}}</span>
-      <span>品牌：AQUAPICK</span>
+  <div class="">
+    <div class="goodIntroduce">
+      <div>
+        <span>品名：{{instruction.addName}}</span>
+        <span>单位：{{instruction.unit}}</span>
+        <span>品牌：AQUAPICK</span>
+      </div>
+      <div>
+        <span>注册证号：{{instruction.registerId}}</span>
+        <span>产品包装：{{instruction.itemPacking}}</span>
+        <span>医械类别：</span>
+      </div>
+      <div>
+        <span>注册证有效期/备案日期：{{instruction.registerDate}}</span>
+        <span>商家货号：{{instruction.storeItemId}}</span>
+        <span>其他：{{instruction.remark}}</span>
+      </div>
+      <div>
+        <span>使用范围：{{instruction.itemRange}}</span>
+        <span>生产企业名称：{{instruction.producePompany}}</span>
+      </div>
     </div>
-    <div>
-      <span>注册证号：{{instruction.registerId}}</span>
-      <span>产品包装：{{instruction.itemPacking}}</span>
-      <span>医械类别：</span>
-    </div>
-    <div>
-      <span>注册证有效期/备案日期：{{instruction.registerDate}}</span>
-      <span>商家货号：{{instruction.storeItemId}}</span>
-      <span>其他：{{instruction.remark}}</span>
-    </div>
-    <div>
-      <span>使用范围：{{instruction.itemRange}}</span>
-      <span>生产企业名称：{{instruction.producePompany}}</span>
-    </div>
+    <div v-html="instruction.itemDesc"></div>
   </div>
 </template>
 
