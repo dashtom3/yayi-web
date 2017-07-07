@@ -17,7 +17,6 @@
   import carousel from './carousel'
   import preventive from './preventive'
   import backToTop from './backToTop'
-
   export default {
     name: 'index',
     data () {

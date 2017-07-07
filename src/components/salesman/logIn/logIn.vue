@@ -2,7 +2,7 @@
   <div class="logIn_box">
     <div class="headerBox">
       <div class="headerFirst">
-        <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
+        <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="returnAcb">
         <div class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
         </div>
@@ -252,15 +252,6 @@
     // },
     created: function() {
       var that = this;
-      that.Gtoken = that.global.getToken();
-      window.addEventListener('scroll', that.menu);
-      if (that.global.getToken() !== null) {
-        var username = that.global.getUser();
-        that.username = username.phone;
-        that.hasLogin = false;
-      } else {
-        that.hasLogin = true;
-      }
       // console.log(that.global.getToken());
     },
     mounted() {
@@ -373,51 +364,15 @@
       },
     },
     methods: {
-      menu: function() {
+      // 返回电商网站
+      returnAcb: function() {
         var that = this;
-        var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(scroll >= 30) {
-          that.isActive = true;
-        } else {
-          that.isActive = false;
-        }
-        // console.log(scroll, 'frisco')
-      },
-      // logo跳转
-      logo: function() {
-        var that = this;
-        console.log('hh');
-        //that.$router.push({ path: '/index' });
-        that.$router.push({ path: '/salesIndex' });
+        that.$router.push({path: '/'});
       },
       // 登录成功后
       alreadyLog: function() {
         var that = this;
         that.$router.push({ name: 'center', params: { current: false}});
-      },
-      // 登出
-      logOut: function() {
-        var that = this;
-        var obj = {
-          token: that.global.getToken()
-        }
-        that.global.axiosPostReq('/user/reLogin', obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
-              that.$router.push({ path: '/'})
-            }
-            console.log(res);
-            that.global.removeMsg()
-            that.$message({
-              message: '退出成功！',
-              type: 'success'
-            });
-            that.hasLogin = true;
-            that.car_num = 0;
-          } else {
-            that.$message.error('退出失败！');
-          }
-        })
       },
       // 箭头变色
       arrow_in: function() {
@@ -515,7 +470,7 @@
           return false
         } else {
           var obj = { phone: that.ms_mobilephone }
-          that.global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/saleLog/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -547,7 +502,7 @@
           that.fgPhone_alert = true
         } else {
           var obj = { phone: that.fg_mobilephone }
-          that.global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/saleLog/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -579,7 +534,7 @@
           that.rgPhone_alert = true
         } else {
           var obj = { phone: that.rg_mobilephone }
-          that.global.axiosPostReq('/user/getVerifyCode', obj)
+          that.global.axiosPostReq('/saleLog/getVerifyCode', obj)
           .then((res) => {
             // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
@@ -619,23 +574,18 @@
           phone: that.ms_mobilephone,
           code: that.ms_yzm,
         }
-        that.global.axiosPostReq('/user/noteLogin', obj).then((res) => {
+        that.global.axiosPostReq('/saleLog/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res);
-            that.global.setToken(res.data.token)
-            that.global.setUser(res.data.data)
+            that.global.setSalesToken(res.data.token)
+            that.global.setSalesUser(res.data.data)
             that.$message({
               message: '登录成功！',
               type: 'success'
             });
-            that.Gtoken = that.global.getToken();
-            that.username = res.data.data.phone;
-            that.hasLogin = false;
-            that.changeForget1 = false;
-            that.changeForget2 = false;
-            that.changeForget3 = false;
             that.ms_mobilephone = '';
             that.ms_yzm = '';
+            that.$router.push({ path: '/salesIndex' });
             return false
           } else {
             that.$message.error(res.data.msg);
@@ -661,23 +611,18 @@
           phone: that.pwd_mobilephone,
           password: str,
         }
-        that.global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
+        that.global.axiosPostReq('/saleLog/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.token);
-            that.global.setToken(res.data.token)
-            that.global.setUser(res.data.data)
+            that.global.setSalesToken(res.data.token)
+            that.global.setSalesUser(res.data.data)
             that.$message({
               message: '登录成功！',
               type: 'success'
             });
-            that.Gtoken = that.global.getToken();
-            that.username = res.data.data.phone;
-            that.hasLogin = false;
-            that.changeForget1 = false;
-            that.changeForget2 = false;
-            that.changeForget3 = false;
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
+            that.$router.push({ path: '/salesIndex' });
           } else {
             that.$message.error(res.data.msg);
           }
@@ -711,7 +656,7 @@
           password: str,
           code: that.fg_code,
         }
-        that.global.axiosPostReq('/user/forgetPwd', obj).then((res) => {
+        that.global.axiosPostReq('/saleLog/forgetPwd', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res, '1');
             console.log(res.data, '2');
@@ -768,20 +713,14 @@
           password: str,
           code: that.rg_code,
         }
-        that.global.axiosPostReq('/user/register', obj).then((res) => {
+        that.global.axiosPostReq('/saleLog/register', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.global.setToken(res.data.token)
-            that.global.setUser(res.data.data)
+            that.global.setSalesToken(res.data.token)
+            that.global.setSalesUser(res.data.data)
             that.$message({
               message: '注册成功！',
               type: 'success'
             });
-            that.Gtoken = that.global.getToken();
-            that.username = res.data.data.phone;
-            that.hasLogin = false;
-            that.changeForget1 = false;
-            that.changeForget2 = false;
-            that.changeForget3 = false;
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
             that.rg_mobilephone = '';
@@ -789,6 +728,7 @@
             that.rg_code = '';
             that.rg_confirmPwd = '';
             that.agree = false;
+            that.$router.push({ path: '/salesIndex' });
           } else {
             that.$message.error(res.data.msg);
           }

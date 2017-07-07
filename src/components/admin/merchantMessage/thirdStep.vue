@@ -8,11 +8,15 @@
     <div class="clearfix"></div>
     <div class="second_box">
       <div class="secondTitle">商品详情：</div>
-      <vue-editor id="editor1" v-model="thirdForm.itemDesc"></vue-editor>
+<!--         <quill-editor ref="myTextEditor" v-model="content" :config="editorOption"></quill-editor> -->
+      <div id="editor"></div>
+<!--       <vue-editor id="editor1" v-model="thirdForm.itemDesc"></vue-editor> -->
     </div>
     <div class="third_box">
       <div class="thirdTitle">图片说明：</div>
-      <vue-editor id="editor2" v-model="thirdForm.itemUse"></vue-editor>
+     <!--  <div id="editor" type="text/plain" style="width: 100%; height: 500px;"></div> -->
+<!--     <button @click="submits">保存</button>  -->
+<!--       <vue-editor id="editor2" v-model="thirdForm.itemUse"></vue-editor> -->
     </div>
     <div class="fouth_box">
       <div class="fouthTitle">视频说明：</div>
@@ -29,9 +33,24 @@
   </div>
 </template>
 <script>
-  import { VueEditor } from 'vue2-editor'
+  // import { VueEditor } from 'vue2-editor'
+  // import { quillEditor } from 'vue-quill-editor';
+  // require('../../../../node_modules/quill/core/quill')
   import global from '../../global/global' 
   import axios from 'axios'
+  //import Quill from 'quill'
+  // var quill = new Quill('#editor-container', {
+  //   modules: {
+  //     toolbar: [
+  //       [{ header: [1, 2, false] }],
+  //       ['bold', 'italic', 'underline'],
+  //       ['image', 'code-block']
+  //     ]
+  //   },
+  //   placeholder: 'Compose an epic...',
+  //   theme: 'snow'  // or 'bubble'
+  // });
+  // var editor = new Quill('#editor', options);
   export default{
     name: 'thirdStep',
     props: ['message'],
@@ -67,7 +86,72 @@
       })
       that.queryHandler();
     },
+    mounted: function() {
+      var that = this;
+      // var IMGUR_CLIENT_ID = 'bcab3ce060640ba';
+      function imageHandler(image, callback) {
+        var that = this;
+        var data = new FormData();
+        var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
+        data.append('image', image);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Authorization', "UpToken " + that.qiNiuToken);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 200 && response.success) {
+              callback(response.data.link);
+            } else {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                callback(e.target.result);
+              };
+              reader.readAsDataURL(image);
+            }
+          }
+        }
+        xhr.send(data);
+      }
+      var quill = new Quill('#editor', {
+        modules: {
+          toolbar: [
+            'image'
+          ]
+        },
+        placeholder: 'Insert an image...',
+        theme: 'snow',
+        imageHandler: imageHandler
+      });
+    },
     methods: {
+      // 富文本上传图片至七牛云
+      // imageHandler: function(image, callback) {
+      //   var that = this;
+      //   var data = new FormData();
+      //   var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
+      //   data.append('image', image);
+
+      //   var xhr = new XMLHttpRequest();
+      //   xhr.open('POST', url, true);
+      //   xhr.setRequestHeader('Authorization', "UpToken " + that.qiNiuToken);
+      //   xhr.onreadystatechange = function() {
+      //     if (xhr.readyState === 4) {
+      //       var response = JSON.parse(xhr.responseText);
+      //       if (response.status === 200 && response.success) {
+      //         callback(response.data.link);
+      //       } else {
+      //         var reader = new FileReader();
+      //         reader.onload = function(e) {
+      //           callback(e.target.result);
+      //         };
+      //         reader.readAsDataURL(image);
+      //       }
+      //     }
+      //   }
+      //   xhr.send(data);
+      // },
       // 获取视频链接
       queryHandler() {
         var that = this;
@@ -221,7 +305,7 @@
       }
     },
     components: {
-      VueEditor,
+      // quillEditor,
     }
   }
 </script>
@@ -250,4 +334,8 @@
 }
 .upload-demo {
 }
+#editor-container {
+  height: 375px;
+}
+
 </style>

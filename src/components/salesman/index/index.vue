@@ -1,8 +1,8 @@
 <template>
   <div class="salesIndex">
-    <salesHead></salesHead>
+    <salesHead v-on:msgFromChild="getMsg"></salesHead>
     <div class="saleSecond">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
+      <img class="logo_img" src="../../../images/index/logo.png" alt="img">
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
@@ -73,6 +73,16 @@
       tab05: myWallet,
       tab06: personalData,
       myOrder,
+    },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        if (that.global.getSalesToken() == null) {
+          that.$router.push({ path: '/salesLog'})
+        }
+      })
     },
     created: function() {
     },
@@ -145,10 +155,10 @@
         this.isActive5 = false;
         this.isActive6 = true;
       },
-      logo: function() {
-        var that = this;
-        that.$router.push({path: '/'});
-      }
+      // logo: function() {
+      //   var that = this;
+      //   that.$router.push({path: '/'});
+      // }
     }
   }
 </script>

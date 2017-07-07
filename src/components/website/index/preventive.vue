@@ -149,7 +149,7 @@ export default {
         console.log(total,'hei')
         if (osTop+a == c) {
           clearInterval(timer);
-          //isTop = false;
+          isTop = false;
         }
         if( hei > 0) {
           document.documentElement.scrollTop = document.body.scrollTop = osTop + 15;
@@ -371,11 +371,9 @@ a {
   width: 263px;
   height: 200px;
 }
-.item_img {
-  /*max-width: 100%;
-  max-height: 100%;*/
-  max-width: 40%;
-  max-height: 40%;
+ .item_img_box .item_img {
+  max-width: 100%;
+  max-height: 100%;
   display: inline-block;
   vertical-align: middle;
 }

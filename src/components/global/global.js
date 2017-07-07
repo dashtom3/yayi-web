@@ -63,6 +63,10 @@ export default {
   setToken (token) {
     localStorage.setItem('adverToken', token)
   },
+  setSalesToken (token) {
+    localStorage.setItem('salesToken', token)
+  },
+  // yayiAbcToken
   removeMsg () {
     localStorage.removeItem('adverToken')
     localStorage.removeItem('adverUser')
@@ -75,6 +79,20 @@ export default {
   },
   getUser () {
     return JSON.parse(localStorage.getItem('adverUser'))
+  },
+  // 创客系统token
+  getSalesToken () {
+    return localStorage.getItem('salesToken')
+  },
+  removeSalesMsg () {
+    localStorage.removeItem('salesToken')
+    localStorage.removeItem('salesUser')
+  },
+  setSalesUser (data) {
+    localStorage.setItem('salesUser', JSON.stringify(data))
+  },
+  getSalesUser () {
+    return JSON.parse(localStorage.getItem('salesUser'))
   },
   axiosPostReq (url, data) {
     //axios.defaults.headers['token'] = this.getToken()

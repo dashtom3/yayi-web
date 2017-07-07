@@ -33,7 +33,7 @@
         </div>
         <div class="list_des" v-for="cargo in cargos">
           <div class="left des_img">
-            <img :src=cargo.pic alt="img">
+            <img style="width:60px;height:60px;" :src=cargo.pic alt="img">
           </div>
           <div class="left des_p">
             <p style="margin-bottom: 40px;">{{cargo.name}}</p>

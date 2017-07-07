@@ -22,12 +22,12 @@
           <el-form-item label="品牌名称：">
             <el-input v-model="cargo.brand"></el-input>
           </el-form-item>
-          <el-form-item label="推荐：">
+<!--           <el-form-item label="推荐：">
             <el-select v-model="coinValue" placeholder="请选择">
               <el-option v-for="coin in options1" :key="coin.value" :label="coin.label" :value="coin.value">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="商品状态：">
             <el-select v-model="stateValue" placeholder="请选择">
               <el-option v-for="state in options2" :key="state.value" :label="state.label" :value="state.value">
@@ -43,7 +43,7 @@
       <el-table :data="tableData" border style="margin-top: 26px;width: 100%">
         <el-table-column label="商品编号" prop="itemId"></el-table-column>
         <el-table-column label="商品名称" prop="itemName"></el-table-column>
-        <el-table-column label="商品分类" prop="oneClassify"></el-table-column>
+        <el-table-column label="商品分类" prop="classify"></el-table-column>
         <el-table-column label="品牌名称" prop="itemBrand.itemBrandName"></el-table-column>
         <el-table-column label="推荐">
           <template scope="scope">
@@ -75,7 +75,7 @@
       </el-table>
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
-  <el-dialog title="商品详情" :visible.sync="dialogTableVisible">
+  <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="large">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <div class="detail_box">
         <div class="detail_cargo">商品编号：</div>
@@ -160,10 +160,10 @@
       return {
         tableData: [],
         cargo: {
-          id: null,
-          name: null,
-          class: null,
-          brand: null,
+          id: '',
+          name: '',
+          class: '',
+          brand: '',
         },
         options1: [{
           label: '全部',
@@ -177,13 +177,13 @@
         }],
         options2: [{
           label: '全部',
-          value: null,
+          value: '',
         },{
           label: '已上架',
-          value: '1'
+          value: 1
         },{
           label: '已下架',
-          value: '0'
+          value: 0
         }],
         list: true,
         coinValue: '',
@@ -273,7 +273,9 @@
         that.global.axiosPostReq('/item/itemInfoList').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            console.log(that.tableData);
+            for (var i = 0; i < that.tableData.length; i++) {
+              that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -298,11 +300,9 @@
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            // that.cargo.id = null;
-            // that.cargo.name = null;
-            // that.cargo.class = null;
-            // that.cargo.brand = null;
-            // that.stateValue = null;
+            for (var i = 0; i < that.tableData.length; i++) {
+              that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
+            }
             console.log(that.tableData);
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -320,6 +320,11 @@
         var that = this;
         that.list = false;
         that.addMerchandise = true;
+      },
+      //预览商品
+      preview: function(scope) {
+        var that = this;
+        window.open('http://47.93.48.111:85/details/' + scope.row.itemId)
       },
       //商品属性详情
       detail: function(scope) {

@@ -2,7 +2,7 @@
   <div class="salesHead">
     <div class="headerFirst">
       <div class="log right">
-        <span class="alreadyLog">你好，{{username}}</span><span class="logOut">退出</span>
+        <span class="alreadyLog" @click="goToMy">你好，{{username}}</span><span class="logOut" @click="logOut">退出</span>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -14,15 +14,42 @@
     name: 'salesHead',
     data () {
       return {
-        username: '15900901007'
+        username: ''
       }
     },
     components: {
 
     },
     created: function() {
+      var that = this;
+      that.username = that.global.getSalesUser().phone
     },
     methods: {
+      // 登出
+      logOut: function() {
+        var that = this;
+        var obj = {
+          token: that.global.getSalesToken()
+        }
+        that.global.axiosPostReq('/saleLog/reLogin', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res);
+            that.global.removeSalesMsg()
+            that.$message({
+              message: '退出成功！',
+              type: 'success'
+            });
+            that.$router.push({ path: '/salesLog'})
+          } else {
+            that.$message.error('退出失败！');
+          }
+        })
+      },
+      //去我的信息
+      goToMy: function() {
+        var that = this;
+        that.$emit('msgFromChild', 'editMyPersData');
+      }
     }
   }
 </script>
@@ -75,10 +102,13 @@
     margin-left: 60px;
     float: right;
     transform: translateY(-5%);
-  }
-  .logOut:hover {
-    color: #5DB7E7;
     cursor: pointer;
+  }
+  .alreadyLog {
+    cursor: pointer;
+  }
+  .logOut:hover, .alreadyLog:hover{
+    color: #5DB7E7;
     transition: all ease 0.5s;
   }
 </style>

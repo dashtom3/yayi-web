@@ -156,7 +156,7 @@ let router = new Router({
       ]
     },
     {
-      path: '/admin',
+      path: '/',
       component: Home,
       name: '商品信息管理',
       menuShow: true,
