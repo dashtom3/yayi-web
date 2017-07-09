@@ -4,7 +4,6 @@
     <publicHeader></publicHeader>
     <classify :brandListData="brandList"></classify>
     <carousel></carousel>
-<!--     <brand class="d_jump"></brand> -->
     <preventive></preventive>
     <publicFooter></publicFooter>
   </div>

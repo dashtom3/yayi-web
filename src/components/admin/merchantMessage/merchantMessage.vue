@@ -251,6 +251,7 @@
           },
         },
         propertyList: [],
+        editCargo: {},
       }
     },
     created: function() {
@@ -313,13 +314,28 @@
       add: function() {
         var that = this;
         that.list = false;
+        window.sessionStorage.removeItem('editCargo');
         that.$router.push({ path: '/admin/addMerchandise'});
       },
       //编辑商品属性
-      edit: function() {
+      edit: function(scope) {
         var that = this;
-        that.list = false;
-        that.addMerchandise = true;
+        var obj = {
+          itemId: scope.row.itemId,
+        }
+        that.global.axiosPostReq('/item/itemDetailDes',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.editCargo = res.data.data
+            if (that.editCargo !== {}) {
+              window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
+              that.$router.push({ name: 'addMerchandise'});
+              //that.$router.push({ name: 'addMerchandise', params: {editCargo:that.editCargo}});
+              console.log(that.editCargo,'oooooo');
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       //预览商品
       preview: function(scope) {
@@ -348,7 +364,7 @@
         })
         that.dialogTableVisible = true;
       },
-      //上架
+      //上架商品
       grounding: function(scope) {
         var that = this;
         that.$confirm('确定上架该商品吗?', '提示', {
@@ -377,7 +393,7 @@
           });          
         });
       },
-      //下架
+      //下架商品
       soldOut: function(scope) {
         var that = this;
         that.$confirm('确定下架该商品吗?', '提示', {
@@ -406,7 +422,7 @@
           });          
         });
       },
-      //删除
+      //删除商品
       remove: function(scope) {
         var that = this;
         that.$confirm('确定删除该商品吗?', '提示', {
@@ -474,18 +490,6 @@ th,td {
   font-size: 14px;
   border-right: 1px solid #dfe6ec;
 }
-/*.type2, .des_type2{
-  width: 8%;
-  text-align: center;
-  font-size: 14px;
-  border-right: 1px solid #dfe6ec;
-}
-.type3, .des_type3{
-  width: 8%;
-  text-align: center;
-  font-size: 14px;
-  border-right: 1px solid #dfe6ec;
-}*/
 .skuCode, .des_skuCode{
   width: 12.5%;
   text-align: center;

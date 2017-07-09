@@ -62,18 +62,39 @@
       thirdStep,
     },
     created: function() {
-      var that = this;
-      that.ruleForm = that.$route.params.ruleForm;
+      var that = this
+      that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
+      if (that.editCargo !== null) {
+        that.ruleForm = that.$route.params.ruleForm
+        that.secondForm.storeItemId = that.editCargo.itemDetail.storeItemId
+        that.secondForm.apparatusType = that.editCargo.itemDetail.apparatusType
+        that.secondForm.unit = that.editCargo.itemDetail.unit
+        that.secondForm.producePompany = that.editCargo.itemDetail.producePompany
+        that.secondForm.registerDate = that.editCargo.itemDetail.registerDate
+        that.secondForm.itemPacking = that.editCargo.itemDetail.itemPacking
+        that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
+        that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
+      } else {
+        that.ruleForm = that.$route.params.ruleForm
+      }
       //console.log(that.ruleForm);
     },
     methods: {
       nextToThird: function() {
         var that = this;
-        that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
-        Object.assign(that.newForm,that.secondForm,that.ruleForm);
-        that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
-        that.secondStep = false;
-        that.thirdStep = true;
+        if (that.editCargo !== null) {
+          that.secondForm.registerDate = util.formatDate.format(new Date(that.secondForm.registerDate));
+          Object.assign(that.newForm,that.secondForm,that.ruleForm);
+          that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+          that.secondStep = false;
+          that.thirdStep = true;
+        } else {
+          that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
+          Object.assign(that.newForm,that.secondForm,that.ruleForm);
+          that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+          that.secondStep = false;
+          that.thirdStep = true;
+        }
       },
       returnFrist: function() {
         var that = this;

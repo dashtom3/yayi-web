@@ -210,6 +210,7 @@
         canUse: 0,
         activeTable: [],
         newArr: [],
+        editCargo: {},
       }
     },
     components: {
@@ -258,11 +259,25 @@
     },
     created: function() {
       var that = this;
-      //console.log(that.$route.params.ruleForm,'223232323');
-      //that.ruleForm = that.$route.params.ruleForm;
-      that.getItemId();
-      that.getAllClassify();
-      that.getAllProperty();
+      that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
+       if (that.editCargo !== null) {
+        that.getAllClassify();
+        that.getAllProperty();
+        that.ruleForm.itemId = that.editCargo.itemId;
+        that.ruleForm.itemName = that.editCargo.itemName;
+        that.ruleForm.oneClassify = that.editCargo.oneClassify;
+        that.ruleForm.twoClassify = that.editCargo.twoClassify;
+        that.ruleForm.threeClassify = that.editCargo.threeClassify;
+        that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
+        that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
+        that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
+        that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
+        that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
+       } else {
+        that.getItemId();
+        that.getAllClassify();
+        that.getAllProperty();
+       }
     },
     methods: {
       //获取获取商品编号
@@ -398,6 +413,7 @@
       },
       nextToFirst: function(formName) {
         var that = this;
+        console.log(that.ruleForm.itemBrand)
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if (that.shopType !== '1') {
@@ -428,7 +444,7 @@
               that.ruleForm.itemValueList = subitem;
               that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
               console.log(that.ruleForm,'223355');
-              that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
+              that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm, editCargo:that.editCargo}});
             } else {
               var subitem = that.activeItems;
               for (var i = 0; i < that.activeItems.length; i++) {
@@ -443,18 +459,6 @@
                 } else {
                   subitem[i].canUse = 0
                 }
-                // subitem[i].itemPropertyName = ''
-                // subitem[i].itemPropertyInfo = ''
-                // subitem[i].itemPropertyNameTwo = ''
-                // subitem[i].itemPropertyTwoValue = ''
-                // subitem[i].itemPropertyNameThree = ''
-                // subitem[i].itemPropertyThreeValue = ''
-                // subitem[i].itemPropertyFourName = ''
-                // subitem[i].itemPropertyFourValue = ''
-                // subitem[i].itemPropertyFiveName = ''
-                // subitem[i].itemPropertyFiveValue = ''
-                // subitem[i].itemPropertySixName = ''
-                // subitem[i].itemPropertySixValue = ''
               }
               window.sessionStorage.setItem('property', JSON.stringify(subitem))
               for (var i = 0; i < subitem.length; i++) {

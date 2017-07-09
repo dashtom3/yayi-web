@@ -13,20 +13,20 @@
             <el-date-picker
               v-model="value"
               type="daterange"
-              placeholder="选择日期范围">
+              placeholder="选择日期范围" @change="chooseDate">
             </el-date-picker>
           </div>
         </li>
-        <li>
+<!--         <li>
           <div class="block">
             <span class="demonstration">最近：</span>
             <span class="nav_select margin_r_30" v-for="(item, index) in selectDate" :key="index" :class="{active_nav: dateStat === index}" @click="choose(index)">{{item}}</span>
           </div>
-        </li>
+        </li> -->
         <li>
           <div class="block">
             <span class="demonstration">分类：</span>
-            <span class="nav_select margin_r_30" v-for="(item, index) in classify" :key="index" :class="{active_nav: classStat === index}"  @click="selClass(index)">{{item}}</span>
+            <span class="nav_select margin_r_30" v-for="(item, index) in classify" :key="index" :class="{active_nav: classStat === index}"  @click="selClass(item,index)">{{item}}</span>
           </div>
         </li>
       </ul>
@@ -37,14 +37,14 @@
     </el-col>
     <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
       <el-table :data="tableData" align="center" border style="width: 100%">
-        <el-table-column prop="date" align="center" label="日期">
+        <el-table-column prop="updated" align="center" label="日期">
         </el-table-column>
-        <el-table-column  prop="income" align="center" label="进账">
+        <el-table-column  prop="getMoney" align="center" label="进账">
           <template scope="scope">
             <span class="col_blue">{{scope.row.income}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="withDrawals" align="center" label="提现">
+        <el-table-column prop="getMoney" align="center" label="提现">
           <template scope="scope">
             <span class="col_red">{{scope.row.withDrawals}}</span>
           </template>
@@ -56,7 +56,7 @@
             <el-button
               size="mini"
               type="info"
-              @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+              @click="queryDetail()">查看详情</el-button>
           </template>  
         </el-table-column>
       </el-table>
@@ -113,36 +113,12 @@
 </template>
 
 <script>
+  import util from '../../../common/util'
   export default {
     data(){
       return {
-        value: '',
-        tableData: [{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        }],
+        value: null,
+        tableData: [],
         selectDate: ['1个月','2个月','半年','1年'],
         classify: ['全部','进账','提现'],
         dateStat: 0,
@@ -155,12 +131,95 @@
         withDrawCode: ''
       }
     },
+    created: function() {
+      var that = this;
+      that.getMyWallet();
+    },
     methods: {
-      choose(index){
-        this.dateStat = index;
+      //获取钱包明细
+      getMyWallet: function() {
+        var that = this;
+        var obj = {
+          token: that.global.getSalesToken(),
+          state: 0,
+        }
+        console.log(obj)
+        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res)
+            // that.tableData = res.data.data;
+            console.log(that.tableData)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
-      selClass(index){
-        this.classStat = index;
+      // 选择时间段
+      chooseDate: function() {
+        var that = this;
+        var startDate = util.formatDate.format(new Date(that.value[0]));
+        var endDate = util.formatDate.format(new Date(that.value[1]));
+        // var obj = {
+        //   token: that.global.getSalesToken(),
+        //   state: 0,
+        // }
+        // that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+        //   if (res.data.callStatus === 'SUCCEED') {
+        //     console.log(res)
+        //     // that.tableData = res.data.data;
+        //     console.log(that.tableData)
+        //   } else {
+        //     that.$message.error('网络出错，请稍后再试！');
+        //   }
+        // })
+      },
+      // 选择分类
+      selClass: function(item,index){
+        var that = this;
+        that.classStat = index;
+        if (item == '全部') {
+          var obj = {
+            token: that.global.getSalesToken(),
+            state: 0,
+          }
+          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res)
+              // that.tableData = res.data.data;
+              console.log(that.tableData)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        } else if (item == '进账') {
+          var obj = {
+            token: that.global.getSalesToken(),
+            state: 1,
+          }
+          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res)
+              // that.tableData = res.data.data;
+              console.log(that.tableData)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        } else if (item == '提现') {
+          var obj = {
+            token: that.global.getSalesToken(),
+            state: 2,
+          }
+          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              console.log(res)
+              // that.tableData = res.data.data;
+              console.log(that.tableData)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
       },
       withDrawHandler(){
         this.withDrawBank = true

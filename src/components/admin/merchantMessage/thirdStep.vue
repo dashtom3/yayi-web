@@ -68,12 +68,8 @@
   </div>
 </template>
 <script>
-  // import { VueEditor } from 'vue2-editor'
-  // import { quillEditor } from 'vue-quill-editor';
-  // require('../../../../node_modules/quill/core/quill')
   import global from '../../global/global' 
   import axios from 'axios'
-  //import Quill from 'quill'
   export default{
     name: 'thirdStep',
     props: ['message'],
@@ -98,23 +94,42 @@
         dialogVisible: false,
         imageUrl: '',
         fwb: '',
+        state: 1,
       }
     },
     created: function() {
       var that = this;
-      // 获取七牛云token
-      global.axiosGetReq('/file/getUpToken').then((res) => {
-        if (res.data.callStatus === 'SUCCEED') { 
-          that.qiNiuToken = {
-            token: res.data.msg
+      that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
+      if (that.editCargo !== null) {
+        that.thirdForm.video = that.editCargo.itemDetail.video
+        that.state = 1
+        console.log('buweikong')
+        // 获取七牛云token
+        global.axiosGetReq('/file/getUpToken').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            that.qiNiuToken = {
+              token: res.data.msg
+            }
+            console.log(that.qiNiuToken.token)
           }
-          console.log(that.qiNiuToken.token)
-        }
-      })
-      that.queryHandler();
+        })
+        that.queryHandler();
+      } else {
+        // 获取七牛云token
+        global.axiosGetReq('/file/getUpToken').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            that.qiNiuToken = {
+              token: res.data.msg
+            }
+            console.log(that.qiNiuToken.token)
+          }
+        })
+        that.queryHandler();
+      }
     },
     mounted: function() {
       var that = this;
+      //商品详情
       that.quill1 = new Quill('#editor1', {
         modules: {
         toolbar: '#toolbar1'
@@ -123,6 +138,7 @@
         theme: 'snow',
         // imageHandler: that.imageHandler
       });
+      //图片说明
       that.quill2 = new Quill('#editor2', {
         modules: {
         toolbar: '#toolbar2'
@@ -133,34 +149,7 @@
       });
     },
     methods: {
-      imageHandler(image, callback) {
-        var that = this;
-        var url = that.qiNiuUrl;
-        var token = that.qiNiuToken.token;
-        console.log('ppopopopop')
-        var data = new FormData();
-        data.append('image', image);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
-        xhr.setRequestHeader('Authorization', "UpToken " + token);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            var response = JSON.parse(xhr.responseText);
-            if (response.status === 200 && response.success) {
-              callback(response.data.link);
-            } else {
-              var reader = new FileReader();
-              reader.onload = function(e) {
-                callback(e.target.result);
-              };
-              reader.readAsDataURL(image);
-            }
-          }
-        }
-        xhr.send(data);
-      },
+      // 插入图片至富文本框
       insertImg() {
         var that = this;
         var insert = {
@@ -202,7 +191,6 @@
       //   var data = new FormData();
       //   var url = "http://upload-z2.qiniu.com/"; //非华东空间需要根据注意事项 1 修改上传域名
       //   data.append('image', image);
-
       //   var xhr = new XMLHttpRequest();
       //   xhr.open('POST', url, true);
       //   xhr.setRequestHeader('Authorization', "UpToken " + that.qiNiuToken);
@@ -255,86 +243,81 @@
       // 保存新增商品
       save: function() {
         var that = this;
-        // that.quill1.insertText(1, 'Hello', 'bold', true);
-        that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
-        that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
-        console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
-        that.thirdForm.itemPica = that.fileList[0];
-        that.thirdForm.itemPicb = that.fileList[1];
-        that.thirdForm.itemPicc = that.fileList[2];
-        that.thirdForm.itemPicd = that.fileList[3];
-        that.thirdForm.itemPice = that.fileList[4];
-        Object.assign(that.thirdForm,that.message);
-        delete that.thirdForm.itemBrand
-        delete that.thirdForm.type
-        var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-        console.log(itemValueList)
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
-        xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.send(itemValueList)
-        xhr.onreadystatechange = function(){
-          // var succeed = JSON.parse(xhr.response.callStatus)
-          // console.log(succeed)
-          var succeed = JSON.parse(xhr.response)
-          if(succeed.callStatus == 'SUCCEED') {
-            delete that.thirdForm.itemValueList
-            global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                console.log(res,'22222');
-                that.$message('保存成功！');
-                that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+        if (that.state !== 1) {
+          // that.quill1.insertText(1, 'Hello', 'bold', true);
+          that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
+          that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
+          console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
+          that.thirdForm.itemPica = that.fileList[0];
+          that.thirdForm.itemPicb = that.fileList[1];
+          that.thirdForm.itemPicc = that.fileList[2];
+          that.thirdForm.itemPicd = that.fileList[3];
+          that.thirdForm.itemPice = that.fileList[4];
+          Object.assign(that.thirdForm,that.message);
+          delete that.thirdForm.itemBrand
+          delete that.thirdForm.type
+          var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
+          console.log(itemValueList)
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+          xhr.setRequestHeader("Content-Type", "application/json")
+          xhr.send(itemValueList)
+          xhr.onreadystatechange = function(){
+            // var succeed = JSON.parse(xhr.response.callStatus)
+            // console.log(succeed)
+            var succeed = JSON.parse(xhr.response)
+            if(succeed.callStatus == 'SUCCEED') {
+              delete that.thirdForm.itemValueList
+              global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  console.log(res,'保存成功！');
+                  that.$message('保存成功！');
+                  that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            }
+          }
+        } else {
+          console.log('xiugai')
+          // that.quill1.insertText(1, 'Hello', 'bold', true);
+          that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
+          that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
+          console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
+          that.thirdForm.itemPica = that.fileList[0];
+          that.thirdForm.itemPicb = that.fileList[1];
+          that.thirdForm.itemPicc = that.fileList[2];
+          that.thirdForm.itemPicd = that.fileList[3];
+          that.thirdForm.itemPice = that.fileList[4];
+          Object.assign(that.thirdForm,that.message);
+          delete that.thirdForm.itemBrand
+          delete that.thirdForm.type
+          var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
+          console.log(itemValueList)
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+          xhr.setRequestHeader("Content-Type", "application/json")
+          xhr.send(itemValueList)
+          xhr.onreadystatechange = function(){
+            // var succeed = JSON.parse(xhr.response.callStatus)
+            // console.log(succeed)
+            var succeed = JSON.parse(xhr.response)
+            if(succeed.callStatus == 'SUCCEED') {
+              delete that.thirdForm.itemValueList
+              global.axiosPostReq('/item/update',that.thirdForm).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  console.log(res,'修改商品成功！');
+                  that.$message('修改商品成功！');
+                  window.sessionStorage.removeItem('editCargo')
+                  that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            }
           }
         }
-
-        // var qq = {
-        //   apparatusType:2,
-        //   isThrow:0,
-        //   itemBrandId:3,
-        //   itemBrandName:"武汉高登",
-        //   itemDesc:"<p>rfgrfrfrfrfr</p>",
-        //   itemId: '1707040002',
-        //   itemLevels:"12323",
-        //   itemName:"123",
-        //   itemPacking:"12323",
-        //   itemPica:"http://orl5769dk.bkt.clouddn.com/Fjn3NulDVDHq_SX19BC6QOJvwV_r",
-        //   itemPicb: "http://orl5769dk.bkt.clouddn.com/Fvc7rLFt0gJaqR080CJ1KYiq3igO",
-        //   itemPicc:"http://orl5769dk.bkt.clouddn.com/FrqX_ttOVVOLwz5ee22hgsZ_hrY6",
-        //   itemPicd:"http://orl5769dk.bkt.clouddn.com/FrF-erbJV1hYHD-6ACiKUShG4l1j",
-        //   itemPice :"http://orl5769dk.bkt.clouddn.com/Fvstw2BuoZh6dk8Px8PxD8LMbMLw",
-        //   itemRange:"231232",
-        //   itemUse:"<p>frfrfrfrfr</p>",
-        //   itemValueList:[{canUse:1,itemPropertyFiveName:"",itemPropertyFiveValue:"",itemPropertyFourName:"",itemPropertyFourValue:"",itemPropertyInfo:"",itemPropertyName:"",itemPropertyNameThree:"",itemPropertyNameTwo:"",itemPropertySixName:"",itemPropertySixValue:"",itemPropertyThreeValue:"",itemPropertyTwoValue:"",itemQb:12,itemSKU:"17070500071",itemSkuPrice:123,itemValueId:"",stockNum:12,tiChen:12}],
-        //   oneClassify:"预防护理",
-        //   producePompany:"12323",
-        //   registerDate:"2017-07-12",
-        //   registerId:"123123",
-        //   storeItemId:"12323",
-        //   threeClassify:"漱口水",
-        //   twoClassify:"日常护理",
-        //   unit:"21323",
-        //   video:"http://orl5769dk.bkt.clouddn.com/FqCsIFokMKOikya4XeF0wCFw0JTg"
-        // };
-        // var arr = [{canUse:1,itemId:"1707050007",itemPropertyFiveName:"",itemPropertyFiveValue:"",itemPropertyFourName:"",itemPropertyFourValue:"",itemPropertyInfo:"",itemPropertyName:"",itemPropertyNameThree:"",itemPropertyNameTwo:"",itemPropertySixName:"",itemPropertySixValue:"",itemPropertyThreeValue:"",itemPropertyTwoValue:"",itemQb:12,itemSKU:"17070500071",itemSkuPrice:123,itemValueId:"",stockNum:12,tiChen:12}]
-        // var itemValueList = JSON.stringify(arr)
-        // console.log(itemValueList,'22222');
-          // axios({
-          //   method: 'post',
-          //   url: 'http://192.168.1.103:8081/api/item/insert',
-          //   data: qq
-          // })
-          // .then(function (response) {
-          //   console.log(response);
-          // })
-          // .catch(function (error) {
-          //   console.log(error);
-          // });
-       // console.log(qq);
-        that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
       },
       // 返回上一步
       returnSecond: function() {
@@ -349,33 +332,33 @@
   }
 </script>
 <style scoped>
-.firstTitle {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  font-size: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e9e9e9;
-}
-.secondTitle,.thirdTitle{
-  margin-top: 50px;
-  margin-bottom: 15px;
-  font-size: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e9e9e9;
-}
-.fouthTitle {
-  float: left;
-  margin-top: 50px;
-}
-.selectTv {
-  float: left;
-  margin-top: 50px;
-}
-.upload-demo {
-}
-#editor-container {
-  height: 375px;
-}
+  .firstTitle {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+  .secondTitle,.thirdTitle{
+    margin-top: 50px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+  .fouthTitle {
+    float: left;
+    margin-top: 50px;
+  }
+  .selectTv {
+    float: left;
+    margin-top: 50px;
+  }
+  .upload-demo {
+  }
+  #editor-container {
+    height: 375px;
+  }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -393,7 +376,7 @@
     height: 178px;
     line-height: 178px;
     text-align: center;
-background: #eaeaea;
+    background: #eaeaea;
   }
   .avatar {
     width: 178px;
