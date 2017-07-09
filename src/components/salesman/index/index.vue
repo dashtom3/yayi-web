@@ -75,15 +75,15 @@
       myOrder,
     },
     //*******导航钩子*********//
-    beforeRouteEnter (to, from, next) {
-      // 通过 `vm` 访问组件实例
-      next(vm => {
-        var that = vm;
-        if (that.global.getSalesToken() == null) {
-          that.$router.push({ path: '/salesLog'})
-        }
-      })
-    },
+    // beforeRouteEnter (to, from, next) {
+    //   // 通过 `vm` 访问组件实例
+    //   next(vm => {
+    //     var that = vm;
+    //     if (that.global.getSalesToken() == null) {
+    //       that.$router.push({ path: '/salesLog'})
+    //     }
+    //   })
+    // },
     created: function() {
     },
     methods: {

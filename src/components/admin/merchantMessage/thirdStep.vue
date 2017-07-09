@@ -36,7 +36,7 @@
             <button class="ql-italic"></button>
             <button class="ql-script" value="sub"></button>
             <button class="ql-script" value="super"></button>
-            <button class="ql-Image" @click="uploaImage">image</button>
+            <button class="ql-Image" @click="uploaImage1">image</button>
         </div>
         <div id="editor2"></div>
      <!--  <div id="editor" type="text/plain" style="width: 100%; height: 500px;"></div> -->
@@ -97,6 +97,7 @@
         qiNiuUrl: global.qiNiuUrl,
         dialogVisible: false,
         imageUrl: '',
+        fwb: '',
       }
     },
     created: function() {
@@ -168,14 +169,25 @@
         // var delta = that.quill1.getContents();
         // delta.push(insert);
         // console.log(delta,'ppp')
-        var i = that.quill1.getContents().ops.length;
+        //var i = that.quill1.getContents().ops.length;
         // console.log(i,'333')
-        that.quill1.insertEmbed(0, 'image', that.imageUrl);
+        if (that.fwb == 0) {
+          that.quill1.insertEmbed(0, 'image', that.imageUrl);
+        } else {
+          that.quill2.insertEmbed(0, 'image', that.imageUrl);
+        }
         that.dialogVisible = false;
       },
       uploaImage: function() {
          var that = this;
          that.imageUrl = '';
+         that.fwb = 0,
+         that.dialogVisible = true;
+      },
+      uploaImage1: function() {
+         var that = this;
+         that.imageUrl = '';
+         that.fwb = 1;
          that.dialogVisible = true;
       },
       handleAvatarSuccess(file, fileList) {

@@ -43,7 +43,7 @@
         <p class="classifyName">{{classifyItem.oneClassify}}</p>
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-for="item in classifyItems.items" :key="item" @click="toDetail(item)">
+        <div class="preventive_item" v-for="item in classifyItem.items" :key="item" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src=item.itemDetail.itemPica alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>

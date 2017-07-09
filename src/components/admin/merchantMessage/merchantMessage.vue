@@ -142,7 +142,7 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">图片说明：</div>
-        <p class="detail_word" style="width:100px;height:100px;" v-html="details.itemDetail.itemUse"></p>
+        <p class="detail_word" v-html="details.itemDetail.itemUse"></p>
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
@@ -439,6 +439,14 @@
     }
   }
 </script>
+<style>
+.detail_word img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: auto;
+}
+</style>
 <style scoped>
 table {
  border-collapse:collapse;
@@ -533,9 +541,5 @@ th,td {
   color: #000;
   line-height: 25px;
   display: inline-block;
-}
-.detail_word p img {
-  width: 100px;
-  height: 100px;
 }
 </style>
