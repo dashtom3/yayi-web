@@ -54,6 +54,7 @@
 		  </ul>
     <div style="margin-top:30px;">
       <el-button class="btn_" type="primary" @click="saveVideo">保存</el-button>
+      <el-button class="btn_" @click="cancelVideo">取消</el-button>
     </div>
     </el-dialog>
   </el-row>
@@ -116,6 +117,9 @@
         	name: this.video_link,
         	url: this.video_link
         })
+      },
+      cancelVideo(){
+      	this.videoVisible = false;
       },
       validate(){
       	if(!this.input_video){
@@ -235,6 +239,7 @@
 	padding-right: 6px;
 }
 .btn_{
+	width: 80px;
   margin-left: 92px;
 }
 .add_btn{

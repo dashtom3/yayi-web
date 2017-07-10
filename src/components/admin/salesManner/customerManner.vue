@@ -7,18 +7,19 @@
       </el-breadcrumb>
     </el-col>
     <el-col :span="24" class="warp-main">
-    	<el-form label-width="80px" class="clearfix">
-	    	<el-select v-model="value" class="fl t_select_width">
-			    <el-option
-			      v-for="item in optSelect"
-			      :key="item.value"
-			      :label="item.label"
-			      :value="item.value">
-			    </el-option>
-			  </el-select>
-        <el-input v-model="select_input" class="fl t_input_w"></el-input>
-        <el-form-item class="fl">
-          <el-button type="primary">查询</el-button>
+    	<el-form :inline="true" class="clearfix">
+    		<el-input v-model="selectInput" class="fl t_input_w">
+		    	<el-select v-model="sel_value" slot="prepend" class="fl t_select_width" @change="selectOpt">
+				    <el-option
+				      v-for="item in optSelect"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				  </el-select>
+        </el-input>
+        <el-form-item class="fl" style="margin-left:10px;">
+          <el-button type="primary" @click="queryHandler">查询</el-button>
         </el-form-item>
 	    </el-form>
     </el-col>
@@ -26,13 +27,13 @@
 
     <!--客户列表-->
     <el-table :data="customerList" border>
-      <el-table-column prop="company_name" label="单位名称" :span="12" align="center">
+      <el-table-column prop="unitName" label="单位名称" :span="12" align="center">
       </el-table-column>
-      <el-table-column prop="company_add" label="单位地址" :span="12" align="center">
+      <el-table-column prop="unitAddress" label="单位地址" :span="12" align="center">
       </el-table-column>
-      <el-table-column prop="linkman" label="联系人" :span="12" align="center">
+      <el-table-column prop="contacts" label="联系人" :span="12" align="center">
       </el-table-column>
-      <el-table-column prop="contact" label="联系电话" :span="12" align="center">
+      <el-table-column prop="contactsPhone" label="联系电话" :span="12" align="center">
       </el-table-column>
       <el-table-column prop="handle" label="操作" :span="12" align="center">
         <template scope="scope">
@@ -70,13 +71,14 @@
 		    </li>
 		  </ul>
 	    <div style="margin-top:30px;">
-	      <el-button class="btn_" type="primary">保存</el-button>
+	      <el-button class="btn_" type="primary" @click="saveHandler">保存</el-button>
 	    </div>
     </el-dialog>
 	</el-row>
 </template>
 
 <script>
+	import global from '../../global/global'
 	export default {
 		data(){
 			return {
@@ -90,33 +92,96 @@
           value: '3',
           label: '联系电话'
         }],
-        value: '1',
-        select_input: '',
-        customerList: [{
-        	'company_name': '小酱软件',
-        	'company_add': '同济',
-        	'linkman': '小小',
-        	'contact': 13187570389
-        },{
-        	'company_name': '小酱软件',
-        	'company_add': '同济',
-        	'linkman': '小小',
-        	'contact': 13187570389
-        },{
-        	'company_name': '小酱软件',
-        	'company_add': '同济',
-        	'linkman': '小小',
-        	'contact': 13187570389
-        }],
+        sel_value: '1',
+        selectInput: '',
+        customerList: [],
         customerVisible: false,
         isEdit: false,
         companyName: '',
         companyAdd: '',
         linkMan: '',
-        contact_: ''
+        contact_: '',
+        cusId: ''
 			}
 		},
+		created(){
+			this.queryHandler()
+		},
 		methods: {
+			selectOpt(key){
+        this.sel_value = key;
+        this.selectInput = '';
+      },
+      queryHandler(){
+      	var params;
+      	if(this.sel_value == '1'){
+      		params = {
+      			companyName: this.selectInput,
+      			companyAdd: '',
+      			linkMan: ''
+      		}	
+      	}else if(this.sel_value == '2'){
+      		params = {
+      			companyName: '',
+      			companyAdd: this.selectInput,
+      			linkMan: ''
+      		}	
+      	}else if(this.sel_value == '3'){
+      		params = {
+      			companyName: '',
+      			companyAdd: '',
+      			linkMan: this.selectInput
+      		}	
+      	}
+    		console.log(params)
+        global.axiosPostReq('/cus/show',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.customerList = res.data.data
+            console.log(this.customerList)
+          }
+        })
+      },
+      saveHandler(){
+      	if(this.isEdit){
+      		let params = {
+	      		cusId: this.cusId,
+	      		unitName: this.companyName,
+	      		unitAddress: this.companyAdd,
+	      		contacts: this.linkMan,
+	      		contactsPhone: this.contact_
+	      	}
+	      	
+	      	global.axiosPostReq('/cus/update',params).then((res) => {
+	          if(res.data.callStatus === 'SUCCEED'){
+	            this.$message({
+	              message: '修改成功',
+	              type: 'success'
+	            });
+	            this.customerVisible = false
+	            this.queryHandler()
+	          }
+	        })
+      	}else if(!this.isEdit){
+      		let params = {
+	      		unitName: this.companyName,
+	      		unitAddress: this.companyAdd,
+	      		contacts: this.linkMan,
+	      		contactsPhone: this.contact_
+	      	}
+	      	global.axiosPostReq('/cus/insert',params).then((res) => {
+	          if(res.data.callStatus === 'SUCCEED'){
+	            this.$message({
+	              message: '新增成功',
+	              type: 'success'
+	            });
+	            this.customerVisible = false
+	            this.queryHandler()
+	          }
+	        })
+      	}
+      	
+
+      },
 			customerAddHandler(){
 				this.customerVisible = true;
 				this.isEdit = false;
@@ -128,15 +193,29 @@
 			handleEdit(index, row){
 				this.customerVisible = true;
 				this.isEdit = true;
-				this.companyName = row.company_name,
-				this.companyAdd = row.company_add,
-				this.linkMan = row.linkman,
-				this.contact_ = row.contact
+				this.companyName = row.unitName,
+				this.companyAdd = row.unitAddress,
+				this.linkMan = row.contacts,
+				this.contact_ = row.contactsPhone,
+				this.cusId = row.cusId
 			},
 			handleDel(index, row){
 				this.$confirm('确定删除吗？')
           .then(_ => {
-            done();
+            global.axiosPostReq('/cus/delete',{cusId: row.cusId}).then((res) => {
+		          if(res.data.callStatus === 'SUCCEED'){
+		            this.$message({
+		              message: '删除成功',
+		              type: 'success'
+		            });
+		            this.queryHandler()
+		          }else{
+		          	this.$message({
+		              message: '删除失败',
+		              type: 'success'
+		            });
+		          }
+		        })
           })
           .catch(_ => {});
 			}
@@ -157,11 +236,11 @@
 		display:block;
 	}
 	.t_input_w{
-		width:220px!important;
-	}
-	.t_select_width{
-		width:110px;
-	}
+    width:320px!important;
+  }
+  .t_select_width{
+    width:110px;
+  }
 	.add_btn{
 		float:right;
 		margin: 20px 118px 20px 0;

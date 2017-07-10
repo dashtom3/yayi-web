@@ -3629,9 +3629,7 @@
         ],
       }
     },
-    components: {
-
-    },
+    props: ['selected'],
     watch:{
       selectedOptions3:{
         handler:function(){
@@ -3642,6 +3640,10 @@
       }
     },
     created: function() {
+        if (this.selected !== undefined) {
+          this.selectedOptions3 = this.selected
+          return false
+        }
     },
     methods: {
     }

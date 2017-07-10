@@ -15,15 +15,15 @@
       <div class="personal_right">
         <div class="oneInfor">
           <span>手机号：</span>
-          <span>134141241</span>
+          <span>{{personalData}}</span>
         </div>
         <div class="oneInfor">
           <span>真实姓名：</span>
-          <span>134141241</span>
+          <span>{{personalData}}</span>
         </div>
         <div class="oneInfor">
           <span>支付宝账户：</span>
-          <span>134141241</span>
+          <span>{{personalData}}</span>
         </div>
         <div class="btnWrap">
           <span v-on:click="immediateDoIt()">立即完善</span>
@@ -43,27 +43,108 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable></dataTable>
+    <dataTable :orderInfo="orderInfo" :dateInfo="dateInfo"></dataTable>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </div>
 </template>
 
 <script>
   import dataTable from './dataTable'
+  import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
   export default {
     name: 'aa',
     data () {
       return {
-        imgIs:true
+        imgIs:true,
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
+        dateInfo: {
+          year: new Date().getFullYear(),
+          month: new Date().getMonth()+1
+        },
+        orderInfo: {
+          allCommission: '',
+          dayCommission: '',
+          dayOrderNum: '',
+          getUpdated: '',
+          hasCommission: '',
+          orderNum: '',
+          saleIncomeVoList: '',
+          stayCommission: '',
+          sumOrderMoney: '',
+          myOrderVoList: []
+        },
+        personalData: null
       }
     },
     components: {
-      // salesHead,
-      dataTable
+      dataTable,
+      paging
     },
     created: function() {
+      this.init()
+      this.echartPic()
+      this.queryInfo()
       console.log("aaa")
     },
     methods: {
+      init(){
+        let params = {
+          currentPage: this.pageProps.pageNum,
+          numberPerPage: 10,
+          token: global.getSalesToken()
+        }
+
+        global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            // this.replayList = res.data.data
+            // this.pageProps.totalPage = res.data.totalPage
+            console.log(res.data.data)
+            // this.orderInfo = res.data.data
+            this.overYearHasCommission = res.data.data.overYearHasCommission
+            this.pageProps.totalPage = res.data.totalPage
+          }else{
+            this.$message.error('查询订单失败！');
+          }
+        })
+      },
+      queryInfo(){
+        let params = {
+          phone: global.getSalesUser().phone,
+          token: global.getSalesToken(),
+          currentPage: 1,
+          numberPerPage: 1
+        }
+        console.log('查询销售员个人资料',params)
+        global.axiosGetReq('/saleList/detail',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.personalData = res.data.data
+            console.log(this.personalData)
+          }
+        })
+      },
+      echartPic(){
+        let params = {
+          year: this.dateInfo.year,
+          month: this.dateInfo.month,
+          token: global.getSalesToken()
+        }
+        global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            // this.replayList = res.data.data
+            console.log(res.data.data)
+          }else{
+            this.$message.error('查询订单失败！');
+          }
+        })
+      },
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.init();
+      },
       immediateDoIt:function(){
         var that = this;
         that.$emit('msgFromChild', 'editMyPersData' );

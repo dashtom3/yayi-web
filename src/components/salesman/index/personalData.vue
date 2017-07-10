@@ -8,26 +8,28 @@
     <div v-if="showPane==1">
       <div class="perDataRight">
         <div v-if="showDefaultData" class="defaultData">
-          <div class="headImgWrap">
-            <label for="file1">
-              <div class="imgWrap">
-                <img src="" alt="">
-              </div>
-              上传头像
-              <input type="file" name="file1" style="display:none" id="file1">
-            </label>
+          <div style="margin: 0 0 0 460px;">
+            <el-upload
+              class="avatar-uploader"
+              :action="qiNiuUrl"
+              :show-file-list="false"
+              :on-success="uploadFile"
+              :data="qiNiuToken">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
+              <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
+            </el-upload>
           </div>
           <div class="persInfo">
             <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">手机号：</span>{{personalData.phone}}</span>
-              <span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.name}}</span>
+              <span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.trueName}}</span>
             </div>
             <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">性别：</span>{{personalData.sex}}</span>
-              <span class="infoRight"><span class="infoName">身份证号：</span>{{personalData.IDCode}}</span>
+              <span class="infoRight"><span class="infoName">身份证号：</span>{{personalData.idCard}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">微信：</span>{{personalData.weixin}}</span>
+              <span class="infoLeft"><span class="infoName">微信：</span>{{personalData.weChar}}</span>
               <span class="infoRight"><span class="infoName">邮箱：</span>{{personalData.email}}</span>
             </div>
             <div class="oneLineInfo">
@@ -35,14 +37,14 @@
               <span class="infoRight"><span class="infoName">学历：</span>{{personalData.education}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">工作单位：</span>{{personalData.companyName}}</span>
-              <span class="infoRight"><span class="infoName">工作职位：</span>{{personalData.position}}</span>
+              <span class="infoLeft"><span class="infoName">工作单位：</span>{{personalData.workUnit}}</span>
+              <span class="infoRight"><span class="infoName">工作职位：</span>{{personalData.workPosition}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">所在地省市区：</span>{{personalData.palce}}</span>
+              <span class="infoLeft"><span class="infoName">所在地省市区：</span>{{personalData.part}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">详细地址：</span>{{personalData.detailsPlace}}</span>
+              <span class="infoLeft"><span class="infoName">详细地址：</span>{{personalData.address}}</span>
             </div>
             <div class="goToEditData">
               <span @click="goToEditData()">编辑资料</span>
@@ -50,34 +52,36 @@
           </div>
         </div>
         <div v-else class="edit">
-          <div class="headImgWrap">
-            <label for="file1">
-              <div class="imgWrap">
-                <img src="" alt="">
-              </div>
-              上传头像
-              <input type="file" name="file1" style="display:none" id="file1">
-            </label>
+          <div style="margin: 0 0 0 460px;">
+            <el-upload
+              class="avatar-uploader"
+              :action="qiNiuUrl"
+              :show-file-list="false"
+              :on-success="uploadFile"
+              :data="qiNiuToken">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
+              <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
+            </el-upload>
           </div>
           <div class="editPersonalData">
             <el-form :label-position="lablePosi"  label-width="150px"  :model="personalData" :rules="personalDataRule" ref="personalData">
               <el-form-item label="手机号：" prop="phone">
                 <el-input v-model="personalData.phone" :disabled="true"></el-input>
               </el-form-item>
-              <el-form-item label="真实姓名：" prop="name">
-                <el-input v-model="personalData.name"></el-input>
+              <el-form-item label="真实姓名：" prop="trueName">
+                <el-input v-model="personalData.trueName"></el-input>
               </el-form-item>
               <el-form-item label="性别：" prop="sex">
                 <el-radio-group v-model="personalData.sex">
-                  <el-radio label="男"></el-radio>
-                  <el-radio label="女"></el-radio>
+                  <el-radio label="1">男</el-radio>
+                  <el-radio label="2">女</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item label="身份证号：" prop="IDCode">
-                <el-input v-model="personalData.IDCode"></el-input>
+              <el-form-item label="身份证号：" prop="idCard">
+                <el-input v-model="personalData.idCard"></el-input>
               </el-form-item>
-              <el-form-item label="微信号：" prop="weixin">
-                <el-input v-model="personalData.weixin"></el-input>
+              <el-form-item label="微信号：" prop="weChar">
+                <el-input v-model="personalData.weChar"></el-input>
               </el-form-item>
               <el-form-item label="邮箱：" prop="email">
                 <el-input v-model="personalData.email"></el-input>
@@ -88,17 +92,17 @@
               <el-form-item label="学历：" prop="education">
                 <el-input v-model="personalData.education"></el-input>
               </el-form-item>
-              <el-form-item label="工作单位：" prop="companyName">
-                <el-input v-model="personalData.companyName"></el-input>
+              <el-form-item label="工作单位：" prop="workUnit">
+                <el-input v-model="personalData.workUnit"></el-input>
               </el-form-item>
               <el-form-item label="工作职位：" prop="position">
-                <el-input v-model="personalData.position"></el-input>
+                <el-input v-model="personalData.workPosition"></el-input>
               </el-form-item>
-              <el-form-item label="所在地省市区：" prop="palce">
-                <positionPicker v-on:getMsgFromChildren="positionFromPicker"></positionPicker>
+              <el-form-item label="所在地省市区：" prop="part">
+                <positionPicker v-on:getMsgFromChildren="positionFromPicker" :selected="this.personalData.part"></positionPicker>
               </el-form-item>
-              <el-form-item label="详细地址：" prop="detailsPlace">
-                <el-input v-model="personalData.detailsPlace"></el-input>
+              <el-form-item label="详细地址：" prop="address">
+                <el-input v-model="personalData.address"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="saveEditPersData('personalData')">保存</el-button>
@@ -156,68 +160,12 @@
           </div>
       </div>
     </div>
-    <!-- <div class="perDataRight">
-      <div class="headImgWrap">
-        <label for="file1">
-          <div class="imgWrap">
-            <img src="" alt="">
-          </div>
-          上传头像
-          <input type="file" name="file1" style="display:none" id="file1">
-        </label>
-      </div>
-      <div class="editPersonalData">
-        <el-form :label-position="lablePosi"  label-width="150px"  :model="personalData" :rules="personalDataRule" ref="personalData">
-          <el-form-item label="手机号：" prop="phone">
-            <el-input v-model="personalData.phone" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="真实姓名：" prop="name">
-            <el-input v-model="personalData.name"></el-input>
-          </el-form-item>
-          <el-form-item label="性别：" prop="sex">
-            <el-radio-group v-model="personalData.sex">
-              <el-radio label="男"></el-radio>
-              <el-radio label="女"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="身份证号：" prop="IDCode">
-            <el-input v-model="personalData.IDCode"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号：" prop="weixin">
-            <el-input v-model="personalData.weixin"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱：" prop="email">
-            <el-input v-model="personalData.email"></el-input>
-          </el-form-item>
-          <el-form-item label="出生日期：" prop="birthday">
-            <el-date-picker type="date" v-model="personalData.birthday" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="学历：" prop="education">
-            <el-input v-model="personalData.education"></el-input>
-          </el-form-item>
-          <el-form-item label="工作单位：" prop="companyName">
-            <el-input v-model="personalData.companyName"></el-input>
-          </el-form-item>
-          <el-form-item label="工作职位：" prop="position">
-            <el-input v-model="personalData.position"></el-input>
-          </el-form-item>
-          <el-form-item label="所在地省市区：" prop="palce">
-            <positionPicker v-on:getMsgFromChildren="positionFromPicker"></positionPicker>
-          </el-form-item>
-          <el-form-item label="详细地址：" prop="detailsPlace">
-            <el-input v-model="personalData.detailsPlace"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="saveEditPersData('personalData')">保存</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </div> -->
   </div>
 </template>
 
 <script>
   import positionPicker from "./positionSelect"
+  import global from "../../global/global"
   export default {
     name: 'personalData',
     data () {
@@ -226,6 +174,9 @@
         showPane:1,
         showDefaultData:true,
         getMoneySet:true,
+        imageUrl: '',
+        qiNiuToken: null,
+        qiNiuUrl: global.qiNiuUrl,
         bindGetMoneyCount:{
           type:'支付宝',
           userName:"小酱",
@@ -245,51 +196,51 @@
           zhifubaoCounet:{required: true, message: '请填写支付宝账号', trigger: 'change'}
         },
         personalData:{
-          phone:"121121",
-          name:"小酱",
-          sex:"男",
-          IDCode:"1234",
-          weixin:"134",
+          phone: global.getSalesUser().phone,
+          trueName:"小酱",
+          sex: '1',
+          idCard:"1234",
+          weChar:"134",
           email:'134',
           birthday:'1993-02-01',
           education:"同济",
-          companyName:"小酱",
-          position:'小酱',
-          palce:["上海","杨浦区"],
-          detailsPlace:"同济大学"
+          workUnit:"小酱",
+          workPosition:'小酱',
+          part:["河北","秦皇岛市","北戴河区"],
+          address:"同济大学"
         },
         personalDataRule:{
-          name: [
+          trueName: [
             { required: true, message: '请填写真实姓名', trigger: 'change' }
           ],
           sex: [
             { required: true, message: '请选择性别', trigger: 'change' }
           ],
-          IDCode: [
+          idCard: [
             { required: true, message: '请输入身份证号', trigger: 'change' }
           ],
-          weixin: [
+          weChar: [
             { required: true, message: '请填写微信号', trigger: 'change' }
           ],
           email: [
             { required: true, message: '请填写邮箱', trigger: 'change' }
           ],
           birthday: [
-            { required: true, message: '请选择出生日期', trigger: 'blur' ,type:"date"}
+            { required: true, message: '请选择出生日期', trigger: 'blur' ,type:"string"}
           ],
           education: [
             { required: true, message: '请填写学历', trigger: 'change' }
           ],
-          companyName: [
+          workUnit: [
             { required: true, message: '请输入工作单位', trigger: 'change' }
           ],
-          position: [
+          workPosition: [
             { required: true, message: '请输入工作职位', trigger: 'change' }
           ],
-          palce: [
+          part: [
             { required: true, message: '请选择所在省市区', trigger: 'change',type:"array" }
           ],
-          detailsPlace: [
+          address: [
             { required: true, message: '请填写详细地址', trigger: 'change' }
           ]
         },
@@ -299,14 +250,65 @@
       positionPicker
     },
     created: function() {
+      //获取七牛token
+      global.axiosGetReq('/file/getUpToken', null).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          this.qiNiuToken = {
+            token: res.data.msg
+          }
+        }
+      })
+      this.queryPersonInfo()
     },
     methods: {
+      queryPersonInfo: function(){
+        let params = {
+          phone: global.getSalesUser().phone,
+          token: global.getSalesToken(),
+          currentPage: 1,
+          numberPerPage: 1
+        }
+        console.log('查询销售员个人资料',params)
+        global.axiosGetReq('/saleList/detail',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.personalData = res.data.data
+            console.log(this.personalData)
+          }
+        })
+      },
       saveEditGetMoeny:function(formName){
         var that = this;
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
-            that.getMoneySet = true;
+            let params
+            if(this.getMoneyData.type === '支付宝'){
+              params = {
+                postalType: '支付宝',
+                openName: this.getMoneyData.name,
+                accountNumber: this.getMoneyData.zhifubaoCounet,
+                token: global.getSalesToken()
+              }
+            }else if(this.getMoneyData.type === '银行'){
+              params = {
+                postalType: '银行',
+                bankName: this.getMoneyData.name,
+                openName: this.getMoneyData.bandName,
+                accountNumber: this.getMoneyData.bandCounet,
+                token: global.getSalesToken()
+              }
+            }
+            
+            console.log(params)
+            global.axiosPostReq('/saleInfo/updatePostal',params).then((res) => {
+              if(res.data.callStatus === 'SUCCEED'){
+                this.$message({
+                  message: '设置成功',
+                  type: 'success'
+                });
+                that.getMoneySet = true;
+              }
+            })
+            
           } else {
             alert('error submit!!');
             return false;
@@ -327,15 +329,42 @@
       },
       positionFromPicker:function(data){
         var that = this;
-        that.personalData.palce = data;
-        console.log(that.personalData.palce)
+        that.personalData.part = data;
+      },
+      uploadFile(res, file) {
+        this.personalData.salePic = global.qiniuShUrl + file.response.key
+        this.imageUrl = global.qiniuShUrl + file.response.key
       },
       saveEditPersData:function(formName){
         var that = this;
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
-            that.showDefaultData = true;
+            let params = {
+              trueName: this.personalData.trueName,
+              idCard: this.personalData.idCard,
+              weChar: this.personalData.weChar,
+              email: this.personalData.email,
+              sex: this.personalData.sex,
+              birthday: this.personalData.birthday,
+              part: this.personalData.part,
+              address: this.personalData.address,
+              education: this.personalData.education,
+              workUnit: this.personalData.workUnit,
+              workPosition: this.personalData.workPosition,
+              salePic: this.personalData.salePic,
+              token: global.getSalesToken()
+            }
+            console.log(params)
+            global.axiosPostReq('/saleInfo/updateSale',params).then((res) => {
+              if(res.data.callStatus === 'SUCCEED'){
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                });
+                that.queryPersonInfo()
+                that.showDefaultData = true
+              }
+            })
           } else {
             alert('error submit!!');
             return false;
@@ -415,7 +444,7 @@ background: #5ed6dc;
   font-weight: 600;
 }
 .persInfo .oneLineInfo .infoRight{
-  float: right
+  float: right;
 }
 .goToEditData span{
   display: block;
@@ -458,5 +487,13 @@ background: #5ed6dc;
   width: 630px;
   margin: auto;
   margin-top:30px;
+}
+.defaultCss{
+  width: 100px;
+  height: 100px;
+  -webkit-box-shadow: 3px 3px 10px #ddd;  
+  -moz-box-shadow: 3px 3px 10px #ddd;
+  box-shadow: 3px 3px 10px #ddd;
+  border-radius: 50%;
 }
 </style>

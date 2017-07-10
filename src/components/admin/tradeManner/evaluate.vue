@@ -61,6 +61,8 @@
         </el-table-column>
       </el-table>
 
+      <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+
       <!-- 回复弹窗 -->
       <el-dialog title="回复评价" size="tiny" v-model="replayBtn" :close-on-click-modal="true">
         <el-input
@@ -80,6 +82,7 @@
 
 <script>
   import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
 	export default {
 		data(){
 			return {
@@ -95,59 +98,40 @@
           value: '1',
           label: '已回复'
         }],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         value: '',
         //回复列表
-        replayList: [{
-        	SKUCode: 'xxxxx',
-        	goodsInfo: '商品名称+属性',
-        	comment: '6666666',
-        	deuce: 5,
-        	orderCode: 'FJDKS64236764',
-        	userCode: 'FIOPOP753287',
-        	replayInfo: '',
-        	recoveryState: '0'
-        },{
-        	SKUCode: 'xxxxx',
-        	goodsInfo: '商品名称+属性',
-        	comment: '6666666',
-        	deuce: 5,
-        	orderCode: 'FJDKS64236764',
-        	userCode: 'FIOPOP753287',
-        	replayInfo: '',
-        	recoveryState: '0'
-        },{
-        	SKUCode: 'xxxxx',
-        	goodsInfo: '商品名称+属性',
-        	comment: '6666666',
-        	deuce: 5,
-        	orderCode: 'FJDKS64236764',
-        	userCode: 'FIOPOP753287',
-        	replayInfo: '我回复完了',
-        	recoveryState: '1'
-        }],
+        replayList: [],
         replayBtn: false,
         replayText: '',
         orderId: '',
         itemId: ''
 			}
 		},
+    components: {
+      paging
+    },
     created(){
       this.queryHandler()
     },
 		methods: {
       queryHandler(){
         let params = {
-          token: global.getUser().phone,
+          token: global.getToken(),
           orderId: this.orderCode,
           userId: this.userCode,
           recoveryState: this.value,
-          currentPage: 1,
-          numberPerpage: 10
+          currentPage: this.pageProps.pageNum,
+          numberPerPage: 10,
         }
         console.log(params)
         global.axiosPostReq('/commentManage/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.replayList = res.data.data
+            this.pageProps.totalPage = res.data.totalPage
             console.log(res.data.data)
           }else{
             this.$message.error('查询评论失败！');
@@ -160,6 +144,10 @@
         this.itemId = row.sku;
 				this.replayBtn = true;
 			},
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.queryHandler();
+      },
 			replayOkHandler(){
         let params = {
           orderId: this.orderId,

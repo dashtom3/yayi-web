@@ -5,17 +5,17 @@
     </el-col>
     <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
       <div class="grid-content bg-purple-dark fl">
-        <span>总收入：<i class="i_col_red">￥20000</i></span>
-        <span class="margin_l">待结算：<i class="i_col_red">￥18000</i></span>
-        <span class="margin_l">已结算：<i class="i_col_red">￥2000</i></span>
+        <span>总收入：<i class="i_col_red">￥<span>{{tableData.allCommission}}</span></i></span>
+        <span class="margin_l">待结算：<i class="i_col_red">￥{{tableData.stayCommission}}</i></span>
+        <span class="margin_l">已结算：<i class="i_col_red">￥{{tableData.hasCommission}}</i></span>
       </div>
       <div class="grid-content bg-purple-dark fr">
-        <span>订单总额：<i class="i_col_red">￥40000</i></span>
-        <span class="margin_l">订单量：<i class="i_col_red">￥4000</i></span>
+        <span>订单总额：<i class="i_col_red">￥{{tableData.sumOrderMoney}}</i></span>
+        <span class="margin_l">订单量：<i class="i_col_red">￥{{tableData.orderNum}}</i></span>
       </div>
     </el-col>
 		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
-      <el-table :data="tableData" align="center" border style="width: 100%">
+      <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
         <el-table-column prop="orderTime" align="center" label="下单时间">
         </el-table-column>
         <el-table-column  prop="customerName" align="center" label="客户姓名">
@@ -91,71 +91,72 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-	name: 'hello',
+  props: ['orderInfo'],
   data() {
     return {
       detailVisible: false,
-      tableData: [{
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      }, {
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      }, {
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      }, {
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      },{
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      },{
-        orderTime: '2016-05-02-17:00',
-        customerName: '李志芳',
-        customerPhone: '13861637946',
-        commodityInfo: '商品信息',
-        commodityTotal: 4000,
-        refundAmt: 200,
-        income: 10000,
-        state: '待结算',
-        cutoffTime: '2017-01-03-17:00'
-      }],
+      // tableData: [{
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // }, {
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // }, {
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // }, {
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // },{
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // },{
+      //   orderTime: '2016-05-02-17:00',
+      //   customerName: '李志芳',
+      //   customerPhone: '13861637946',
+      //   commodityInfo: '商品信息',
+      //   commodityTotal: 4000,
+      //   refundAmt: 200,
+      //   income: 10000,
+      //   state: '待结算',
+      //   cutoffTime: '2017-01-03-17:00'
+      // }],
+      tableData: this.orderInfo,
       infoList: [{
         goodsName: '商品名称1',
         price: 30,
@@ -173,6 +174,9 @@ export default {
         totalPrice: 60
       }]
     }
+  },
+  created(){
+    console.log(this.orderInfo)
   },
   mounted() {
     this.drawLine();

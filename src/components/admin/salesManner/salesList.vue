@@ -8,10 +8,11 @@
     </el-col>
     <!-- 头部查询 -->
     <el-col  class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
-      <el-form :inline="true" >
+      <el-form :inline="true" class="clearfix">
         <el-form-item>
-          <el-input v-model="searchUserContent">
-            <el-select v-model="searchUserType" slot="prepend" placeholder="请选择">
+          <el-input v-model="searchUserContent" class="fl t_input_w">
+            <el-select v-model="searchUserType" slot="prepend" class="fl t_select_width" placeholder="请选择"  @change="selectOpt">
+              <el-option label="销售员编号" value="销售员编号"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
             </el-select>
@@ -23,7 +24,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="headSearch()">查询</el-button>
+          <el-button type="primary" v-on:click="queryHandler">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -98,65 +99,82 @@
         <img src="" alt="">
         <h3>个人资料</h3>
         <div class="">
-          <span>销售员编号：{{someOneUserDetails.info.bianhao}}</span>
-          <span>真实姓名：{{someOneUserDetails.info.name}}</span>
+          <span>销售员编号：{{someOneUserDetails.info.saleId}}</span>
+          <span>真实姓名：{{someOneUserDetails.info.trueName}}</span>
         </div>
         <div class="">
           <span>手机号：{{someOneUserDetails.info.phone}}</span>
           <span>性别：{{someOneUserDetails.info.sex}}</span>
         </div>
         <div class="">
-          <span>身份证号：{{someOneUserDetails.info.ID}}</span>
-          <span>注册时间：{{someOneUserDetails.info.time}}</span>
+          <span>身份证号：{{someOneUserDetails.info.idCard}}</span>
+          <span>注册时间：{{someOneUserDetails.info.created}}</span>
         </div>
         <div class="">
-          <span>钱包余额：{{someOneUserDetails.info.leaveMoney}}</span>
+          <span>钱包余额：{{someOneUserDetails.info.money}}</span>
           <span>已绑定的客户数：{{someOneUserDetails.info.bindUserNum}}</span>
         </div>
       </div>
       <div class="certification">
         <h3>提现方式</h3>
         <div class="">
-          <span>类型：{{someOneUserDetails.getMoneyStyle.type}}</span>
-          <span>银行：{{someOneUserDetails.getMoneyStyle.count}}</span>
+          <span>类型：{{someOneUserDetails.getMoneyStyle.postalType}}</span>
+          <span>银行：{{someOneUserDetails.getMoneyStyle.bankName}}</span>
         </div>
         <div class="">
-          <span>开户者：{{someOneUserDetails.getMoneyStyle.type}}</span>
-          <span>账号：{{someOneUserDetails.getMoneyStyle.count}}</span>
+          <span>开户者：{{someOneUserDetails.getMoneyStyle.openName}}</span>
+          <span>账号：{{someOneUserDetails.getMoneyStyle.accountNumber}}</span>
         </div>
       </div>
       <h3>绑定的客户信息</h3>
       <el-table :data="someOneUserDetails.bindUsers" border>
-        <el-table-column align="center" property="bianhao" label="用户编号" width="150"></el-table-column>
+        <el-table-column align="center" property="userId" label="用户编号" width="150"></el-table-column>
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
-        <el-table-column align="center" property="name" label="真实姓名" width="200"></el-table-column>
-        <el-table-column align="center" property="componey" label="单位名称"></el-table-column>
+        <el-table-column align="center" property="trueName" label="真实姓名" width="200"></el-table-column>
+        <el-table-column align="center" property="certification.companyName" label="单位名称"></el-table-column>
       </el-table>
     </el-dialog>
 
     <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
-      <el-table-column  prop="name"  align="center"  label="真实姓名">  </el-table-column>
+      <el-table-column  prop="saleId"  align="center"  label="销售员编号">  </el-table-column>
+      <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
       <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
-      <el-table-column  prop="time"  align="center"  label="注册时间">  </el-table-column>
-      <el-table-column  prop="bindUser"  align="center"  label="是否绑定客户">  </el-table-column>
-      <el-table-column  prop="userNum"  align="center"  label="客户数量">  </el-table-column>
-      <el-table-column  label="操作"  align="center" >
+      <el-table-column  prop="created"  align="center"  label="注册时间"> 
         <template scope="scope">
-            <el-button v-if="scope.row.bindUser=='否'" type="text"  v-on:click="bindUser(scope.$index)">绑定客户</el-button>
-            <el-button v-else type="text"  v-on:click="cancleBindUser(scope.$index)">取消绑定</el-button>
-            <el-button type="text"   v-on:click="saleDetail(scope.$index)">详情</el-button>
+          <span>{{new Date(scope.row.created).getFullYear()+'-'+ (new Date(scope.row.created).getMonth()+1)+'-'+new Date(scope.row.created).getDate()}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
+        <template scope="scope">
+          <span v-if="scope.row.isBindUser === 1">是</span>
+          <span v-else-if="scope.row.isBindUser === 2">否</span>
+        </template>
+      </el-table-column>
+      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
+      <el-table-column  label="操作"  align="center">
+        <template scope="scope">
+            <el-button v-if="scope.row.isBindUser=='否'" type="text"  v-on:click="bindUser(scope.$index)">绑定客户</el-button>
+            <el-button v-else type="text"  v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
+            <el-button type="text"   v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
+     <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
+  import global from '../../global/global'
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
         noBindSearchType:"手机号",
         BindSearchType:"手机号",
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         noBindSearchContent:null,
         BindSearchContent:null,
         multipleSelection1: [],
@@ -164,9 +182,9 @@
         activeName2: 'first',
         showSaleDetailInfor:false,
         bindSalseAlert:false,
-        searchUserContent:null,
-        searchUserType:"手机号",
-        searchState:"全部",
+        searchUserContent:'',
+        searchUserType:"销售员编号",
+        searchState:"",
         bindedUserList:[
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
@@ -214,10 +232,14 @@
           {value: '机构',label: '机构'}
         ],
         states:[
-          {value: '全部',label: '全部'},
-          {value: '是',label: '是'},
-          {value: '否',label: '否'}        ],
+          {value: '',label: '全部'},
+          {value: '1',label: '是'},
+          {value: '2',label: '否'}       
+        ],
       }
+    },
+    components: {
+      paging
     },
     watch:{
       multipleSelection1:{
@@ -228,7 +250,59 @@
         deep:true
       }
     },
+    created(){
+      this.queryHandler()
+    },
     methods: {
+      selectOpt(key){
+        this.searchUserType = key;
+        this.searchUserContent = '';
+      },
+      queryHandler: function(){
+        var params;
+        if(this.searchUserType === '销售员编号'){
+          params = {
+            saleId: this.searchUserContent,
+            phone: '',
+            trueName: '',
+            isBindUser: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
+            token: ''
+          }
+        }else if(this.searchUserType === '手机号'){
+          params = {
+            saleId: '',
+            phone: this.searchUserContent,
+            trueName: '',
+            isBindUser: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
+            token: ''
+          }
+        }else if(this.searchUserType === '真实姓名'){
+          params = {
+            saleId: '',
+            phone: '',
+            trueName: this.searchUserContent,
+            isBindUser: this.searchState,
+            currentPage: this.pageProps.pageNum,
+            numberPerPage: 10,
+            token: ''
+          }
+        }
+        console.log('查询销售员列表',params)
+        global.axiosGetReq('/saleList/query',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            console.log(res.data.data)
+            this.salesList = res.data.data
+          }
+        })
+      },
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.queryHandler();
+      },
       BindSearch:function(){
         var that = this;
         if(that.BindSearchContent){
@@ -307,12 +381,30 @@
         this.bindSalseAlert = true;
         this.activeName2 = "first";
       },
-      cancleBindUser:function(index){
+      cancleBindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "second";
+        console.log(row)
+        this.bindedUserList = row.user
       },
-      saleDetail:function(index){
+      saleDetail:function(index, row){
+        //查看详情
         this.showSaleDetailInfor = true;
+        let params = {
+          phone: row.phone,
+          currentPage: 1,
+          numberPerPage: 1,
+          token: global.getToken()
+        }
+        global.axiosGetReq('/saleList/detail',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.someOneUserDetails.info = res.data.data
+            this.someOneUserDetails.bindUsers = res.data.data.user
+            console.log(res.data.data)
+          }
+        })
+
+
       },
       search:function(){},
 
@@ -322,7 +414,7 @@
 
 <style>
   .saleListWarp .el-select .el-input{
-width: 150px;
+    width: 120px;
   }
     .saleListWarp h4{
       line-height: 50px;
@@ -350,5 +442,11 @@ width: 150px;
       display: inline-block;
       line-height: 35px;
     }
+  .t_input_w{
+    width:320px!important;
+  }
+  .t_select_width{
+    width:120px;
+  }
 
 </style>

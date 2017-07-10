@@ -85,28 +85,30 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="tiny">
-      <el-row>
-        <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24" align="center"><div class="i_title"><span>姓名：招商银行：6225842322152325</span></div></el-col>
-      </el-row>
-      <el-form>
-        <el-form-item label="提现金额：">
-          <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号：" style="padding-left:14px;">
-          <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
-        </el-form-item>
-        <el-form-item label="验证码：" style="padding-left:14px;">
-          <el-input v-model="withDrawCode" class="item_c_input fl"></el-input>
-          <button class="btn_col">获取验证码</button>
-        </el-form-item>
-      </el-form>
-      <div>
-        <button class="withDrawBtn btn_col" @click="withDrawBank = false">申请提现</button>
-        <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
+      size="small">
+      <div style="margin:0 auto;width:460px;">
+        <el-row>
+          <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24" align="center"><div class="i_title"><span>姓名：招商银行：6225842322152325</span></div></el-col>
+        </el-row>
+        <el-form>
+          <el-form-item label="提现金额：">
+            <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号：" style="padding-left:14px;">
+            <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
+          </el-form-item>
+          <el-form-item label="验证码：" style="padding-left:14px;">
+            <el-input v-model="withDrawCode" class="item_c_input fl"></el-input>
+            <button class="btn_col">获取验证码</button>
+          </el-form-item>
+        </el-form>
+        <div>
+          <button class="withDrawBtn btn_col" @click="withDrawBank = false">申请提现</button>
+          <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
+        </div>
       </div>
     </el-dialog>
 	</el-row> 
@@ -120,8 +122,34 @@
         value: null,
         tableData: [],
         selectDate: ['1个月','2个月','半年','1年'],
+        value: '',
+        tableData: [{
+          date: '2017-01-01-17:00',
+          income: 8888,
+          withDrawals: -2000,
+          account: 2000
+        },{
+          date: '2017-01-01-17:00',
+          income: 8888,
+          withDrawals: -2000,
+          account: 2000
+        },{
+          date: '2017-01-01-17:00',
+          income: 8888,
+          withDrawals: -2000,
+          account: 2000
+        },{
+          date: '2017-01-01-17:00',
+          income: 8888,
+          withDrawals: -2000,
+          account: 2000
+        },{
+          date: '2017-01-01-17:00',
+          income: 8888,
+          withDrawals: -2000,
+          account: 2000
+        }],
         classify: ['全部','进账','提现'],
-        dateStat: 0,
         classStat: 0,
         withDrawSets: false,
         statTip: false,
@@ -220,6 +248,9 @@
             }
           })
         }
+      },
+      selClass(index){
+        this.classStat = index;
       },
       withDrawHandler(){
         this.withDrawBank = true
