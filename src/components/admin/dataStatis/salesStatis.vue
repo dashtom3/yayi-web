@@ -102,7 +102,6 @@
         global.axiosGetReq('/saleStatistics/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.salesList = res.data.data
-            console.log(this.salesList)
             this.pageProps.totalPage = res.data.totalPage
           }
         })

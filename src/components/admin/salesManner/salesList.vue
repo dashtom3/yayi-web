@@ -12,7 +12,6 @@
         <el-form-item>
           <el-input v-model="searchUserContent" class="fl t_input_w">
             <el-select v-model="searchUserType" slot="prepend" class="fl t_select_width" placeholder="请选择"  @change="selectOpt">
-              <el-option label="销售员编号" value="销售员编号"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
             </el-select>
@@ -36,7 +35,7 @@
           <el-form :inline="true" >
             <el-form-item>
               <el-input placeholder="请输入内容" v-model="noBindSearchContent">
-                <el-select  slot="prepend" v-model="noBindSearchType">
+                <el-select  slot="prepend" v-model="noBindSearchType" @change="selectOption">
                   <el-option label="手机号" value="手机号"></el-option>
                   <el-option label="真实姓名" value="真实姓名"></el-option>
                   <el-option label="单位名称" value="单位名称"></el-option>
@@ -53,7 +52,6 @@
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
             <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
-            <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
                 <el-button type="primary" v-on:click="bindThisUser(scope.row,scope.$index)">绑定</el-button>
@@ -82,7 +80,6 @@
             <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
             <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
-            <el-table-column  prop="userCompony"  align="center"  label="注册时间">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
                 <el-button type="primary" v-on:click="cancleBindThisUser(scope.row,scope.$index)">取消绑定</el-button>
@@ -133,11 +130,11 @@
         <el-table-column align="center" property="trueName" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="certification.companyName" label="单位名称"></el-table-column>
       </el-table>
+      <paging :childmsg="d_pageProps" style="text-align:center;margin-top:20px;" @childSay="d_pageHandler"></paging>
     </el-dialog>
 
     <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
-      <el-table-column  prop="saleId"  align="center"  label="销售员编号">  </el-table-column>
       <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
       <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
       <el-table-column  prop="created"  align="center"  label="注册时间"> 
@@ -160,7 +157,7 @@
         </template>
       </el-table-column>
     </el-table>
-     <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
@@ -175,6 +172,10 @@
           pageNum: 1,
           totalPage: 1
         },
+        d_pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         noBindSearchContent:null,
         BindSearchContent:null,
         multipleSelection1: [],
@@ -183,7 +184,7 @@
         showSaleDetailInfor:false,
         bindSalseAlert:false,
         searchUserContent:'',
-        searchUserType:"销售员编号",
+        searchUserType:"手机号",
         searchState:"",
         bindedUserList:[
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
@@ -258,19 +259,13 @@
         this.searchUserType = key;
         this.searchUserContent = '';
       },
+      selectOption(){
+        this.noBindSearchType = key;
+        this.noBindSearchContent = '';
+      },
       queryHandler: function(){
         var params;
-        if(this.searchUserType === '销售员编号'){
-          params = {
-            saleId: this.searchUserContent,
-            phone: '',
-            trueName: '',
-            isBindUser: this.searchState,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
-            token: ''
-          }
-        }else if(this.searchUserType === '手机号'){
+        if(this.searchUserType === '手机号'){
           params = {
             saleId: '',
             phone: this.searchUserContent,
@@ -278,7 +273,7 @@
             isBindUser: this.searchState,
             currentPage: this.pageProps.pageNum,
             numberPerPage: 10,
-            token: ''
+            token: global.getToken()
           }
         }else if(this.searchUserType === '真实姓名'){
           params = {
@@ -288,7 +283,7 @@
             isBindUser: this.searchState,
             currentPage: this.pageProps.pageNum,
             numberPerPage: 10,
-            token: ''
+            token: global.getToken()
           }
         }
         console.log('查询销售员列表',params)
@@ -303,6 +298,10 @@
         this.pageProps.pageNum = data
         this.queryHandler();
       },
+      d_pageHandler(data){
+        this.d_pageProps.pageNum = data
+        // this.saleDetail(index, row) 详情分页查询
+      },
       BindSearch:function(){
         var that = this;
         if(that.BindSearchContent){
@@ -315,7 +314,18 @@
       noBindSearch:function(){
         var that = this;
         if(that.noBindSearchContent){
+          //查询未绑定的用户
+          let params;
+          if(this.noBindSearchType === "用户编号"){
+            params = {
+              phone: this.noBindSearchContent,
+              trueName: '',
+              companyName: '',
+              isBind: 1,
+              token: ''
+            }
 
+          }
           that.noBindSearchContent = null;//清空搜索内容
         }else{
           this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
@@ -392,10 +402,11 @@
         this.showSaleDetailInfor = true;
         let params = {
           phone: row.phone,
-          currentPage: 1,
-          numberPerPage: 1,
+          currentPage: this.d_pageProps.pageNum,
+          numberPerPage: 10,
           token: global.getToken()
         }
+        console.log('查看销售员详情',params)
         global.axiosGetReq('/saleList/detail',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.someOneUserDetails.info = res.data.data

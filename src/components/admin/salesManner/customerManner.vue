@@ -133,11 +133,9 @@
       			linkMan: this.selectInput
       		}	
       	}
-    		console.log(params)
         global.axiosPostReq('/cus/show',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.customerList = res.data.data
-            console.log(this.customerList)
           }
         })
       },
