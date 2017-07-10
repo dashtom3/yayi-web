@@ -36,7 +36,14 @@
     props:["instruction"]
   }
 </script>
+<style >
+ .instruction img{
+  max-width: 100% !important;
+  display: block;
+  margin: 20px auto;
 
+}
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .goodIntroduce{
@@ -50,15 +57,7 @@
   margin-left: 37px;
   margin-right: 46px;
 }
-.instruction{
-  background: red;
-  width: 1200px;
-}
-.goodIntroduce .instruction img{
-  max-width: 100% !important;
-  display: block;
-  margin: auto;
-}
+
 .goodIntroduce div{
   line-height: 45px;
 }

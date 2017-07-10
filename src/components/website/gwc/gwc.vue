@@ -176,6 +176,7 @@
               }
               sendData.details = that.sendDataList;
               sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
+              console.log(sendData)
               window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
               that.$router.push({path: '/suborder'})
             } else {
