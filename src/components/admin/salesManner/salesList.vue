@@ -29,7 +29,7 @@
     </el-col>
     <!-- 绑定弹窗 -->
     <el-dialog :visible.sync="bindSalseAlert">
-      <h4>当前已绑定人数（人）：<span>12</span></h4>
+      <h4>当前已绑定人数（人）：<span>{{bindNum}}</span></h4>
       <el-tabs v-model="activeName2" type="card">
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
@@ -151,7 +151,7 @@
       <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
-            <el-button v-if="scope.row.isBindUser=='否'" type="text"  v-on:click="bindUser(scope.$index)">绑定客户</el-button>
+            <el-button v-if="scope.row.isBindUser=='2'" type="text"  v-on:click="bindUser(scope.$index)">绑定客户</el-button>
             <el-button v-else type="text"  v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
             <el-button type="text"   v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
@@ -186,6 +186,7 @@
         searchUserContent:'',
         searchUserType:"手机号",
         searchState:"",
+        bindNum: 0,
         bindedUserList:[
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
           {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
@@ -390,12 +391,14 @@
       bindUser:function(index){
         this.bindSalseAlert = true;
         this.activeName2 = "first";
+        this.bindNum = 0;
       },
       cancleBindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "second";
         console.log(row)
-        this.bindedUserList = row.user
+        this.bindNum = row.bindUserNum;
+        this.bindedUserList = row.user;
       },
       saleDetail:function(index, row){
         //查看详情
