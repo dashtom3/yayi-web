@@ -444,6 +444,7 @@ import myAddress from './selectThree'
               itemSKU:nowSku,
               price:that.nowGoodDetails.itemPrice,
             };
+            sendData.haveSelectedGoodNum = that.goodDefaultNum;
             sendData.details.push(obj)
             window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
             that.$router.push({path: '/suborder'})
