@@ -20,12 +20,10 @@
         <span>小计(元)</span>
         <span>操作</span>
       </div>
-      <div style="min-height:402px">
-
-
+      <div style="min-height:402px;padding-bottom:90px;">
       <div class="oneGood" v-for="(good,index) in gwcGoods">
         <div class="">
-          <el-checkbox v-model="good.checked"></el-checkbox>
+          <el-checkbox style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>
           <div class="imgWrap" @click="goToThisDetail(good)">
               <img :src="good.pic" alt="">
               <span></span>
@@ -34,6 +32,8 @@
         <div class="goodInfo">
           <span>{{good.name}}</span>
           <span>{{good.itemPropertyNamea}}</span>
+          <span v-if="good.itemPropertyNameb">,{{good.itemPropertyNameb}}</span>
+          <span v-if="good.itemPropertyNamec">,{{good.itemPropertyNamec}}</span>
         </div>
         <div class="onePrice">
           <span>￥{{good.price}}</span>
@@ -58,24 +58,27 @@
         <div style="clear:both"> </div>
       </div>
 </div>
-      <div class="goodsFooter">
-        <div class="selectaLLFooter cursorPointer" v-on:click="checkAll()">
-          <el-checkbox v-model="selectaLL">全选</el-checkbox>
-        </div>
-        <div class="footerOpera">
-          <span v-on:click="deleteAll()">删除</span>
-          <span v-on:click="saveAll()" class="colorBlue">收藏</span>
-        </div>
-        <div class="haveSelectedGoodNum">
-          <span>已选择<span class="colorRed">{{haveSelectedGoodNum}}</span>件商品</span>
-        </div>
-        <div class="zongji">
-          <span class="asdg">总计:<span class="colorRed">￥{{allMoeny}}</span></span>
-        </div>
-        <div class="jiesuanbtn">
-          <span v-on:click="goToSuborder()">结算</span>
-        </div>
-      </div>
+<div class="goodFooterWrap" :class="{jiwsuanbtnFixedClass:jiwsuanbtnFixed}">
+  <div class="goodsFooter" >
+    <div class="selectaLLFooter cursorPointer" v-on:click="checkAll()">
+      <el-checkbox v-model="selectaLL">全选</el-checkbox>
+    </div>
+    <div class="footerOpera">
+      <span v-on:click="deleteAll()">删除</span>
+      <span v-on:click="saveAll()" class="colorBlue">收藏</span>
+    </div>
+    <div class="haveSelectedGoodNum">
+      <span>已选择<span class="colorRed">{{haveSelectedGoodNum}}</span>件商品</span>
+    </div>
+    <div class="zongji">
+      <span class="asdg">总计:<span class="colorRed">￥{{allMoeny}}</span></span>
+    </div>
+    <div class="jiesuanbtn">
+      <span v-on:click="goToSuborder()">结算</span>
+    </div>
+  </div>
+</div>
+
     </div>
     <publicFooter></publicFooter>
   </div>
@@ -90,6 +93,7 @@
     data () {
       return {
         isLogin:true,
+        jiwsuanbtnFixed:false,
         addBlueColor:null,
         allMoeny:0,
         haveSelectedGoodNum:0,
@@ -135,7 +139,9 @@
     },
 
     created:function(){
-      this.getGwcList();
+      var that = this
+      that.getGwcList();
+
     },
     methods: {
       getGwcList:function(){
@@ -155,6 +161,7 @@
               data[i].goodLeaveNum = 200;
             }
             this.gwcGoods = data;
+            that.calculationPayBtnPosi();
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -173,12 +180,13 @@
               sendData.allMoney = that.allMoeny;
               for(let i in that.sendDataList){
                   that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
+                  that.sendDataList[i].itemName = that.sendDataList[i].name;
+                  that.sendDataList[i].picPath = that.sendDataList[i].pic;
               }
               sendData.details = that.sendDataList;
               sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
-              console.log(sendData)
               window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-              // that.$router.push({path: '/suborder'})
+              that.$router.push({path: '/suborder'})
         //     } else {
         //       that.$message.error('网络出错，请稍后再试！');
         //     }
@@ -299,6 +307,17 @@
       },
       hideBlue:function(index){
         this.addBlueColor = null;
+      },
+      calculationPayBtnPosi:function(){
+        var that = this;
+        var HEIGHT = window.innerHeight;
+        HEIGHT = HEIGHT-28-63-50-21-50-21-10;
+        var flag = HEIGHT - that.gwcGoods.length*148-127;
+        console.log(flag)
+        if(flag<0){
+          that.jiwsuanbtnFixed = true;
+        }
+        console.log(HEIGHT)
       },
       saveOne:function(index,good){
         var that = this;
@@ -526,6 +545,23 @@ vertical-align: middle;
   .gwcWrap   .goodsFooter{
     padding-top: 52px;
     padding-bottom: 50px;
+    background: white;
+    width: 1200px;
+    margin: auto;
+    border-top: 1px solid #eeeeee;
+  }
+  .gwcWrap .goodsFooterWrap{
+
+  }
+  .gwcWrap .jiwsuanbtnFixedClass{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /*left:50%;
+    transform: translateX(-50%);*/
+    width: 100%;
+    background: white;
+
   }
 .gwcWrap   .goodsFooter div{
   display: inline-block;

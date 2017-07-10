@@ -53,6 +53,10 @@ Vue.filter('operate', function (value) {
       var hh = '付款'
       return hh
     }
+    if(value == 2) {
+      var hh = '付款'
+      return false
+    }
     // if (value == 1) {
     //   var aa = '无'
     //   return aa
@@ -62,7 +66,7 @@ Vue.filter('operate', function (value) {
       return ee
     }
     if (value == 3) {
-      var ee = '待收货'
+      var ee = '确认收货'
       return ee
     }
     // return middleState2

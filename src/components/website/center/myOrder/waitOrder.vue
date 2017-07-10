@@ -10,7 +10,10 @@
       <div class="left deal_operate">交易操作</div>
     </div>
     <!--  暂无订单开始 -->
-    <div class="no_order" v-show="no_order">{{no_find}}</div>
+    <div class="no_order" v-show="no_order">
+      <div style="margin-top:67px; margin-bottom:40px;"><img src="../../../../images/center/noOrder.png" alt="img"></div>
+      <div><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
+    </div>
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
@@ -39,11 +42,63 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
+          <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
+          <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
+    <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
+      <div class="">
+        <p>收货信息：</p>
+        <p>收货信息：</p>
+      </div>
+      <div class="">
+        <p>订单信息：</p>
+        <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+        <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+        <div class="">
+          <div class="order_table" style="width:100%" >
+            <div style="width:150px;" class="left cargo">商品</div>
+            <div class="left price">单价（元）</div>
+            <div class="left num">数量</div>
+            <div class="left now_pay">实付款（元）</div>
+            <div class="left deal_state">交易状态</div>
+          </div>
+          <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
+            <!--  订单详情item 开始 -->
+            <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
+              <div class="left des_img" style="width:81px;height:85px;">
+                <img :src="cargo.picPath" alt="img">
+              </div>
+              <div style="width:220px;" class="left des_p">
+                <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+                <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+              </div>
+              <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
+              <div class="left des_num">{{cargo.num}}</div>
+            </div>
+            <!--  订单详情item 结束 -->
+            <div class="order_des_right" style="width:auto;right:25px;top:0">
+              <div class="left now_pay_des" style="margin-top:0">
+                <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
+                <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
+                <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+              </div>
+              <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="" v-if="nowOrderDetails.buyerMessage">
+        <p>订单留言：</p>
+        <p>订单留言：</p>
+      </div>
+      <div class="">
+        <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
+      </div>
+    </el-dialog>
     <!-- 确定取消订单吗？ -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
       <span>确定取消订单吗？</span>
@@ -62,6 +117,8 @@
     name: 'waitOrder',
     data () {
       return {
+        nowOrderDetails:{},
+        dialogVisibleToOrderDetails:false,
         dialogVisible:false,
         items: [],
         no_find: '暂无订单～',
@@ -302,7 +359,7 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    /*margin-top: 36px;*/
     margin-bottom: 5px;
     line-height: 28px;
     background-color: #5DB7E7;
@@ -327,7 +384,6 @@
   .no_order {
     width: 1067px;
     height: 180px;
-    line-height: 160px;
     text-align: center;
     font-size: 20px;
     color: #000;

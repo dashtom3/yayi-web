@@ -232,9 +232,9 @@
             }
             obj.itemPparamList = arr;
             obj.itemPropertyName = that.formData.addGoodAttrName;
-            console.log(obj)
             that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
             .then((res) => {
+              console.log(res)
               if (res.data.callStatus === 'SUCCEED') {
                 obj.itempropertydList = arr2;
                 that.tableData.push(obj);

@@ -1,6 +1,8 @@
 <template>
   <div class="instructions" >
-    <h3>这是使用说明.....</h3>
+    <div v-html="instruction.itemUse">
+
+    </div>
   </div>
 </template>
 
@@ -13,8 +15,9 @@
 
       }
     },
+    props:["instruction"],
     created:function(){
-      
+      console.log(this.instruction)
     },
     methods: {
 
@@ -23,6 +26,8 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
+<style >
+  .instructions img{
+    width: 100% !important;
+  }
 </style>

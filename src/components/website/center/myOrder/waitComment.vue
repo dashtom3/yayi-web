@@ -10,7 +10,10 @@
       <div class="left deal_operate">交易操作</div>
     </div>
     <!--  暂无订单开始 -->
-    <div class="no_order" v-show="no_order">{{no_find}}</div>
+    <div class="no_order" v-show="no_order">
+      <div style="margin-top:67px; margin-bottom:40px;"><img src="../../../../images/center/noOrder.png" alt="img"></div>
+      <div><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
+    </div>
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
@@ -319,7 +322,7 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    /*margin-top: 36px;*/
     margin-bottom: 5px;
     line-height: 28px;
     background-color: #5DB7E7;
@@ -344,7 +347,6 @@
   .no_order {
     width: 1067px;
     height: 180px;
-    line-height: 160px;
     text-align: center;
     font-size: 20px;
     color: #000;

@@ -1,6 +1,6 @@
 <template>
   <div class="allOrder">
-    <div class="order_table" v-show="order_table">
+    <!-- <div class="order_table" v-show="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
       <div class="left num">数量</div>
@@ -8,7 +8,7 @@
       <div class="left now_pay">实付款（元）</div>
       <div class="left deal_state">交易状态</div>
       <div class="left deal_operate">交易操作</div>
-    </div>
+    </div> -->
     <!--  暂无订单开始 -->
     <div class="no_order" v-show="no_order">
       <div class="order_table_spe">
@@ -66,13 +66,65 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
+          <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
           <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
-          <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
 <!--     <paging0></paging0> -->
+    <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
+      <div class="">
+        <p>收货信息：</p>
+        <p>收货信息：</p>
+      </div>
+      <div class="">
+        <p>订单信息：</p>
+        <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+        <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+        <div class="">
+          <div class="order_table" style="width:100%" v-show="order_table">
+            <div style="width:150px;" class="left cargo">商品</div>
+            <div class="left price">单价（元）</div>
+            <div class="left num">数量</div>
+            <div class="left now_pay">实付款（元）</div>
+            <div class="left deal_state">交易状态</div>
+          </div>
+          <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
+            <!--  订单详情item 开始 -->
+            <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
+              <div class="left des_img" style="width:81px;height:85px;">
+                <img :src="cargo.picPath" alt="img">
+              </div>
+              <div style="width:220px;" class="left des_p">
+                <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+                <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+              </div>
+              <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
+              <div class="left des_num">{{cargo.num}}</div>
+            </div>
+            <!--  订单详情item 结束 -->
+            <div class="order_des_right" style="width:auto;right:25px;top:0">
+              <div class="left now_pay_des" style="margin-top:0">
+                <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
+                <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
+                <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+              </div>
+              <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="" v-if="nowOrderDetails.buyerMessage">
+        <p>订单留言：</p>
+        <p>订单留言：</p>
+      </div>
+      <div class="">
+        <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
+      </div>
+    </el-dialog>
+    <!-- 取消订单 -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
       <span>确定取消订单吗？</span>
       <span slot="footer" class="dialog-footer">
@@ -80,12 +132,14 @@
         <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 物流信息 -->
     <el-dialog title="提示" :visible.sync="dialogVisibleHaveALookAtWuLiu" size="tiny">
       则是物流信息
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 确认收货 -->
     <el-dialog title="提示" :visible.sync="dialogVisibleGetGood" size="tiny">
       <span>确定确认收货吗？</span>
       <span slot="footer" class="dialog-footer">
@@ -93,20 +147,25 @@
         <el-button type="primary" @click="sureGetGood()">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 评价 -->
     <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-      <div class="comment_box">
-        <img class="comment_img" src="../../../../images/center/small.png" alt="img">
-        <p class="comment_des">爱丽丝 #标准</p>
+      <div  class="comment_box" v-for="item in nowToOperateItem.orderitemList">
+        <div class="commentImgWrap">
+          <img class="comment_img" :src="item.picPath" alt="img">
+        </div>
+        <p class="comment_des">
+          <span>{{item.itemName}}</span>
+        </p>
         <div class="clearfix"></div>
         <div class="score_box">
           <div class="score_word">评分：</div>
-          <el-rate v-model="value2" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
-          <div class="getScore" v-show="getScore"><span style="color: #D81E06">{{score}}</span>分</div>
+          <el-rate v-model="item.commentScore" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
+          <div class="getScore" v-show="item.commentScore"><span style="color: #D81E06">{{item.commentScore}}</span>分</div>
         </div>
         <div class="clearfix"></div>
         <div class="comment_word_box">
           <div class="comment_word_des">评价：</div>
-          <el-input type="textarea" :rows="5" placeholder="请输入评价内容~" v-model="textarea" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
+          <el-input type="textarea" :rows="5" placeholder="请输入评价内容~" v-model="item.commentContent" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
           </el-input>
         </div>
         <div class="clearfix"></div>
@@ -125,6 +184,9 @@
     name: 'allOrder',
     data () {
       return {
+        nowToOperateItem:{},
+        nowOrderDetails:{},
+        dialogVisibleToOrderDetails:false,
         items: [{
             date: '2017-05-17',
             orderId : '19877240650895924',
@@ -226,6 +288,13 @@
       }
     },
     methods: {
+      lookOrderDetails:function(item){
+        var that = this;
+
+        that.nowOrderDetails = item;
+        that.dialogVisibleToOrderDetails = true;
+        console.log(item)
+      },
       //显示所有订单
       getAllOrder: function() {
         var that = this;
@@ -353,9 +422,25 @@
     }
   }
 </script>
-
+<style >
+.orderDetails{
+  width: 860px !important;
+}
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.orderDetails{
+  width: 860px !important;
+}
+.orderDetails div p:nth-child(1){
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.orderDetails div p:nth-child(2){
+color: #333333;
+}
   .left {
     float: left;
   }
@@ -520,7 +605,7 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    /*margin-top: 36px;*/
     margin-bottom: 5px;
     line-height: 28px;
     background-color: #5DB7E7;
@@ -566,10 +651,17 @@
     padding-bottom: 20px;
     border-bottom: 1px solid #e9e9e9;
   }
+  .commentImgWrap{
+    width: 60px;
+    height: 60px;
+    border: 1px solid #eeeeee;
+  }
   .comment_img {
     border: 1px solid #e9e9e9;
     margin-right: 15px;
     float: left;
+    max-width: 60px;
+    max-height: 60px;
   }
   .comment_des {
     margin-top: 18px;

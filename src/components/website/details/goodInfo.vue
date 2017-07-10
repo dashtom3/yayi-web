@@ -147,10 +147,11 @@ import myAddress from './selectThree'
             var LIST = that.nowGoodDetails.itemValueList;
             for(let i in LIST){
               if(LIST[i].itemSKU == that.nowGoodSKU){
-                obj =LIST[i];
+                obj = LIST[i];
                 break;
               }
             }
+            this.sendItemAttrs = obj;
             var LIST2 = that.nowGoodDetails.propertyList;
             for(let m in LIST2[0].propertyInfoList){
               if(obj.itemPropertyInfo==LIST2[0].propertyInfoList[m]){
@@ -274,7 +275,7 @@ import myAddress from './selectThree'
         // that.attrVal[item.propertyName] = item.propertyInfoList[indexC];
         that.attrVal[indexP] = item.propertyInfoList[indexC];
         this.ite = indexC;
-        this.sureGoodAttr = item.itemPropertyInfo;
+        this.sureGoodAttr = item.propertyInfoList[indexC];
         var data = that.items[indexP];
         data.propertyInfoList.checkWhich = indexC;
         that.items.splice(indexP,1,data);
@@ -401,15 +402,15 @@ import myAddress from './selectThree'
             name:that.nowGoodDetails.itemName,
             pic:that.itemDetail.itemPica,
             num:that.goodDefaultNum,
-            // itemSKU：
             itemSKU:nowSku,
             price:that.nowGoodDetails.itemPrice,
-            itemPropertyNamea:that.sureGoodAttr,
+            // itemPropertyNamea:that.sureGoodAttr,
             token:that.global.getToken()
           };
           console.log(obj)
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
+              console.log(res)
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
               } else {
@@ -424,8 +425,31 @@ import myAddress from './selectThree'
       nowToBuyThis:function(){
         var that = this;
         var userToken = that.global.getToken();
+        var nowSku;
         if(userToken){
-
+          if(that.nowGoodDetails.nowGoodSKU){
+            nowSku =that.nowGoodDetails.nowGoodSKU;
+          }else{
+            nowSku = that.nowGoodSKU;
+          }
+          if(that.global.getUser()){
+            var sendData = {};
+            sendData.details = [];
+            sendData.allMoney = that.nowGoodDetails.itemPrice;
+            var obj = {
+              phone:that.global.getUser().phone,
+              itemId:that.nowGoodDetails.itemId,
+              itemName:that.nowGoodDetails.itemName,
+              picPath:that.itemDetail.itemPica,
+              num:that.goodDefaultNum,
+              itemSKU:nowSku,
+              price:that.nowGoodDetails.itemPrice,
+              token:that.global.getToken()
+            };
+            sendData.details.push(obj)
+            window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+            that.$router.push({path: '/suborder'})
+          }
         }else{
           that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
         }
@@ -464,6 +488,7 @@ import myAddress from './selectThree'
   .infoRight .shuxing{
     height:auto;
     line-height: 50px;
+    padding-left: 100px;
   }
   .infoRight h3 .ifdikou{
   position: absolute;

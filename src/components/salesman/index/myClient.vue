@@ -56,9 +56,10 @@
         var obj = {
           token:that.global.getToken()
         };
+        console.log(obj)
         that.global.axiosGetReq("/saleMyClient/myClient",obj)
         .then((res) => {
-          console.log(res,"searchUserBySearchConet")
+          console.log(res,"getMyClientList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
           } else {
