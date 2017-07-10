@@ -224,7 +224,7 @@ import myAddress from './selectThree'
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data.data.propertyList,"getNowGoodDetail")
+          console.log(res.data,"getNowGoodDetail")
           if (res.data.callStatus === 'SUCCEED') {
             that.ifshoucang = res.data.num;
             that.nowGoodSKU = res.data.msg;
@@ -269,6 +269,7 @@ import myAddress from './selectThree'
       changeAttSty:function(indexC,item,indexP){
         var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
         var nowPrice;
+        var nowSku;
         var that = this;
         // that.attrVal[item.propertyName] = item.propertyInfoList[indexC];
         that.attrVal[indexP] = item.propertyInfoList[indexC];
@@ -282,40 +283,47 @@ import myAddress from './selectThree'
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }else if(that.attrVal.length==2){
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }else  if(that.attrVal.length==3){
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }else  if(that.attrVal.length==4){
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }else  if(that.attrVal.length==5){
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }else  if(that.attrVal.length==6){
             for(let i in LIST){
               if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue&&that.attrVal[5]==LIST[i].itemPropertyFiveValue){
                 nowPrice = LIST[i].itemSkuPrice;
+                nowSku = LIST[i].itemSKU;
               }
             }
           }
         that.nowGoodDetails.itemPrice = nowPrice;
+        that.nowGoodDetails.nowGoodSKU = nowSku;
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
@@ -380,6 +388,12 @@ import myAddress from './selectThree'
       },
       addGwcThisGood:function(){
         var that = this;
+        var nowSku;
+        if(that.nowGoodDetails.nowGoodSKU){
+          nowSku =that.nowGoodDetails.nowGoodSKU;
+        }else{
+          nowSku = that.nowGoodSKU;
+        }
         if(that.global.getUser()){
           var obj = {
             phone:that.global.getUser().phone,
@@ -388,11 +402,12 @@ import myAddress from './selectThree'
             pic:that.itemDetail.itemPica,
             num:that.goodDefaultNum,
             // itemSKU：
-            itemSKU:that.nowGoodDetails.itemSKU,
+            itemSKU:nowSku,
             price:that.nowGoodDetails.itemPrice,
             itemPropertyNamea:that.sureGoodAttr,
             token:that.global.getToken()
           };
+          console.log(obj)
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
@@ -403,7 +418,6 @@ import myAddress from './selectThree'
             });
         }else{
           var num = Math.random();
-          // that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
           that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
         }
       },

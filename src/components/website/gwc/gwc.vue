@@ -163,13 +163,13 @@
       goToSuborder:function(){
         var that = this;
         var sendData = {};
-        var obj = {
-          token:that.global.getToken()
-        };
-        if(that.sendDataList.length>0){
-          that.global.axiosPostReq('/po/buyNows', obj)
-          .then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
+        // var obj = {
+        //   token:that.global.getToken()
+        // };
+        // if(that.sendDataList.length>0){
+        //   that.global.axiosPostReq('/po/buyNows', obj)
+        //   .then((res) => {
+        //     if (res.data.callStatus === 'SUCCEED') {
               sendData.allMoney = that.allMoeny;
               for(let i in that.sendDataList){
                   that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
@@ -178,14 +178,14 @@
               sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
               console.log(sendData)
               window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-              that.$router.push({path: '/suborder'})
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }else{
-          that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
-        }
+              // that.$router.push({path: '/suborder'})
+        //     } else {
+        //       that.$message.error('网络出错，请稍后再试！');
+        //     }
+        //   })
+        // }else{
+        //   that.$alert("请点选择要购买的商品！", {confirmButtonText: '确定'});
+        // }
       },
       deleteAll:function(){
         var that = this;
@@ -331,6 +331,7 @@
             itemSKU:good.itemSKU,
             token:that.global.getToken()
           };
+          console.log(obj)
           that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
