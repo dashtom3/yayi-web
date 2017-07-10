@@ -437,14 +437,12 @@ import myAddress from './selectThree'
             sendData.details = [];
             sendData.allMoney = that.nowGoodDetails.itemPrice;
             var obj = {
-              phone:that.global.getUser().phone,
               itemId:that.nowGoodDetails.itemId,
               itemName:that.nowGoodDetails.itemName,
               picPath:that.itemDetail.itemPica,
               num:that.goodDefaultNum,
               itemSKU:nowSku,
               price:that.nowGoodDetails.itemPrice,
-              token:that.global.getToken()
             };
             sendData.details.push(obj)
             window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
