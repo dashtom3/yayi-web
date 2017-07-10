@@ -616,7 +616,7 @@ import myAddress from './selectThree'
   .infoRight .calculator {
     float:right;
     /*margin-left: 50px;*/
-    margin-right:75.3%;
+    margin-right:65.1%;
     width:122px;
     border:1px solid #e5e5e5;
     height:40px;
