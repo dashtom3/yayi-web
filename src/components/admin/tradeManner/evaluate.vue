@@ -120,9 +120,8 @@
 		methods: {
       queryHandler(){
         let params = {
-          token: global.getToken(),
           orderId: this.orderCode,
-          userId: this.userCode,
+          phone: this.userCode,
           recoveryState: this.value,
           currentPage: this.pageProps.pageNum,
           numberPerPage: 10,

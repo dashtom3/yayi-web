@@ -49,9 +49,9 @@
           </el-form>
           <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
-            <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
-            <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
-            <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
+            <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
+            <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
+            <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
                 <el-button type="primary" v-on:click="bindThisUser(scope.row,scope.$index)">绑定</el-button>
@@ -77,9 +77,9 @@
           </el-form>
           <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
-            <el-table-column  prop="userName"  align="center"  label="真实姓名">  </el-table-column>
-            <el-table-column  prop="userPhone"  align="center"  label="手机号">  </el-table-column>
-            <el-table-column  prop="userName"  align="center"  label="单位名称">  </el-table-column>
+            <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
+            <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
+            <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
             <el-table-column  label="操作"  align="center" >
               <template scope="scope">
                 <el-button type="primary" v-on:click="cancleBindThisUser(scope.row,scope.$index)">取消绑定</el-button>
@@ -151,7 +151,7 @@
       <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
-            <el-button v-if="scope.row.isBindUser=='2'" type="text"  v-on:click="bindUser(scope.$index)">绑定客户</el-button>
+            <el-button v-if="scope.row.isBindUser=='2'" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
             <el-button v-else type="text"  v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
             <el-button type="text"   v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
@@ -187,15 +187,9 @@
         searchUserType:"手机号",
         searchState:"",
         bindNum: 0,
-        bindedUserList:[
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-        ],
-        noBindUserList:[
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-          {userId:12112,userName:"eqaer",userPhone:"12121211212",userCompony:"asdfadfaf"},
-
-        ],
+        salePhone: '',
+        bindedUserList:[],
+        noBindUserList:[],
         someOneUserDetails:{
           info:{
             bianhao:"123134",
@@ -304,49 +298,89 @@
         // this.saleDetail(index, row) 详情分页查询
       },
       BindSearch:function(){
-        var that = this;
-        if(that.BindSearchContent){
-
-          that.BindSearchContent = null;//清空搜索内容
-        }else{
-          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+        //查询已绑定用户
+        let params;
+        if(this.BindSearchType === "手机号"){
+          params = {
+            phone: this.BindSearchContent,
+            trueName: '',
+            companyName: '',
+            isBind: 2
+          }
+        }else if(this.BindSearchType === "真实姓名"){
+          params = {
+            phone: '',
+            trueName: this.BindSearchContent,
+            companyName: '',
+            isBind: 2
+          }
+        }else if(this.BindSearchType === "单位名称"){
+          params = {
+            phone: '',
+            trueName: '',
+            companyName: this.BindSearchContent,
+            isBind: 2
+          }
         }
+        console.log('查询已绑定用户',params)
+        global.axiosGetReq('/saleList/userlist',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.bindedUserList = res.data.data
+            console.log(res.data.data)
+          }
+        })
+        this.BindSearchContent = null;//清空搜索内容
+        
       },
       noBindSearch:function(){
-        var that = this;
-        if(that.noBindSearchContent){
-          //查询未绑定的用户
-          let params;
-          if(this.noBindSearchType === "用户编号"){
-            params = {
-              phone: this.noBindSearchContent,
-              trueName: '',
-              companyName: '',
-              isBind: 1,
-              token: ''
-            }
-
+        //查询未绑定的用户
+        let params;
+        if(this.noBindSearchType === "手机号"){
+          params = {
+            phone: this.noBindSearchContent,
+            trueName: '',
+            companyName: '',
+            isBind: 1
           }
-          that.noBindSearchContent = null;//清空搜索内容
-        }else{
-          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+        }else if(this.noBindSearchType === "真实姓名"){
+          params = {
+            phone: '',
+            trueName: this.noBindSearchContent,
+            companyName: '',
+            isBind: 1
+          }
+        }else if(this.noBindSearchType === "单位名称"){
+          params = {
+            phone: '',
+            trueName: '',
+            companyName: this.noBindSearchContent,
+            isBind: 1
+          }
         }
+        console.log('查询未绑定用户',params)
+        global.axiosGetReq('/saleList/userlist',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.noBindUserList = res.data.data
+            console.log(res.data.data)
+          }
+        })
+        this.noBindSearchContent = null;//清空搜索内容
       },
-      headSearch:function(){
-        var that = this;
-        var searchObj = {
-          searchUserType:that.searchUserType,
-          searchState:that.searchState
-        };
-        if(that.searchUserContent){
-          searchObj.searchUserContent = that.searchUserContent;
+      // headSearch:function(){
+      //   var that = this;
+      //   var searchObj = {
+      //     searchUserType:that.searchUserType,
+      //     searchState:that.searchState
+      //   };
+      //   if(that.searchUserContent){
+      //     searchObj.searchUserContent = that.searchUserContent;
 
 
-          that.searchUserContent = null;//清空搜索内容
-        }else{
-          this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
-        }
-      },
+      //     that.searchUserContent = null;//清空搜索内容
+      //   }else{
+      //     this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
+      //   }
+      // },
       bindAlertSearch:function(){
         var that = this;
         if(that.multipleSelection1.length==0){
@@ -360,24 +394,49 @@
         if(that.multipleSelection2.length==0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
-
+          
         }
       },
       bindThisUser:function(nowUser,index){
-        console.log(nowUser);
+        //绑定用户
         var that = this;
         var obj = {};
-        if(nowUser==that.multipleSelection1[index]){
-
+        if(nowUser==that.multipleSelection1[0]){
+          obj = {
+            salePhone: this.salePhone,
+            userPhone: nowUser.phone
+          }
+          global.axiosPostReq('/saleList/bind',obj).then((res) => {
+            if(res.data.callStatus === 'SUCCEED'){
+              this.$message({
+                type: 'success',
+                message: '绑定成功!'
+              });
+              this.noBindSearch()
+            }
+          })
         }else{
           this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
         }
       },
       cancleBindThisUser:function(nowUser,index){
+        //取消绑定用户
         var that = this;
         var obj = {};
-        if(nowUser==that.multipleSelection2[index]){
-
+        if(nowUser==that.multipleSelection2[0]){
+          obj = {
+            salePhone: this.salePhone,
+            userPhone: nowUser.phone
+          }
+          global.axiosPostReq('/saleList/disBind',obj).then((res) => {
+            if(res.data.callStatus === 'SUCCEED'){
+              this.$message({
+                type: 'success',
+                message: '取消绑定成功!'
+              });
+              this.BindSearch()
+            }
+          })
         }else{
           this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
         }
@@ -388,17 +447,19 @@
       handleSelectionChange2:function(val) {
         this.multipleSelection2 = val;
       },
-      bindUser:function(index){
+      bindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "first";
         this.bindNum = 0;
+        this.salePhone = row.phone;
+        this.noBindSearch();
       },
       cancleBindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "second";
-        console.log(row)
         this.bindNum = row.bindUserNum;
-        this.bindedUserList = row.user;
+        this.salePhone = row.phone;
+        this.BindSearch();
       },
       saleDetail:function(index, row){
         //查看详情

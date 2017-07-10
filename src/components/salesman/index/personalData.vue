@@ -25,7 +25,7 @@
               <span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.trueName}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">性别：</span>{{personalData.sex}}</span>
+              <span class="infoLeft"><span class="infoName">性别：</span>{{sexShow}}</span>
               <span class="infoRight"><span class="infoName">身份证号：</span>{{personalData.idCard}}</span>
             </div>
             <div class="oneLineInfo">
@@ -33,7 +33,7 @@
               <span class="infoRight"><span class="infoName">邮箱：</span>{{personalData.email}}</span>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">出生日期：</span>{{personalData.birthday}}</span>
+              <span class="infoLeft"><span class="infoName">出生日期：</span>{{birthDay}}</span>
               <span class="infoRight"><span class="infoName">学历：</span>{{personalData.education}}</span>
             </div>
             <div class="oneLineInfo">
@@ -196,18 +196,18 @@
           zhifubaoCounet:{required: true, message: '请填写支付宝账号', trigger: 'change'}
         },
         personalData:{
-          phone: global.getSalesUser().phone,
-          trueName:"小酱",
-          sex: '1',
-          idCard:"1234",
-          weChar:"134",
-          email:'134',
-          birthday:'1993-02-01',
-          education:"同济",
-          workUnit:"小酱",
-          workPosition:'小酱',
-          part:["河北","秦皇岛市","北戴河区"],
-          address:"同济大学"
+          // phone: global.getSalesUser().phone,
+          // trueName:"小酱",
+          // sex: '1',
+          // idCard:"1234",
+          // weChar:"134",
+          // email:'134',
+          // birthday:'1993-02-01',
+          // education:"同济",
+          // workUnit:"小酱",
+          // workPosition:'小酱',
+          // part:["河北","秦皇岛市","北戴河区"],
+          // address:"同济大学"
         },
         personalDataRule:{
           trueName: [
@@ -246,6 +246,14 @@
         },
       }
     },
+    computed: {
+      sexShow: function(){
+        return this.personalData.sex === '2' ? '女' : '男'
+      },
+      birthDay: function(){
+        return new Date(this.personalData.birthday).getFullYear() + '-' + this.fillZero((new Date(this.personalData.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.personalData.birthday).getDate())
+      }
+    },
     components: {
       positionPicker
     },
@@ -261,6 +269,9 @@
       this.queryPersonInfo()
     },
     methods: {
+      fillZero: function(n){
+        return n<10 ? '0'+ n: n 
+      },
       queryPersonInfo: function(){
         let params = {
           phone: global.getSalesUser().phone,

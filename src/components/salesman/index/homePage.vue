@@ -88,7 +88,6 @@
       this.init()
       this.echartPic()
       this.queryInfo()
-      console.log("aaa")
     },
     methods: {
       init(){

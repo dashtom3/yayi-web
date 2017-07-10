@@ -48,7 +48,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+		<paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
     <!-- 添加视频 -->
     					 
     <el-dialog :title="!isEdit? '添加客户信息':'修改客户信息'" size="tiny" v-model="customerVisible" :close-on-click-modal="true">
@@ -79,6 +79,7 @@
 
 <script>
 	import global from '../../global/global'
+	import paging from '../../website/brandLib/paging0'
 	export default {
 		data(){
 			return {
@@ -92,6 +93,10 @@
           value: '3',
           label: '联系电话'
         }],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
         sel_value: '1',
         selectInput: '',
         customerList: [],
@@ -104,6 +109,9 @@
         cusId: ''
 			}
 		},
+		components: {
+      paging
+    },
 		created(){
 			this.queryHandler()
 		},
@@ -111,6 +119,10 @@
 			selectOpt(key){
         this.sel_value = key;
         this.selectInput = '';
+      },
+      pageHandler(data){
+        this.pageProps.pageNum = data
+        this.queryHandler();
       },
       queryHandler(){
       	var params;
