@@ -72,7 +72,7 @@
       <div class="checked_box">
         <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}.00</span></p>
         <p class="second_p">运费：¥{{freight}}.00</p>
-        <p class="third_p">钱币抵扣：¥{{qbdk}}</p>
+        <p class="third_p">钱币抵扣：¥{{qbdk}}.00</p>
         <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}.00</span></p>
         <p class="fifth_p">本次可获得钱币：¥?.00</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
@@ -129,6 +129,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import publicHeader from '../index/publicHeader'
   import publicFooter from '../index/publicFooter'
   import myAddress from '../details/selectThree'
@@ -354,6 +355,8 @@
         receiverDetail: '',
         receiverId: '',
         freight: '',
+        fromGwc: '',
+        orderItem: '',
       }
     },
     watch: {
@@ -425,6 +428,9 @@
       that.getMyAdd();
       that.nowQb = that.global.getUser().qbBalance;
       var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+      that.fromGwc = arr;
+      that.orderItem = arr.details;
+      console.log(that.fromGwc,'uiuiuiu')
       that.cargos = arr.details;
       that.gwcTotal = arr.allMoney;
       that.haveSelectedGoodNum = arr.haveSelectedGoodNum
@@ -674,26 +680,70 @@
       // 提交订单按钮
       submit_order: function() {
         var that = this;
+        // for (var i = 0; i < that.orderItem.length; i++) {
+        //   that.orderItem[i].itemName = that.orderItem[i].name
+        //   that.orderItem[i].picPath = that.orderItem[i].pic
+        //   delete that.orderItem[i].name
+        //   delete that.orderItem[i].pic
+        //   delete that.orderItem[i].userId
+        //   delete that.orderItem[i].updated
+        //   delete that.orderItem[i].totalMoney
+        //   delete that.orderItem[i].itemPropertyNamea
+        //   delete that.orderItem[i].itemPropertyNameb
+        //   delete that.orderItem[i].itemPropertyNamec
+        //   delete that.orderItem[i].cartId
+        //   delete that.orderItem[i].checked
+        //   delete that.orderItem[i].created
+        //   delete that.orderItem[i].goodLeaveNum
+        // }
+        console.log(that.orderItem,'ll')
+        var orderItem = JSON.stringify(that.orderItem)
         var obj = {
           token:that.global.getToken(),
-          receiverId: parseInt(that.receiverId),
-          invoiceHand: that.tax_des,
-          isRegister: that.leave_word,
-          qbDed: that.qianbi_des,
-          buyerMessage: that.leave_des,
-          price: that.gwcTotal,
-          actualPay: parseInt(that.gwcTotal-that.qianbi_des),
+          receiverId: parseInt(that.receiverId), //收货地址id
+          postFee: that.freight,
+          invoiceHand: that.tax_des, //发票抬头
+          isRegister: that.leave_word, //是否需要产品注册证
+          qbDed: that.qianbi_des, //钱币抵扣
+          buyerMessage: that.leave_des, //买家留言
+          totalFee: that.gwcTotal, //总价
+          actualPay: parseInt(that.gwcTotal-that.qianbi_des), //实际付款
+          giveQb: '',  //获得乾币
+          orderItem: orderItem, //JSON数组
         }
-        console.log(obj);
-        that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
+        console.log(obj,'opopopp');
+        // axios.defaults.headers['token'] = that.global.getToken()
+        that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data);
+            console.log(res.data,'kkkkk');
             that.$router.push({ path:'/pay' });
           } else {
             that.$message.error('保存地址失败！');
           }
         })
       }
+      // submit_order: function() {
+      //   var that = this;
+      //   var obj = {
+      //     token:that.global.getToken(),
+      //     receiverId: parseInt(that.receiverId),
+      //     invoiceHand: that.tax_des,
+      //     isRegister: that.leave_word,
+      //     qbDed: that.qianbi_des,
+      //     buyerMessage: that.leave_des,
+      //     price: that.gwcTotal,
+      //     actualPay: parseInt(that.gwcTotal-that.qianbi_des),
+      //   }
+      //   console.log(obj);
+      //   that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
+      //     if (res.data.callStatus === 'SUCCEED') {
+      //       console.log(res.data);
+      //       that.$router.push({ path:'/pay' });
+      //     } else {
+      //       that.$message.error('保存地址失败！');
+      //     }
+      //   })
+      // }
     }
   }
 </script>

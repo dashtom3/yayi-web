@@ -16,11 +16,15 @@
           <el-form-item label="商品名称：">
             <el-input v-model="cargo.name"></el-input>
           </el-form-item>
-          <el-form-item label="商品分类：">
-            <el-input v-model="cargo.class"></el-input>
+          <el-form-item label="商品分类">
+            <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="cargo.class" change-on-select>
+            </el-cascader>
           </el-form-item>
-          <el-form-item label="品牌名称：">
-            <el-input v-model="cargo.brand"></el-input>
+          <el-form-item label="品牌名称">
+            <el-select v-model="cargo.brand" placeholder="请选择">
+              <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand">
+              </el-option>
+            </el-select>
           </el-form-item>
 <!--           <el-form-item label="推荐：">
             <el-select v-model="coinValue" placeholder="请选择">
@@ -36,6 +40,7 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="search()">查询</el-button>
+        <el-button type="primary" @click="clearWord()">重置</el-button>
         <el-button type="primary" @click="add()">添加商品</el-button>
       </el-col>
     </el-col>
@@ -162,7 +167,7 @@
         cargo: {
           id: '',
           name: '',
-          class: '',
+          class: [],
           brand: '',
         },
         options1: [{
@@ -252,11 +257,14 @@
         },
         propertyList: [],
         editCargo: {},
+        options: [],
+        brandOptions: [],
       }
     },
     created: function() {
       var that = this;
       that.getItemInfo();
+      that.getAllClassify();
     },
     mounted: function() {
       var that = this;
@@ -274,8 +282,32 @@
         that.global.axiosPostReq('/item/itemInfoList').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
+            that.tableData.reverse();
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      //获取所有分类列表
+      getAllClassify: function() {
+        var that = this;
+        that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.options = res.data.data.classifyList;
+            that.brandOptions = res.data.data.itemBrandList;
+            for (var i = 0; i < that.options.length; i++) {
+              that.options[i].label = that.options[i].oneClassify
+              that.options[i].children = that.options[i].classifyTwoList
+              for (var k in that.options[i].children) {
+                that.options[i].children[k].label = that.options[i].children[k].classifyTwoName
+                that.options[i].children[k].children = that.options[i].children[k].classifyThreeList
+                for (var j in that.options[i].children[k].children) {
+                  that.options[i].children[k].children[j].label = that.options[i].children[k].children[j].classifyThreeName
+                }
+              }
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -294,10 +326,11 @@
         var obj = {
           itemId: that.cargo.id,
           itemName: that.cargo.name,
-          itemClassify: that.cargo.class,
-          itemBrandName: that.cargo.brand,
+          itemClassify: that.cargo.class.pop(),
+          itemBrandName: that.cargo.brand.itemBrandName,
           state: that.stateValue,
         }
+        console.log(obj,'llll')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
@@ -309,6 +342,15 @@
             that.$message.error('网络出错，请稍后再试！');
           }
         })
+      },
+      //清空
+      clearWord: function() {
+        var that = this
+        that.cargo.id = ''
+        that.cargo.name = ''
+        that.cargo.class = []
+        that.cargo.brand = ''
+        that.stateValue = ''
       },
       //添加商品
       add: function() {

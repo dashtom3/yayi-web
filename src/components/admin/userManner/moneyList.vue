@@ -112,13 +112,14 @@
       // 头部查询
       searchAll: function() {
         var that = this;
-        if (that.searchDataPrev.length == 0) {
+        if (that.searchDataPrev.length == 0 || that.searchDataPrev[0] == null) {
           var obj = {
             phone: that.searchUserId,
             startDate: '',
             endDate: '',
             token: ''
           }
+          console.log(that.searchDataPrev,'kongkong')
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
@@ -133,8 +134,8 @@
                 }
                 console.log(that.moneyList,'2222222222')
               }
-              // that.searchUserId = '';
-              // that.searchDataPrev = [];
+              //that.searchUserId = '';
+              that.searchDataPrev = [];
             } else {
               that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');
@@ -149,25 +150,25 @@
             endDate: endDate,
             token: ''
           }
+          console.log(that.searchDataPrev,'ppp')
+          console.log(obj,'2323232')
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              if (res.data.data.length == 0) {
-                that.loadingCheckHead = false;
-                that.$message.error('查询无结果！');
-              } else {
-                that.loadingCheckHead = false;
-                that.moneyList = res.data.data;
-                for (var i = 0; i < that.moneyList.length; i++) {
-                  that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
-                }
-              }
-              that.searchUserId = '';
+              that.loadingCheckHead = false;
+              that.moneyList = res.data.data;
               that.searchDataPrev = [];
             } else {
               that.loadingCheckHead = false;
-              that.$message.error('网络出错，请稍后再试！');
+              that.moneyList = res.data.data;
+              for (var i = 0; i < that.moneyList.length; i++) {
+                that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+              }
             }
+            startDate = ''
+            endDate = ''
+            that.searchDataPrev = [];
+            // that.searchUserId = '';
           })
         }
       },
@@ -179,13 +180,10 @@
           return false
         }
         var obj = {
-          phone: that.nowUserMoneyNum,
-          startDate: '',
-          endDate: '',
-          token: ''
+          userPhone: that.nowUserMoneyNum,
         }
         that.loadingCheck = true;
-        that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
+        that.global.axiosGetReq('/userQbList/queryQb',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length == 0) {
               that.loadingCheck = false;

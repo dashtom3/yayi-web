@@ -439,6 +439,13 @@
           that.rgAgree_alert = false;
         }
       },
+      // showLogin1: function() {
+      //   var that = this;
+      //   if (that.showLogin1 == false) {
+      //     console.log('222');
+
+      //   }
+      // }
     },
     methods: {
       //获取注册登录banner
@@ -516,7 +523,7 @@
           that.changeForget1 = true;
           that.changeForget2 = false;
           that.changeForget3 = false;
-          that.showLogin1 = !that.showLogin1;
+          that.showLogin1 = true;
         }
       },
       // hover购物车
@@ -560,7 +567,7 @@
       // 删除购物车商品
       delete_cargo: function(item) {
         var that = this;
-        // console.log(item.itemSKU);
+        console.log(item.itemSKU);
         var obj = {
           phone: that.global.getUser().phone,
           itemSKU: item.itemSKU,
@@ -623,13 +630,13 @@
       // 我的订单
       myOrder: function() {
         var that = this;
-          if (that.global.getToken() !== null) {
-            that.$router.push({ path: '/center' });
-          } else {
-            that.changeForget1 = true;
-            that.changeForget2 = false;
-            that.changeForget3 = false;
-            that.showLogin1 = !that.showLogin1;
+        if (that.global.getToken() !== null) {
+          that.$router.push({ path: '/center' });
+        } else {
+          that.changeForget1 = true;
+          that.changeForget2 = false;
+          that.changeForget3 = false;
+          that.showLogin1 = true;
         }
       },
       // 登录成功后

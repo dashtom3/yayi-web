@@ -46,7 +46,7 @@ import userManner_moneyList from '@/components/admin/userManner/moneyList'
 import userManner_certificationList from '@/components/admin/userManner/certificationList'
 
 //系统管理
-import adminManner_oplog from '@/components/admin/adminManner/oplog'
+// import adminManner_oplog from '@/components/admin/adminManner/oplog'
 import adminManner_admin from '@/components/admin/adminManner/admin'
 
 
@@ -261,7 +261,7 @@ let router = new Router({
       // leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-users', // 图标样式class
       children: [
-        {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
+        // {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}
       ]
     },

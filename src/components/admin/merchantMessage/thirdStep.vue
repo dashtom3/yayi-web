@@ -94,7 +94,7 @@
         dialogVisible: false,
         imageUrl: '',
         fwb: '',
-        state: 1,
+        state: null,
       }
     },
     created: function() {
@@ -296,7 +296,7 @@
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
           console.log(itemValueList)
           var xhr = new XMLHttpRequest();
-          xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
+          xhr.open("POST", "http://47.93.48.111:8080/api/item/updateItemValue")
           xhr.setRequestHeader("Content-Type", "application/json")
           xhr.send(itemValueList)
           xhr.onreadystatechange = function(){

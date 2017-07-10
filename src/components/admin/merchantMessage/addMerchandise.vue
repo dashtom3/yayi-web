@@ -61,7 +61,7 @@
         </tr>
         <tr class="activeTable_des">
           <td class="des_skuCode">
-            <el-input v-model="input_sku" :disabled="true"></el-input>
+            <span>{{ruleForm.itemId+1}}</span>
           </td>
           <td class="des_price">
             <el-input v-model="input_price"></el-input>

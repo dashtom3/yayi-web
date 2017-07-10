@@ -1,6 +1,6 @@
 <template>
   <div class="secondStep">
-    <el-form :inline="true" class="secondStep_box" style="margin-top: 20px;" v-show="secondStep">
+    <el-form :inline="true" :model="secondForm" :rules="rules" ref="secondForm" class="secondStep_box" style="margin-top: 20px;" v-show="secondStep">
       <el-form-item label="商家货号">
         <el-input v-model="secondForm.storeItemId"></el-input>
       </el-form-item>
@@ -13,7 +13,7 @@
       <el-form-item label="生产企业">
         <el-input v-model="secondForm.producePompany"></el-input>
       </el-form-item>
-      <el-form-item label="注册证有效期／备案日期">
+      <el-form-item label="注册证有效期／备案日期" prop="registerDate">
         <el-date-picker format="yyyy-MM-dd" v-model="secondForm.registerDate" type="date" placeholder="选择日期">
         </el-date-picker>
       </el-form-item>
@@ -26,8 +26,11 @@
       <el-form-item label="使用范围">
         <el-input v-model="secondForm.itemRange"></el-input>
       </el-form-item>
+      <el-form-item label="其他">
+        <el-input v-model="secondForm.remark"></el-input>
+      </el-form-item>
       <div style="margin-left: 30px;">
-        <el-button type="primary" @click="nextToThird()">下一步</el-button>
+        <el-button type="primary" @click="nextToThird('secondForm')">下一步</el-button>
         <el-button @click="returnFrist()">返回</el-button>
       </div>
     </el-form>
@@ -52,10 +55,16 @@
           itemPacking: '', //商品包装
           itemLevels:'', //产品标准
           itemRange: '', //商品使用范围
+          remark: '', //其他
         },
         ruleForm: {},
         newForm: {},
         message: {},
+        rules: {
+          registerDate: [
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ]
+        }
       }
     },
     components: {
@@ -80,21 +89,28 @@
       //console.log(that.ruleForm);
     },
     methods: {
-      nextToThird: function() {
+      nextToThird: function(formName) {
         var that = this;
-        if (that.editCargo !== null) {
-          that.secondForm.registerDate = util.formatDate.format(new Date(that.secondForm.registerDate));
-          Object.assign(that.newForm,that.secondForm,that.ruleForm);
-          that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
-          that.secondStep = false;
-          that.thirdStep = true;
-        } else {
-          that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
-          Object.assign(that.newForm,that.secondForm,that.ruleForm);
-          that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
-          that.secondStep = false;
-          that.thirdStep = true;
-        }
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (that.editCargo !== null) {
+              that.secondForm.registerDate = util.formatDate.format(new Date(that.secondForm.registerDate));
+              Object.assign(that.newForm,that.secondForm,that.ruleForm);
+              that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+              that.secondStep = false;
+              that.thirdStep = true;
+            } else {
+              that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
+              Object.assign(that.newForm,that.secondForm,that.ruleForm);
+              that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+              that.secondStep = false;
+              that.thirdStep = true;
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       returnFrist: function() {
         var that = this;
