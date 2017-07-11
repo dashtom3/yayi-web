@@ -190,10 +190,24 @@
           }
         }
       },
+      lzy_returnData:function () {
+        var that = this;
+        var arr = [];
+        for(let i in that.items){
+          for(let a in that.items[i].place){
+            if(that.items[i].place[a].checked==true){
+              arr.push(that.items[i].place[a].city);
+            }
+          }
+        }
+        return arr;
+      },
       confirm: function() {
         var that = this;
         var arr = that.submitCities;
-        that.$emit('listenChildren',arr);
+        var arr2 = that.lzy_returnData()
+        // that.$emit('listenChildren',arr);
+        that.$emit('listenChildren',arr2);
         that.state2 = false;
         this.returnDefault();
       },

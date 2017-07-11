@@ -14,7 +14,7 @@
           <el-table-column  prop="postCity" align="center"  label="运送到" >
             <template scope="scope">
               <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span>
-              <el-button type="text" v-if="scope.row.changeState" @click="tab1_editThis(scope.$index)">编辑</el-button>
+              <el-button type="text" v-if="scope.row.changeState" @click="tab1_editThis(scope.$index,scope.row)">编辑</el-button>
             </template>
           </el-table-column>
           <el-table-column  prop="firstNum" align="center"  label="首件数（件）"  width="200">
@@ -50,6 +50,7 @@
           <el-button v-show="!tab1_allInputDisable" v-on:click="tab1_addOneFreight()" type="text">为指定地区城市添加邮费</el-button>
         </div>
       </el-tab-pane>
+
       <el-tab-pane label="包邮" name="fourth">
         <el-table  :data="tab2_tableData"  stripe  style="width: 100%">
           <el-table-column  prop="postCity" align="center"  label="选择地区" >
@@ -97,6 +98,7 @@
     name: 'freightSet',
     data () {
       return {
+        palceSelected:null,
         state:false,
         tab1_allInputDisable:false,
         tab1_editIndex:null,
@@ -158,18 +160,23 @@
       },
       listenChildrenFun:function(data){
         var that = this;
-        // var oldData =  this.tab1_tableData[this.tab1_editIndex].postCity;
         if(data!="1"){
           if(that.selectPlaceStale == 1){
-            that.tab1_tableData[that.tab1_editIndex].postCity = [];
-            for(let i in data){
-              that.tab1_tableData[that.tab1_editIndex].postCity.push(data[i]);
-            }
+            // 自定义
+            // that.tab1_tableData[that.tab1_editIndex].postCity = "";
+            var str = data.join(",");
+            // for(let i in data){
+            //   that.tab1_tableData[that.tab1_editIndex].postCity.push(data[i]);
+            // }
+            that.tab1_tableData[that.tab1_editIndex].postCity = str;
           }else if(that.selectPlaceStale == 2){
-            that.tab2_tableData[0].postCity = [];
-            for(let i in data){
-              that.tab2_tableData[0].postCity.push(data[i]);
-            }
+            // 包邮
+            var str = data.join(",");
+            // that.tab2_tableData[0].postCity = [];
+            // for(let i in data){
+              // that.tab2_tableData[0].postCity.push(data[i]);
+            // }
+            that.tab2_tableData[0].postCity = str;
           }
         }
         this.state = false;
@@ -249,25 +256,32 @@
         this.tab1_tableData.push(obj);
       },
       tab1_delete:function(index,one){
-        console.log(one)
         var that = this;
-        if(one.postFeeId){
-          var obj = {
-            postFeeId:one.postFeeId
-          };
-          that.global.axiosPostReq('/freightManage/deleteCustomFreight',obj)
-          .then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              that.tab1_tableData.splice(index,1);
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }else{
-          that.tab1_tableData.splice(index,1);
-        }
+        that.$confirm('此操作将删除该自定义邮费, 是否继续?', '提示', {  confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
+        }).then(() => {
+          if(one.postFeeId){
+            var obj = {
+              postFeeId:one.postFeeId
+            };
+            that.global.axiosPostReq('/freightManage/deleteCustomFreight',obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.tab1_tableData.splice(index,1);
+                that.$message({type: 'success',message: '删除成功!'});
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
+          }
+        }).catch(() => {
+          that.$message({  type: 'info',  message: '已取消删除'});
+        });
+        // else{
+        //   that.tab1_tableData.splice(index,1);
+        // }
       },
-      tab1_editThis:function(index){
+      tab1_editThis:function(index,row){
+        console.log(row)
         var that = this;
         that.selectPlaceStale = 1;
         that.state = true;
