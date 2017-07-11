@@ -6,11 +6,11 @@
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
         <span @click="goThisBrand('首页')" class="showBlueColor">首页</span>
         <span v-if="firstClassfy">></span>
-        <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" v-if="firstClassfy">{{firstClassfy}}</span>
+        <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" :class="{indexLine:!secondClassfy&&!thirdClassfy&&!haveBrand&&!searchWordFromIndex}" v-if="firstClassfy">{{firstClassfy}}</span>
         <span v-if="secondClassfy">></span>
-        <span @click="goThisBrand(secondClassfy,2)" class="showBlueColor" v-if="secondClassfy" >{{secondClassfy}}</span><span v-if="thirdClassfy">></span>
-        <span @click="goThisBrand(thirdClassfy,3)" class="showBlueColor" v-if="thirdClassfy" >{{thirdClassfy}}</span><span v-if="haveBrand">></span>
-        <span class="showBlueColor" v-if="haveBrand" >{{haveBrand}}</span><span v-if="searchWordFromIndex">></span>
+        <span @click="goThisBrand(secondClassfy,2)" class="showBlueColor" :class="{indexLine:!thirdClassfy&&!haveBrand&&!searchWordFromIndex}" v-if="secondClassfy" >{{secondClassfy}}</span><span v-if="thirdClassfy">></span>
+        <span @click="goThisBrand(thirdClassfy,3)" class="showBlueColor" :class="{indexLine:!haveBrand&&!searchWordFromIndex}" v-if="thirdClassfy" >{{thirdClassfy}}</span><span v-if="haveBrand">></span>
+        <span class="showBlueColor" :class="{indexLine:!searchWordFromIndex}" v-if="haveBrand" >{{haveBrand}}</span><span v-if="searchWordFromIndex">></span>
         <span class="indexLine">{{searchWordFromIndex}}</span>
       </div>
       <div class="classifyLine" >

@@ -54,9 +54,8 @@
       getMyClientList:function(){
         var that = this;
         var obj = {
-          token:that.global.getToken()
+          token:that.global.getSalesToken()
         };
-        console.log(obj)
         that.global.axiosGetReq("/saleMyClient/myClient",obj)
         .then((res) => {
           console.log(res,"getMyClientList")
@@ -76,7 +75,7 @@
         // if(that.searchData){
           var obj = {
             value:that.searchData,
-            token:that.global.getToken()
+            token:that.global.getSalesToken()
           };
           that.global.axiosGetReq("/saleMyClient/myClient",obj)
           .then((res) => {

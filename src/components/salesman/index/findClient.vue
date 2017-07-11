@@ -56,7 +56,7 @@
         // };
         that.global.axiosPostReq('/findCus/unregistered')
         .then((res) => {
-          console.log(res)
+          console.log(res,"")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
           } else {
@@ -73,7 +73,7 @@
         // };
         that.global.axiosPostReq('/findCus/registered')
         .then((res) => {
-          console.log(res)
+          console.log(res,"getWaitBindUserList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
           } else {

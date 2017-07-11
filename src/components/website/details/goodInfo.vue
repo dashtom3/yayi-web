@@ -638,7 +638,7 @@ import myAddress from './selectThree'
 
   .goodBtn{
     margin-top: 32px;
-    padding-left: 63px;
+    padding-left: 141px;
   }
   .goodBtn span{
       display: inline-block;
