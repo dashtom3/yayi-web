@@ -53,7 +53,6 @@
   import global from '../../global/global'
   import paging from '../../website/brandLib/paging0'
   export default {
-    name: 'aa',
     data () {
       return {
         imgIs:true,
@@ -103,7 +102,7 @@
             // this.pageProps.totalPage = res.data.totalPage
             console.log(res.data.data)
             // this.orderInfo = res.data.data
-            this.overYearHasCommission = res.data.data.overYearHasCommission
+            this.overYearHasCommission = res.data.data.myOrderVoList
             this.pageProps.totalPage = res.data.totalPage
           }else{
             this.$message.error('查询订单失败！');

@@ -121,7 +121,6 @@
       return {
         value: null,
         tableData: [],
-        selectDate: ['1个月','2个月','半年','1年'],
         value: '',
         tableData: [{
           date: '2017-01-01-17:00',

@@ -16,23 +16,23 @@
     </el-col>
 		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
-        <el-table-column prop="orderTime" align="center" label="下单时间">
+        <el-table-column prop="orderCreated" align="center" label="下单时间">
         </el-table-column>
-        <el-table-column  prop="customerName" align="center" label="客户姓名">
+        <el-table-column prop="userName" align="center" label="客户姓名">
         </el-table-column>
-        <el-table-column prop="customerPhone" align="center" label="客户手机号">
+        <el-table-column prop="userPhone" align="center" label="客户手机号">
         </el-table-column>
-        <el-table-column prop="commodityInfo" align="center" label="商品信息">
+        <el-table-column prop="saleDataStatistics" align="center" label="商品信息">
         </el-table-column>
-        <el-table-column prop="commodityTotal"  align="center"label="商品总价">
+        <el-table-column prop="totalFee"  align="center"label="商品总价">
         </el-table-column>
-        <el-table-column prop="refundAmt" align="center" label="已退款金额（元）">
+        <el-table-column prop="refundMoney" align="center" label="已退款金额（元）">
         </el-table-column>
-        <el-table-column prop="income" align="center" label="收入（元）">
+        <el-table-column prop="getMoney" align="center" label="收入（元）">
         </el-table-column>
-        <el-table-column prop="state" align="center" label="状态">
+        <el-table-column prop="getState" align="center" label="状态">
         </el-table-column>
-        <el-table-column prop="cutoffTime" align="center" label="结算时间">
+        <el-table-column prop="getUpdated" align="center" label="结算时间">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import global from '../../global/global'
 let echarts = require('../../../../node_modules/echarts/lib/echarts')
 // 引入折线图组件
 require('echarts/lib/chart/line');
@@ -91,7 +92,7 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-  props: ['orderInfo'],
+  props: ['orderInfo','echartData'],
   data() {
     return {
       detailVisible: false,
@@ -156,7 +157,7 @@ export default {
       //   state: '待结算',
       //   cutoffTime: '2017-01-03-17:00'
       // }],
-      tableData: this.orderInfo,
+      tableData: null,
       infoList: [{
         goodsName: '商品名称1',
         price: 30,
@@ -176,7 +177,7 @@ export default {
     }
   },
   created(){
-    console.log(this.orderInfo)
+    this.tableData = this.orderInfo
   },
   mounted() {
     this.drawLine();
@@ -196,7 +197,7 @@ export default {
               trigger: 'axis'
           },
           legend: {
-              data:['邮件营销']
+              data:['收入']
           },
           grid: {
               left: '3%',
@@ -225,14 +226,27 @@ export default {
                   name:'总收入',
                   type:'line',
                   stack: '总收入',
-                  data:[0, 500, 800, 2200, 1800, 3000, 3500]
+                  data: this.echartData
               }
           ]
       });
 
 		},
     queryDetail(index, row){
-      this.detailVisible = true
+      let params = {
+        userPhone: row.userPhone,
+        orderId: row.saleId,
+        token: global.getSalesToken()
+      }
+      console.log('查看详情',params)
+      global.axiosGetReq('/saleMyOrder/detail',params).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          console.log('查看详情',res.data.data)
+          this.detailVisible = true
+        }else{
+          this.$message.error('查询订单失败！');
+        }
+      })
     }
 	}
 }
