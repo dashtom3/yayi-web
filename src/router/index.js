@@ -161,7 +161,7 @@ let router = new Router({
       name: '商品信息管理',
       menuShow: true,
       leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-home', // 图标样式class
+      iconCls: 'iconfont icon-books', // 图标样式class
       children: [
         {path: '/admin/merchantMessage', component: merchantMessage, name: '商品信息管理', menuShow: true},
         {path: '/admin/addMerchandise', component: addMerchandise, name: 'addMerchandise', menuShow: true},
