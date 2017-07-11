@@ -14,9 +14,9 @@
         历年已结算收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :dateInfo="dateInfo"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" @childSay="pageHandler"></paging>
 	</el-row> 
 </template>
 
@@ -34,45 +34,47 @@ export default {
         totalPage: 1
       },
       dateInfo: {
-        year: '',
-        month: ''
+        year: new Date().getFullYear(),
+        month: new Date().getMonth()+1
       },
       orderInfo: {
-        allCommission: '',
-        dayCommission: '',
-        dayOrderNum: '',
-        getUpdated: '',
-        hasCommission: '',
-        orderNum: '',
-        saleIncomeVoList: '',
-        stayCommission: '',
-        sumOrderMoney: '',
-        myOrderVoList: []
-      }
+        // allCommission: '',
+        // dayCommission: '',
+        // dayOrderNum: '',
+        // getUpdated: '',
+        // hasCommission: '',
+        // orderNum: '',
+        // saleIncomeVoList: '',
+        // stayCommission: '',
+        // sumOrderMoney: '',
+        // myOrderVoList: []
+      },
+      echartData: []
     }
   },
   created(){
     this.init()
     this.echartPic()
-    console.log(this.dateInfo)
   },
   components:{
     dataTable,
     paging
   },
   methods: {
+    //查询订单数据
     init(){
       let params = {
         currentPage: this.pageProps.pageNum,
         numberPerPage: 10,
         token: global.getSalesToken()
       }
+      console.log('查询订单数据',params)
       global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           // this.replayList = res.data.data
           // this.pageProps.totalPage = res.data.totalPage
-          console.log(res.data.data)
-          // this.orderInfo = res.data.data
+          console.log('查询订单数据',res.data.data)
+          this.orderInfo = res.data.data
           this.overYearHasCommission = res.data.data.overYearHasCommission
           this.pageProps.totalPage = res.data.totalPage
         }else{
@@ -80,18 +82,21 @@ export default {
         }
       })
     },
+    //查询收入
     echartPic(){
       let params = {
         year: this.dateInfo.year,
         month: this.dateInfo.month,
         token: global.getSalesToken()
       }
+      console.log('echart数据',params)
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           // this.replayList = res.data.data
-          console.log(res.data.data)
+          console.log('echart数据',res.data.data)
+          this.echartData = res.data.data
         }else{
-          this.$message.error('查询订单失败！');
+          this.$message.error('查询收入失败！');
         }
       })
     },
