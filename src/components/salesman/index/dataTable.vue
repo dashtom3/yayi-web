@@ -242,11 +242,12 @@ export default {
       global.axiosGetReq('/saleMyOrder/detail',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           console.log('查看详情',res.data.data)
-          this.detailVisible = true
+          
         }else{
           this.$message.error('查询订单失败！');
         }
       })
+      this.detailVisible = true
     }
 	}
 }

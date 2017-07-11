@@ -4,26 +4,23 @@
       <span class="headName">个人信息</span>
       <div class="personal_left">
         <div class="userImgWrap">
-          <label for="file1" v-if="imgIs">
-            +<input style="display:none" type="file" name="file1" id="file1">
-          </label>
-          <img style="border-radius50%;width:100%;height:100%" src="" alt="" v-else>
-          <p>更换头像</p>
+          <img style="border-radius:50%;width:100%;height:100%" :src="imgUrl" alt="头像">
+          <p v-on:click="immediateDoIt()">更换头像</p>
         </div>
-
       </div>
       <div class="personal_right">
         <div class="oneInfor">
           <span>手机号：</span>
-          <span>{{personalData}}</span>
+          <span>{{phone}}</span>
         </div>
         <div class="oneInfor">
           <span>真实姓名：</span>
-          <span>{{personalData}}</span>
+          <span>{{trueName}}</span>
         </div>
         <div class="oneInfor">
-          <span>支付宝账户：</span>
-          <span>{{personalData}}</span>
+          <span v-if="this.postalType === '支付宝'">支付宝账户：</span>
+          <span v-if="this.postalType === '银行'">银行账户：</span>
+          <span>{{accountNumber}}</span>
         </div>
         <div class="btnWrap">
           <span v-on:click="immediateDoIt()">立即完善</span>
@@ -34,7 +31,7 @@
     <div class="mymoney">
       <span class="headName">我的钱包</span>
       <div class="userLeaveMoney">
-        账户余额：<span>￥7000</span>
+        账户余额：<span>￥{{accountAmt}}</span>
       </div>
       <div class="btnWrap">
         <span v-on:click="cash()">提现</span>
@@ -43,7 +40,7 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable :orderInfo="orderInfo" :dateInfo="dateInfo"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </div>
 </template>
@@ -55,7 +52,6 @@
   export default {
     data () {
       return {
-        imgIs:true,
         pageProps: {
           pageNum: 1,
           totalPage: 1
@@ -64,6 +60,12 @@
           year: new Date().getFullYear(),
           month: new Date().getMonth()+1
         },
+        phone: '',
+        trueName: '',
+        accountNumber: '',
+        imgUrl: '',
+        postalType: '',
+        accountAmt: '',
         orderInfo: {
           allCommission: '',
           dayCommission: '',
@@ -76,7 +78,8 @@
           sumOrderMoney: '',
           myOrderVoList: []
         },
-        personalData: null
+        personalData: null,
+        echartData: []
       }
     },
     components: {
@@ -87,6 +90,7 @@
       this.init()
       this.echartPic()
       this.queryInfo()
+      this.getMyWallet()
     },
     methods: {
       init(){
@@ -98,14 +102,27 @@
 
         global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            // this.replayList = res.data.data
-            // this.pageProps.totalPage = res.data.totalPage
-            console.log(res.data.data)
-            // this.orderInfo = res.data.data
-            this.overYearHasCommission = res.data.data.myOrderVoList
+            console.log('查询订单',res.data.data)
+            this.orderInfo = res.data.data
             this.pageProps.totalPage = res.data.totalPage
           }else{
             this.$message.error('查询订单失败！');
+          }
+        })
+      },
+      //获取钱包明细
+      getMyWallet: function() {
+        var that = this;
+        var obj = {
+          token: that.global.getSalesToken(),
+          state: 0,
+        }
+        console.log(obj)
+        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.accountAmt = res.data.data.withdrawalsTX;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -114,11 +131,14 @@
           phone: global.getSalesUser().phone,
           token: global.getSalesToken(),
         }
-        console.log('查询销售员个人资料',params)
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            this.personalData = res.data.data
-            console.log(this.personalData)
+            console.log('查询销售员个人资料',res.data.data)
+            this.phone = res.data.data.phone
+            this.trueName = res.data.data.trueName
+            this.accountNumber = res.data.data.accountNumber
+            this.postalType = res.data.data.postalType
+            this.imgUrl = res.data.data.salePic
           }
         })
       },
@@ -132,8 +152,9 @@
           if (res.data.callStatus === 'SUCCEED') { 
             // this.replayList = res.data.data
             console.log(res.data.data)
+            this.echartData = res.data.data
           }else{
-            this.$message.error('查询订单失败！');
+            this.$message.error('查询收入失败！');
           }
         })
       },
@@ -171,8 +192,8 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  box-shadow: 0 0 20px 10px #eeeeee;
-  margin: 80px 102px 30px 78px;
+  box-shadow: 0 0 20px 10px #eee;
+  margin: 80px 102px 0 78px;
   text-align: center;
   line-height: 90px;
   cursor: pointer;
@@ -184,7 +205,7 @@
   font-weight: 300;
 }
 .userImgWrap p{
-  line-height: 50px;
+  line-height: 10px;
 }
 .personal_right{
   /*float: right;*/

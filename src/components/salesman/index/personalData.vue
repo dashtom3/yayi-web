@@ -15,31 +15,11 @@
               :show-file-list="false"
               :on-success="uploadFile"
               :data="qiNiuToken">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
+              <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
               <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
             </el-upload>
           </div>
           <div class="persInfo">
-            <!-- <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">手机号：</span>{{personalData.phone}}</span>
-              <span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.trueName}}</span>
-            </div>
-            <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">性别：</span>{{sexShow}}</span>
-              <span class="infoRight"><span class="infoName">身份证号：</span>{{personalData.idCard}}</span>
-            </div>
-            <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">微信：</span>{{personalData.weChar}}</span>
-              <span class="infoRight"><span class="infoName">邮箱：</span>{{personalData.email}}</span>
-            </div>
-            <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">出生日期：</span>{{birthDay}}</span>
-              <span class="infoRight"><span class="infoName">学历：</span>{{personalData.education}}</span>
-            </div>
-            <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">工作单位：</span>{{personalData.workUnit}}</span>
-              <span class="infoRight"><span class="infoName">工作职位：</span>{{personalData.workPosition}}</span>
-            </div> -->
             <div class="clearfix">
               <ul class="fl infowrap">
                 <li><span class="infoLeft"><span class="infoName">手机号：</span>{{personalData.phone}}</span></li>
@@ -75,7 +55,7 @@
               :show-file-list="false"
               :on-success="uploadFile"
               :data="qiNiuToken">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
+              <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
               <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
             </el-upload>
           </div>
@@ -212,20 +192,7 @@
           bandName:{required: true, message: '请填写支银行名称', trigger: 'change'},
           zhifubaoCounet:{required: true, message: '请填写支付宝账号', trigger: 'change'}
         },
-        personalData:{
-          // phone: global.getSalesUser().phone,
-          // trueName:"小酱",
-          // sex: '1',
-          // idCard:"1234",
-          // weChar:"134",
-          // email:'134',
-          // birthday:'1993-02-01',
-          // education:"同济",
-          // workUnit:"小酱",
-          // workPosition:'小酱',
-          // part:["河北","秦皇岛市","北戴河区"],
-          // address:"同济大学"
-        },
+        personalData:{},
         personalDataRule:{
           trueName: [
             { required: true, message: '请填写真实姓名', trigger: 'change' }
@@ -273,10 +240,10 @@
           phone: global.getSalesUser().phone,
           token: global.getSalesToken()
         }
-        console.log('查询销售员个人资料',params)
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
+            this.personalData.part = this.personalData.part.split(',')
             console.log(this.personalData)
           }
         })
