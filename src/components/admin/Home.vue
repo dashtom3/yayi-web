@@ -3,10 +3,10 @@
     <!--头部-->
     <el-col :span="24" class="topbar-wrap">
       <div class="topbar-logo topbar-btn">
-        <a href="/"><img src="../assets/logo.png" style="width:42px;margin-top: 5px;"></a>
+        <a href="/"><img src="../../images/index/contact.png" style="width:42px;margin-top: 5px;"></a>
       </div>
       <div class="topbar-title topbar-btn">
-        <span>admin</span>
+        <span>牙医abc后台</span>
       </div>
       <div class="topbar-account topbar-btn">
         <el-dropdown trigger="click">

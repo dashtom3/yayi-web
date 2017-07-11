@@ -122,20 +122,26 @@
           console.log(that.searchDataPrev,'kongkong')
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
+            console.log(res.data);
             if (res.data.callStatus === 'SUCCEED') {
-              if (res.data.data.length == 0) {
-                that.loadingCheckHead = false;
-                that.$message.error('查询无结果！');
-              } else {
-                that.loadingCheckHead = false;
-                that.moneyList = res.data.data;
-                for (var i = 0; i < that.moneyList.length; i++) {
-                  that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
-                }
-                console.log(that.moneyList,'2222222222')
+              that.loadingCheckHead = false;
+              that.moneyList = res.data.data;
+              for (var i = 0; i < that.moneyList.length; i++) {
+                that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
+              // if (res.data.data.length == 0) {
+              //  
+              //   that.$message.error('查询无结果！');
+              // } else {
+              //   that.loadingCheckHead = false;
+              //   that.moneyList = res.data.data;
+              //   for (var i = 0; i < that.moneyList.length; i++) {
+              //     that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+              //   }
+              //   console.log(that.moneyList,'2222222222')
+              // }
               //that.searchUserId = '';
-              that.searchDataPrev = [];
+              // that.searchDataPrev = [];
             } else {
               that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');

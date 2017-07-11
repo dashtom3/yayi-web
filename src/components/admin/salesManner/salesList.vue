@@ -394,7 +394,7 @@
         if(that.multipleSelection2.length==0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
-          
+
         }
       },
       bindThisUser:function(nowUser,index){
@@ -413,6 +413,7 @@
                 message: '绑定成功!'
               });
               this.noBindSearch()
+
             }
           })
         }else{

@@ -121,7 +121,6 @@
       <!--  添加属性变换表格 结束 -->
       <el-form-item style="margin-top:50px;">
         <el-button type="primary" @click="nextToFirst('ruleForm')">下一步</el-button>
-<!--         <el-button @click="resetForm('ruleForm')">重置</el-button> -->
       </el-form-item>
       <!-- 选择属性弹出框 开始 -->
       <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
@@ -260,24 +259,30 @@
     created: function() {
       var that = this;
       that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
-       if (that.editCargo !== null) {
-        that.getAllClassify();
-        that.getAllProperty();
-        that.ruleForm.itemId = that.editCargo.itemId;
-        that.ruleForm.itemName = that.editCargo.itemName;
-        that.ruleForm.oneClassify = that.editCargo.oneClassify;
-        that.ruleForm.twoClassify = that.editCargo.twoClassify;
-        that.ruleForm.threeClassify = that.editCargo.threeClassify;
-        that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
-        that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
-        that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
-        that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
-        that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
-       } else {
-        that.getItemId();
-        that.getAllClassify();
-        that.getAllProperty();
-       }
+      if (that.$route.params.ruleForm == undefined) {
+        if (that.editCargo !== null ) {
+          that.getAllClassify();
+          that.getAllProperty();
+          that.ruleForm.itemId = that.editCargo.itemId;
+          that.ruleForm.itemName = that.editCargo.itemName;
+          that.ruleForm.oneClassify = that.editCargo.oneClassify;
+          that.ruleForm.twoClassify = that.editCargo.twoClassify;
+          that.ruleForm.threeClassify = that.editCargo.threeClassify;
+          that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
+          that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
+          that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
+          that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
+          that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
+        } else {
+          that.getItemId();
+          that.getAllClassify();
+          that.getAllProperty();
+        }
+      } else {
+        that.ruleForm = that.$route.params.ruleForm
+      }
+      
+      // console.log(that.ruleForm);
     },
     methods: {
       //获取获取商品编号

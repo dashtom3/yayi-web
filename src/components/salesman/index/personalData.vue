@@ -8,7 +8,7 @@
     <div v-if="showPane==1">
       <div class="perDataRight">
         <div v-if="showDefaultData" class="defaultData">
-          <div style="margin: 0 0 0 460px;">
+          <div style="margin: -54px 0 0 460px;">
             <el-upload
               class="avatar-uploader"
               :action="qiNiuUrl"
@@ -20,7 +20,7 @@
             </el-upload>
           </div>
           <div class="persInfo">
-            <div class="oneLineInfo">
+            <!-- <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">手机号：</span>{{personalData.phone}}</span>
               <span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.trueName}}</span>
             </div>
@@ -39,6 +39,22 @@
             <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">工作单位：</span>{{personalData.workUnit}}</span>
               <span class="infoRight"><span class="infoName">工作职位：</span>{{personalData.workPosition}}</span>
+            </div> -->
+            <div class="clearfix">
+              <ul class="fl infowrap">
+                <li><span class="infoLeft"><span class="infoName">手机号：</span>{{personalData.phone}}</span></li>
+                <li><span class="infoLeft"><span class="infoName">性别：</span>{{sexShow}}</span></li>
+                <li><span class="infoLeft"><span class="infoName">微信：</span>{{personalData.weChar}}</span></li>
+                <li><span class="infoLeft"><span class="infoName">出生日期：</span>{{birthDay}}</span></li>
+                <li><span class="infoLeft"><span class="infoName">工作单位：</span>{{personalData.workUnit}}</span></li>
+              </ul>
+              <ul class="fl infowrap" style="margin-left: 320px;margin-bottom:20px;">
+                <li><span class="infoRight"><span class="infoName">真实姓名：</span>{{personalData.trueName}}</span></li>
+                <li><span class="infoRight"><span class="infoName">身份证号：</span>{{personalData.idCard}}</span></li>
+                <li><span class="infoRight"><span class="infoName">邮箱：</span>{{personalData.email}}</span></li>
+                <li><span class="infoRight"><span class="infoName">学历：</span>{{personalData.education}}</span></li>
+                <li><span class="infoRight"><span class="infoName">工作职位：</span>{{personalData.workPosition}}</span></li>
+              </ul>
             </div>
             <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">所在地省市区：</span>{{personalData.part}}</span>
@@ -52,7 +68,7 @@
           </div>
         </div>
         <div v-else class="edit">
-          <div style="margin: 0 0 0 460px;">
+          <div style="margin: -54px 0 0 460px;">
             <el-upload
               class="avatar-uploader"
               :action="qiNiuUrl"
@@ -166,6 +182,7 @@
 <script>
   import positionPicker from "./positionSelect"
   import global from "../../global/global"
+  import util from '../../../common/util'
   export default {
     name: 'personalData',
     data () {
@@ -221,34 +238,13 @@
           ],
           weChar: [
             { required: true, message: '请填写微信号', trigger: 'change' }
-          ],
-          email: [
-            { required: true, message: '请填写邮箱', trigger: 'change' }
-          ],
-          birthday: [
-            { required: true, message: '请选择出生日期', trigger: 'blur' ,type:"string"}
-          ],
-          education: [
-            { required: true, message: '请填写学历', trigger: 'change' }
-          ],
-          workUnit: [
-            { required: true, message: '请输入工作单位', trigger: 'change' }
-          ],
-          workPosition: [
-            { required: true, message: '请输入工作职位', trigger: 'change' }
-          ],
-          part: [
-            { required: true, message: '请选择所在省市区', trigger: 'change',type:"array" }
-          ],
-          address: [
-            { required: true, message: '请填写详细地址', trigger: 'change' }
           ]
         },
       }
     },
     computed: {
       sexShow: function(){
-        return this.personalData.sex === '2' ? '女' : '男'
+        return this.personalData.sex === 2 ? '女' : '男'
       },
       birthDay: function(){
         return new Date(this.personalData.birthday).getFullYear() + '-' + this.fillZero((new Date(this.personalData.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.personalData.birthday).getDate())
@@ -275,12 +271,10 @@
       queryPersonInfo: function(){
         let params = {
           phone: global.getSalesUser().phone,
-          token: global.getSalesToken(),
-          currentPage: 1,
-          numberPerPage: 1
+          token: global.getSalesToken()
         }
         console.log('查询销售员个人资料',params)
-        global.axiosGetReq('/saleList/detail',params).then((res) => {
+        global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
             console.log(this.personalData)
@@ -302,8 +296,8 @@
             }else if(this.getMoneyData.type === '银行'){
               params = {
                 postalType: '银行',
-                bankName: this.getMoneyData.name,
-                openName: this.getMoneyData.bandName,
+                bankName: this.getMoneyData.bandName,
+                openName: this.getMoneyData.name,
                 accountNumber: this.getMoneyData.bandCounet,
                 token: global.getSalesToken()
               }
@@ -321,21 +315,30 @@
             })
             
           } else {
-            alert('error submit!!');
+            this.$alert('请填写完整的个人信息');
             return false;
           }
         });
       },
       setGetMoney:function(){
         var that = this;
+        this.getMoneyData.type = this.personalData.postalType
+        this.getMoneyData.name = this.personalData.openName
+        this.getMoneyData.bandCounet = this.personalData.accountNumber
+        this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
+        this.getMoneyData.bandName = this.personalData.bankName
         that.getMoneySet = false;
       },
       goToEditData:function(){
         var that = this;
+        this.personalData.sex = this.personalData.sex && this.personalData.sex.toString()
         that.showDefaultData = false;
       },
       changShowPane:function(arg){
         var that = this;
+        this.bindGetMoneyCount.type = this.personalData.postalType
+        this.bindGetMoneyCount.userName = this.personalData.openName
+        this.bindGetMoneyCount.count = this.personalData.accountNumber
         that.showPane = arg;
       },
       positionFromPicker:function(data){
@@ -356,8 +359,8 @@
               weChar: this.personalData.weChar,
               email: this.personalData.email,
               sex: this.personalData.sex,
-              birthday: this.personalData.birthday,
-              part: this.personalData.part,
+              birthday: util.formatDate.format(new Date(this.personalData.birthday)),
+              part: (this.personalData.part).join(","),
               address: this.personalData.address,
               education: this.personalData.education,
               workUnit: this.personalData.workUnit,
@@ -377,7 +380,7 @@
               }
             })
           } else {
-            alert('error submit!!');
+            this.$alert('请填写完整的个人信息');
             return false;
           }
         });
@@ -396,7 +399,11 @@
 .editPersonalData{
   width: 630px;
   margin: auto;
-  margin-top: 110px;
+  margin-top: 30px;
+}
+.infowrap li{
+  height: 60px;
+  line-height: 60px;
 }
 .perDataLeft{
   float: left;
@@ -446,7 +453,7 @@ background: #5ed6dc;
 .persInfo{
   width: 818px;
   margin: auto;
-  margin-top: 100px;
+  margin-top: 40px;
 }
 .persInfo .oneLineInfo{
   margin-bottom: 40px;
