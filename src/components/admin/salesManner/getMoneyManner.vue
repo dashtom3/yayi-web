@@ -62,7 +62,7 @@
   export default{
     data(){
       return {
-        searchUserContent:null,
+        searchUserContent: '',
         searchType: '',
         state: '',
         getMoneyList: [],
@@ -97,9 +97,11 @@
         }
         var obj = {
           state: that.state,
-          message: '',
+          message: that.searchUserContent,
         }
+        console.log(obj);
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
+          console.log(res,'23')
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
             console.log(that.getMoneyList,'222');

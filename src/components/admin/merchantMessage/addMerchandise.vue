@@ -27,6 +27,12 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="商品类型" prop="itemSort">
+        <el-select v-model="ruleForm.itemSort" placeholder="请选择">
+          <el-option v-for="type in typeOptions" :key="type" :label="type.itemTypeName" :value="type.itemTypeName">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="注册证号" prop="registerId">
         <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
@@ -154,6 +160,7 @@
       return {
         options: [],
         brandOptions: [],
+        typeOptions: [{itemTypeName:'耗材类'},{itemTypeName:'工具设备类'}],
         list: true,
         shopType: '',
         chooseShopType: true,
@@ -169,6 +176,7 @@
           itemBrandId: '', //商品品牌ID
           registerId:'', //商品注册证号
           isThrow: '', //是否推荐
+          itemSort: '', //商品类型
         },
         rules: {
           itemId: [
@@ -182,6 +190,9 @@
           ],
           itemBrandName: [
             { required: true, message: '请选择品牌名称', trigger: 'blur' }
+          ],
+          itemSort: [
+            { required: true, message: '请选择商品类型', trigger: 'blur' }
           ],
           registerId: [
             { required: true, message: '请填写注册证号', trigger: 'blur' }

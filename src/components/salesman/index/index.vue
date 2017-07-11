@@ -2,7 +2,7 @@
   <div class="salesIndex">
     <salesHead v-on:msgFromChild="getMsg"></salesHead>
     <div class="saleSecond">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img">
+      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
@@ -15,7 +15,7 @@
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
-      <component v-on:msgFromChild="getMsg" :is="currentView" keep-alive></component>
+      <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :is="currentView" keep-alive></component>
     </transition>
     <div class="clearfix"></div>
     <salesFoot></salesFoot>
@@ -61,6 +61,7 @@
         tab05Text: "tab05",
         tab06Text: "tab06",
         currentView: 'tab01', //默认选中的导航栏
+        dataValue: null,
       }
     },
     components: {
@@ -88,18 +89,21 @@
     },
     methods: {
       getMsg:function(data){
-        console.log(data)
+        //console.log(data)
         var that = this;
         if(data=="goToMyClient"){
           that.changeActive4(that.tab04Text);
+          that.dataValue = '';
         }else if(data=="goToFindClient"){
           that.changeActive3(that.tab03Text);
+          that.dataValue = '';
         }else if(data=="editMyPersData"){
           that.changeActive6(that.tab06Text);
-        }else if(data=="getMyMoney"){
+          that.dataValue = '';
+        }else if(data.myMoney=='getMyMoney'){
           that.changeActive5(that.tab05Text);
+          that.dataValue = data;
         }
-
       },
       changeActive1: function(tabText) {
         this.currentView = tabText;
@@ -109,6 +113,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.dataValue = '';
       },
       changeActive2: function(tabText) {
         this.currentView = tabText;
@@ -118,6 +123,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.dataValue = '';
       },
       changeActive3: function(tabText) {
         this.currentView = tabText;
@@ -127,6 +133,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.dataValue = '';
       },
       changeActive4: function(tabText) {
         this.currentView = tabText;
@@ -136,6 +143,7 @@
         this.isActive4 = true;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.dataValue = '';
       },
       changeActive5: function(tabText) {
         this.currentView = tabText;
@@ -145,6 +153,7 @@
         this.isActive4 = false;
         this.isActive5 = true;
         this.isActive6 = false;
+        this.dataValue = '';
       },
       changeActive6: function(tabText) {
         this.currentView = tabText;
@@ -154,6 +163,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = true;
+        this.dataValue = '';
       },
       // logo: function() {
       //   var that = this;
@@ -175,6 +185,7 @@
   float: left;
   margin-top: 20px;
   margin-right: 88px;
+  cursor: pointer;
 }
 .tab_box {
   float: left;

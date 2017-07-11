@@ -9,7 +9,7 @@
       <div>
         <span>注册证号：{{instruction.registerId}}</span>
         <span>产品包装：{{instruction.itemPacking}}</span>
-        <span>医械类别：</span>
+        <span>医械类别：{{instruction.apparatusType}}</span>
       </div>
       <div>
         <span>注册证有效期/备案日期：{{instruction.registerDate}}</span>

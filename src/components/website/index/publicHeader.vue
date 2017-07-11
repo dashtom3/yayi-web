@@ -478,7 +478,8 @@
       // 创客系统入口
       gotoSales: function() {
         var that = this;
-        that.$router.push({path: '/salesLog'});
+        window.open('/salesLog')
+        //that.$router.push({path: '/salesLog'});
       },
       //首页搜索框
       search_cargo: function() {
@@ -1111,7 +1112,7 @@
     margin-left: 60px;
   }
   .shopping_car {
-    width: 80px;
+    width: 100px;
     height: 26px;
     position: relative;
     cursor: pointer;
@@ -1126,10 +1127,11 @@
   }
   .shopping_car .car_num {
     color: #D81E06;
+    margin-left: 20px;
   }
   .gwcHeader {
     margin-left: 30px;
-    width: 60px;
+    width: 71px;
   }
   .logIn:hover, .register:hover, .my_order:hover, .yayi:hover, .system_enter:hover{
     color: #5DB7E7;
@@ -1153,10 +1155,10 @@
   }
 /*------------页面购物车hover样式 start----------------*/
   .whiteLine {
-    display: none;
+    display: block;
     position: absolute;
     top: 26px;
-    left: 90px;
+    left: 110px;
     width: 268px;
     height: 1px;
     background-color: #e9e9e9;
@@ -1166,7 +1168,7 @@
     display: none;
     position: absolute;
     top: 26px;
-    left: 90px;
+    left: 110px;
     width: 239px;
     height: 1px;
     background-color: #e9e9e9;
@@ -1191,7 +1193,7 @@
   }
   .shopping_car .car_hover {
     display: none;
-    width: 317px;
+    width: 337px;
     max-height: 300px;
     overflow: scroll;
     position: absolute;
@@ -1206,7 +1208,7 @@
   }
   .shopping_car .car_hover1 {
     display: none;
-    width: 288px;
+    width: 308px;
     position: absolute;
     text-align: center;
     top: 27px;

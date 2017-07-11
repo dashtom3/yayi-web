@@ -99,8 +99,8 @@
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data);
             that.moneyList = res.data.data;
+            that.moneyList.reverse();
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
             }
@@ -119,29 +119,15 @@
             endDate: '',
             token: ''
           }
-          console.log(that.searchDataPrev,'kongkong')
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             if (res.data.callStatus === 'SUCCEED') {
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
-              // if (res.data.data.length == 0) {
-              //  
-              //   that.$message.error('查询无结果！');
-              // } else {
-              //   that.loadingCheckHead = false;
-              //   that.moneyList = res.data.data;
-              //   for (var i = 0; i < that.moneyList.length; i++) {
-              //     that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
-              //   }
-              //   console.log(that.moneyList,'2222222222')
-              // }
-              //that.searchUserId = '';
-              // that.searchDataPrev = [];
             } else {
               that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');
@@ -156,25 +142,15 @@
             endDate: endDate,
             token: ''
           }
-          console.log(that.searchDataPrev,'ppp')
-          console.log(obj,'2323232')
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.loadingCheckHead = false;
-              that.moneyList = res.data.data;
-              that.searchDataPrev = [];
-            } else {
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
             }
-            startDate = ''
-            endDate = ''
-            that.searchDataPrev = [];
-            // that.searchUserId = '';
           })
         }
       },
@@ -190,20 +166,16 @@
         }
         that.loadingCheck = true;
         that.global.axiosGetReq('/userQbList/queryQb',obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            if (res.data.data.length == 0) {
-              that.loadingCheck = false;
-              that.$message.error('手机号不存在！');
-              // that.nowUserMoneyNum = '';
-            } else {
-              //console.log(res.data.data[res.data.data.length-1].qbBalances, 'frisco');
-              that.loadingCheck = false;
-              that.yayiCoin = res.data.data[res.data.data.length-1].qbBalances;
-            }
-          } else {
-            that.loadingCheck = false;
-            that.$message.error('网络出错，请稍后再试！');
+          if (res.data.callStatus === 'FAILED') {
+            that.loadingCheck = false
+            that.$message.error('手机号不存在！')
           }
+          if (res.data.callStatus === 'SUCCEED') {
+            that.loadingCheck = false
+            that.yayiCoin = res.data.data.qbBalance
+            // console.log(that.yayiCoin,'okokoko');
+          }
+          // that.$message.error('网络出错，请稍后再试！');
         })
       },
       changeUserMoney:function() {
@@ -227,10 +199,12 @@
         }
         console.log(obj);
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
-                      console.log(res);
+          console.log(res);
           if (res.data.callStatus === 'SUCCEED') {
             that.getClassify()
-            that.showChangeUserMoney = false;
+            that.nowUserMoneyNum = ''
+            that.yayiCoin = ''
+            that.showChangeUserMoney = false
           } else {
             that.$message.error('手机号不存在！');
           }

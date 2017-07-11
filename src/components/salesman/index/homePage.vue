@@ -164,15 +164,23 @@
       },
       immediateDoIt:function(){
         var that = this;
-        that.$emit('msgFromChild', 'editMyPersData' );
+        that.$emit('msgFromChild','editMyPersData');
       },
       cash:function(){
         var that = this;
-        that.$emit('msgFromChild', 'getMyMoney' );
+        var getMyMoney = {
+          isActive: true,
+          myMoney: 'getMyMoney',
+        }
+        that.$emit('msgFromChild',getMyMoney);
       },
       lookDetais:function(){
         var that = this;
-        that.$emit('msgFromChild', 'getMyMoney' );
+        var getMyMoney = {
+          isActive: false,
+          myMoney: 'getMyMoney',
+        }
+        that.$emit('msgFromChild',getMyMoney);
       },
     }
   }

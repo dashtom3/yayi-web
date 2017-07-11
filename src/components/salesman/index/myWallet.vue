@@ -120,34 +120,8 @@
     data(){
       return {
         value: null,
-        tableData: [],
         value: '',
-        tableData: [{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        },{
-          date: '2017-01-01-17:00',
-          income: 8888,
-          withDrawals: -2000,
-          account: 2000
-        }],
+        tableData: [],
         classify: ['全部','进账','提现'],
         classStat: 0,
         withDrawSets: false,
@@ -158,9 +132,14 @@
         withDrawCode: ''
       }
     },
+    props: ['toMySon'],
     created: function() {
       var that = this;
+      if (that.toMySon.isActive == true) {
+        that.withDrawBank = that.toMySon.isActive
+      }
       that.getMyWallet();
+      console.log(that.toMySon,'son')
     },
     methods: {
       //获取钱包明细
@@ -173,9 +152,9 @@
         console.log(obj)
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res)
-            // that.tableData = res.data.data;
-            console.log(that.tableData)
+            console.log(res,'232323')
+            //that.tableData = res.data.data;
+            //console.log(that.tableData)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -211,8 +190,7 @@
           }
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res)
-              // that.tableData = res.data.data;
+              that.tableData = res.data.data;
               console.log(that.tableData)
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -225,8 +203,7 @@
           }
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res)
-              // that.tableData = res.data.data;
+              that.tableData = res.data.data;
               console.log(that.tableData)
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -239,17 +216,13 @@
           }
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res)
-              // that.tableData = res.data.data;
+              that.tableData = res.data.data;
               console.log(that.tableData)
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
         }
-      },
-      selClass(index){
-        this.classStat = index;
       },
       withDrawHandler(){
         this.withDrawBank = true

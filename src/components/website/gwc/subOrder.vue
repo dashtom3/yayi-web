@@ -72,9 +72,9 @@
       <div class="checked_box">
         <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}.00</span></p>
         <p class="second_p">运费：¥{{freight}}.00</p>
-        <p class="third_p">钱币抵扣：¥{{qbdk}}.00</p>
+        <p class="third_p">乾币抵扣：¥{{qbdk}}.00</p>
         <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}.00</span></p>
-        <p class="fifth_p">本次可获得钱币：¥?.00</p>
+        <p class="fifth_p">本次可获得乾币：¥?.00</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>

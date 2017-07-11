@@ -50,8 +50,8 @@
     <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
     <el-table-column prop="saleName" align="center" label="真实姓名"></el-table-column>
     <el-table-column prop="salePhone" align="center" label="手机号"></el-table-column>
-    <el-table-column prop="saleId" align="center" label="订单编号"></el-table-column>
-    <el-table-column prop="orderVoList.orderState" align="center" label="订单状态">
+    <el-table-column prop="orderId" align="center" label="订单编号"></el-table-column>
+    <el-table-column prop="orderState" align="center" label="订单状态">
       <template scope="scope">
         <span v-if="scope.row.getState == 0">订单取消</span>
         <span v-if="scope.row.getState == 1">待付款</span>
@@ -62,9 +62,9 @@
         <span v-if="scope.row.getState == 6">退款退货中</span>
       </template>
     </el-table-column>
-    <el-table-column prop="orderTime" align="center" label="下单日期"></el-table-column>
+    <el-table-column prop="orderCreated" align="center" label="下单日期"></el-table-column>
     <el-table-column prop="signLateSeven" align="center" label="签收已过7天"></el-table-column>
-    <el-table-column prop="getMoey" align="center" label="收入"></el-table-column>
+    <el-table-column prop="getMoney" align="center" label="收入"></el-table-column>
     <el-table-column prop="getState" align="center" label="收入状态">
       <template scope="scope">
         <span v-if="scope.row.getState == 1">待结算</span>
@@ -200,6 +200,9 @@
         that.global.axiosGetReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
+            // for (var i = 0; i < that.getMoneyList.length; i++) {
+            //   that.getMoneyList.push(that.getMoneyList[i].orderVoList[0].orderCreated)
+            // }
             that.infoList = res.data.data.orderVoList
             console.log(that.getMoneyList,'222');
           } else {

@@ -96,13 +96,13 @@
             if (that.editCargo !== null) {
               that.secondForm.registerDate = util.formatDate.format(new Date(that.secondForm.registerDate));
               Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+              // that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
               that.secondStep = false;
               that.thirdStep = true;
             } else {
               that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
               Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
+              // that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
               that.secondStep = false;
               that.thirdStep = true;
             }
