@@ -148,7 +148,7 @@ let router = new Router({
       name: '商品基础资料管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-books', // 图标样式class
       children: [
         {path: '/admin/bsseInfoManner/attr', component: bsseInfoManner_attr, name: '商品属性管理', menuShow: true},
 				{path: '/admin/bsseInfoManner/classfy', component: bsseInfoManner_classfy, name: '商品分类管理', menuShow: true},
@@ -161,7 +161,7 @@ let router = new Router({
       name: '商品信息管理',
       menuShow: true,
       leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-setting1', // 图标样式class
+      iconCls: 'iconfont icon-home', // 图标样式class
       children: [
         {path: '/admin/merchantMessage', component: merchantMessage, name: '商品信息管理', menuShow: true},
         {path: '/admin/addMerchandise', component: addMerchandise, name: 'addMerchandise', menuShow: true},
@@ -174,7 +174,7 @@ let router = new Router({
       name: '交易管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-menuunfold', // 图标样式class
       children: [
         {path: '/admin/tradeManner/order', component: tradeManner_order, name: '订单管理', menuShow: true},
         {path: '/admin/tradeManner/evaluate', component: tradeManner_evaluate, name: '评价管理', menuShow: true}
@@ -213,7 +213,7 @@ let router = new Router({
       name: '广告设置',
       menuShow: true,
       leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-books2', // 图标样式class
       children: [
         {path: '/admin/advertSets/adv', component: advertSets_adv, name: '广告设置', menuShow: true}
       ]
@@ -224,7 +224,7 @@ let router = new Router({
       name: '视频管理',
       menuShow: true,
       leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-books2', // 图标样式class
       children: [
         {path: '/admin/videoManner/video', component: videoManner_video, name: '视频管理', menuShow: true}
       ]
@@ -235,7 +235,7 @@ let router = new Router({
       name: '运费管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-books2', // 图标样式class
       children: [
         {path: '/admin/freightManner/freightSet', component: freightSet, name: '运费设置', menuShow: true}
       ]
@@ -246,7 +246,7 @@ let router = new Router({
       name: '数据统计',
       menuShow: true,
       //leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-books1', // 图标样式class
       children: [
         {path: '/admin/dataStatis/goodsStatis', component: dataStatis_goodsStatis, name: '商品统计', menuShow: true},
         {path: '/admin/dataStatis/elecSuppStatis', component: dataStatis_elecSuppStatis, name: '电商用户统计', menuShow: true},
@@ -259,7 +259,7 @@ let router = new Router({
       name: '系统管理',
       menuShow: true,
       // leaf: true, // 只有一个节点
-      iconCls: 'iconfont icon-users', // 图标样式class
+      iconCls: 'iconfont icon-setting', // 图标样式class
       children: [
         // {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
         {path: '/admin/adminManner/admin', component: adminManner_admin, name: '管理员列表', menuShow: true}

@@ -33,10 +33,10 @@
         </div>
         <div class="list_des" v-for="cargo in cargos">
           <div class="left des_img">
-            <img style="width:60px;height:60px;" :src=cargo.pic alt="img">
+            <img style="width:60px;height:60px;" :src=cargo.picPath alt="img">
           </div>
           <div class="left des_p">
-            <p style="margin-bottom: 40px;">{{cargo.name}}</p>
+            <p style="margin-bottom: 40px;">{{cargo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}</p>
           </div>
           <div class="left des_price">¥{{cargo.price}}</div>
@@ -680,23 +680,23 @@
       // 提交订单按钮
       submit_order: function() {
         var that = this;
-        // for (var i = 0; i < that.orderItem.length; i++) {
-        //   that.orderItem[i].itemName = that.orderItem[i].name
-        //   that.orderItem[i].picPath = that.orderItem[i].pic
-        //   delete that.orderItem[i].name
-        //   delete that.orderItem[i].pic
-        //   delete that.orderItem[i].userId
-        //   delete that.orderItem[i].updated
-        //   delete that.orderItem[i].totalMoney
-        //   delete that.orderItem[i].itemPropertyNamea
-        //   delete that.orderItem[i].itemPropertyNameb
-        //   delete that.orderItem[i].itemPropertyNamec
-        //   delete that.orderItem[i].cartId
-        //   delete that.orderItem[i].checked
-        //   delete that.orderItem[i].created
-        //   delete that.orderItem[i].goodLeaveNum
-        // }
-        console.log(that.orderItem,'ll')
+        for (var i = 0; i < that.orderItem.length; i++) {
+          that.orderItem[i].itemName = that.orderItem[i].name
+          that.orderItem[i].picPath = that.orderItem[i].pic
+          delete that.orderItem[i].name
+          delete that.orderItem[i].pic
+          delete that.orderItem[i].userId
+          // delete that.orderItem[i].updated
+          // delete that.orderItem[i].totalMoney
+          // delete that.orderItem[i].itemPropertyNamea
+          // delete that.orderItem[i].itemPropertyNameb
+          // delete that.orderItem[i].itemPropertyNamec
+          delete that.orderItem[i].cartId
+          // delete that.orderItem[i].checked
+          delete that.orderItem[i].created
+          // delete that.orderItem[i].goodLeaveNum
+        }
+        // console.log(that.orderItem,'ll')
         var orderItem = JSON.stringify(that.orderItem)
         var obj = {
           token:that.global.getToken(),
@@ -715,10 +715,11 @@
         // axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data,'kkkkk');
+            console.log(res.data.data,'kkkkk');
+            window.sessionStorage.removeItem('suborderData')
             that.$router.push({ path:'/pay' });
           } else {
-            that.$message.error('保存地址失败！');
+            that.$message.error('提交订单失败！');
           }
         })
       }
