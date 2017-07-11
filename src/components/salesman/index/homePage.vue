@@ -114,11 +114,9 @@
         let params = {
           phone: global.getSalesUser().phone,
           token: global.getSalesToken(),
-          currentPage: 1,
-          numberPerPage: 1
         }
         console.log('查询销售员个人资料',params)
-        global.axiosGetReq('/saleList/detail',params).then((res) => {
+        global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
             console.log(this.personalData)
