@@ -280,7 +280,7 @@
           salePhone:one.phone,
           userPhone:that.needBindUserPhone
         };
-        that.global.axiosGetReq('/userManageList/bind',obj)
+        that.global.axiosPostReq('/userManageList/bind',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.userList[that.needBindSaleUserIndex].isBindSale = "是";

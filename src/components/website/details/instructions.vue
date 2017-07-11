@@ -3,6 +3,9 @@
     <div v-html="instruction.itemUse">
 
     </div>
+    <video :src="instruction.video" controls autoplay>
+
+    </video>
   </div>
 </template>
 
