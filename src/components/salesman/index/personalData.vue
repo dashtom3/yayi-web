@@ -11,12 +11,13 @@
           <div style="margin: -54px 0 0 460px;">
             <el-upload
               class="avatar-uploader"
+              :disabled="true"
               :action="qiNiuUrl"
               :show-file-list="false"
               :on-success="uploadFile"
               :data="qiNiuToken">
-              <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
-              <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
+              <img v-if="personalData.salePic"  style="cursor:auto;" :src="personalData.salePic" class="avatar defaultCss">
+              <img src="../../../images/center/loadUserImg.png"  style="cursor:auto;" class="defaultCss" v-if="!personalData.salePic">
             </el-upload>
           </div>
           <div class="persInfo">
@@ -57,6 +58,8 @@
               :data="qiNiuToken">
               <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
               <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
+              <div class="clearfix"></div>
+              <span style="margin-top:4px;">更改头像</span>
             </el-upload>
           </div>
           <div class="editPersonalData">
@@ -233,7 +236,8 @@
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
-            this.personalData.part = this.personalData.part.split(',')
+            this.personalData.part = this.personalData.part && this.personalData.part.split(',')
+            this.personalData.sex = res.data.data.sex || 1
             console.log(this.personalData)
           }
         })
@@ -259,8 +263,6 @@
                 token: global.getSalesToken()
               }
             }
-            
-            console.log(params)
             global.axiosPostReq('/saleInfo/updatePostal',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({
@@ -268,6 +270,7 @@
                   type: 'success'
                 });
                 that.queryPersonInfo();
+
                 that.getMoneySet = true;
               }
             })
@@ -326,7 +329,6 @@
               salePic: this.personalData.salePic,
               token: global.getSalesToken()
             }
-            console.log(params)
             global.axiosPostReq('/saleInfo/updateSale',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({

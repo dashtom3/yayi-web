@@ -4,9 +4,8 @@
       <span class="headName">个人信息</span>
       <div class="personal_left">
         <div class="userImgWrap">
-          <img style="border-radius:50%;width:100%;height:100%" :src="imgUrl" alt="头像" v-if="imgUrl">
-          <img src="../../../images/center/loadUserImg.png" style="border-radius:50%;width:100%;height:100%" alt="头像" v-if="!imgUrl">
-          <p v-on:click="immediateDoIt()">更换头像</p>
+          <img style="border-radius:50%;width:100%;height:100%;cursor:auto;" :src="imgUrl" alt="头像" v-if="imgUrl">
+          <img src="../../../images/center/loadUserImg.png" style="border-radius:50%;width:100%;height:100%;cursor:auto;" alt="头像" v-if="!imgUrl">
         </div>
       </div>
       <div class="personal_right">
@@ -67,18 +66,7 @@
         imgUrl: '',
         postalType: '',
         accountAmt: '',
-        orderInfo: {
-          allCommission: '',
-          dayCommission: '',
-          dayOrderNum: '',
-          getUpdated: '',
-          hasCommission: '',
-          orderNum: '',
-          saleIncomeVoList: '',
-          stayCommission: '',
-          sumOrderMoney: '',
-          myOrderVoList: []
-        },
+        orderInfo: {},
         personalData: null,
         echartData: []
       }
@@ -100,12 +88,10 @@
           numberPerPage: 10,
           token: global.getSalesToken()
         }
-
         global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.orderInfo = res.data.data
             this.pageProps.totalPage = res.data.totalPage
-            console.log(this.orderInfo)
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }

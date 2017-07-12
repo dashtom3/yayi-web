@@ -96,67 +96,6 @@ export default {
   data() {
     return {
       detailVisible: false,
-      // tableData: [{
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // }, {
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // }, {
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // }, {
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // },{
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // },{
-      //   orderTime: '2016-05-02-17:00',
-      //   customerName: '李志芳',
-      //   customerPhone: '13861637946',
-      //   commodityInfo: '商品信息',
-      //   commodityTotal: 4000,
-      //   refundAmt: 200,
-      //   income: 10000,
-      //   state: '待结算',
-      //   cutoffTime: '2017-01-03-17:00'
-      // }],
       tableData: null,
       infoList: [{
         goodsName: '商品名称1',

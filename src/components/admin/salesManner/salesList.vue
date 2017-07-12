@@ -29,7 +29,7 @@
     </el-col>
     <!-- 绑定弹窗 -->
     <el-dialog :visible.sync="bindSalseAlert">
-      <h4>当前已绑定人数（人）：<span>{{bindNum}}</span></h4>
+      <h4>当前已绑定人数（人）：<span>{{bindedUserList.length}}</span></h4>
       <el-tabs v-model="activeName2" type="card">
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
@@ -93,7 +93,7 @@
     <!-- 详情 -->
     <el-dialog custom-class="asgagewgf" title="销售员详情" :visible.sync="showSaleDetailInfor">
       <div class="personalInfor">
-        <img src="" alt="">
+        <img :src="headImg" alt="头像" style="padding-right:50px;">
         <h3>个人资料</h3>
         <div>
           <span>销售员编号：{{someOneUserDetails.info.saleId}}</span>
@@ -101,14 +101,14 @@
         </div>
         <div>
           <span>手机号：{{someOneUserDetails.info.phone}}</span>
-          <span>性别：{{someOneUserDetails.info.sex}}</span>
+          <span>性别：{{sexShow}}</span>
         </div>
         <div>
-          <span>微信{{someOneUserDetails.info.weChar}}</span>
+          <span>微信：{{someOneUserDetails.info.weChar}}</span>
           <span>邮箱：{{someOneUserDetails.info.email}}</span>
         </div>
         <div>
-          <span>出生日期：{{someOneUserDetails.info.birthday}}</span>
+          <span>出生日期：{{birthdayFormate}}</span>
           <span>学历：{{someOneUserDetails.info.education}}</span>
         </div>
         <div>
@@ -121,7 +121,7 @@
         </div>
         <div>
           <span>身份证号：{{someOneUserDetails.info.idCard}}</span>
-          <span>注册时间：{{someOneUserDetails.info.created}}</span>
+          <span>注册时间：{{regTimeFormate}}</span>
         </div>
         <div>
           <span>钱包余额：{{someOneUserDetails.info.money}}</span>
@@ -132,7 +132,7 @@
         <h3>提现方式</h3>
         <div>
           <span>类型：{{someOneUserDetails.getMoneyStyle.postalType}}</span>
-          <span>银行：{{someOneUserDetails.getMoneyStyle.bankName}}</span>
+          <span v-if="this.someOneUserDetails.getMoneyStyle.bankName">银行：{{someOneUserDetails.getMoneyStyle.bankName}}</span>
         </div>
         <div>
           <span>开户者：{{someOneUserDetails.getMoneyStyle.openName}}</span>
@@ -184,6 +184,7 @@
       return {
         noBindSearchType:"手机号",
         BindSearchType:"手机号",
+        headImg: '',
         pageProps: {
           pageNum: 1,
           totalPage: 1
@@ -202,43 +203,16 @@
         searchUserContent:'',
         searchUserType:"手机号",
         searchState:"",
-        bindNum: 0,
         salePhone: '',
         bindedUserList:[],
         noBindUserList:[],
         someOneUserDetails:{
-          info:{
-            bianhao:"123134",
-            name:"23545",
-            phone:"1234",
-            sex:'aef',
-            ID:"134141341431341414",
-            time:"1234-12-12",
-            leaveMoney:'2112',
-            bindUserNum:123,
-            saleImg:"1.png"
-          },
-          getMoneyStyle:{
-            type:"a",
-            count:1231313123
-          },
-          bindUsers:[
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-            {bianhao:'12',name:'w4er',phone:'32424',componey:'2w323'},
-          ]
-
+          info:{},
+          getMoneyStyle:{},
+          bindUsers:[]
         },
-        salesList:[
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"否",userNum:""},
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"是",userNum:12},
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"否",userNum:""},
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"是",userNum:12},
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"否",userNum:""},
-          {saleId:12121,name:'asdfaf&&1234141414',phone:31414141414143,time:"asdfa",bindUser:"是",userNum:12}
-        ],
-        userTypes: [
+        salesList:[],
+        userTypes:[
           {value: '不限',label: '不限'},
           {value: '个人',label: '个人'},
           {value: '机构',label: '机构'}
@@ -256,16 +230,29 @@
     watch:{
       multipleSelection1:{
         handler:function(){
-          var that = this;
-          console.log(that.multipleSelection1)
+          
         },
         deep:true
+      }
+    },
+    computed: {
+      sexShow: function(){
+        return this.someOneUserDetails.info.sex === 2 ? '女' : '男'
+      },
+      regTimeFormate: function(){
+        return new Date(this.someOneUserDetails.info.created).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.created).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.birthday).getDate()) 
+      },
+      birthdayFormate: function(){
+        return new Date(this.someOneUserDetails.info.birthday).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.birthday).getDate()) 
       }
     },
     created(){
       this.queryHandler()
     },
     methods: {
+      fillZero: function(n){
+        return n<10 ? '0'+ n: n 
+      },
       selectOpt(key){
         this.searchUserType = key;
         this.searchUserContent = '';
@@ -283,8 +270,7 @@
             trueName: '',
             isBindUser: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
-            token: global.getToken()
+            numberPerPage: 10
           }
         }else if(this.searchUserType === '真实姓名'){
           params = {
@@ -293,14 +279,11 @@
             trueName: this.searchUserContent,
             isBindUser: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
-            token: global.getToken()
+            numberPerPage: 10
           }
         }
-        console.log('查询销售员列表',params)
         global.axiosGetReq('/saleList/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            console.log(res.data.data)
             this.salesList = res.data.data
           }
         })
@@ -318,21 +301,26 @@
         let params;
         if(this.BindSearchType === "手机号"){
           params = {
-            phone: this.BindSearchContent,
+            salePhone: this.salePhone,
+            userPhone: this.BindSearchContent,
             trueName: '',
             companyName: '',
-            isBind: 2
+            isBind: 2,
+            // currentPage: 1,
+            // numberPerPage: 10
           }
         }else if(this.BindSearchType === "真实姓名"){
           params = {
-            phone: '',
+            salePhone: this.salePhone,
+            userPhone: '',
             trueName: this.BindSearchContent,
             companyName: '',
             isBind: 2
           }
         }else if(this.BindSearchType === "单位名称"){
           params = {
-            phone: '',
+            salePhone: this.salePhone,
+            userPhone: '',
             trueName: '',
             companyName: this.BindSearchContent,
             isBind: 2
@@ -353,21 +341,24 @@
         let params;
         if(this.noBindSearchType === "手机号"){
           params = {
-            phone: this.noBindSearchContent,
+            salePhone: this.salePhone,
+            userPhone: this.noBindSearchContent,
             trueName: '',
             companyName: '',
             isBind: 1
           }
         }else if(this.noBindSearchType === "真实姓名"){
           params = {
-            phone: '',
+            salePhone: this.salePhone,
+            userPhone: '',
             trueName: this.noBindSearchContent,
             companyName: '',
             isBind: 1
           }
         }else if(this.noBindSearchType === "单位名称"){
           params = {
-            phone: '',
+            salePhone: this.salePhone,
+            userPhone: '',
             trueName: '',
             companyName: this.noBindSearchContent,
             isBind: 1
@@ -467,14 +458,12 @@
       bindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "first";
-        this.bindNum = 0;
         this.salePhone = row.phone;
         this.noBindSearch();
       },
       cancleBindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "second";
-        this.bindNum = row.bindUserNum;
         this.salePhone = row.phone;
         this.BindSearch();
       },
@@ -484,22 +473,24 @@
         let params = {
           phone: row.phone,
           currentPage: this.d_pageProps.pageNum,
-          numberPerPage: 10,
-          token: global.getToken()
+          numberPerPage: 10
         }
         console.log('查看销售员详情',params)
         global.axiosGetReq('/saleList/detail',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.someOneUserDetails.info = res.data.data
             this.someOneUserDetails.bindUsers = res.data.data.user
+            this.someOneUserDetails.getMoneyStyle = {
+              postalType: res.data.data.postalType,
+              bankName: res.data.data.bankName,
+              openName: res.data.data.openName,
+              accountNumber: res.data.data.accountNumber
+            }
+            this.headImg = res.data.data.salePic
             console.log(res.data.data)
           }
         })
-
-
-      },
-      search:function(){},
-
+      }
     },
   }
 </script>

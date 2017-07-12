@@ -35,7 +35,7 @@
         <span class="margin_l">提现总额：<i class="i_col_red">￥10000</i></span>
       </div> 
     </el-col>
-    <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
+    <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;height:280px;">
       <el-table :data="tableData" align="center" border style="width: 100%">
         <el-table-column prop="updated" align="center" label="日期">
         </el-table-column>
