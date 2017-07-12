@@ -46,7 +46,7 @@
     <div class="fouth_box">
       <div class="fouthTitle">视频说明：</div>
         <el-select v-model="thirdForm.video" filterable placeholder="请选择" class="selectTv">
-          <el-option v-for="item in options" :key="item.vidRoute" :label="item.vidRoute" :value="item.vidRoute">
+          <el-option v-for="item in options" :key="item.vidRoute" :label="item.vidName" :value="item.vidRoute">
           </el-option>
         </el-select>
     </div>
@@ -247,7 +247,7 @@
           // that.quill1.insertText(1, 'Hello', 'bold', true);
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
-          console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
+          // console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
           that.thirdForm.itemPica = that.fileList[0];
           that.thirdForm.itemPicb = that.fileList[1];
           that.thirdForm.itemPicc = that.fileList[2];
@@ -257,7 +257,7 @@
           delete that.thirdForm.itemBrand
           delete that.thirdForm.type
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-          console.log(itemValueList)
+          // console.log(itemValueList)
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
           xhr.setRequestHeader("Content-Type", "application/json")
@@ -277,6 +277,8 @@
                   that.$message.error('网络出错，请稍后再试！');
                 }
               })
+            } else {
+              that.$message.error('保存失败！');
             }
           }
         } else {
@@ -315,6 +317,8 @@
                   that.$message.error('网络出错，请稍后再试！');
                 }
               })
+            } else {
+              that.$message.error('保存失败！');
             }
           }
         }

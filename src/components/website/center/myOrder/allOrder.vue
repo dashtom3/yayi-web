@@ -1,6 +1,6 @@
 <template>
   <div class="allOrder">
-    <!-- <div class="order_table" v-show="order_table">
+    <div class="order_table" v-show="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
       <div class="left num">数量</div>
@@ -8,7 +8,7 @@
       <div class="left now_pay">实付款（元）</div>
       <div class="left deal_state">交易状态</div>
       <div class="left deal_operate">交易操作</div>
-    </div> -->
+    </div>
     <!--  暂无订单开始 -->
     <div class="no_order" v-show="no_order">
       <div class="order_table_spe">
@@ -46,7 +46,7 @@
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
-        <div class="left des_img" style="width:81px;height:85px;">
+        <div class="left des_img">
           <img :src="cargo.picPath" alt="img">
         </div>
         <div class="left des_p">
@@ -94,7 +94,7 @@
           <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
             <!--  订单详情item 开始 -->
             <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
-              <div class="left des_img" style="width:81px;height:85px;">
+              <div class="left des_img">
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
@@ -553,6 +553,10 @@ color: #333333;
   .des_img {
     margin-right: 20px;
     border: 1px solid #D7D7D7;
+  }
+  .des_img > img{
+   width: 81px;
+   height: 81px;
   }
   .des_p {
     width: 270px;

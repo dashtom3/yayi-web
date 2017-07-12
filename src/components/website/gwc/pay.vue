@@ -38,11 +38,17 @@
         wxPay: false,
         isActive1: false,
         isActive2: false,
+        orderDetail: null,
       }
     },
     components: {
       publicHeader,
       publicFooter,
+    },
+    created: function() {
+      var that = this;
+      that.orderDetail = JSON.parse(window.sessionStorage.getItem('order'))
+      console.log(that.orderDetail,'order')
     },
     methods: {
       alipay: function() {
@@ -66,6 +72,7 @@
       // 立即支付
       nowpay: function() {
         var that = this;
+        that.$router.push({path:'/paySuccess'})
       }
     }
   }

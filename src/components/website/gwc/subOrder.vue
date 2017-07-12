@@ -73,8 +73,8 @@
         <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}.00</span></p>
         <p class="second_p">运费：¥{{freight}}.00</p>
         <p class="third_p">乾币抵扣：¥{{qbdk}}.00</p>
-        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal-qianbi_des}}.00</span></p>
-        <p class="fifth_p">本次可获得乾币：¥?.00</p>
+        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}.00</span></p>
+        <p class="fifth_p">本次可获得乾币：¥0.00</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>
@@ -336,7 +336,7 @@
         setDefault: false,
         tax_des: '',
         qianbi_des: '',
-        qbdk: '0.00',
+        qbdk: '0',
         tax_word: false,
         qianbi_word: false,
         leave_des: '',
@@ -361,9 +361,9 @@
     },
     watch: {
       xRegion: function() {
-        var that = this;
+        var that = this
         if (that.xRegion !== []) {
-          that.placeAlert = false;
+          that.placeAlert = false
           // that.placeAlert1 = false;
         }
       },
@@ -371,13 +371,13 @@
         handler: function() {
          var that = this;
          if (that.form.name !== '') {
-          that.realAlert = false;
+          that.realAlert = false
          }
          if (that.form.mobile !== '') {
-          that.phoneAlert = false;
+          that.phoneAlert = false
          }
          if (that.form.address !== '') {
-          that.addAlert = false;
+          that.addAlert = false
          }
         },
         deep: true
@@ -385,33 +385,36 @@
       items: function() {
         var that = this;
         if (that.items.length == 0) {
-          that.diaTitle = '新增收货信息';
-          that.editAddVisible = true;
+          that.diaTitle = '新增收货信息'
+          that.editAddVisible = true
         }
       },
       checked1: function() {
         var that = this;
         if (that.checked1 == true) {
-          that.qianbi_word = true;
+          that.qianbi_word = true
         } else {
-          that.qianbi_word = false;
-          that.qianbi_des = '';
+          that.qianbi_word = false
+          that.qianbi_des = ''
+          that.qbdk = '0'
+          that.hasCount = false
         }
       },
       checked2: function() {
         var that = this;
         if (that.checked2 == true) {
-          that.tax_word = true;
+          that.tax_word = true
         } else {
-          that.tax_word = false;
+          that.tax_word = false
+          that.tax_des = ''
         }
       },
       checked3: function() {
         var that = this;
         if (that.checked3 == false) {
-          that.leave_word = 0;
+          that.leave_word = 0
         } else {
-          that.leave_word = 1;
+          that.leave_word = 1
         }
       },
       qianbi_des: function() {
@@ -443,7 +446,7 @@
           if (that.qianbi_des > that.gwcTotal) {
             that.$message.error('乾币数量大于商品总额！');
             that.hasCount = false;
-            that.qbdk = '0.00';
+            that.qbdk = '0';
             return false
           }
           var obj = {
@@ -675,6 +678,20 @@
         that.county = item.county
         that.receiverDetail = item.receiverDetail
         that.receiverId = item.receiverId
+        var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+        var freight = {
+          receiverId: item.receiverId,
+          sumPrice: arr.allMoney,
+          itemSum: arr.haveSelectedGoodNum,
+        }
+        that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.freight = res.data.data.postFee
+            console.log(that.freight,'yunfei')
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
         // console.log(that.radio)
       },
       // 提交订单按钮
@@ -714,9 +731,10 @@
         console.log(obj,'opopopp');
         // axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
-          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,'kkkkk');
+            console.log(res.data.data,'kkkkk')
+            let orderD = res.data.data
+            window.sessionStorage.setItem('order', JSON.stringify(orderD))
             window.sessionStorage.removeItem('suborderData')
             that.$router.push({ path:'/pay' });
           } else {
@@ -724,28 +742,6 @@
           }
         })
       }
-      // submit_order: function() {
-      //   var that = this;
-      //   var obj = {
-      //     token:that.global.getToken(),
-      //     receiverId: parseInt(that.receiverId),
-      //     invoiceHand: that.tax_des,
-      //     isRegister: that.leave_word,
-      //     qbDed: that.qianbi_des,
-      //     buyerMessage: that.leave_des,
-      //     price: that.gwcTotal,
-      //     actualPay: parseInt(that.gwcTotal-that.qianbi_des),
-      //   }
-      //   console.log(obj);
-      //   that.global.axiosPostReq('/po/saveMessage', obj).then((res) => {
-      //     if (res.data.callStatus === 'SUCCEED') {
-      //       console.log(res.data);
-      //       that.$router.push({ path:'/pay' });
-      //     } else {
-      //       that.$message.error('保存地址失败！');
-      //     }
-      //   })
-      // }
     }
   }
 </script>

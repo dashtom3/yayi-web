@@ -330,6 +330,10 @@
     margin-right: 20px;
     border: 1px solid #D7D7D7;
   }
+  .des_img > img{
+   width: 81px;
+   height: 81px;
+  }
   .des_p {
     width: 270px;
   }

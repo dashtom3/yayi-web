@@ -7,6 +7,8 @@ import center from '@/components/website/center/center'
 import gwc from '@/components/website/gwc/gwc'
 import suborder from '@/components/website/gwc/suborder'
 import pay from '@/components/website/gwc/pay'
+import paySuccess from '@/components/website/gwc/paySuccess'
+import payFail from '@/components/website/gwc/payFail'
 
 // 创客系统
 import salesIndex from '@/components/salesman/index/index'
@@ -113,6 +115,16 @@ let router = new Router({
     component: resolve => require(['@/components/website/gwc/pay.vue'], resolve)
 		//component: pay,
 	},
+  {
+    path: '/paySuccess',
+    name: 'paySuccess',
+    component: resolve => require(['@/components/website/gwc/paySuccess.vue'], resolve)
+  },
+  {
+    path: '/payFail',
+    name: 'payFail',
+    component: resolve => require(['@/components/website/gwc/payFail.vue'], resolve)
+  },
 	//后台管理router
     {
       path: '/admin/login',
