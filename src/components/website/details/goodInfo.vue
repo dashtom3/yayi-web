@@ -397,13 +397,13 @@ import myAddress from './selectThree'
         }
         if(that.global.getUser()){
           var obj = {
-            phone:that.global.getUser().phone,
-            itemId:that.nowGoodDetails.itemId,
-            name:that.nowGoodDetails.itemName,
-            pic:that.itemDetail.itemPica,
+            // phone:that.global.getUser().phone,
+            // itemId:that.nowGoodDetails.itemId,
+            // name:that.nowGoodDetails.itemName,
+            // pic:that.itemDetail.itemPica,
             num:that.goodDefaultNum,
             itemSKU:nowSku,
-            price:that.nowGoodDetails.itemPrice,
+            // price:that.nowGoodDetails.itemPrice,
             // itemPropertyNamea:that.sureGoodAttr,
             token:that.global.getToken()
           };
