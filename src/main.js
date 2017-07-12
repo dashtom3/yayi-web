@@ -1,7 +1,6 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import ElementUI from 'element-ui'
+//import { Button, Select, Radio, Checkbox, Input, Cascader, DatePicker, Upload, Rate, Form, Table, Message, MessageBox, Dialog, Carousel, Collapse} from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import '@/assets/iconfont.css'
 import App from './App'
@@ -9,10 +8,23 @@ import router from './router'
 // import axios from 'axios'
 import Global from './components/global/global'
 
-// import Mock from './mock'
-// Mock.init()
-
 Vue.use(ElementUI)
+// Vue.component(Button.name, Button)
+// Vue.component(Select.name, Select)
+// Vue.component(Radio.name, Radio)
+// Vue.component(Checkbox.name, Checkbox)
+// Vue.component(Input.name, Input)
+// Vue.component(Cascader.name, Cascader)
+// Vue.component(DatePicker.name, DatePicker)
+// Vue.component(Upload.name, Upload)
+// Vue.component(Rate.name, Rate)
+// Vue.component(Form.name, Form)
+// Vue.component(Table.name, Table)
+// Vue.component(Message.name, Message)
+// Vue.component(MessageBox.name, MessageBox)
+// Vue.component(Dialog.name, Dialog)
+// Vue.component(Carousel.name, Carousel)
+// Vue.component(Collapse.name, Collapse)
 Vue.config.productionTip = false
 //设置全局global
 Vue.prototype.global = Global

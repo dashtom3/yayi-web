@@ -100,7 +100,6 @@
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.moneyList = res.data.data;
-            that.moneyList.reverse();
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
             }
@@ -168,6 +167,7 @@
         that.global.axiosGetReq('/userQbList/queryQb',obj).then((res) => {
           if (res.data.callStatus === 'FAILED') {
             that.loadingCheck = false
+            that.yayiCoin = ''
             that.$message.error('手机号不存在！')
           }
           if (res.data.callStatus === 'SUCCEED') {

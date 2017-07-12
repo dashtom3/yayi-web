@@ -80,13 +80,9 @@
 </template>
 
 <script>
-  import { bus } from '../../bus.js'
   export default {
     name: 'home',
     created(){
-      bus.$on('setUserName', (text) => {
-        this.sysUserName = text;
-      })
     },
     data () {
       return {

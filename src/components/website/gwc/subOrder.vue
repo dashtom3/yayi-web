@@ -714,6 +714,7 @@
         console.log(obj,'opopopp');
         // axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
+          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data,'kkkkk');
             window.sessionStorage.removeItem('suborderData')

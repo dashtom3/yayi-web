@@ -39,9 +39,7 @@
     name: 'myCollection',
     data () {
       return {
-        allGoods:[
-          {item_pica:"../../../../images/center/goods.png",item_name:"商品11111111111111333333333333311111113333333333333333333111111111",item_price:23,ifGold:false},
-        ]
+        allGoods:[],
       }
     },
     created:function(){

@@ -7,7 +7,6 @@ import center from '@/components/website/center/center'
 import gwc from '@/components/website/gwc/gwc'
 import suborder from '@/components/website/gwc/suborder'
 import pay from '@/components/website/gwc/pay'
-import publicHeader from '@/components/website/index/publicHeader'
 
 // 创客系统
 import salesIndex from '@/components/salesman/index/index'
@@ -15,16 +14,6 @@ import salesLog from '@/components/salesman/logIn/logIn'
 
 //后台管理
 import Home from '@/components/admin/Home'
-// import Dashboard from '@/components/admin/Dashboard'
-
-// import BookList from '@/components/admin/book/list'
-// import BookCategoryList from '@/components/admin/bookcategory/list'
-//
-// import UserList from '@/components/admin/user/list'
-// import UserChangePwd from '@/components/admin/user/changepwd'
-// import UserProfile from '@/components/admin/user/profile'
-
-
 
 // 商品基础资料管理
 import bsseInfoManner_attr from '@/components/admin/bsseInfoManner/attr'
@@ -90,49 +79,52 @@ let router = new Router({
 	},
 	{
 		path: '/center',
-		name: 'center',
-		component: center,
+	  name: 'center',
+    component: resolve => require(['@/components/website/center/center.vue'], resolve)
+		// component: center,
 	},
 	{
 		path: '/details/:goodId',
 		name: 'details',
-		component: details,
+    component: resolve => require(['@/components/website/details/details.vue'], resolve)
+		//component: details,
 	},
 	{
 		path: '/brandLib/:classifyIdAndbrandId',
 		name: 'brandLib',
-		component: brandLib,
+    component: resolve => require(['@/components/website/brandLib/brandLib.vue'], resolve)
+		//component: brandLib,
 	},
 	{
 		path: '/gwc',
 		name: 'gwc',
-		component: gwc,
+    component: resolve => require(['@/components/website/gwc/gwc.vue'], resolve)
+		//component: gwc,
 	},
 	{
 		path: '/suborder',
 		name: 'suborder',
-		component: suborder,
+    component: resolve => require(['@/components/website/gwc/suborder.vue'], resolve)
+		//component: suborder,
 	},
 	{
 		path: '/pay',
 		name: 'pay',
-		component: pay,
+    component: resolve => require(['@/components/website/gwc/pay.vue'], resolve)
+		//component: pay,
 	},
-  {
-    path: '/publicHeader',
-    name: 'publicHeader',
-    component: publicHeader,
-  },
 	//后台管理router
     {
       path: '/admin/login',
       name: '登录',
-      component: Login
+      component: resolve => require(['@/components/admin/Login.vue'], resolve)
+      // component: Login
     },
     {
       path: '/admin',
       name: 'home',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       redirect: '/admin/login',
       leaf: true, // 只有一个节点
       menuShow: true,
@@ -144,7 +136,8 @@ let router = new Router({
 
 		{
       path: '/admin/bsseInfoManner/attr',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '商品基础资料管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -157,7 +150,8 @@ let router = new Router({
     },
     {
       path: '/',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '商品信息管理',
       menuShow: true,
       leaf: true, // 只有一个节点
@@ -170,7 +164,8 @@ let router = new Router({
     },
     {
       path: '/tradeManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '交易管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -182,7 +177,8 @@ let router = new Router({
     },
 		{
       path: '/userManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '用户管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -195,7 +191,8 @@ let router = new Router({
     },
 		{
       path: '/salesManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '销售员管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -209,7 +206,8 @@ let router = new Router({
     },
     {
       path: '/advertSets',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '广告设置',
       menuShow: true,
       leaf: true, // 只有一个节点
@@ -220,7 +218,8 @@ let router = new Router({
     },
     {
       path: '/videoManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '视频管理',
       menuShow: true,
       leaf: true, // 只有一个节点
@@ -231,7 +230,8 @@ let router = new Router({
     },
 		{
       path: '/freightManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '运费管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -242,7 +242,8 @@ let router = new Router({
     },
     {
       path: '/dataStatis',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '数据统计',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -255,7 +256,8 @@ let router = new Router({
     },
     {
       path: '/adminManner',
-      component: Home,
+      component: resolve => require(['@/components/admin/Home.vue'], resolve),
+      //component: Home,
       name: '系统管理',
       menuShow: true,
       // leaf: true, // 只有一个节点
@@ -269,12 +271,14 @@ let router = new Router({
 		{
 			path: '/salesIndex',
 			name: 'salesIndex',
-			component: salesIndex,
+      component: resolve => require(['@/components/salesman/index/index.vue'], resolve)
+			//component: salesIndex,
 		},
     {
       path: '/salesLog',
       name: 'salesLog',
-      component: salesLog,
+      component: resolve => require(['@/components/salesman/logIn/logIn.vue'], resolve)
+      //component: salesLog,
     },
 	],
 })

@@ -63,7 +63,12 @@
       </template>
     </el-table-column>
     <el-table-column prop="orderCreated" align="center" label="下单日期"></el-table-column>
-    <el-table-column prop="signLateSeven" align="center" label="签收已过7天"></el-table-column>
+    <el-table-column prop="signLateSeven" align="center" label="签收已过7天">
+      <template scope="scope">
+        <span v-if="scope.row.getState == 1">是</span>
+        <span v-if="scope.row.getState == 2">否</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="getMoney" align="center" label="收入"></el-table-column>
     <el-table-column prop="getState" align="center" label="收入状态">
       <template scope="scope">
@@ -101,7 +106,7 @@
     <h3>订单信息</h3>
     <div class="ordertable">
       <table class="datail_tb">
-        <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
+        <tr><td colspan="7"><span class="pad_l_30">下单时间：{{orderTime}}</span><span class="pad_l_30">订单状态：{{orderState}}</span></td></tr>
         <tr class="trs">
           <td>商品名称</td>
           <td>价格（元）</td>
@@ -148,22 +153,7 @@
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
-        infoList: [{
-          goodsName: '商品名称1',
-          price: 30,
-          num: 2,
-          totalPrice: 60
-        },{
-          goodsName: '商品名称2',
-          price: 30,
-          num: 2,
-          totalPrice: 60
-        },{
-          goodsName: '商品名称3',
-          price: 30,
-          num: 2,
-          totalPrice: 60
-        }],
+        infoList: [],
         showIncomeInfor:false,
         searchSaleContent: '',
         searchDataPrev:[],
@@ -174,6 +164,8 @@
         nowUserMoneyNum:null,
         // selectSearchType:"用户编号",
         showChangeUserMoney:false,
+        orderTime: '',
+        orderState: '',
       }
     },
     created: function() {
@@ -199,23 +191,37 @@
         }
         that.global.axiosGetReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.getMoneyList = res.data.data;
-            // for (var i = 0; i < that.getMoneyList.length; i++) {
-            //   that.getMoneyList.push(that.getMoneyList[i].orderVoList[0].orderCreated)
-            // }
-            that.infoList = res.data.data.orderVoList
-            console.log(that.getMoneyList,'222');
+            that.getMoneyList = res.data.data
+            for (var i = 0; i < that.getMoneyList.length; i++) {
+              if (that.getMoneyList[i].orderVoList.length !== 0) {
+                that.getMoneyList[i].orderCreated = that.getMoneyList[i].orderVoList[0].orderCreated
+                that.getMoneyList[i].orderId = that.getMoneyList[i].orderVoList[0].orderId
+                that.getMoneyList[i].orderState = that.getMoneyList[i].orderVoList[0].orderState
+              }
+            }
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            that.$message.error('网络出错，请稍后再试！')
           }
         })
       },
       incomeList:function(scope){
-        var that = this;
-        console.log(scope.row,'scope');
-        that.someOneUserDetails = scope.row;
-        that.showIncomeInfor = true;
+        var that = this
+        console.log(scope.row,'scope')
+        if (scope.row.orderVoList.length !== 0 ) {
+          that.someOneUserDetails = scope.row
+          that.infoList = scope.row.orderVoList
+          that.orderTime = scope.row.orderVoList[0].orderCreated
+          that.orderState = scope.row.orderVoList[0].orderState
+          that.showIncomeInfor = true
+        } else {
+          that.someOneUserDetails = scope.row
+          that.showIncomeInfor = true;
+          that.infoList = []
+          that.orderTime = ''
+          that.orderState = ''
+        }
       },
+      // 查询收入列表
       search:function(){
         var that = this;
         if (that.searchDataPrev.length == 0) {
@@ -241,27 +247,27 @@
           endDate: endDate,
           token: ''
         }
-        that.global.axiosPostReq('/saleIncomeList/query',obj).then((res) => {
+        that.global.axiosGetReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.getMoneyList = res.data.data;
+            that.getMoneyList = res.data.data
+            for (var i = 0; i < that.getMoneyList.length; i++) {
+              if (that.getMoneyList[i].orderVoList.length !== 0) {
+                that.getMoneyList[i].orderCreated = that.getMoneyList[i].orderVoList[0].orderCreated
+                that.getMoneyList[i].orderId = that.getMoneyList[i].orderVoList[0].orderId
+                that.getMoneyList[i].orderState = that.getMoneyList[i].orderVoList[0].orderState
+              }
+            }
             console.log(that.getMoneyList,'222');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
-      },
-      changeUserMoney:function(){
-        this.showChangeUserMoney = true;
-      },
-      saveUserMoney:function(){
-        this.showChangeUserMoney = false;
-      },
+      }
     },
   }
 </script>
 
 <style>
-
   .incomeWrap   .asgagewgf h3{
     font-weight: 500;
     line-height: 50px;
