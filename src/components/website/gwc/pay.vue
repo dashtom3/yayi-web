@@ -7,7 +7,7 @@
         <p class="first_p">订单提交成功，请您尽快付款。</p>
         <p class="second_p">未成功支付订单将在 <span style="color:#D81E06; font-weight: bold;">{{time}}分钟</span> 后自动取消，请及时付款</p>
       </div>
-      <p class="pay_price">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{price}}</span></p>
+      <p class="pay_price">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.sumPrice}}</span></p>
     </div>
     <div class="pay_container">
       <div class="pay_header">支付方式</div>
@@ -33,7 +33,6 @@
     data () {
       return {
         time: 30,
-        price: 1222,
         aliPay: false,
         wxPay: false,
         isActive1: false,
@@ -57,10 +56,6 @@
         that.aliPay = !that.aliPay;
         that.isActive2 = false;
         that.wxPay = false;
-        // if (that.isActive1 = true) {
-        //   that.isActive1 = false;
-        //   that.aliPay = false;
-        // }
       },
       wxpay: function() {
         var that = this;
@@ -72,7 +67,23 @@
       // 立即支付
       nowpay: function() {
         var that = this;
-        that.$router.push({path:'/paySuccess'})
+        if (that.isActive1 == true) {
+          var obj = {
+            orderId: that.orderDetail.OrderId
+          }
+          that.global.axiosGetReq('/pay/payParames',obj).then((res) => {
+            //console.log(res.request.responseURL,'pay')
+            window.location.href=res.request.responseURL
+            //window.open(res.request.responseURL)
+            //window.sessionStorage.removeItem('order')
+            // if (res.data.callStatus === 'SUCCEED') {
+               
+            // } else {
+            //   that.$message.error('网络出错，请稍后再试！');
+            // }
+          })
+        }
+        //that.$router.push({path:'/paySuccess'})
       }
     }
   }

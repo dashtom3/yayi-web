@@ -55,10 +55,12 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
   import util from '../../../common/util'
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -81,13 +83,26 @@
         loadingCheck: false,
         loadingCheckHead: false,
         moneyList:[],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
       }
+    },
+    components: {
+      paging,
     },
     created: function() {
       var that = this;
       that.getClassify()
     },
     methods: {
+      //分页
+      pageHandler:function(data){
+        var that = this
+        that.pageProps.pageNum = data
+        that.getClassify()
+      },
       //获取用户钱币列表
       getClassify: function() {
         var that = this;
@@ -95,11 +110,14 @@
           phone: '',
           startDate: '',
           endDate: '',
+          currentPage: that.pageProps.pageNum,
+          numberPerPage: 6,
           token: ''
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.moneyList = res.data.data;
+            that.pageProps.totalPage = res.data.totalPage
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
             }

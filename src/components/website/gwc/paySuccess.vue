@@ -3,15 +3,9 @@
     <publicHeader></publicHeader>
     <div class="paySuccess_box" ref="contentHeight">
       <div class="paySuccess_word">
-        <!-- <img  class="special_img" src="../../images/paySuccess.png" alt="img"> -->
+        <img class="special_img" src="../../../images/gwc/pay1.png" alt="img">
         <span class="special_word">恭喜您，付款成功！</span>
       </div>
-<!--       <div class="paySuccess_detail">
-        <p style="font-size:16px; margin-bottom:15px;">付款信息</p>
-        <p>收货人：熊振</p>
-        <p>收货地址：上海市市辖区杨浦区长阳路1687号1楼1109</p>
-        <p>已付金额：<span style="color: #D73240;">490.00</span>元</p>
-      </div> -->
       <div class="paySuccess_btn">
         <div class="seeOrder" @click="see">查看订单</div>
         <div class="keepShop" @click="keep">继续购物</div>
@@ -78,6 +72,7 @@
   font-weight: bold;
   float: left;
   margin-top: 3.9px;
+  text-align: right;
 }
 .paySuccess_detail {
   width: 330px;

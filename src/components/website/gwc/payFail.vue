@@ -3,7 +3,7 @@
     <publicHeader></publicHeader>
     <div class="paySuccess_box" ref="contentHeight">
       <div class="paySuccess_word">
-        <!-- <img  class="special_img" src="../../images/paySuccess.png" alt="img"> -->
+        <img class="special_img" src="../../../images/center/noOrder.png" alt="img">
         <span class="special_word">抱歉，付款失败！</span>
       </div>
 <!--       <div class="paySuccess_detail">
@@ -71,6 +71,8 @@
 .special_img {
   float: left;
   margin-right: 10px;
+  width: 30px;
+  height: 30px;
 }
 .special_word {
   color: #555964;
