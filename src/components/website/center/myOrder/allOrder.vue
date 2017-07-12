@@ -51,7 +51,7 @@
         </div>
         <div class="left des_p">
           <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
-          <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+          <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -307,6 +307,7 @@
             that.items = res.data.data;
             if(that.items.length==0){
               that.no_order = true;
+              that.order_table = false;
             }
           } else {
             that.$message.error('网络错误！');

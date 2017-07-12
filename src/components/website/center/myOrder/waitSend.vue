@@ -151,6 +151,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.waitSend{
+  margin-top: 30px;
+  border: 1px solid #d7d7d7;
+}
   .left {
     float: left;
   }
@@ -180,7 +184,6 @@
   .order_table {
     width: 1069px;
     height: 40px;
-    margin-top: 30px;
     margin-bottom: 20px;
     font-size: 14px;
     font-weight: bold;

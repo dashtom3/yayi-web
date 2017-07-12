@@ -368,7 +368,7 @@
           that.$router.push({  path:"/index"});
         }
         if(index==1){
-          that.classify1Index = that.aaaaa1;
+          that.classify1Index = that.classify1Index;
           that.classify2Index = 0;
           that.fenlie3 = [];
           that.classify3Index = 0;

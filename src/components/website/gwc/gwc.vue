@@ -151,7 +151,6 @@
       getGwcList:function(){
         var that = this;
         var obj = {
-          // phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
         that.global.axiosGetReq('/cart/list', obj)
@@ -166,6 +165,16 @@
             }
             this.gwcGoods = data;
             that.calculationPayBtnPosi();
+            window.onscroll = function(){
+              var HEIGHT = window.innerHeight; //网页的高度
+              var flag = document.body.scrollHeight - document.body.scrollTop - HEIGHT;
+              if(flag<100){
+                that.jiwsuanbtnFixed = false;
+              }
+              if(flag>200){
+                that.jiwsuanbtnFixed = true;
+              }
+            };
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -320,6 +329,8 @@
         console.log(flag)
         if(flag<0){
           that.jiwsuanbtnFixed = true;
+        }else{
+          that.jiwsuanbtnFixed = false
         }
         console.log(HEIGHT)
       },
@@ -564,6 +575,7 @@ top: 5px;
     transform: translateX(-50%);*/
     width: 100%;
     background: white;
+    z-index: 999;
 
   }
 .gwcWrap   .goodsFooter div{

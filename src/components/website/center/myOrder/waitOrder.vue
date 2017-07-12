@@ -195,6 +195,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.waitOrder{
+  border: 1px solid #d7d7d7;
+  margin-top: 30px;
+}
   .left {
     float: left;
   }
@@ -224,7 +228,6 @@
   .order_table {
     width: 1069px;
     height: 40px;
-    margin-top: 30px;
     margin-bottom: 20px;
     font-size: 14px;
     font-weight: bold;
@@ -391,8 +394,5 @@
     text-align: center;
     font-size: 20px;
     color: #000;
-/*    border-left: 1px solid #D7D7D7;
-    border-right: 1px solid #D7D7D7;
-    border-bottom: 1px solid #D7D7D7;*/
   }
 </style>

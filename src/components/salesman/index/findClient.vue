@@ -15,7 +15,21 @@
       我已绑定的客户
     </div>
     <div class="clientList">
-      <el-table :data="tableData" border style="width: 100%;text-align:center">
+      <el-table v-if="showBindOrNoBindList" :data="tableData" border style="width: 100%;text-align:center">
+        <el-table-column align="center" label="单位名称"  >
+          <template scope='scope'>
+            <span>{{scope.row.certification.companyName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center"  label="单位地址" >
+          <template scope='scope'>
+            <span>{{scope.row.certification.workAddress}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="trueName"  label="联系人"></el-table-column>
+        <el-table-column align="center" prop="phone"  label="联系方式"></el-table-column>
+      </el-table>
+      <el-table v-else :data="tableData1" border style="width: 100%;text-align:center">
         <el-table-column align="center"  prop="unitName" label="单位名称"  ></el-table-column>
         <el-table-column align="center" prop="unitAddress"  label="单位地址" ></el-table-column>
         <el-table-column align="center" prop="contacts"  label="联系人"></el-table-column>
@@ -30,8 +44,10 @@
     name: 'findClient',
     data () {
       return {
+        showBindOrNoBindList:true,
         nowBtn:1,
         searchData:null,
+        tableData1:[],
         tableData:[
           // {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
 
@@ -44,21 +60,15 @@
     created: function() {
       var that = this;
       that.getWaitBindUserList();
-
     },
     methods: {
       getNoRegistUserList:function(){
         var that =this;
-        // var obj = {
-        //   phone:"",
-        //   cusName:"",
-        //   cusAddress:""
-        // };
         that.global.axiosPostReq('/findCus/unregistered')
         .then((res) => {
           console.log(res,"")
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData = res.data.data;
+            that.tableData1 = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -66,11 +76,6 @@
       },
       getWaitBindUserList:function(){
         var that =this;
-        // var obj = {
-        //   phone:"",
-        //   cusName:"",
-        //   cusAddress:""
-        // };
         that.global.axiosPostReq('/findCus/registered')
         .then((res) => {
           console.log(res,"getWaitBindUserList")
@@ -86,9 +91,11 @@
         if(arg==1){
           that.nowBtn = true;
           that.getWaitBindUserList();
+          that.showBindOrNoBindList = true;
         }else{
           that.nowBtn = false;
           that.getNoRegistUserList();
+          that.showBindOrNoBindList = false;
         }
       },
       goToMyClient:function(){
