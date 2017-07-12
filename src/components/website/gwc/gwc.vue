@@ -26,17 +26,18 @@
           <el-checkbox style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>
           <div class="imgWrap" @click="goToThisDetail(good)">
               <img :src="good.pic" alt="">
-              <span></span>
           </div>
         </div>
         <div class="goodInfo">
           <span>{{good.name}}</span>
-          <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
-          <span v-if="good.itemPropertyTwoValue">,{{good.itemPropertyTwoValue}}</span>
-          <span v-if="good.itemPropertyThreeValue">,{{good.itemPropertyThreeValue}}</span>
-          <span v-if="good.itemPropertyFourValue">,{{good.itemPropertyFourValue}}</span>
-          <span v-if="good.itemPropertyFiveValue">,{{good.itemPropertyFiveValue}}</span>
-          <span v-if="good.itemPropertySixValue">,{{good.itemPropertySixValue}}</span>
+          <p>
+            <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
+            <span v-if="good.itemPropertyTwoValue">&nbsp;{{good.itemPropertyTwoValue}}</span>
+            <span v-if="good.itemPropertyThreeValue">&nbsp;{{good.itemPropertyThreeValue}}</span>
+            <span v-if="good.itemPropertyFourValue">&nbsp;{{good.itemPropertyFourValue}}</span>
+            <span v-if="good.itemPropertyFiveValue">&nbsp;{{good.itemPropertyFiveValue}}</span>
+            <span v-if="good.itemPropertySixValue">&nbsp;{{good.itemPropertySixValue}}</span>
+          </p>
         </div>
         <div class="onePrice">
           <span>￥{{good.price}}</span>
@@ -468,14 +469,13 @@ top: 5px;
     margin-left: 16px;
     cursor: pointer;
   }
-.gwcWrap .oneGood .imgWrap span{
-display: inline-block;
-height: 100%;
-vertical-align: middle;
-}
+
     .gwcWrap .oneGood .imgWrap img{
-      display: inline-block;
-vertical-align: middle;
+      display: block;
+    margin: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
       max-width: 100%;
       max-height: 100%;
     }
@@ -486,7 +486,7 @@ vertical-align: middle;
         text-overflow:ellipsis;
        white-space:nowrap;
       }
-  .gwcWrap .oneGood  .goodInfo span:nth-child(2){
+  .gwcWrap .oneGood  .goodInfo p{
     display: block;
     margin-top: 42px;
     }

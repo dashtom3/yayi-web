@@ -13,7 +13,8 @@
         <el-table  :data="tab1_tableData"  stripe  style="width: 100%">
           <el-table-column  prop="postCity" align="center"  label="运送到" >
             <template scope="scope">
-              <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span>
+              <span>{{scope.row.postCity}}</span>
+              <!-- <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span> -->
               <el-button type="text" v-if="scope.row.changeState" @click="tab1_editThis(scope.$index,scope.row)">编辑</el-button>
             </template>
           </el-table-column>
@@ -55,7 +56,8 @@
         <el-table  :data="tab2_tableData"  stripe  style="width: 100%">
           <el-table-column  prop="postCity" align="center"  label="选择地区" >
             <template scope="scope">
-              <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span>
+              <span>{{scope.row.postCity}}</span>
+              <!-- <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span> -->
             </template>
           </el-table-column>
           <el-table-column  prop="postCity" align="center"  width="100">

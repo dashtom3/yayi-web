@@ -360,6 +360,7 @@
       },
       goThisBrand:function(arg,index){
         var that = this;
+        console.log(arg)
         // firstClassfy:'',
         // secondClassfy:'',
         // thirdClassfy:'',
@@ -371,8 +372,12 @@
           that.classify2Index = 0;
           that.fenlie3 = [];
           that.classify3Index = 0;
+          that.secondClassfy = null;
+          that.thirdClassfy = null;
         }else if(index==2){
-
+          that.classify1Index = that.classify1Index;
+          that.classify3Index = 0;
+          that.thirdClassfy = null;
         }else if(index==3){
 
         }
@@ -671,10 +676,15 @@ margin: 0 auto;
 
 
 .allGoods li .imgWrap .goodImg{
-  display: inline-block;
-  vertical-align: middle;
+  /*display: inline-block;*/
+  /*vertical-align: middle;*/
   max-width: 100%;
   max-height: 100%;
+  display: block;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .allGoods li .imgWrap:hover{
   box-shadow: 7px 7px 28px #bcbcbc;
