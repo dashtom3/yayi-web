@@ -4,7 +4,8 @@
       <span class="headName">个人信息</span>
       <div class="personal_left">
         <div class="userImgWrap">
-          <img style="border-radius:50%;width:100%;height:100%" :src="imgUrl" alt="头像">
+          <img style="border-radius:50%;width:100%;height:100%" :src="imgUrl" alt="头像" v-if="imgUrl">
+          <img src="../../../images/center/loadUserImg.png" style="border-radius:50%;width:100%;height:100%" alt="头像" v-if="!imgUrl">
           <p v-on:click="immediateDoIt()">更换头像</p>
         </div>
       </div>
@@ -102,22 +103,21 @@
 
         global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            console.log('查询订单',res.data.data)
             this.orderInfo = res.data.data
             this.pageProps.totalPage = res.data.totalPage
+            console.log(this.orderInfo)
           }else{
-            this.$message.error('查询订单失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
       //获取钱包明细
-      getMyWallet: function() {
+      getMyWallet(){
         var that = this;
         var obj = {
           token: that.global.getSalesToken(),
           state: 0,
         }
-        console.log(obj)
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.accountAmt = res.data.data.withdrawalsTX;
@@ -133,7 +133,6 @@
         }
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            console.log('查询销售员个人资料',res.data.data)
             this.phone = res.data.data.phone
             this.trueName = res.data.data.trueName
             this.accountNumber = res.data.data.accountNumber
@@ -150,11 +149,10 @@
         }
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            // this.replayList = res.data.data
             console.log(res.data.data)
             this.echartData = res.data.data
           }else{
-            this.$message.error('查询收入失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },

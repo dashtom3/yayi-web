@@ -95,30 +95,46 @@
       <div class="personalInfor">
         <img src="" alt="">
         <h3>个人资料</h3>
-        <div class="">
+        <div>
           <span>销售员编号：{{someOneUserDetails.info.saleId}}</span>
           <span>真实姓名：{{someOneUserDetails.info.trueName}}</span>
         </div>
-        <div class="">
+        <div>
           <span>手机号：{{someOneUserDetails.info.phone}}</span>
           <span>性别：{{someOneUserDetails.info.sex}}</span>
         </div>
-        <div class="">
+        <div>
+          <span>微信{{someOneUserDetails.info.weChar}}</span>
+          <span>邮箱：{{someOneUserDetails.info.email}}</span>
+        </div>
+        <div>
+          <span>出生日期：{{someOneUserDetails.info.birthday}}</span>
+          <span>学历：{{someOneUserDetails.info.education}}</span>
+        </div>
+        <div>
+          <span>工作单位：{{someOneUserDetails.info.workUnit}}</span>
+          <span>工作职位：{{someOneUserDetails.info.workPosition}}</span>
+        </div>
+        <div>
+          <span>所在地省市区：{{someOneUserDetails.info.part}}</span>
+          <span>详细地址：{{someOneUserDetails.info.address}}</span>
+        </div>
+        <div>
           <span>身份证号：{{someOneUserDetails.info.idCard}}</span>
           <span>注册时间：{{someOneUserDetails.info.created}}</span>
         </div>
-        <div class="">
+        <div>
           <span>钱包余额：{{someOneUserDetails.info.money}}</span>
           <span>已绑定的客户数：{{someOneUserDetails.info.bindUserNum}}</span>
         </div>
       </div>
       <div class="certification">
         <h3>提现方式</h3>
-        <div class="">
+        <div>
           <span>类型：{{someOneUserDetails.getMoneyStyle.postalType}}</span>
           <span>银行：{{someOneUserDetails.getMoneyStyle.bankName}}</span>
         </div>
-        <div class="">
+        <div>
           <span>开户者：{{someOneUserDetails.getMoneyStyle.openName}}</span>
           <span>账号：{{someOneUserDetails.getMoneyStyle.accountNumber}}</span>
         </div>

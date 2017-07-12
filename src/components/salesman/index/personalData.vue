@@ -174,18 +174,8 @@
         imageUrl: '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
-        bindGetMoneyCount:{
-          type:'支付宝',
-          userName:"小酱",
-          count:'13241341341'
-        },
-        getMoneyData:{
-          type:"支付宝",
-          name:"小将",
-          bandCounet:"213414134",
-          zhifubaoCounet:"13414",
-          bandName:""
-        },
+        bindGetMoneyCount:{},
+        getMoneyData:{},
         getMoneyDataRule:{
           name:{ required: true, message: '请填写真实姓名', trigger: 'change' },
           bandCounet:{required: true, message: '请填写银行账号', trigger: 'change'},
@@ -277,6 +267,7 @@
                   message: '设置成功',
                   type: 'success'
                 });
+                that.queryPersonInfo();
                 that.getMoneySet = true;
               }
             })
