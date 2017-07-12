@@ -69,7 +69,7 @@
       <div>请先设置提现方式</div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="withDrawSets = false">取 消</el-button>
-        <el-button type="primary" @click="withDrawSets = false">确 定</el-button>
+        <el-button type="primary" @click="gotoSet">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -278,6 +278,9 @@
             }
           })
         }
+      },
+      gotoSet: function(){
+        this.withDrawSets = false
       },
       //查询提现方式
       queryInfo: function(){

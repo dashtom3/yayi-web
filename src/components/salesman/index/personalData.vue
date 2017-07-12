@@ -135,9 +135,13 @@
             <div class="editSetGetMoney">
               <el-form :label-position="lablePosi"  label-width="150px"  :model="getMoneyData" :rules="getMoneyDataRule" ref="getMoneyData">
                 <el-form-item label="类型：" prop="type">
-                  <el-select v-model="getMoneyData.type">
-                    <el-option label="支付宝" value="支付宝"></el-option>
-                    <el-option label="银行" value="银行"></el-option>
+                  <el-select v-model="getMoneyData.type" @change="selectOpt">
+                    <el-option
+                      v-for="item in optSelect"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="开户者：" prop="name">
@@ -171,6 +175,13 @@
     name: 'personalData',
     data () {
       return {
+        optSelect: [{
+          value: '支付宝',
+          label: '支付宝'
+        }, {
+          value: '银行',
+          label: '银行'
+        }],
         lablePosi:"right",
         showPane:1,
         showDefaultData:true,
@@ -179,7 +190,8 @@
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
         bindGetMoneyCount:{},
-        getMoneyData:{},
+        getMoneyData:{
+        },
         getMoneyDataRule:{
           name:{ required: true, message: '请填写真实姓名', trigger: 'change' },
           bandCounet:{required: true, message: '请填写银行账号', trigger: 'change'},
@@ -226,6 +238,10 @@
       this.queryPersonInfo()
     },
     methods: {
+      selectOpt(key){
+        console.log(key)
+        this.getMoneyData.type = key
+      },
       fillZero: function(n){
         return n<10 ? '0'+ n: n 
       },
@@ -284,11 +300,20 @@
       },
       setGetMoney:function(){
         var that = this;
-        this.getMoneyData.type = this.personalData.postalType
-        this.getMoneyData.name = this.personalData.openName
-        this.getMoneyData.bandCounet = this.personalData.accountNumber
-        this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
-        this.getMoneyData.bandName = this.personalData.bankName
+        if(this.personalData.postalType === '支付宝'){
+          this.getMoneyData.type = this.personalData.postalType
+          this.getMoneyData.name = this.personalData.openName
+          this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
+        }else if(this.personalData.postalType === '银行'){
+          this.getMoneyData.type = this.personalData.postalType
+          this.getMoneyData.name = this.personalData.openName
+          this.getMoneyData.bandCounet = this.personalData.accountNumber
+          this.getMoneyData.bandName = this.personalData.bankName
+        }else{
+          this.getMoneyData.type = '支付宝'
+          this.getMoneyData.name = this.personalData.openName
+          this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
+        }
         that.getMoneySet = false;
       },
       goToEditData:function(){
