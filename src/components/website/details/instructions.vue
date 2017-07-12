@@ -33,4 +33,8 @@
   .instructions img{
     width: 100% !important;
   }
+  video{
+    display: block;
+    margin: auto;
+  }
 </style>

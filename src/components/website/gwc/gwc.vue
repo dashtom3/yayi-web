@@ -31,9 +31,12 @@
         </div>
         <div class="goodInfo">
           <span>{{good.name}}</span>
-          <span>{{good.itemPropertyNamea}}</span>
-          <span v-if="good.itemPropertyNameb">,{{good.itemPropertyNameb}}</span>
-          <span v-if="good.itemPropertyNamec">,{{good.itemPropertyNamec}}</span>
+          <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
+          <span v-if="good.itemPropertyTwoValue">,{{good.itemPropertyTwoValue}}</span>
+          <span v-if="good.itemPropertyThreeValue">,{{good.itemPropertyThreeValue}}</span>
+          <span v-if="good.itemPropertyFourValue">,{{good.itemPropertyFourValue}}</span>
+          <span v-if="good.itemPropertyFiveValue">,{{good.itemPropertyFiveValue}}</span>
+          <span v-if="good.itemPropertySixValue">,{{good.itemPropertySixValue}}</span>
         </div>
         <div class="onePrice">
           <span>￥{{good.price}}</span>
@@ -147,7 +150,7 @@
       getGwcList:function(){
         var that = this;
         var obj = {
-          phone:that.global.getUser().phone,
+          // phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
         that.global.axiosGetReq('/cart/list', obj)

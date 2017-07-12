@@ -292,10 +292,14 @@
         that.haveBrand = null;
         if(item.classifyTwoName=="不限"){
           that.fenlie3 = [];
+          that.secondClassfy = null;
         }
       },
       selectClassfy3:function(index,item){
         var that = this;
+        if(item.classifyThreeName=="不限"){
+          that.thirdClassfy = null;
+        }
         that.classify3Index = index;
         that.searchThreeStr = item.classifyThreeName;
         that.getNowClassfyAndBrandGoods();

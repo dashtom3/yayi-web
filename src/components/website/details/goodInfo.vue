@@ -3,13 +3,11 @@
   	<div class="infoLeft">
       <div class="infoLeft_1">
         <img :src="bigImgUrl" />
-        <span></span>
       </div>
       <div class="infoLeft_2">
         <ul>
           <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs">
             <img  :src="goodAllImgs[index]" />
-          <span></span>
           </li>
           <div class="clearFloat"></div>
         </ul>
@@ -397,17 +395,11 @@ import myAddress from './selectThree'
         }
         if(that.global.getUser()){
           var obj = {
-            // phone:that.global.getUser().phone,
-            // itemId:that.nowGoodDetails.itemId,
-            // name:that.nowGoodDetails.itemName,
-            // pic:that.itemDetail.itemPica,
             num:that.goodDefaultNum,
             itemSKU:nowSku,
-            // price:that.nowGoodDetails.itemPrice,
-            // itemPropertyNamea:that.sureGoodAttr,
             token:that.global.getToken()
           };
-          console.log(obj)
+          console.log(obj,"addGwcThisGoodObj")
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
               console.log(res)
@@ -554,16 +546,14 @@ import myAddress from './selectThree'
     border:1px solid #e5e5e5;
     text-align: center;
   }
-  .infoLeft_1 span{
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-  }
   .infoLeft_1 img{
-    display: inline-block;
+    display: block;
     vertical-align: middle;
     max-width: 100%;
     max-height: 100%;
+    margin: auto;
+    margin-top: 50%;
+    transform: translateY(-50%);
   }
 
 
@@ -586,15 +576,12 @@ import myAddress from './selectThree'
     cursor: pointer;
   }
 
-  .infoLeft_2 li span{
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  }
 
   .infoLeft_2 li img{
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
+  margin: auto;
+  margin-top: 50%;
+  transform: translateY(-50%);
   max-width: 100%;
   max-height: 100%;
   }
