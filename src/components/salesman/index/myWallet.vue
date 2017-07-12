@@ -120,7 +120,7 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="small">
+      size="tiny">
       <div style="margin:0 auto;width:460px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
@@ -247,19 +247,20 @@
     methods: {
       // 获取验证码
       hasYzm: function() {
+        debugger
         var that = this;
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
         if (that.withDrawPhone == '' || !mb.test(that.withDrawPhone)) {
-          that.$message.error('shoujigeshibuzhengque！');
+          that.$message.error('请输入正确的手机号！');
           return false
         } else {
           var obj = { phone: that.withDrawPhone }
           that.global.axiosPostReq('/witManage/gitVcode', obj)
           .then((res) => {
-            console.log('yanzhengma',res)
+            console.log('验证码',res)
             if (res.data.callStatus === 'SUCCEED') {
-              for(let  i=0; i<=60; i++) {
+              for(let i=0; i<=60; i++) {
                 window.setTimeout(function(){
                   if (sec != 0) {
                     that.hYzm = false;
@@ -274,7 +275,6 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              console.log(res);
             }
           })
         }
@@ -384,7 +384,7 @@
           this.withDrawBank = true
         }else if(this.postalType ==='支付宝'){
           this.withDrawBank = true
-        }else if(this.postalType ===''){
+        }else if(this.postalType === null){
           this.withDrawSets = true
         }       
       },

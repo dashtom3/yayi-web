@@ -65,6 +65,7 @@
 		  </ul>
 	    <div style="margin-top:30px;">
 	      <el-button class="btn_" type="primary" @click="saveBtn">保存</el-button>
+	      <el-button class="btn_" @click="celSave">取消</el-button>
 	    </div>
     </el-dialog>
 	</el-row>
@@ -76,37 +77,6 @@
 		data(){
 			return {
 				advertList: [],
-				// advertList:[{
-				// 	advId: 1,
-				// 	advName: '登录注册页',
-				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advType: '登录注册页'
-				// },{
-				// 	advId: 2,
-				// 	advName: '首页轮播',
-				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advType: '首页轮播'
-				// },{
-				// 	advId: 3,
-				// 	advName: '首页轮播',
-				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advType: '首页轮播'
-				// },{
-				// 	advId: 4,
-				// 	advName: '首页轮播',
-				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advType: '首页轮播'
-				// },{
-				// 	advId: 5,
-				// 	advName: '首页轮播',
-				// 	advImg: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advUrl: 'http://orl5769dk.bkt.clouddn.com/FsORTf3JFh3QU2OaJN2pV_bHnUFo',
-				// 	advType: '首页轮播'
-				// }],
 				qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
 				advertVisible: false,
@@ -147,9 +117,6 @@
 				this.img_src = row.advUrl;
 				this.fileList[0].url = this.img_src;
 			},
-      handlePreview(file) {
-        
-      },
       uploadFile(res, file) {
         this.advUrl = global.qiniuShUrl + file.response.key
         this.img_src = global.qiniuShUrl + file.response.key
@@ -190,8 +157,9 @@
           }
           this.advertVisible = false;
         })
-
-
+      },
+      celSave(){
+      	this.advertVisible = false
       }
 		}
 	}

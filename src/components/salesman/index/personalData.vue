@@ -59,7 +59,8 @@
               <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
               <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
               <div class="clearfix"></div>
-              <span style="margin-top:4px;">更改头像</span>
+              <span style="margin-top:4px;" v-if="!personalData.salePic">上传头像</span>
+              <span style="margin-top:4px;" v-if="personalData.salePic">更改头像</span>
             </el-upload>
           </div>
           <div class="editPersonalData">
