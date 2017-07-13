@@ -159,14 +159,14 @@
       </el-table-column>
       <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
         <template scope="scope">
-          <span v-if="scope.row.bindUserNum">是</span>
-          <span v-else-if="!scope.row.bindUserNum">否</span>
+          <span v-if="scope.row.isBindUser===1">是</span>
+          <span v-else-if="scope.row.isBindUser===2">否</span>
         </template>
       </el-table-column>
       <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
-            <el-button v-if="scope.row.bindUserNum===0" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
+            <el-button v-if="scope.row.isBindUser===2" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
             <el-button v-else type="text" v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
             <el-button type="text" v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
