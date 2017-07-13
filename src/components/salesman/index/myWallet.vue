@@ -121,12 +121,12 @@
       title="提现"
       :visible.sync="withDrawBank"
       size="tiny">
-      <div style="margin:0 auto;width:460px;">
+      <div style="margin:0 auto;width:380px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
         </el-row>
         <el-row>
-          <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{trueName}} 账号：{{bankNo}}</span></div></el-col>
+          <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{trueName}} &nbsp;&nbsp;&nbsp;&nbsp;账户：{{bankNo}}</span></div></el-col>
         </el-row>
         <el-form>
           <el-form-item label="提现金额：">
@@ -148,37 +148,6 @@
         </div>
       </div>
     </el-dialog>
-
-    <!-- 支付宝提现 -->
-    <!-- <el-dialog
-      title="提现"
-      :visible.sync="withDrawBank01"
-      size="small">
-      <div style="margin:0 auto;width:460px;">
-        <el-row>
-          <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24" align="center"><div class="i_title"><span>姓名：支付宝：18652599279</span></div></el-col>
-        </el-row>
-        <el-form>
-          <el-form-item label="提现金额：">
-            <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号：" style="padding-left:14px;">
-            <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
-          </el-form-item>
-          <el-form-item label="验证码：" style="padding-left:14px;">
-            <el-input v-model="rg_code" class="item_c_input fl"></el-input>
-            <button class="btn_col">获取验证码</button>
-          </el-form-item>
-        </el-form>
-        <div>
-          <button class="withDrawBtn btn_col" @click="withDrawBank = false">申请提现</button>
-          <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
-        </div>
-      </div>
-    </el-dialog> -->
 	</el-row> 
 </template>
 
@@ -218,7 +187,6 @@
       }
       that.queryInfo();
       that.getMyWallet();
-      console.log(that.toMySon,'son')
     },
     methods: {
       // 获取验证码
@@ -252,7 +220,14 @@
           })
         }
       },
+      //跳转到提现设置
       gotoSet: function(){
+        var that = this;
+        var editWithDraw = {
+          isActive: true,
+          flag: 'editWithDraw',
+        }
+        that.$emit('msgFromChild',editWithDraw);
         this.withDrawSets = false
       },
       //查询提现方式
@@ -487,10 +462,10 @@
     margin-top: 20px;
   }
   .item_w_input{
-    width: 350px;
+    width: 280px;
   }
   .item_c_input{
-    width: 210px;
+    width: 140px;
     margin-right: 20px;
   }
   .i_red{
@@ -501,12 +476,12 @@
     line-height: 30px;
   }
   .withDrawBtn{
-    width: 140px;
+    width: 100px;
     margin-left: 82px;
   }
   .withDrawBtn1{
-    width: 140px;
-    margin-left: 66px;
+    width: 100px;
+    margin-left: 58px;
   }
 
   .custInfo{

@@ -118,13 +118,13 @@
           <div v-if="getMoneySet">
             <div class="baseInfo">
               <span class="info1">
-                <span class="infoName">类型：</span><span>{{bindGetMoneyCount.type}}</span>
+                <span class="infoName">类型：</span><span>{{bindGetMoneyCount.type}}</span><span v-if="bindGetMoneyCount.bankName">{{'（ '+bindGetMoneyCount.bankName+' ）'}}</span>
               </span>
               <span class="info2">
                 <span class="infoName">开户者：</span><span>{{bindGetMoneyCount.userName}}</span>
               </span>
               <span class="info3">
-                <span class="infoName">{{bindGetMoneyCount.type}}：</span><span>{{bindGetMoneyCount.count}}</span>
+                <span class="infoName">{{bindGetMoneyCount.type+'账户'}}：</span><span>{{bindGetMoneyCount.count}}</span>
               </span>
             </div>
             <div class="setBtnWrap">
@@ -134,10 +134,7 @@
           <div v-else>
             <div class="editSetGetMoney">
               <el-form :label-position="lablePosi"  label-width="150px"  :model="getMoneyData" :rules="getMoneyDataRule" ref="getMoneyData">
-                <el-form-item label="开户者：" prop="name">
-                  <el-input v-model="getMoneyData.name"></el-input>
-                </el-form-item>
-                <el-form-item label="类型：" prop="type">
+                <el-form-item label="类型：" prop="type" style="height:36px;">
                   <el-select v-model="typeValue" placeholder="请选择" @change="changeHandler">
                     <el-option
                       v-for="item in options"
@@ -149,6 +146,9 @@
                 </el-form-item>
                 <el-form-item v-if="typeValue!=='支付宝'" label="银行：" prop="bandName">
                   <el-input v-model="getMoneyData.bandName"></el-input>
+                </el-form-item>
+                <el-form-item label="开户者：" prop="name">
+                  <el-input v-model="getMoneyData.name"></el-input>
                 </el-form-item>
                 <el-form-item v-if="typeValue!=='支付宝'" label="银行卡账号：" prop="bandCounet">
                   <el-input v-model="getMoneyData.bandCounet"></el-input>
@@ -173,6 +173,7 @@
   import util from '../../../common/util'
   export default {
     name: 'personalData',
+    props: ['toEditDraw'],
     data () {
       return {
         options: [{
@@ -182,7 +183,7 @@
           value: '支付宝',
           label: '支付宝'
         }],
-        typeValue: '',
+        typeValue: '支付宝',
         lablePosi:"right",
         showPane:1,
         showDefaultData:true,
@@ -199,9 +200,9 @@
         },
         getMoneyDataRule:{
           name:{ required: true, message: '请填写真实姓名', trigger: 'change' },
-          bandCounet:{required: true, message: '请填写银行卡账号', trigger: 'change'},
+          bandCounet:{required: true, message: '请填写账号信息', trigger: 'change'},
           bandName:{required: true, message: '请填写银行名称', trigger: 'change'},
-          zhifubaoCounet:{required: true, message: '请填写支付宝账号', trigger: 'change'}
+          zhifubaoCounet:{required: true, message: '请填写账号信息', trigger: 'change'}
         },
         personalData:{},
         personalDataRule:{
@@ -243,13 +244,18 @@
           }
         }
       })
+      if(this.toEditDraw.isActive){
+        this.changShowPane(2)
+      }
       this.queryPersonInfo()
     },
     methods: {
       changeHandler: function(key){
         if(key === '支付宝'){
+          this.getMoneyData.name = ''
           this.getMoneyData.zhifubaoCounet = ''
         }else if(key === '银行卡'){
+          this.getMoneyData.name = ''
           this.getMoneyData.bandCounet = ''
           this.getMoneyData.bandName = ''
         }
@@ -293,7 +299,6 @@
                 token: global.getSalesToken()
               }
             }
-            console.log('提现设置',params)
             global.axiosPostReq('/saleInfo/updatePostal',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({
@@ -331,6 +336,7 @@
         this.bindGetMoneyCount.type = this.personalData.postalType
         this.bindGetMoneyCount.userName = this.personalData.openName
         this.bindGetMoneyCount.count = this.personalData.accountNumber
+        this.bindGetMoneyCount.bankName = this.personalData.bankName
         that.showPane = arg;
       },
       positionFromPicker:function(data){
@@ -487,10 +493,10 @@ background: #5ed6dc;
   margin-left: 80px;
 }
 .baseInfo .info2{
-  margin-left: 260px;
+  margin-left: 230px;
 }
 .baseInfo .info3{
-  margin-left: 260px;
+  margin-left: 220px;
 }
 .editSetGetMoney{
   width: 630px;

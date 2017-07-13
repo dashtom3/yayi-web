@@ -345,7 +345,7 @@
             this.bindedUserList = res.data.data
           }
         })
-        this.BindSearchContent = null;//清空搜索内容
+        // this.BindSearchContent = null;//清空搜索内容
         
       },
       noBindSearch:function(){
@@ -381,7 +381,7 @@
             this.noBindUserList = res.data.data
           }
         })
-        this.noBindSearchContent = null;//清空搜索内容
+        // this.noBindSearchContent = null;//清空搜索内容
       },
       bindAlertSearch:function(){
         var that = this;
@@ -402,52 +402,53 @@
       bindThisUser:function(nowUser,index){
         //绑定用户
         var that = this;
-        var obj = {};
-        if(nowUser==that.multipleSelection1[0]){
-          obj = {
-            salePhone: this.salePhone,
-            userPhone: nowUser.phone
-          }
-          global.axiosPostReq('/saleList/bind',obj).then((res) => {
-            if(res.data.callStatus === 'SUCCEED'){
-              this.$message({
-                type: 'success',
-                message: '绑定成功!'
-              });
-              this.noBindSearch()
-
-            }
-          })
-        }else{
-          this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
+        var obj = {
+          salePhone: this.salePhone,
+          userPhone: nowUser.phone
         }
+        global.axiosPostReq('/saleList/bind',obj).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.$message({
+              type: 'success',
+              message: '绑定成功!'
+            });
+            this.noBindSearch()
+          }
+        })
+        
       },
       cancleBindThisUser:function(nowUser,index){
         //取消绑定用户
         var that = this;
-        var obj = {};
-        if(nowUser==that.multipleSelection2[0]){
-          obj = {
-            salePhone: this.salePhone,
-            userPhone: nowUser.phone
+        var obj = {
+          salePhone: this.salePhone,
+          userPhone: nowUser.phone
+        }
+        global.axiosPostReq('/saleList/disBind',obj).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.$message({
+              type: 'success',
+              message: '取消绑定成功!'
+            });
+            this.BindSearch()
           }
-          global.axiosPostReq('/saleList/disBind',obj).then((res) => {
-            if(res.data.callStatus === 'SUCCEED'){
-              this.$message({
-                type: 'success',
-                message: '取消绑定成功!'
-              });
-              this.BindSearch()
-            }
-          })
-        }else{
-          this.$alert("请选择对应的用户", {confirmButtonText: '确定！'});
+        })
+      },
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable1.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable1.clearSelection();
         }
       },
       handleSelectionChange1:function(val) {
+        console.log(val)
         this.multipleSelection1 = val;
       },
       handleSelectionChange2:function(val) {
+        console.log(val)
         this.multipleSelection2 = val;
       },
       bindUser:function(index, row){
@@ -455,12 +456,14 @@
         this.activeName2 = "first";
         this.salePhone = row.phone;
         this.noBindSearch();
+        this.BindSearch();
       },
       cancleBindUser:function(index, row){
         this.bindSalseAlert = true;
         this.activeName2 = "second";
         this.salePhone = row.phone;
         this.BindSearch();
+        this.noBindSearch();
       },
       saleDetail:function(index, row){
         //查看详情

@@ -10,7 +10,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">绑定</el-button>
+          <el-button type="primary" @click="bindHandler">绑定</el-button>
         </el-form-item>
       </el-form>
       <div v-else class="binded">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+  import global from '../../../global/global'
   export default {
     name: 'bindSale',
     data () {
@@ -50,16 +51,42 @@
       }
     },
     watch:{
-      willBindSale:function(){
-        if(this.willBindSale.length>=6){
-          this.showSearchInfo = true;
-        }else{
-          this.showSearchInfo = false;
-        }
-      }
+      // willBindSale:function(){
+      //   if(this.willBindSale.length>=6){
+      //     this.showSearchInfo = true;
+      //   }else{
+      //     this.showSearchInfo = false;
+      //   }
+      // }
+    },
+    created(){
+      // this.queryHandler()
     },
     methods:{
-
+      queryHandler(){
+        let params = {
+          phone: global.getUser().token
+        }
+        global.axiosGetReq('/userManageList/userlist',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.personalData = res.data.data
+            console.log(this.personalData)
+          }
+        })
+      },
+      bindHandler(){
+        let params = {
+          salePhone: this.willBindSale,
+          userPhone: global.getUser().phone,
+          token: global.getUser().token
+        }
+        console.log('绑定销售员',params)
+        global.axiosPostReq('/userManageList/bind',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            console.log(res.data.data)
+          }
+        })
+      }
     }
   }
 </script>

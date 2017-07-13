@@ -19,7 +19,7 @@
         </div>
         <div class="oneInfor">
           <span v-if="this.postalType === '支付宝'">支付宝账户：</span>
-          <span v-if="this.postalType === '银行'">银行账户：</span>
+          <span v-if="this.postalType === '银行卡'">银行账户：</span>
           <span>{{accountNumber}}</span>
         </div>
         <div class="btnWrap">
