@@ -17,8 +17,9 @@
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.date}}</span>
+        <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
+        <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
@@ -42,10 +43,8 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
           <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
@@ -113,6 +112,7 @@
 
 <script>
   import paging0 from '../../brandLib/paging0'
+  import util from '../../../../common/util'
   export default {
     name: 'waitOrder',
     data () {
@@ -181,6 +181,9 @@
             });
             console.log(b,"getAllOrder_waitPay");
             that.items = b;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+            }
             if(that.items==0){
               that.no_order = true;
             }
@@ -195,9 +198,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.orderDetailsBtn{
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+}
 .waitOrder{
-  border: 1px solid #d7d7d7;
-  margin-top: 30px;
+  /*border: 1px solid #d7d7d7;
+  margin-top: 30px;*/
 }
   .left {
     float: left;

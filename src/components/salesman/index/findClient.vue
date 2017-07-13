@@ -15,26 +15,53 @@
       我已绑定的客户
     </div>
     <div class="clientList">
-      <el-table v-if="showBindOrNoBindList" :data="tableData" border style="width: 100%;text-align:center">
-        <el-table-column align="center" label="单位名称"  >
-          <template scope='scope'>
-            <span>{{scope.row.certification.companyName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center"  label="单位地址" >
-          <template scope='scope'>
-            <span>{{scope.row.certification.workAddress}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="trueName"  label="联系人"></el-table-column>
-        <el-table-column align="center" prop="phone"  label="联系方式"></el-table-column>
-      </el-table>
-      <el-table v-else :data="tableData1" border style="width: 100%;text-align:center">
-        <el-table-column align="center"  prop="unitName" label="单位名称"  ></el-table-column>
-        <el-table-column align="center" prop="unitAddress"  label="单位地址" ></el-table-column>
-        <el-table-column align="center" prop="contacts"  label="联系人"></el-table-column>
-        <el-table-column align="center" prop="contactsPhone"  label="联系方式"></el-table-column>
-      </el-table>
+      <div v-if="showBindOrNoBindList">
+        <el-table  :data="tableData" border style="width: 100%;text-align:center">
+          <el-table-column align="center" label="单位名称"  >
+            <template scope='scope'>
+              <span>{{scope.row.certification.companyName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center"  label="单位地址" >
+            <template scope='scope'>
+              <span>{{scope.row.certification.workAddress}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center"  label="联系人">
+            <template scope='scope'>
+              <span>{{scope.row.trueName}}</span>
+            </template></el-table-column>
+          </el-table-column>
+          <el-table-column align="center"  label="联系方式">
+            <template scope='scope'>
+              <span>{{scope.row.phone}}</span>
+            </template></el-table-column>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-else>
+        <el-table  :data="tableDataNoRegist" border style="width: 100%;text-align:center">
+          <el-table-column align="center"   label="单位名称"  >
+            <template scope='scope'>
+              <span>{{scope.row.unitName}}</span>
+            </template></el-table-column>
+          <el-table-column align="center"  label="单位地址" >
+            <template scope='scope'>
+              <span>{{scope.row.unitAddress}}</span>
+            </template></el-table-column>
+          </el-table-column>
+          <el-table-column align="center"  label="联系人">
+            <template scope='scope'>
+              <span>{{scope.row.contacts}}</span>
+            </template></el-table-column>
+          </el-table-column>
+          <el-table-column align="center"  label="联系方式">
+            <template scope='scope'>
+              <span>{{scope.row.contactsPhone}}</span>
+            </template></el-table-column>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -47,11 +74,8 @@
         showBindOrNoBindList:true,
         nowBtn:1,
         searchData:null,
-        tableData1:[],
-        tableData:[
-          // {companyName:"qwerqew",companyPlace:"fasdfsef",linkMan:"adfaf",phone:"1324141243"},
-
-        ]
+        tableDataNoRegist:[],
+        tableData:[]
       }
     },
     components: {
@@ -60,15 +84,16 @@
     created: function() {
       var that = this;
       that.getWaitBindUserList();
+      that.getNoRegistUserList();
     },
     methods: {
       getNoRegistUserList:function(){
         var that =this;
         that.global.axiosPostReq('/findCus/unregistered')
         .then((res) => {
-          console.log(res,"")
+          console.log(res,"getNoRegistUserList")
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData1 = res.data.data;
+            that.tableDataNoRegist = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -90,11 +115,11 @@
         var that = this;
         if(arg==1){
           that.nowBtn = true;
-          that.getWaitBindUserList();
+          // that.getWaitBindUserList();
           that.showBindOrNoBindList = true;
         }else{
           that.nowBtn = false;
-          that.getNoRegistUserList();
+
           that.showBindOrNoBindList = false;
         }
       },
@@ -117,7 +142,11 @@
         .then((res) => {
           console.log(res,"searchUserBySearchConet")
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData = res.data.data;
+            if(that.nowBtn){
+              that.tableData = res.data.data;
+            }else{
+              that.tableDataNoRegist = res.data.data;
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

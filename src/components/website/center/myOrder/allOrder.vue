@@ -43,6 +43,7 @@
       <div class="order_title">
         <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
+        <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
@@ -66,10 +67,10 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
+
           <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
+          <p class="cancelBtn" v-if="item.state!=1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
@@ -180,6 +181,7 @@
 
 <script>
   import paging0 from '../../brandLib/paging0'
+  import util from '../../../../common/util'
   export default {
     name: 'allOrder',
     data () {
@@ -305,6 +307,9 @@
            console.log(res,"getAllOrder");
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+            }
             if(that.items.length==0){
               that.no_order = true;
               that.order_table = false;
@@ -430,7 +435,11 @@
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.orderDetailsBtn{
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+}
 .orderDetails{
   width: 860px !important;
 }

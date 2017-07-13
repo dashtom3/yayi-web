@@ -19,6 +19,7 @@
       <div class="order_title">
         <span class="order_date">{{item.date}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
+        <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
@@ -158,6 +159,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.orderDetailsBtn{
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+}
   .left {
     float: left;
   }

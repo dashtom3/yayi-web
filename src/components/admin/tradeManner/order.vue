@@ -339,7 +339,7 @@
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.orderList[that.fahuoIndex].state = "3";
-              that.deliveryVisible = true;
+              that.deliveryVisible = false;
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

@@ -303,8 +303,6 @@
         that.getOneUserDetails(user.phone);
       },
       searchSalse:function(){
-        // bindSaleSearchType
-        // that.bindSaleSearchCont
         var that = this;
         var obj = {
           token:"111"
@@ -351,31 +349,29 @@
         //类型
         if(that.searchtype=="全部"){
           obj.type = "";
-        }else if(that.searchtype=="个人"){
+        }else if(that.searchtype=="选项2"){
           obj.type = 1;
-        }else if(that.searchtype=="机构"){
+        }else if(that.searchtype=="选项3"){
           obj.type = 2;
         }
         //是否绑定销售
         if(that.searchisBindSale=="全部"){
           obj.isBindSale = "";
-        }else if(that.searchisBindSale=="是"){
+        }else if(that.searchisBindSale=="选项2"){
           obj.isBindSale = 1;
-        }else if(that.searchisBindSale=="否"){
+        }else if(that.searchisBindSale=="选项3"){
           obj.isBindSale = 2;
         }
         if(!that.searchSaleName){
           that.searchSaleName = "";
         }
-        // console.log(obj)
+        // console.log(obj,"headSearchObj")
           that.global.axiosGetReq('/userManageList/userlist',obj)
           .then((res) => {
-            // console.log(res,"searchList")
+            console.log(res,"headSearchResult")
             if (res.data.callStatus === 'SUCCEED') {
               that.userList = res.data.data;
               //清空搜寻项目
-              // that.searchSaleName = "";
-              // that.searchUserContent = "";
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
