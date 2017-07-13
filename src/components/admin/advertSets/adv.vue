@@ -126,6 +126,9 @@
         	url: this.img_src
         })
       },
+      handlePreview(){
+        
+      },
       saveBtn(){
       	let params = {
       		advImg: this.img_src,

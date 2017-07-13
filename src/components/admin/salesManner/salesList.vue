@@ -30,7 +30,7 @@
     <!-- 绑定弹窗 -->
     <el-dialog :visible.sync="bindSalseAlert">
       <h4>当前已绑定人数（人）：<span>{{bindedUserList.length}}</span></h4>
-      <el-tabs v-model="activeName2" type="card">
+      <el-tabs v-model="activeName2" type="card" @tab-click="tabHandler">
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
             <el-form-item>
@@ -96,7 +96,6 @@
         <img :src="headImg" alt="头像" style="padding-right:50px;">
         <h3>个人资料</h3>
         <div>
-          <span>销售员编号：{{someOneUserDetails.info.saleId}}</span>
           <span>真实姓名：{{someOneUserDetails.info.trueName}}</span>
         </div>
         <div>
@@ -116,7 +115,7 @@
           <span>工作职位：{{someOneUserDetails.info.workPosition}}</span>
         </div>
         <div>
-          <span>所在地省市区：{{someOneUserDetails.info.part}}</span>
+          <span>所在地省市区：{{partFormate}}</span>
           <span>详细地址：{{someOneUserDetails.info.address}}</span>
         </div>
         <div>
@@ -160,16 +159,16 @@
       </el-table-column>
       <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
         <template scope="scope">
-          <span v-if="scope.row.isBindUser === 1">是</span>
-          <span v-else-if="scope.row.isBindUser === 2">否</span>
+          <span v-if="scope.row.bindUserNum">是</span>
+          <span v-else-if="!scope.row.bindUserNum">否</span>
         </template>
       </el-table-column>
       <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
-            <el-button v-if="scope.row.isBindUser=='2'" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
-            <el-button v-else type="text"  v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
-            <el-button type="text"   v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
+            <el-button v-if="scope.row.bindUserNum===0" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
+            <el-button v-else type="text" v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
+            <el-button type="text" v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,9 +232,17 @@
           
         },
         deep:true
+      },
+      bindSalseAlert: function(){
+        if(!this.bindSalseAlert){
+          this.queryHandler()
+        }
       }
     },
     computed: {
+      partFormate: function(){
+        return this.someOneUserDetails.info.part && this.someOneUserDetails.info.part.split(',').join('/')
+      },
       sexShow: function(){
         return this.someOneUserDetails.info.sex === 2 ? '女' : '男'
       },
@@ -250,6 +257,13 @@
       this.queryHandler()
     },
     methods: {
+      tabHandler(tab, event){
+        if(tab.name === 'first'){
+          this.noBindSearch()
+        }else if(tab.name === 'second'){
+          this.BindSearch()
+        }
+      },
       fillZero: function(n){
         return n<10 ? '0'+ n: n 
       },
@@ -257,7 +271,7 @@
         this.searchUserType = key;
         this.searchUserContent = '';
       },
-      selectOption(){
+      selectOption(key){
         this.noBindSearchType = key;
         this.noBindSearchContent = '';
       },
@@ -326,11 +340,9 @@
             isBind: 2
           }
         }
-        console.log('查询已绑定用户',params)
         global.axiosGetReq('/saleList/userlist',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.bindedUserList = res.data.data
-            console.log(res.data.data)
           }
         })
         this.BindSearchContent = null;//清空搜索内容
@@ -364,30 +376,13 @@
             isBind: 1
           }
         }
-        console.log('查询未绑定用户',params)
         global.axiosGetReq('/saleList/userlist',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.noBindUserList = res.data.data
-            console.log(res.data.data)
           }
         })
         this.noBindSearchContent = null;//清空搜索内容
       },
-      // headSearch:function(){
-      //   var that = this;
-      //   var searchObj = {
-      //     searchUserType:that.searchUserType,
-      //     searchState:that.searchState
-      //   };
-      //   if(that.searchUserContent){
-      //     searchObj.searchUserContent = that.searchUserContent;
-
-
-      //     that.searchUserContent = null;//清空搜索内容
-      //   }else{
-      //     this.$alert("请输入搜索内容", {confirmButtonText: '确定！'});
-      //   }
-      // },
       bindAlertSearch:function(){
         var that = this;
         if(that.multipleSelection1.length==0){
@@ -475,7 +470,6 @@
           currentPage: this.d_pageProps.pageNum,
           numberPerPage: 10
         }
-        console.log('查看销售员详情',params)
         global.axiosGetReq('/saleList/detail',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.someOneUserDetails.info = res.data.data
@@ -487,7 +481,6 @@
               accountNumber: res.data.data.accountNumber
             }
             this.headImg = res.data.data.salePic
-            console.log(res.data.data)
           }
         })
       }
