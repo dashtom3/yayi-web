@@ -698,20 +698,32 @@
       submit_order: function() {
         var that = this;
         for (var i = 0; i < that.orderItem.length; i++) {
-          that.orderItem[i].itemName = that.orderItem[i].name
-          that.orderItem[i].picPath = that.orderItem[i].pic
+          // that.orderItem[i].itemName = that.orderItem[i].name
+          // that.orderItem[i].picPath = that.orderItem[i].pic
           delete that.orderItem[i].name
           delete that.orderItem[i].pic
           delete that.orderItem[i].userId
-          // delete that.orderItem[i].updated
-          // delete that.orderItem[i].totalMoney
-          // delete that.orderItem[i].itemPropertyNamea
-          // delete that.orderItem[i].itemPropertyNameb
-          // delete that.orderItem[i].itemPropertyNamec
+          delete that.orderItem[i].updated
+          delete that.orderItem[i].totalMoney
+          delete that.orderItem[i].itemPropertyNamea
+          delete that.orderItem[i].itemPropertyNameb
+          delete that.orderItem[i].itemPropertyNamec
           delete that.orderItem[i].cartId
-          // delete that.orderItem[i].checked
+          delete that.orderItem[i].checked
           delete that.orderItem[i].created
-          // delete that.orderItem[i].goodLeaveNum
+          delete that.orderItem[i].goodLeaveNum
+          delete that.orderItem[i].itemPropertyName
+          delete that.orderItem[i].itemPropertyInfo
+          delete that.orderItem[i].itemPropertyNameTwo
+          delete that.orderItem[i].itemPropertyTwoValue
+          delete that.orderItem[i].itemPropertyNameThree
+          delete that.orderItem[i].itemPropertyThreeValue
+          delete that.orderItem[i].itemPropertyFourName
+          delete that.orderItem[i].itemPropertyFourValue
+          delete that.orderItem[i].itemPropertyFiveName
+          delete that.orderItem[i].itemPropertyFiveValue
+          delete that.orderItem[i].itemPropertySixName
+          delete that.orderItem[i].itemPropertySixValue
         }
         // console.log(that.orderItem,'ll')
         var orderItem = JSON.stringify(that.orderItem)

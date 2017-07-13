@@ -120,7 +120,7 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="tiny">
+      size="small">
       <div style="margin:0 auto;width:460px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
@@ -140,11 +140,11 @@
           </el-form-item>
           <el-form-item label="验证码：" style="padding-left:14px;">
             <el-input v-model="rg_code" class="item_c_input fl"></el-input>
-            <button class="btn_col" @click="hasYzm(withDrawPhone)" v-if="hYzm">{{Yzm}}</button>
-            <button class="btn_col" style="background-color: #C8C8C8;" disabled v-else>{{Yzm1}}</button>
-            <transition name="shake">
+            <button v-if="hYzm" class="btn_col" @click="hasYzm()">{{Yzm}}</button>
+            <button v-else class="btn_col" style="background-color: #C8C8C8;" disabled>{{Yzm1}}</button>
+<!--             <transition name="shake">
               <p v-show="msCode_alert" class="error">请输入正确的验证码!</p>
-            </transition>
+            </transition> -->
           </el-form-item>
         </el-form>
         <div>
@@ -247,7 +247,8 @@
     methods: {
       // 获取验证码
       hasYzm: function() {
-        debugger
+        //debugger
+        ev.cancelBubble = false
         var that = this;
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
@@ -256,8 +257,7 @@
           return false
         } else {
           var obj = { phone: that.withDrawPhone }
-          that.global.axiosPostReq('/witManage/gitVcode', obj)
-          .then((res) => {
+          that.global.axiosPostReq('/witManage/gitVcode', obj).then((res) => {
             console.log('验证码',res)
             if (res.data.callStatus === 'SUCCEED') {
               for(let i=0; i<=60; i++) {

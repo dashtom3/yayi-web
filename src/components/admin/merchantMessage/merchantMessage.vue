@@ -382,7 +382,9 @@
       //预览商品
       preview: function(scope) {
         var that = this;
-        window.open('http://47.93.48.111:85/details/' + scope.row.itemId)
+      // that.$router.push({path: '/details/' + item.itemId})
+      // window.scroll(0,0);
+        window.open('/preview/' + scope.row.itemId)
       },
       //商品属性详情
       detail: function(scope) {

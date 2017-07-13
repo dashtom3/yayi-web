@@ -1,15 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/website/index/index'
-import details from '@/components/website/details/details'
-import brandLib from '@/components/website/brandLib/brandLib'
-import center from '@/components/website/center/center'
-import gwc from '@/components/website/gwc/gwc'
-import suborder from '@/components/website/gwc/suborder'
-import pay from '@/components/website/gwc/pay'
-import paySuccess from '@/components/website/gwc/paySuccess'
-import payFail from '@/components/website/gwc/payFail'
-
+const Details = resolve => require(['@/components/website/details/details'], resolve)
+const BrandLib = resolve => require(['@/components/website/brandLib/brandLib'], resolve)
+const Center = resolve => require(['@/components/website/center/center'], resolve)
+const Gwc = resolve => require(['@/components/website/gwc/gwc'], resolve)
+const Suborder = resolve => require(['@/components/website/gwc/suborder'], resolve)
+const Pay = resolve => require(['@/components/website/gwc/pay'], resolve)
 // 创客系统
 import salesIndex from '@/components/salesman/index/index'
 import salesLog from '@/components/salesman/logIn/logIn'
@@ -62,11 +59,9 @@ import dataStatis_elecSuppStatis from '@/components/admin/dataStatis/elecSuppSta
 import dataStatis_salesStatis from '@/components/admin/dataStatis/salesStatis'
 
 
-
-
-
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/admin/Login'], resolve)
+const Preview = resolve => require(['@/components/website/details/details'], resolve)
 
 Vue.use(Router)
 
@@ -82,47 +77,43 @@ let router = new Router({
 	{
 		path: '/center',
 	  name: 'center',
-    component: resolve => require(['@/components/website/center/center.vue'], resolve)
-		// component: center,
+    component: Center
 	},
 	{
 		path: '/details/:goodId',
 		name: 'details',
-    component: resolve => require(['@/components/website/details/details.vue'], resolve)
-		//component: details,
+    component: Details,
 	},
+  {
+    path: '/preview/:goodId',
+    component: Preview,
+  },
 	{
 		path: '/brandLib/:classifyIdAndbrandId',
 		name: 'brandLib',
-    component: resolve => require(['@/components/website/brandLib/brandLib.vue'], resolve)
-		//component: brandLib,
+    component: BrandLib,
 	},
 	{
 		path: '/gwc',
 		name: 'gwc',
-    component: resolve => require(['@/components/website/gwc/gwc.vue'], resolve)
-		//component: gwc,
+    component: Gwc,
 	},
 	{
 		path: '/suborder',
 		name: 'suborder',
-    component: resolve => require(['@/components/website/gwc/suborder.vue'], resolve)
-		//component: suborder,
+    component: Suborder,
 	},
 	{
 		path: '/pay',
 		name: 'pay',
-    component: resolve => require(['@/components/website/gwc/pay.vue'], resolve)
-		//component: pay,
+    component: Pay,
 	},
   {
     path: '/paySuccess',
-    name: 'paySuccess',
     component: resolve => require(['@/components/website/gwc/paySuccess.vue'], resolve)
   },
   {
     path: '/payFail',
-    name: 'payFail',
     component: resolve => require(['@/components/website/gwc/payFail.vue'], resolve)
   },
 	//后台管理router
@@ -141,11 +132,7 @@ let router = new Router({
       leaf: true, // 只有一个节点
       menuShow: true,
       iconCls: 'iconfont icon-home', // 图标样式class
-      // children: [
-      //   {path: '/admin/dashboard', component: Dashboard, name: '首页', menuShow: true}
-      // ]
     },
-
 		{
       path: '/admin/bsseInfoManner/attr',
       component: resolve => require(['@/components/admin/Home.vue'], resolve),
