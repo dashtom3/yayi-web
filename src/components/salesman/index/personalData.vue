@@ -38,7 +38,7 @@
               </ul>
             </div>
             <div class="oneLineInfo">
-              <span class="infoLeft"><span class="infoName">所在地省市区：</span>{{personalData.part}}</span>
+              <span class="infoLeft"><span class="infoName">所在地省市区：</span>{{partFormate}}</span>
             </div>
             <div class="oneLineInfo">
               <span class="infoLeft"><span class="infoName">详细地址：</span>{{personalData.address}}</span>
@@ -118,13 +118,13 @@
           <div v-if="getMoneySet">
             <div class="baseInfo">
               <span class="info1">
-                <span class="infoName">类型：</span>{{bindGetMoneyCount.type}}
+                <span class="infoName">类型：</span><span>{{bindGetMoneyCount.type}}</span>
               </span>
               <span class="info2">
-                <span class="infoName">开户者：</span>{{bindGetMoneyCount.userName}}
+                <span class="infoName">开户者：</span><span>{{bindGetMoneyCount.userName}}</span>
               </span>
               <span class="info3">
-                <span class="infoName">{{bindGetMoneyCount.type}}：</span>{{bindGetMoneyCount.count}}
+                <span class="infoName">{{bindGetMoneyCount.type}}：</span><span>{{bindGetMoneyCount.count}}</span>
               </span>
             </div>
             <div class="setBtnWrap">
@@ -134,23 +134,23 @@
           <div v-else>
             <div class="editSetGetMoney">
               <el-form :label-position="lablePosi"  label-width="150px"  :model="getMoneyData" :rules="getMoneyDataRule" ref="getMoneyData">
+                <el-form-item label="开户者：" prop="name">
+                  <el-input v-model="getMoneyData.name"></el-input>
+                </el-form-item>
                 <el-form-item label="类型：" prop="type">
-                  <el-select v-model="getMoneyData.type" @change="selectOpt">
+                  <el-select v-model="typeValue" placeholder="请选择" @change="changeHandler">
                     <el-option
-                      v-for="item in optSelect"
+                      v-for="item in options"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="开户者：" prop="name">
-                  <el-input v-model="getMoneyData.name"></el-input>
-                </el-form-item>
-                <el-form-item v-if="getMoneyData.type!=='支付宝'" label="银行：" prop="bandName">
+                <el-form-item v-if="typeValue!=='支付宝'" label="银行：" prop="bandName">
                   <el-input v-model="getMoneyData.bandName"></el-input>
                 </el-form-item>
-                <el-form-item v-if="getMoneyData.type!=='支付宝'" label="银行账号：" prop="bandCounet">
+                <el-form-item v-if="typeValue!=='支付宝'" label="银行卡账号：" prop="bandCounet">
                   <el-input v-model="getMoneyData.bandCounet"></el-input>
                 </el-form-item>
                 <el-form-item v-else label="支付宝账号：" prop="zhifubaoCounet">
@@ -175,13 +175,14 @@
     name: 'personalData',
     data () {
       return {
-        optSelect: [{
+        options: [{
+          value: '银行卡',
+          label: '银行卡'
+        }, {
           value: '支付宝',
           label: '支付宝'
-        }, {
-          value: '银行',
-          label: '银行'
         }],
+        typeValue: '',
         lablePosi:"right",
         showPane:1,
         showDefaultData:true,
@@ -191,11 +192,15 @@
         qiNiuUrl: global.qiNiuUrl,
         bindGetMoneyCount:{},
         getMoneyData:{
+          name: '',
+          bandName: '',
+          bandCounet: '',
+          zhifubaoCounet: ''
         },
         getMoneyDataRule:{
           name:{ required: true, message: '请填写真实姓名', trigger: 'change' },
-          bandCounet:{required: true, message: '请填写银行账号', trigger: 'change'},
-          bandName:{required: true, message: '请填写支银行名称', trigger: 'change'},
+          bandCounet:{required: true, message: '请填写银行卡账号', trigger: 'change'},
+          bandName:{required: true, message: '请填写银行名称', trigger: 'change'},
           zhifubaoCounet:{required: true, message: '请填写支付宝账号', trigger: 'change'}
         },
         personalData:{},
@@ -216,6 +221,9 @@
       }
     },
     computed: {
+      partFormate: function(){
+        return this.personalData.part && this.personalData.part.join('/')
+      },
       sexShow: function(){
         return this.personalData.sex === 2 ? '女' : '男'
       },
@@ -238,9 +246,14 @@
       this.queryPersonInfo()
     },
     methods: {
-      selectOpt(key){
-        console.log(key)
-        this.getMoneyData.type = key
+      changeHandler: function(key){
+        if(key === '支付宝'){
+          this.getMoneyData.zhifubaoCounet = ''
+        }else if(key === '银行卡'){
+          this.getMoneyData.bandCounet = ''
+          this.getMoneyData.bandName = ''
+        }
+        
       },
       fillZero: function(n){
         return n<10 ? '0'+ n: n 
@@ -264,30 +277,30 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             let params
-            if(this.getMoneyData.type === '支付宝'){
+            if(this.typeValue === '支付宝'){
               params = {
                 postalType: '支付宝',
                 openName: this.getMoneyData.name,
                 accountNumber: this.getMoneyData.zhifubaoCounet,
                 token: global.getSalesToken()
               }
-            }else if(this.getMoneyData.type === '银行'){
+            }else if(this.typeValue === '银行卡'){
               params = {
-                postalType: '银行',
+                postalType: '银行卡',
                 bankName: this.getMoneyData.bandName,
                 openName: this.getMoneyData.name,
                 accountNumber: this.getMoneyData.bandCounet,
                 token: global.getSalesToken()
               }
             }
+            console.log('提现设置',params)
             global.axiosPostReq('/saleInfo/updatePostal',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({
                   message: '设置成功',
                   type: 'success'
                 });
-                that.queryPersonInfo();
-
+                this.queryPersonInfo()
                 that.getMoneySet = true;
               }
             })
@@ -300,20 +313,12 @@
       },
       setGetMoney:function(){
         var that = this;
-        if(this.personalData.postalType === '支付宝'){
-          this.getMoneyData.type = this.personalData.postalType
-          this.getMoneyData.name = this.personalData.openName
-          this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
-        }else if(this.personalData.postalType === '银行'){
-          this.getMoneyData.type = this.personalData.postalType
-          this.getMoneyData.name = this.personalData.openName
-          this.getMoneyData.bandCounet = this.personalData.accountNumber
-          this.getMoneyData.bandName = this.personalData.bankName
-        }else{
-          this.getMoneyData.type = '支付宝'
-          this.getMoneyData.name = this.personalData.openName
-          this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
-        }
+        this.getMoneyData.type = this.personalData.postalType
+        this.typeValue = this.personalData.postalType
+        this.getMoneyData.name = this.personalData.openName
+        this.getMoneyData.zhifubaoCounet = this.personalData.accountNumber
+        this.getMoneyData.bandCounet = this.personalData.accountNumber
+        this.getMoneyData.bandName = this.personalData.bankName
         that.getMoneySet = false;
       },
       goToEditData:function(){

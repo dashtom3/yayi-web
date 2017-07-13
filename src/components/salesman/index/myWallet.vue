@@ -120,7 +120,7 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="small">
+      size="tiny">
       <div style="margin:0 auto;width:460px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
@@ -134,18 +134,13 @@
           </el-form-item>
           <el-form-item label="手机号：" style="padding-left:14px;">
             <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
-            <transition name="shake">
-              <p v-show="msPhone_alert" class="error">请输入正确的手机号!</p>
-            </transition>
           </el-form-item>
-          <el-form-item label="验证码：" style="padding-left:14px;">
-            <el-input v-model="rg_code" class="item_c_input fl"></el-input>
-            <button v-if="hYzm" class="btn_col" @click="hasYzm()">{{Yzm}}</button>
+          <div style="margin-bottom:16px;">
+            <span class="fl" style="padding-left:15px;">验证码：</span>
+            <el-input v-model="rg_code" class="item_c_input fl" style="margin-left:12px;"></el-input>
+            <button v-if="hYzm" class="btn_col" @click.prevent="hasYzm()">{{Yzm}}</button>
             <button v-else class="btn_col" style="background-color: #C8C8C8;" disabled>{{Yzm1}}</button>
-<!--             <transition name="shake">
-              <p v-show="msCode_alert" class="error">请输入正确的验证码!</p>
-            </transition> -->
-          </el-form-item>
+          </div>
         </el-form>
         <div>
           <button class="withDrawBtn btn_col" @click="applyHandler">申请提现</button>
@@ -210,8 +205,6 @@
         Yzm1: '',
         Yzm: '获取验证码',
         postalType: '',
-        msPhone_alert: false,
-        msCode_alert: false,
         trueName: '',
         bankNo: '',
         infoList: []
@@ -227,28 +220,9 @@
       that.getMyWallet();
       console.log(that.toMySon,'son')
     },
-    watch: {
-      //监听短信登录手机号验证
-      withDrawPhone: function() {
-        var that = this;
-        var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
-        if (that.withDrawPhone !== '' && mb.test(that.withDrawPhone)) {
-          that.msPhone_alert = false;
-        }
-      },
-      //监听注册页验证码验证
-      rg_code: function() {
-        var that = this;
-        if (that.rg_code !== '' && that.rg_code.length >= 6) {
-          that.msPhone_alert = false;
-        }
-      },
-    },
     methods: {
       // 获取验证码
       hasYzm: function() {
-        //debugger
-        ev.cancelBubble = false
         var that = this;
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
@@ -258,7 +232,6 @@
         } else {
           var obj = { phone: that.withDrawPhone }
           that.global.axiosPostReq('/witManage/gitVcode', obj).then((res) => {
-            console.log('验证码',res)
             if (res.data.callStatus === 'SUCCEED') {
               for(let i=0; i<=60; i++) {
                 window.setTimeout(function(){
@@ -382,8 +355,7 @@
         this.detailVisible = true
       },
       withDrawHandler(){
-        console.log(this.postalType)
-        if(this.postalType ==='银行'){
+        if(this.postalType ==='银行卡'){
           this.withDrawBank = true
         }else if(this.postalType ==='支付宝'){
           this.withDrawBank = true
@@ -401,12 +373,17 @@
           anumber: this.withDrawAccount,
           vCode: this.rg_code
         }
-        global.axiosPostReq('/witManage/submitWit',obj).then((res) => {
+        //验证提现金额
+        if(this.withDrawAccount <= 0 || this.withDrawAccount){
+          this.$message.error('请输入正确的金额');
+          return false
+        }
+        global.axiosPostReq('/witManage/submitWit',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.$message({
-              type: 'success',
-              message: '提现成功!'
-            });
+            this.statTip = true
+            this.withDrawAccount = ''
+            this.withDrawPhone = ''
+            this.rg_code = ''
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
