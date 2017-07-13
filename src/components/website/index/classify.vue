@@ -74,7 +74,6 @@
         that.$router.push({
           path:"/brandLib/0-0-0AND"+id,
         });
-        that.$router.go(0);
         window.scroll(0,0);
       },
         getAllBrandList:function(){

@@ -207,7 +207,7 @@ export default {
     goToThisBrand:function(id){
       var that = this;
       that.$router.push({
-        path:"/brandLib/1AND"+id,
+        path:"/brandLib/0-0-0AND"+id,
       });
     },
     prev() {
