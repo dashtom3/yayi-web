@@ -19,6 +19,7 @@
       <div class="order_title">
         <span class="order_date">{{item.date}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
+        <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
@@ -44,7 +45,6 @@
         <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
         <div class="left operate_des" v-if="item.state!==0">
           <!-- <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p> -->
-          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
@@ -151,6 +151,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.orderDetailsBtn{
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+}
 .waitSend{
   margin-top: 30px;
   border: 1px solid #d7d7d7;
