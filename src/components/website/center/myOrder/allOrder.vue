@@ -419,6 +419,14 @@
           that.dialogVisibleComment = true;
         }else if(item.state == 1){
           // 支付
+          var orderD = {
+            OrderId: item.orderId,
+            giveQbNum: item.giveQb,
+            itemSum: '',
+            postFee: item.postFee,
+            sumPrice: item.actualPay,
+          }
+          window.sessionStorage.setItem('order', JSON.stringify(orderD))
           that.$router.push({ path:'/pay' });
         }else if(item.state == 3){
           // 确认收货

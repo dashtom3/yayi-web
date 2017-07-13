@@ -7,26 +7,31 @@ const Center = resolve => require(['@/components/website/center/center'], resolv
 const Gwc = resolve => require(['@/components/website/gwc/gwc'], resolve)
 const Suborder = resolve => require(['@/components/website/gwc/suborder'], resolve)
 const Pay = resolve => require(['@/components/website/gwc/pay'], resolve)
+const PaySuccess =resolve => require(['@/components/website/gwc/paySuccess.vue'], resolve)
+const PayFail =resolve => require(['@/components/website/gwc/payFail.vue'], resolve)
+const Preview = resolve => require(['@/components/website/details/details'], resolve)
+
 // 创客系统
-import salesIndex from '@/components/salesman/index/index'
-import salesLog from '@/components/salesman/logIn/logIn'
+const SalesIndex = resolve => require(['@/components/salesman/index/index'], resolve)
+const SalesLog = resolve => require(['@/components/salesman/logIn/logIn'], resolve)
 
 //后台管理
-import Home from '@/components/admin/Home'
+const Home = resolve => require(['@/components/admin/Home'], resolve)
+const Login = resolve => require(['@/components/admin/Login'], resolve)
 
 // 商品基础资料管理
-import bsseInfoManner_attr from '@/components/admin/bsseInfoManner/attr'
-import bsseInfoManner_brand from '@/components/admin/bsseInfoManner/brand'
-import bsseInfoManner_classfy from '@/components/admin/bsseInfoManner/classfy'
+const BsseInfoManner_attr =resolve => require(['@/components/admin/bsseInfoManner/attr'], resolve)
+const BsseInfoManner_brand =resolve => require(['@/components/admin/bsseInfoManner/brand'], resolve)
+const BsseInfoManner_classfy = resolve => require(['@/components/admin/bsseInfoManner/classfy'], resolve)
 
 // 商品信息管理
-import merchantMessage from '@/components/admin/merchantMessage/merchantMessage'
-import addMerchandise from '@/components/admin/merchantMessage/addMerchandise'
-import secondStep from '@/components/admin/merchantMessage/secondStep'
+const MerchantMessage =resolve => require(['@/components/admin/merchantMessage/merchantMessage'], resolve)
+const AddMerchandise =resolve => require(['@/components/admin/merchantMessage/addMerchandise'], resolve)
+const SecondStep = resolve => require(['@/components/admin/merchantMessage/secondStep'], resolve)
 
 //交易管理
-import tradeManner_order from '@/components/admin/tradeManner/order'
-import tradeManner_evaluate from '@/components/admin/tradeManner/evaluate'
+const TradeManner_order =resolve => require(['@/components/admin/tradeManner/order'], resolve)
+const TradeManner_evaluate = resolve => require(['@/components/admin/tradeManner/evaluate'], resolve)
 
 // 用户管理
 import userManner_userList from '@/components/admin/userManner/userList'
@@ -60,8 +65,6 @@ import dataStatis_salesStatis from '@/components/admin/dataStatis/salesStatis'
 
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
-const Login = resolve => require(['@/components/admin/Login'], resolve)
-const Preview = resolve => require(['@/components/website/details/details'], resolve)
 
 Vue.use(Router)
 
@@ -110,24 +113,22 @@ let router = new Router({
 	},
   {
     path: '/paySuccess',
-    component: resolve => require(['@/components/website/gwc/paySuccess.vue'], resolve)
+    component: PaySuccess,
   },
   {
     path: '/payFail',
-    component: resolve => require(['@/components/website/gwc/payFail.vue'], resolve)
+    component: PayFail,
   },
 	//后台管理router
     {
       path: '/admin/login',
       name: '登录',
-      component: resolve => require(['@/components/admin/Login.vue'], resolve)
-      // component: Login
+      component: Login
     },
     {
       path: '/admin',
       name: 'home',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       redirect: '/admin/login',
       leaf: true, // 只有一个节点
       menuShow: true,
@@ -135,49 +136,45 @@ let router = new Router({
     },
 		{
       path: '/admin/bsseInfoManner/attr',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '商品基础资料管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-books', // 图标样式class
       children: [
-        {path: '/admin/bsseInfoManner/attr', component: bsseInfoManner_attr, name: '商品属性管理', menuShow: true},
-				{path: '/admin/bsseInfoManner/classfy', component: bsseInfoManner_classfy, name: '商品分类管理', menuShow: true},
-				{path: '/admin/bsseInfoManner/brand', component: bsseInfoManner_brand, name: '商品品牌管理', menuShow: true}
+        {path: '/admin/bsseInfoManner/attr', component: BsseInfoManner_attr, name: '商品属性管理', menuShow: true},
+				{path: '/admin/bsseInfoManner/classfy', component: BsseInfoManner_classfy, name: '商品分类管理', menuShow: true},
+				{path: '/admin/bsseInfoManner/brand', component: BsseInfoManner_brand, name: '商品品牌管理', menuShow: true}
       ]
     },
     {
       path: '/',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '商品信息管理',
       menuShow: true,
       leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-books', // 图标样式class
       children: [
-        {path: '/admin/merchantMessage', component: merchantMessage, name: '商品信息管理', menuShow: true},
-        {path: '/admin/addMerchandise', component: addMerchandise, name: 'addMerchandise', menuShow: true},
-        {path: '/admin/secondStep', component: secondStep, name: 'secondStep', menuShow: true},
+        {path: '/admin/merchantMessage', component: MerchantMessage, name: '商品信息管理', menuShow: true},
+        {path: '/admin/addMerchandise', component: AddMerchandise, name: 'addMerchandise', menuShow: true},
+        {path: '/admin/secondStep', component: SecondStep, name: 'secondStep', menuShow: true},
       ]
     },
     {
       path: '/tradeManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '交易管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-menuunfold', // 图标样式class
       children: [
-        {path: '/admin/tradeManner/order', component: tradeManner_order, name: '订单管理', menuShow: true},
-        {path: '/admin/tradeManner/evaluate', component: tradeManner_evaluate, name: '评价管理', menuShow: true}
+        {path: '/admin/tradeManner/order', component: TradeManner_order, name: '订单管理', menuShow: true},
+        {path: '/admin/tradeManner/evaluate', component: TradeManner_evaluate, name: '评价管理', menuShow: true}
       ]
     },
 		{
       path: '/userManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '用户管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -190,8 +187,7 @@ let router = new Router({
     },
 		{
       path: '/salesManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '销售员管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -205,8 +201,7 @@ let router = new Router({
     },
     {
       path: '/advertSets',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '广告设置',
       menuShow: true,
       leaf: true, // 只有一个节点
@@ -217,8 +212,7 @@ let router = new Router({
     },
     {
       path: '/videoManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '视频管理',
       menuShow: true,
       leaf: true, // 只有一个节点
@@ -229,8 +223,7 @@ let router = new Router({
     },
 		{
       path: '/freightManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '运费管理',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -241,8 +234,7 @@ let router = new Router({
     },
     {
       path: '/dataStatis',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '数据统计',
       menuShow: true,
       //leaf: true, // 只有一个节点
@@ -255,8 +247,7 @@ let router = new Router({
     },
     {
       path: '/adminManner',
-      component: resolve => require(['@/components/admin/Home.vue'], resolve),
-      //component: Home,
+      component: Home,
       name: '系统管理',
       menuShow: true,
       // leaf: true, // 只有一个节点
@@ -269,15 +260,13 @@ let router = new Router({
     //创客系统
 		{
 			path: '/salesIndex',
-			name: 'salesIndex',
-      component: resolve => require(['@/components/salesman/index/index.vue'], resolve)
-			//component: salesIndex,
+			name: 'salesIndex', 
+			component: SalesIndex,
 		},
     {
       path: '/salesLog',
       name: 'salesLog',
-      component: resolve => require(['@/components/salesman/logIn/logIn.vue'], resolve)
-      //component: salesLog,
+      component: SalesLog,
     },
 	],
 })

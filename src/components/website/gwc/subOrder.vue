@@ -556,6 +556,7 @@
           that.global.axiosGetReq('/shoppingAdress/deleteShippingAddress', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.getMyAdd();
+              that.freight = 0;
               that.$message(res.data.msg);
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -697,6 +698,10 @@
       // 提交订单按钮
       submit_order: function() {
         var that = this;
+        if (that.receiverId == '') {
+          that.$message.error('请选择一个收货地址！');
+          return false
+        }
         for (var i = 0; i < that.orderItem.length; i++) {
           // that.orderItem[i].itemName = that.orderItem[i].name
           // that.orderItem[i].picPath = that.orderItem[i].pic

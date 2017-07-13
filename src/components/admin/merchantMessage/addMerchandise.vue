@@ -21,9 +21,9 @@
         <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.type" change-on-select>
         </el-cascader>
       </el-form-item>
-      <el-form-item label="品牌名称" prop="itemBrandName">
-        <el-select v-model="ruleForm.itemBrand" placeholder="请选择" @change="getBrandId">
-          <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand">
+      <el-form-item label="品牌名称" prop="itemBrandId">
+        <el-select v-model="ruleForm.itemBrandId" placeholder="请选择">
+          <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand.itemBrandId">
           </el-option>
         </el-select>
       </el-form-item>
@@ -171,8 +171,8 @@
           oneClassify: '', //商品一级分类
           twoClassify: '', //商品二级分类
           threeClassify: '', //商品三级分类
-          itemBrand: '',
-          itemBrandName: '', //品牌名称
+          // itemBrand: '',
+          // itemBrandName: '', //品牌名称
           itemBrandId: '', //商品品牌ID
           registerId:'', //商品注册证号
           isThrow: '', //是否推荐
@@ -188,7 +188,7 @@
           type: [
             { type: 'array', required: true, message: '请选择商品分类', trigger: 'blur' }
           ],
-          itemBrandName: [
+          itemBrandId: [
             { required: true, message: '请选择品牌名称', trigger: 'blur' }
           ],
           itemSort: [
@@ -280,17 +280,25 @@
           that.ruleForm.twoClassify = that.editCargo.twoClassify;
           that.ruleForm.threeClassify = that.editCargo.threeClassify;
           that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
-          that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
-          that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
+          // that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
+          // that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
           that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
           that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
+          that.ruleForm.isThrow = that.editCargo.itemDetail.isThrow;
         } else {
           that.getItemId();
           that.getAllClassify();
           that.getAllProperty();
         }
       } else {
+        // if (that.$route.params.ruleForm.itemBrand.itemBrandName == undefined) {
+        //   that.ruleForm.itemBrand = that.ruleForm.itemBrandName
+        // }
         that.ruleForm = that.$route.params.ruleForm
+        that.ruleForm.isThrow = String(that.$route.params.ruleForm.isThrow)
+        that.getAllClassify();
+        that.getAllProperty();
+        console.log(that.ruleForm,'kk')
       }
       
       // console.log(that.ruleForm);
@@ -350,11 +358,11 @@
         })
       },
       // 获取商品品牌ID
-      getBrandId: function(key) {
-        var that = this;
-        that.ruleForm.itemBrandId = parseInt(key.itemBrandId);
-        that.ruleForm.itemBrandName = key.itemBrandName;
-      },
+      // getBrandId: function(key) {
+      //   var that = this;
+      //   that.ruleForm.itemBrandId = parseInt(key.itemBrandId);
+      //   that.ruleForm.itemBrandName = key.itemBrandName;
+      // },
       //返回商品列表
       retrunList: function() {
         var that = this
@@ -610,9 +618,6 @@ td {
   border-bottom: 1px solid #eaeaea;
   margin-bottom: 20px;
 }
-/*.choose_des {
-  margin-top: 15px;
-}*/
 .btn_box {
   margin-top: 20px;
   text-align: right;

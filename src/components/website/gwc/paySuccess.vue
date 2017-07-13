@@ -29,6 +29,10 @@
       publicHeader,
       publicFooter,
     },
+    created: function() {
+      var that = this;
+      window.sessionStorage.removeItem('order');
+    },
     mounted() {
       var kk = this.$refs.contentHeight;
       var wh = document.body.scrollHeight;
