@@ -28,7 +28,6 @@
     name: 'payFail',
     data () {
       return {
-        //goods: [],
       }
     },
     components: {

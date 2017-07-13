@@ -21,8 +21,8 @@
             <div class="cargo_box" v-for="item in items" :key="item">
               <img class="cargo_sm" :src=item.pic alt="img" @click="gotoDetails(item)">
               <div class="cargo_des" @click="gotoDetails(item)">{{item.name}}</div>
-              <div class="cargo_price" @click="gotoDetails(item)">￥{{item.price}}</div>
-              <div class="cargo_num" @click="gotoDetails(item)">{{item.num}}盒</div>
+              <div class="cargo_price" @click="gotoDetails(item)">￥{{item.price}}*{{item.num}}</div>
+              <div class="cargo_num" @click="gotoDetails(item)">{{item.itemPropertyInfo+';'}}{{item.itemPropertyTwoValue+';'}}{{item.itemPropertyThreeValue+';'}}{{item.itemPropertyFourValue+';'}}{{item.itemPropertyFiveValue+';'}}{{item.itemPropertySixValue}}</div>
               <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
@@ -557,7 +557,7 @@
               }
               that.total_num = sum;
               that.total_price = sumPrice;
-              //console.log(res.data.data);
+              console.log(res.data.data,'ppppp');
               return false
             }
           } else {

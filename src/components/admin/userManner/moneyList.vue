@@ -55,7 +55,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
@@ -101,7 +101,7 @@
       pageHandler:function(data){
         var that = this
         that.pageProps.pageNum = data
-        that.getClassify()
+        // that.getClassify()
       },
       //获取用户钱币列表
       getClassify: function() {
@@ -111,7 +111,7 @@
           startDate: '',
           endDate: '',
           currentPage: that.pageProps.pageNum,
-          numberPerPage: 6,
+          numberPerPage: 10,
           token: ''
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
@@ -134,14 +134,16 @@
             phone: that.searchUserId,
             startDate: '',
             endDate: '',
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
             token: ''
           }
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
-            // console.log(res.data);
             if (res.data.callStatus === 'SUCCEED') {
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
+              that.pageProps.totalPage = res.data.totalPage
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
@@ -157,13 +159,17 @@
             phone: that.searchUserId,
             startDate: startDate,
             endDate: endDate,
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
             token: ''
           }
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
+              console.log(res.data);
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
+              that.pageProps.totalPage = res.data.totalPage
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
@@ -240,7 +246,16 @@
 </script>
 
 <style>
-    .moneyWrap .el-select .el-input {
+  .moneyWrap .el-select .el-input {
     min-width: 110px;
+  }
+  .pageC {
+    text-align: center;
+    margin-top: 20px; 
+    position: fixed; 
+    bottom: 50px; 
+    right: 20px; 
+/*    left: 0px; 
+    margin: 0 auto;*/
   }
 </style>
