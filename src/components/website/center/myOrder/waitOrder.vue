@@ -45,9 +45,11 @@
         <div class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="cancelBtn" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
+    <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
       <div class="">
         <p>收货信息：</p>
@@ -68,7 +70,7 @@
           <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
             <!--  订单详情item 开始 -->
             <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
-              <div class="left des_img" style="width:81px;height:85px;">
+              <div class="left des_img" style="width:81px;height:85px;" @click="goToThisDetails(cargo)">
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
@@ -106,17 +108,17 @@
         <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
       </span>
     </el-dialog>
-<!--     <paging0></paging0> -->
   </div>
 </template>
 
 <script>
-  import paging0 from '../../brandLib/paging0'
+  import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
   export default {
     name: 'waitOrder',
     data () {
       return {
+        pageProps:null,
         nowOrderDetails:{},
         dialogVisibleToOrderDetails:false,
         dialogVisible:false,
@@ -128,7 +130,7 @@
       }
     },
     components: {
-      paging0,
+      paging,
     },
     created:function(){
       var that = this;
@@ -155,6 +157,12 @@
           that.$router.push({ path:'/pay' });
         }
       },
+      goToThisDetails:function(item){
+        var that = this;
+        that.$router.push({
+          path:"/details/"+item.itemId,
+        });
+      },
       cancel_order: function(item) {
         var that = this;
         that.cancleOrderItemId = item.orderId;
@@ -177,6 +185,26 @@
           }
         })
       },
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        var obj = {};
+        obj.currentPage = data;
+        obj.numberPerpage = 10;
+        that.global.axiosPostReq('/OrderDetails/show',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.items = res.data.data;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       getAllOrder: function() {
         var that = this;
         var obj = {
@@ -194,6 +222,13 @@
             }
             if(that.items==0){
               that.no_order = true;
+            }else {
+              var obj = {
+                totalPage:res.data.totalPage,
+                totalNumber:res.data.totalNumber,
+                numberPerPage:res.data.numberPerPage
+              }
+              that.pageProps = obj;
             }
           } else {
             that.$message.error('网络错误！');
@@ -206,11 +241,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.orderDetailsBtn{
-  float: right;
-  margin-right: 20px;
-  cursor: pointer;
-}
 .waitOrder{
   /*border: 1px solid #d7d7d7;
   margin-top: 30px;*/
@@ -382,8 +412,8 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    /*margin-top: 36px;*/
-    margin-bottom: 5px;
+    margin-top: 36px;
+    /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;
@@ -397,6 +427,7 @@
   .cancelBtn {
     font-size: 14px;
     color: #999999;
+    margin-top: 36px;
   }
   .cancelBtn:hover {
     cursor: pointer;

@@ -46,7 +46,7 @@
         <el-table-column  prop="type"  align="center"  label="类型">
           <template scope="scope">
             <span v-if="scope.row.type==1">个人</span>
-            <span v-else>机构</span>
+            <span v-if="scope.row.type==2">机构</span>
           </template>
         </el-table-column>
         <el-table-column  prop="isBindSale"  align="center"  label="是否绑定销售">
@@ -388,7 +388,7 @@
             salePhone:one.salePhone,
             userPhone:one.phone
           };
-          that.global.axiosGetReq('/userManageList/disBind',obj)
+          that.global.axiosPostReq('/userManageList/disBind',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.userList[index].isBindSale = "否";

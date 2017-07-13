@@ -52,7 +52,12 @@
             <span v-if="scope.row.state == '0'">交易关闭</span>
           </template>
         </el-table-column>
-        <el-table-column prop="shippingName" label="物流信息" min-width="120" align="center" >  </el-table-column>
+        <el-table-column prop="shippingName" label="物流信息" min-width="150" align="center" >
+          <template scope="scope">
+            <span>{{scope.row.shippingName}}</span><br>
+            <span>{{scope.row.shippingCode}}</span>
+          </template>
+        </el-table-column>
         <!-- <result property="shippingCode" column="shipping_code" />物流编号 -->
         <el-table-column prop="refund" label="是否退款" min-width="100" align="center" >
           <template scope="scope">
@@ -62,7 +67,7 @@
         </el-table-column>
         <el-table-column prop="handle" label="操作" min-width="180" align="center" >
           <template scope="scope">
-            <el-button  size="mini"  type="info"  @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+            <el-button  size="mini"  type="info"  @click="getOneOrderDetailsById(scope.$index, scope.row)">详情</el-button>
             <el-button  size="mini"  v-show='scope.row.state!=0&&scope.row.state!=4'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
             <el-button  size="mini"  type="success"  v-show='scope.row.state === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
             <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
@@ -71,28 +76,37 @@
         </el-table-column>
       </el-table>
 
+
+      <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+
       <!--详情界面-->
-      <el-dialog title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true">
-        <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">订单已确认</span></h3>
+      <el-dialog v-if="nowOrderDetails" title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true">
+        <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">{{nowOrderDetails.state | frisco}}</span></h3>
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
           <el-table :data="receivingInfo" style="width: 100%" >
-            <el-table-column prop="userCode" label="用户编号" :span="3" align="center" >
+            <el-table-column prop="userId" label="用户编号" :span="3" align="center" >
             </el-table-column>
-            <el-table-column prop="userName" label="收货人" :span="3" align="center">
+            <el-table-column prop="receiverName" label="收货人" :span="3" align="center">
             </el-table-column>
-            <el-table-column prop="localtion" label="所在地区" :span="3" align="center">
+            <el-table-column  label="所在地区" :span="3" align="center">
+              <template scope="scope">
+                <span>{{scope.row.province}}&nbsp;</span>
+                <span>{{scope.row.city}}&nbsp;</span>
+                <span>{{scope.row.county}}&nbsp;</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="detailAddr" label="详细地址" width="500" >
+            <el-table-column prop="receiverDetail" label="详细地址" width="500" >
             </el-table-column>
           </el-table>
         </template>
         <h4 class="detail_h4">订单信息</h4>
         <el-row class="order_header">
-          <el-col :span="8" align="center">{{orderInfo.orderDate}}<div class="grid-content bg-purple"></div></el-col>
-          <el-col :span="8" align="center">订单号：{{orderInfo.orderNo}}<div class="grid-content bg-purple-light"></div></el-col>
-          <el-col :span="8" align="center">下单时间：{{orderInfo.orderTime}}<div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="8" align="center"><span v-if="nowOrderDetails.created">下单时间：{{nowOrderDetails.created}}</span><div class="grid-content bg-purple"></div></el-col>
+          <el-col :span="8" style="overflow:hidden" align="center">订单号：{{nowOrderDetails.orderId}}<div class="grid-content bg-purple-light"></div></el-col>
+          <el-col :span="8" align="center"><span v-if="nowOrderDetails.endTime">签收时间：{{nowOrderDetails.endTime}}</span><div class="grid-content bg-purple"></div></el-col>
         </el-row>
+
         <div class="order_header">
           <el-col :span="3" align="center"><div class="grid-content bg-purple">&nbsp;</div></el-col>
           <el-col :span="3" align="center">商品<div class="grid-content bg-purple"></div></el-col>
@@ -102,17 +116,17 @@
           <el-col :span="7"><div class="grid-content bg-purple"></div></el-col>
         </div>
         <div class="order_box clearfix">
-          <div class="order_content fl" v-for="item in orderInfo.goodsInfo">
-            <el-col :span="4" align="center"><div class="grid-content bg-purple"><img src="../../../images/center/order.png" alt="图片无法显示"></div></el-col>
-            <el-col :span="5" align="center">{{item.goodsName}}<div class="grid-content bg-purple"></div></el-col>
-            <el-col :span="5" align="center">{{item.SKUCode}}<div class="grid-content bg-purple"></div></el-col>
-            <el-col :span="5" align="center">{{'￥'+item.price.toFixed(2)}}<div class="grid-content bg-purple"></div></el-col>
-            <el-col :span="5" align="center">{{item.goodsNum}}<div class="grid-content bg-purple"></div></el-col>
+          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList">
+            <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
+            <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
           </div>
           <div class="order_sum fl">
-            <div class="order_h">{{'￥'+orderInfo.totalPrice.toFixed(2)}}</div>
-            <div class="order_h">{{'（含运费: '+orderInfo.freight.toFixed(2)+ '）'}}</div>
-            <div class="order_h">{{'（乾币已抵扣: '+orderInfo.deductible.toFixed(2)+ '）'}}</div>
+            <div class="order_h">{{'￥'+nowOrderDetails.actualPay}}</div>
+            <div class="order_h">{{'（含运费: '+nowOrderDetails.postFee+ '）'}}</div>
+            <div class="order_h">{{'（乾币已抵扣: '+nowOrderDetails.qbDed+ '）'}}</div>
           </div>
         </div>
         <div class="pay_info clearfix">
@@ -123,19 +137,16 @@
             <li>订单留言</li>
           </ul>
           <ul class="fl">
-            <li>支付宝</li>
+            <li>{{nowOrderDetails.payType}}</li>
             <li>
               <div>不申请发票<i class="i_col_red margin_l_30">申请发票</i><i class="i_col_red margin_l_30">发票抬头：xxxxxx</i></div>
             </li>
             <li>
               <div>不需要产品认证<i class="i_col_red margin_l_30">不需要产品认证</i></div>
             </li>
-            <li>留言为空</li>
+            <li v-if="!nowOrderDetails.buyerMessage">留言为空</li>
+            <li v-else>{{nowOrderDetails.buyerMessage}}</li>
           </ul>
-        </div>
-        <div class="seller_remark">
-          <div>卖家备注</div>
-          <div class="remark_content">xxxxxxxxxxxxxxxxxxxxxxxxx</div>
         </div>
         <div class="refund_info">
           <div>退款信息</div>
@@ -235,12 +246,15 @@
 </template>
 
 <script>
+  import paging from '../../website/brandLib/paging0'
   export default {
     data() {
       return {
         // wuliu:[
         //   {value:"申通快递",label:"申通快递"}
         // ],
+        pageProps:null,
+        nowOrderDetails:null,
         wuLiuBianHao:null,
         wuliu:"申通快递",
         //订单状态
@@ -323,11 +337,33 @@
         }
       }
     },
+    components:{
+      paging
+    },
     created:function(){
       var that = this;
       that.getOrderList();
     },
     methods: {
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        var obj = {};
+        obj.currentPage = data;
+        obj.numberPerpage = 10;
+        console.log(obj)
+        that.global.axiosGetReq('/showUserOrderManage/showOrder',obj)
+        .then((res) => {
+          console.log(res,"getOrderList")
+          if (res.data.callStatus === 'SUCCEED') {
+            that.orderList = res.data.data;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       sureFaHuo:function(){
         var that = this;
         var obj = {};
@@ -366,7 +402,7 @@
               //     obj.state = that.state[b].value;
               //   }
               // }
-              obj.state = that.value;
+              // obj.state = that.value;
         }
         if(that.value3.length!=0){
           var date1,date2;
@@ -393,26 +429,31 @@
           console.log(res,"searchOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
+            var obj = {
+              totalPage:res.data.totalPage,
+              totalNumber:res.data.totalNumber,
+              numberPerPage:res.data.numberPerPage
+            }
+            that.pageProps = obj;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
-      getOneOrderDetailsById:function(orderId){
+      getOneOrderDetailsById:function(index,oneOrder){
         var that = this;
         var obj = {
-          orderId:orderId,
-          buyerInfo:"",
-          state:"",
-          orderCTime:"",
-          orderETime:"",
-          isRefund:""
+          orderId:oneOrder.orderId
         };
-        that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
+        console.log(oneOrder)
+        that.global.axiosPostReq('/showUserOrderManage/queryOrderDetails',obj)
         .then((res) => {
           console.log(res,"getOneOrderDetailsById")
           if (res.data.callStatus === 'SUCCEED') {
-            // that.orderInfo = res.data.data;
+            this.detailVisible = true;
+            this.nowOrderDetails = res.data.data;
+            this.receivingInfo = [];
+            this.receivingInfo.push(res.data.data.receiver)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -433,6 +474,12 @@
           console.log(res,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
+            var obj = {
+              totalPage:res.data.totalPage,
+              totalNumber:res.data.totalNumber,
+              numberPerPage:res.data.numberPerPage
+            }
+            that.pageProps = obj;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -549,7 +596,7 @@
 /*订单信息*/
 .order_header{
   background: #eee;
-  height: 40px;
+  /*height: 40px;*/
   line-height: 40px;
 }
 .order_box{
@@ -576,7 +623,8 @@
   border-top: none;
 }
 .order_h{
-  padding-top: 18px;
+  /*padding-top: 18px;*/
+  line-height: 31px;
 }
 .img_list{
   text-align: center;

@@ -52,8 +52,6 @@
       getMoneyList:function(){
         var that = this;
         var obj = {
-          phone:that.global.getUser().phone,
-          type:1,
           token:that.global.getToken()
         };
         that.global.axiosGetReq('/userMyQb/query', obj)

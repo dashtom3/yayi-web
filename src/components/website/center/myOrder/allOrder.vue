@@ -47,7 +47,7 @@
       </div>
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
-        <div class="left des_img">
+        <div class="left des_img" @click="goToThisDetails(cargo)">
           <img :src="cargo.picPath" alt="img">
         </div>
         <div class="left des_p">
@@ -68,13 +68,16 @@
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
 
-          <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
+
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" v-if="item.state!=1" @click="cancel_order(item)">取消订单</p>
+          <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
+          <p class="cancelBtn" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
-<!--     <paging0></paging0> -->
+
+    <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
       <div class="">
         <p>收货信息：</p>
@@ -180,12 +183,13 @@
 </template>
 
 <script>
-  import paging0 from '../../brandLib/paging0'
+  import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
   export default {
     name: 'allOrder',
     data () {
       return {
+        pageProps:null,
         nowToOperateItem:{},
         nowOrderDetails:{},
         dialogVisibleToOrderDetails:false,
@@ -251,7 +255,7 @@
       }
     },
     components: {
-      paging0,
+      paging,
     },
     created: function() {
       var that = this;
@@ -290,9 +294,28 @@
       }
     },
     methods: {
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        var obj = {};
+        obj.currentPage = data;
+        obj.numberPerpage = 10;
+        that.global.axiosPostReq('/OrderDetails/show',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.items = res.data.data;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       lookOrderDetails:function(item){
         var that = this;
-
         that.nowOrderDetails = item;
         that.dialogVisibleToOrderDetails = true;
         console.log(item)
@@ -313,6 +336,13 @@
             if(that.items.length==0){
               that.no_order = true;
               that.order_table = false;
+            }else {
+              var obj = {
+                totalPage:res.data.totalPage,
+                totalNumber:res.data.totalNumber,
+                numberPerPage:res.data.numberPerPage
+              }
+              that.pageProps = obj;
             }
           } else {
             that.$message.error('网络错误！');
@@ -379,7 +409,7 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
-          itemId:that.cancleOrderItemId
+          orderId:that.cancleOrderItemId
         };
         console.log(obj)
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
@@ -394,6 +424,12 @@
       },
       handleClose: function() {
         var that = this;
+      },
+      goToThisDetails:function(item){
+        var that = this;
+        that.$router.push({
+          path:"/details/"+item.itemId,
+        });
       },
       // 交易操作
       operate: function(item) {
@@ -440,14 +476,21 @@
 .orderDetails{
   width: 860px !important;
 }
-</style>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
 .orderDetailsBtn{
   float: right;
   margin-right: 20px;
   cursor: pointer;
+  color: #5DB7E7;
 }
+.order_item .des_img {
+  margin-right: 20px;
+  border: 1px solid #D7D7D7;
+  cursor: pointer;
+}
+</style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
 .orderDetails{
   width: 860px !important;
 }
@@ -568,10 +611,7 @@ color: #333333;
   .order_des:nth-child(2) {
     border-top: none !important;
   }
-  .des_img {
-    margin-right: 20px;
-    border: 1px solid #D7D7D7;
-  }
+
   .des_img > img{
    width: 81px;
    height: 81px;
@@ -627,8 +667,7 @@ color: #333333;
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    /*margin-top: 36px;*/
-    margin-bottom: 5px;
+    margin-top: 36px;
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;
@@ -642,6 +681,7 @@ color: #333333;
   .cancelBtn {
     font-size: 14px;
     color: #999999;
+    margin-top: 36px;
   }
   .cancelBtn:hover {
     cursor: pointer;

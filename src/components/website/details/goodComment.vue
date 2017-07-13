@@ -1,6 +1,6 @@
 <template>
   <div class="goodComment">
-    <div v-if="comments.length!=0" class="noComment">
+    <div v-if="comments.length==0" class="noComment">
       「暂无评论」
     </div>
     <ul v-else>

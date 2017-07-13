@@ -22,9 +22,10 @@
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
+
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
-        <div class="left des_img" style="width:81px;height:85px;">
-          <img :src="cargo.picPath" alt="img">
+        <div class="left des_img" style="width:81px;height:85px;" @click="goToThisDetails(cargo)">
+          <img :src="cargo.picPath" alt="img" >
         </div>
         <div class="left des_p">
           <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
@@ -48,7 +49,7 @@
         </div>
       </div>
     </div>
-<!--     <paging0></paging0> -->
+<paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
   <div class="comment_box">
     <img class="comment_img" src="../../../../images/center/small.png" alt="img">
@@ -81,6 +82,7 @@
     name: 'waitComment',
     data () {
       return {
+        pageProps:null,
         items: [],
         dialogVisibleComment:false,
         value2:null,
@@ -101,6 +103,26 @@
       that.getAllOrder();
     },
     methods: {
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        var obj = {};
+        obj.currentPage = data;
+        obj.numberPerpage = 10;
+        that.global.axiosPostReq('/OrderDetails/show',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.items = res.data.data;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       //显示所有订单
       getAllOrder: function() {
         var that = this;
@@ -116,6 +138,13 @@
             that.items = b;
             if(that.items.length == 0){
               that.no_order = true;
+            }else{
+              var obj = {
+                totalPage:res.data.totalPage,
+                totalNumber:res.data.totalNumber,
+                numberPerPage:res.data.numberPerPage
+              }
+              that.pageProps = obj;
             }
           } else {
             that.$message.error('网络错误！');
@@ -141,6 +170,12 @@
           }
         })
       },
+      goToThisDetails:function(item){
+        var that = this;
+        that.$router.push({
+          path:"/details/"+item.itemId,
+        });
+      },
       operate: function(item) {
         var that = this;
         that.nowToOperateItem = item;
@@ -159,11 +194,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.orderDetailsBtn{
-  float: right;
-  margin-right: 20px;
-  cursor: pointer;
-}
+
   .left {
     float: left;
   }
@@ -332,8 +363,8 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    /*margin-top: 36px;*/
-    margin-bottom: 5px;
+    margin-top: 36px;
+    /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;
@@ -347,6 +378,7 @@
   .cancelBtn {
     font-size: 14px;
     color: #999999;
+    margin-top: 36px;
   }
   .cancelBtn:hover {
     cursor: pointer;

@@ -393,6 +393,7 @@ import myAddress from './selectThree'
         }else{
           nowSku = that.nowGoodSKU;
         }
+        console.log(nowSku)
         if(that.global.getUser()){
           var obj = {
             num:that.goodDefaultNum,

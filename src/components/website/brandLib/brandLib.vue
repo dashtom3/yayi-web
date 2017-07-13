@@ -613,10 +613,10 @@ margin: 0 auto;
 }
 .classifyLine span {
   display: inline-block;
-  margin-right: 50px;
+  /*margin-right: 50px;*/
   line-height: 52px;
   text-align: center;
-  /*width: 93px;*/
+  width: 93px;
 }
 .brandLine{
   border-bottom: 1px solid #e5e5e5;

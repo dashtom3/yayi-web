@@ -514,7 +514,7 @@ top: 5px;
     text-align: center;
   }
   .gwcWrap .oneGood .jisuanqi .thismargin{
-    margin-top: 26px;
+    margin-top: 27px;
   }
     .gwcWrap .oneGood .jisuanqi div:nth-child(1){
       border: 1px solid #c8c8c8;
