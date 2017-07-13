@@ -98,7 +98,7 @@ export default {
           var obj = {
             oneClassify: that.classifyItems[i].oneClassify,
           };
-          that.global.axiosPostReq('/item/queryItemSearch', obj).then((res) => {
+          that.global.axiosPostReq('/item/queryItemSearchGet', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.classifyItems[i].items = res.data.data
               //console.log(res.data.data,'ppp',i)

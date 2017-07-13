@@ -282,7 +282,6 @@
         that.global.axiosPostReq('/item/itemInfoList').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            that.tableData.reverse();
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }

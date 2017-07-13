@@ -256,6 +256,8 @@
           Object.assign(that.thirdForm,that.message);
           delete that.thirdForm.itemBrand
           delete that.thirdForm.type
+          delete that.thirdForm.shopType
+          delete that.thirdForm.items
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
           // console.log(itemValueList)
           var xhr = new XMLHttpRequest();
@@ -295,6 +297,8 @@
           Object.assign(that.thirdForm,that.message);
           delete that.thirdForm.itemBrand
           delete that.thirdForm.type
+          delete that.thirdForm.shopType
+          delete that.thirdForm.items
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
           console.log(itemValueList)
           var xhr = new XMLHttpRequest();

@@ -88,9 +88,6 @@
       </table>
       <table class="activeTable_box" v-show="active">
         <tr class="activeTable_title">
-          <!-- <th class="type1" v-show="num[0].num1!==0">{{property1}}</th>
-          <th class="type2" v-show="num[1].num2!==0">{{property2}}</th>
-          <th class="type3" v-show="num[2].num3!==0">{{property3}}</th> -->
           <th v-if="item.hasItem" v-for="item in items">{{item.itemPropertyName}}</th>
           <th class="skuCode">SKU代码</th>
           <th class="price">价格</th>
@@ -102,9 +99,8 @@
         <tr class="activeTable_des" v-for="(activeItem,index) in activeItems" :key="">
         <!-- <span>{{activeItem}}</span> -->
           <!-- <td v-for="(item,index) in activeItem">{{item.itemPparam}}</td> -->
-          <td v-for="(item,key) in activeItem">{{item}}</td>
+          <td v-for="(item,key) in activeItem" v-if="key != 'itemSkuPrice' && key != 'tiChen' && key != 'itemQb' && key != 'stockNum' && key != 'canUse'" >{{item}}</td>
           <td class="des_skuCode">
-<!--             <el-input  placeholder="" :disabled="true"></el-input> -->
             <span>{{ruleForm.itemId+(index+1)}}</span>
           </td>
           <td class="des_price">
@@ -171,12 +167,12 @@
           oneClassify: '', //商品一级分类
           twoClassify: '', //商品二级分类
           threeClassify: '', //商品三级分类
-          // itemBrand: '',
-          // itemBrandName: '', //品牌名称
           itemBrandId: '', //商品品牌ID
           registerId:'', //商品注册证号
           isThrow: '', //是否推荐
           itemSort: '', //商品类型
+          // itemBrand: '',
+          // itemBrandName: '', //品牌名称
         },
         rules: {
           itemId: [
@@ -189,7 +185,7 @@
             { type: 'array', required: true, message: '请选择商品分类', trigger: 'blur' }
           ],
           itemBrandId: [
-            { required: true, message: '请选择品牌名称', trigger: 'blur' }
+            { type: 'number', required: true, message: '请选择品牌名称', trigger: 'blur' }
           ],
           itemSort: [
             { required: true, message: '请选择商品类型', trigger: 'blur' }
@@ -280,28 +276,51 @@
           that.ruleForm.twoClassify = that.editCargo.twoClassify;
           that.ruleForm.threeClassify = that.editCargo.threeClassify;
           that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
-          // that.ruleForm.itemBrand = that.editCargo.itemBrand.itemBrandName;
-          // that.ruleForm.itemBrandName = that.editCargo.itemBrand.itemBrandName;
-          that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
+          that.ruleForm.itemBrandId = that.editCargo.itemBrandId;
           that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
           that.ruleForm.isThrow = that.editCargo.itemDetail.isThrow;
+          that.shopType = that.ruleForm.shopType
         } else {
-          that.getItemId();
-          that.getAllClassify();
-          that.getAllProperty();
+          that.getItemId()
+          that.getAllClassify()
+          that.getAllProperty()
         }
       } else {
-        // if (that.$route.params.ruleForm.itemBrand.itemBrandName == undefined) {
-        //   that.ruleForm.itemBrand = that.ruleForm.itemBrandName
-        // }
-        that.ruleForm = that.$route.params.ruleForm
-        that.ruleForm.isThrow = String(that.$route.params.ruleForm.isThrow)
-        that.getAllClassify();
-        that.getAllProperty();
-        console.log(that.ruleForm,'kk')
+        if (that.$route.params.ruleForm.shopType == '1') {
+          that.ruleForm = that.$route.params.ruleForm
+          that.ruleForm.isThrow = String(that.$route.params.ruleForm.isThrow)
+          that.items = that.$route.params.ruleForm.items
+          that.shopType = that.ruleForm.shopType
+          that.getAllClassify()
+          that.getAllProperty()
+          let activeItems = JSON.parse(window.sessionStorage.getItem('editChange'))
+          for (var i = 0; i < activeItems[i].length; i++) {
+            if (that.activeItems[i].canUse == 1) {
+              that.activeItems[i].canUse = true
+            } else {
+              that.activeItems[i].canUse = false
+            }
+          }
+          that.activeItems = activeItems
+          console.log(activeItems,'Yes')
+        } else {
+          if (that.$route.params.ruleForm.itemValueList[0].canUse == 1) {
+            that.input_enable = true
+          } else {
+            that.input_enable = false
+          }
+          that.ruleForm = that.$route.params.ruleForm
+          that.ruleForm.isThrow = String(that.$route.params.ruleForm.isThrow)
+          that.shopType = that.ruleForm.shopType
+          that.input_price = that.$route.params.ruleForm.itemValueList[0].itemSkuPrice
+          that.input_sku = that.$route.params.ruleForm.itemValueList[0].itemSKU
+          that.input_percent = that.$route.params.ruleForm.itemValueList[0].tiChen
+          that.input_coin = that.$route.params.ruleForm.itemValueList[0].itemQb
+          that.input_stock = that.$route.params.ruleForm.itemValueList[0].stockNum
+          that.getAllClassify()
+          that.getAllProperty()
+        }
       }
-      
-      // console.log(that.ruleForm);
     },
     methods: {
       //获取获取商品编号
@@ -311,7 +330,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.ruleForm.itemId = res.data.msg;
             that.input_sku =  that.ruleForm.itemId + '1';
-            // console.log(that.ruleForm.itemId);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -345,7 +363,7 @@
         var that = this;
         that.global.axiosGetReq('/item/queryProperty').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData2 = res.data.data;
+            that.tableData2 = res.data.data
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {
                 that.tableData2[i].itempropertydList[k].checked = false;
@@ -357,12 +375,6 @@
           }
         })
       },
-      // 获取商品品牌ID
-      // getBrandId: function(key) {
-      //   var that = this;
-      //   that.ruleForm.itemBrandId = parseInt(key.itemBrandId);
-      //   that.ruleForm.itemBrandName = key.itemBrandName;
-      // },
       //返回商品列表
       retrunList: function() {
         var that = this
@@ -462,22 +474,24 @@
                 itemPropertySixName: '',
                 itemPropertySixValue: '',
               }
-              var subitem = [];
-              subitem.push(obj);
+              var subitem = []
+              subitem.push(obj)
               // var subitem = JSON.stringify(obj)
-              that.ruleForm.itemValueList = subitem;
-              that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
-              console.log(that.ruleForm,'223355');
-              that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm, editCargo:that.editCargo}});
+              that.ruleForm.itemValueList = subitem
+              that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
+              that.ruleForm.shopType = that.shopType
+              console.log(that.ruleForm,'223355')
+              that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm, editCargo:that.editCargo}})
             } else {
-              var subitem = that.activeItems;
+              window.sessionStorage.setItem('editChange', JSON.stringify(that.activeItems))
+              var subitem = that.activeItems
               for (var i = 0; i < that.activeItems.length; i++) {
                 subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
                 subitem[i].itemId = that.ruleForm.itemId
-                subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice);
-                subitem[i].tiChen = parseInt(that.activeItems[i].tiChen);
-                subitem[i].itemQb = parseInt(that.activeItems[i].itemQb);
-                subitem[i].stockNum = parseInt(that.activeItems[i].stockNum);
+                subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice)
+                subitem[i].tiChen = parseInt(that.activeItems[i].tiChen)
+                subitem[i].itemQb = parseInt(that.activeItems[i].itemQb)
+                subitem[i].stockNum = parseInt(that.activeItems[i].stockNum)
                 if (subitem[i].canUse == true) {
                   subitem[i].canUse = 1
                 } else {
@@ -554,22 +568,22 @@
                       subitem[i].itemPropertySixName = k
                       subitem[i].itemPropertySixValue = subitem[i][k]
                     }
-                    a += 1;
+                    a += 1
                   }
               }
-              that.newArr = JSON.parse(window.sessionStorage.getItem('property'));
-              console.log(subitem,'lll')
+              that.newArr = JSON.parse(window.sessionStorage.getItem('property'))
                 for (var i = 0; i < subitem.length; i++) {
-                  that.newArr[i] = Object.assign(subitem[i],that.newArr[i]);
+                  that.newArr[i] = Object.assign(subitem[i],that.newArr[i])
                 }
-                console.log(that.newArr ,'sheng')
-                that.ruleForm.itemValueList = that.newArr;
-                that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow);
-                //console.log(that.ruleForm, that.newArr,'223355');
-                that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }});
+                that.ruleForm.itemValueList = that.newArr
+                that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
+                that.ruleForm.shopType = that.shopType //是否有商品属性
+                that.ruleForm.items = that.items //选择商品的属性
+                console.log(that.ruleForm, that.newArr,'223355');
+                that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }})
             }
           } else {
-            console.log('error submit!!');
+            console.log('error submit!!')
             return false;
           }
         });

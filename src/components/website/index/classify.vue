@@ -115,7 +115,7 @@
         var that = this;
         var classfyArg = that.goOne+"-0-0AND0";
         that.$router.push({path: '/brandLib/'+classfyArg})
-        that.$router.go(0);
+        // that.$router.go(0);
         window.scroll(0,0);
       },
       goToClassfy2:function(index,two){
@@ -123,7 +123,7 @@
         var index = parseInt(index)+1;
         var classfyArg = that.goOne+"-"+index+"-0AND0";
         that.$router.push({path: '/brandLib/'+classfyArg})
-        that.$router.go(0);
+        // that.$router.go(0);
         window.scroll(0,0);
       },
       goToClassfy3:function(index,index3,two,three){
@@ -132,7 +132,7 @@
         var index2 = parseInt(index3)+1;
         var classfyArg = that.goOne+"-"+index1+"-"+index2+"AND0";
         that.$router.push({path: '/brandLib/'+classfyArg})
-        that.$router.go(0);
+        // that.$router.go(0);
         window.scroll(0,0);
       },
     }
