@@ -308,7 +308,7 @@
       },
       d_pageHandler(data){
         this.d_pageProps.pageNum = data
-        // this.saleDetail(index, row) 详情分页查询
+        //this.saleDetail(index, row) //详情分页查询
       },
       BindSearch:function(){
         //查询已绑定用户
@@ -383,20 +383,52 @@
         })
         // this.noBindSearchContent = null;//清空搜索内容
       },
+      //一次绑定多个
       bindAlertSearch:function(){
         var that = this;
         if(that.multipleSelection1.length==0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
-          
+          for(let i=0;i<that.multipleSelection1.length;i++){
+            let params = {
+              salePhone: this.salePhone,
+              userPhone: that.multipleSelection1[i].phone
+            }
+            global.axiosPostReq('/saleList/bind',params).then((res) => {
+              if(res.data.callStatus === 'SUCCEED'){
+                this.$message({
+                  type: 'success',
+                  message: '绑定成功!'
+                });
+              }
+            })
+          }
+          this.BindSearch()
+          this.noBindSearch()
         }
       },
+      //一次取消绑定多个
       cancleBindAlert:function(){
         var that = this;
         if(that.multipleSelection2.length==0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
-
+          for(let i=0;i<that.multipleSelection2.length;i++){
+            let params = {
+              salePhone: this.salePhone,
+              userPhone: that.multipleSelection2[i].phone
+            }
+            global.axiosPostReq('/saleList/disBind',params).then((res) => {
+              if(res.data.callStatus === 'SUCCEED'){
+                this.$message({
+                  type: 'success',
+                  message: '取消绑定成功!'
+                });
+              }
+            })
+          }
+          this.BindSearch()
+          this.noBindSearch()
         }
       },
       bindThisUser:function(nowUser,index){
@@ -412,6 +444,7 @@
               type: 'success',
               message: '绑定成功!'
             });
+            this.BindSearch()
             this.noBindSearch()
           }
         })
@@ -431,6 +464,7 @@
               message: '取消绑定成功!'
             });
             this.BindSearch()
+            this.noBindSearch()
           }
         })
       },
@@ -444,11 +478,9 @@
         }
       },
       handleSelectionChange1:function(val) {
-        console.log(val)
         this.multipleSelection1 = val;
       },
       handleSelectionChange2:function(val) {
-        console.log(val)
         this.multipleSelection2 = val;
       },
       bindUser:function(index, row){

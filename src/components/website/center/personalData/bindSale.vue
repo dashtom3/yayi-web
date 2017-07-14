@@ -1,13 +1,9 @@
 <template>
   <div class="bindSale">
     <div class="content">
-      <el-form v-if="saleData.saleId" ref="userData" :model="saleData" label-width="80px">
+      <el-form v-if="!saleData.saleName" ref="userData" :model="saleData" label-width="80px">
         <el-form-item label="销售员手机号：" label-width="130px">
           <el-input v-model="willBindSale"></el-input>
-          <div v-show="showSearchInfo" class="showSearchInfoClass">
-            <span>真实姓名：上海小酱</span>
-            <span>手机号：12345678912</span>
-          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="bindHandler">绑定</el-button>
@@ -16,15 +12,11 @@
       <div v-else class="binded">
         <p>
           <span class="left">销售员手机号：</span>
-          <span class="right">{{saleData.saleId}}</span>
+          <span class="right">{{saleData.salePhone}}</span>
         </p>
         <p>
           <span class="left">真实姓名：</span>
           <span class="right">{{saleData.saleName}}</span>
-        </p>
-        <p>
-          <span class="left">手机号：</span>
-          <span class="right">{{saleData.salePhone}}</span>
         </p>
         <p class="colorRed">
           <span class="left">温馨提示：</span>
@@ -42,35 +34,23 @@
     data () {
       return {
         willBindSale:null,
-        showSearchInfo:false,
         saleData:{
-          saleId:1324567890,
-          salePhone:12345678912,
-          saleName:"上海小酱"
+          salePhone:'',
+          saleName:''
         }
       }
     },
-    watch:{
-      // willBindSale:function(){
-      //   if(this.willBindSale.length>=6){
-      //     this.showSearchInfo = true;
-      //   }else{
-      //     this.showSearchInfo = false;
-      //   }
-      // }
-    },
     created(){
-      // this.queryHandler()
+      this.queryHandler()
     },
     methods:{
       queryHandler(){
         let params = {
-          phone: global.getUser().token
+          token: global.getToken()
         }
-        global.axiosGetReq('/userManageList/userlist',params).then((res) => {
+        global.axiosGetReq('/userPersonalInfo/queryBind',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            this.personalData = res.data.data
-            console.log(this.personalData)
+            this.saleData = res.data.data
           }
         })
       },
@@ -80,10 +60,13 @@
           userPhone: global.getUser().phone,
           token: global.getUser().token
         }
-        console.log('绑定销售员',params)
         global.axiosPostReq('/userManageList/bind',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            console.log(res.data.data)
+            this.$message({
+              message: '绑定成功',
+              type: 'success'
+            });
+            this.queryHandler()
           }
         })
       }
@@ -97,10 +80,9 @@
   height: 500px;
 }
 .content{
-/*margin-top: 62px;*/
-margin-left: 44px;
-/*margin-right: 50px;*/
-width: 970px;
+  margin-left: 42px;
+  width: 970px;
+  color: #5db7e8;
 }
 .showSearchInfoClass{
   color: #5db7e8;
@@ -109,20 +91,15 @@ width: 970px;
 .showSearchInfoClass span:nth-child(2){
   margin-left: 50px;
 }
-.colorRed{
-  color:#D81E06;
-}
 .binded p .left{
   display: inline-block;
-  width: 71px;
-  text-align: right;
   margin-top: 30px;
-}
-.binded p:nth-child(2) , .binded p:nth-child(3){
-  color: #5db7e8;
 }
 .binded p:last-child{
   margin-bottom : 170px;
+}
+.colorRed{
+  color:#D81E06;
 }
 </style>
 <style>

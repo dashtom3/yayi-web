@@ -244,7 +244,7 @@
           }
         }
       })
-      console.log(this.toEditDraw)
+
       if(this.toEditDraw && this.toEditDraw.isActive){
         this.changShowPane(2)
       }
@@ -359,7 +359,7 @@
               email: this.personalData.email,
               sex: this.personalData.sex,
               birthday: util.formatDate.format(new Date(this.personalData.birthday)),
-              part: (this.personalData.part).join(","),
+              part: this.personalData.part && this.personalData.part.join(","),
               address: this.personalData.address,
               education: this.personalData.education,
               workUnit: this.personalData.workUnit,

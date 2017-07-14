@@ -120,7 +120,7 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="tiny">
+      size="small">
       <div style="margin:0 auto;width:380px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
