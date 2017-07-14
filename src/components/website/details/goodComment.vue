@@ -1,7 +1,7 @@
 <template>
   <div class="goodComment">
     <div v-if="comments.length==0" class="noComment">
-      「暂无评论」
+      <img src="../../../images/details/noComment.png" alt="">
     </div>
     <ul v-else>
       <li v-for="comment in comments">
@@ -79,10 +79,14 @@ import global from '../../global/global'
       margin-top: -30px;
       margin-right: 0;
 }
-.noComment{
-  line-height: 150px;
+.noComment img{
+  display: block;
+  margin: auto;
+  margin-top:86px;
+  margin-bottom: 100px;
+  /*line-height: 150px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 600;*/
 }
 .goodComment li {
   border-bottom:1px solid #dcdcdc;

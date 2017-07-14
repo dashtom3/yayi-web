@@ -45,7 +45,7 @@
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
+          <!-- <p class="cancelBtn" style="margin-top:0;font-size:12px;" @click="cancel_order(item)">取消订单</p> -->
         </div>
       </div>
     </div>
@@ -279,7 +279,7 @@
     font-size: 14px;
     border: 1px solid #D7D7D7;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
   .order_title {
     width: 100%;
@@ -363,7 +363,7 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    margin-top: 49px;
     /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;

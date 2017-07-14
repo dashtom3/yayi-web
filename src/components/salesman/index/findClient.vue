@@ -122,6 +122,7 @@
 
           that.showBindOrNoBindList = false;
         }
+        that.searchData = "";
       },
       goToMyClient:function(){
         var that = this;

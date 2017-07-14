@@ -374,7 +374,12 @@
           that.global.axiosPostReq('/showUserOrderManage/warehouseDelivery',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.orderList[that.fahuoIndex].state = "3";
+              var data =  that.orderList[that.fahuoIndex];
+              data.state = "3";
+              data.shippingCode = that.wuLiuBianHao
+              data.shippingName = that.wuliu;
+              that.orderList.splice(that.fahuoIndex,1,data);
+              // that.orderList[that.fahuoIndex].state = "3";
               that.deliveryVisible = false;
             } else {
               that.$message.error('网络出错，请稍后再试！');

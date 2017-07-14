@@ -71,7 +71,7 @@
 
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
-          <p class="cancelBtn" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
+          <p class="cancelBtn" style="margin-top:0;font-size:12px;" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
     </div>
@@ -586,7 +586,7 @@ color: #333333;
     font-size: 14px;
     border: 1px solid #D7D7D7;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
   .order_title {
     width: 100%;
@@ -667,7 +667,7 @@ color: #333333;
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    margin-top: 49px;
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;

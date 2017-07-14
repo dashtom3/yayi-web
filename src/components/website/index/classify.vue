@@ -266,6 +266,7 @@
     height: 30px;
     margin: 0 auto;
     position: relative;
+    font-size: 14px;
 /*    background-color: #EECE7C;*/
   }
   .cargo {

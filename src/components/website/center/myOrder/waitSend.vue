@@ -274,7 +274,7 @@
     font-size: 14px;
     border: 1px solid #D7D7D7;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
   .order_title {
     width: 100%;
