@@ -57,9 +57,9 @@
           <span style="float:left">{{item.propertyName}}：</span>
           <div class="shuxing">
             <!-- canUseEqulOneClass -->
-            <span :class="{ attSty2: index2 == item.propertyInfoList.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList">
-              {{oneAttrVal}}
-            </span>
+            <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList"  :disabled = "!oneAttrVal.enabled">
+              {{oneAttrVal.data}}
+            </button>
             <div class="clearFloat"></div>
           </div>
         </div>
@@ -125,7 +125,8 @@ import myAddress from './selectThree'
         goodInforWord:1,
         ite: 0,
         items: [],
-        goodAllImgs:[]
+        goodAllImgs:[],
+        itemKey:[["itemPropertyName","itemPropertyInfo"],["itemPropertyNameTwo","itemPropertyTwoValue"],["itemPropertyNameThree","itemPropertyThreeValue"],["itemPropertyFourName","itemPropertyFourValue"],["itemPropertyFiveName","itemPropertyFiveValue"],["itemPropertySixName","itemPropertySixValue"]]
       }
     },
     created:function(){
@@ -239,6 +240,9 @@ import myAddress from './selectThree'
               if(that.nowGoodDetails.propertyList.propertyName){
                 that.attrLength+=1;
               }
+              for(var j=0;j<that.nowGoodDetails.propertyList[i].propertyInfoList.length;j++){
+                that.nowGoodDetails.propertyList[i].propertyInfoList[j] = {data:that.nowGoodDetails.propertyList[i].propertyInfoList[j],enabled:true}
+              }
             }
             that.nowGoodSKUDefault();
           } else {
@@ -258,70 +262,113 @@ import myAddress from './selectThree'
         this.goodInforWord = arg;
         this.currentView = view;
       },
+      checkDisabled: function(){
+
+      },
+      //indexC 子数组第几位 item 数组第几行的数据  indexP  当前数组第几行
       changeAttSty:function(indexC,item,indexP){
         var that = this;
-        var propertyList = that.nowGoodDetails.propertyList;
-        if(that.attrVal[indexP]){
-          that.attrVal.splice(indexP,1)
-        }else{
-          that.attrVal[indexP] = item.propertyInfoList[indexC];//当前选中的属性，
+        if (item.checkWhich == indexC) {
+          that.nowGoodDetails.propertyList.splice(indexP,1,{propertyInfoList:item.propertyInfoList,propertyName:item.propertyName,checkWhich: null })
+        } else {
+          that.nowGoodDetails.propertyList.splice(indexP,1,{propertyInfoList:item.propertyInfoList,propertyName:item.propertyName,checkWhich: indexC })
         }
-        for(let i in propertyList){
-          if(i==indexP){
-            var data = propertyList[i];
-            // 属性选择
-            if(data.propertyInfoList["checkWhich"] == indexC){
-              data.propertyInfoList["checkWhich"] = null;
-            }else{
-              data.propertyInfoList["checkWhich"] = indexC;
-            }
-            that.nowGoodDetails.propertyList.splice(indexP,1,data)
+        for(var i=0;i<that.nowGoodDetails.propertyList.length;i++){
+          for(var j=0;j<that.nowGoodDetails.propertyList[i].propertyInfoList.length;j++){
+            that.nowGoodDetails.propertyList[i].propertyInfoList[j].enabled = false
           }
         }
-        var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
-        var itemValueList = that.nowGoodDetails.itemValueList;
-        var arr1 = [];
-          for(let i in itemValueList){
-            console.log(itemValueList[i].itemPropertyInfo,itemValueList[i].itemPropertyTwoValue,itemValueList[i].itemPropertyThreeValue,itemValueList[i].canUse)
-            var arr2 = [];
-            if(that.attrVal.length>=1){
-              arr2["0"]=itemValueList[i].itemPropertyInfo;
-            }
-            if(that.attrVal.length>=2){
-              arr2["1"]=itemValueList[i].itemPropertyTwoValue;
-            }
-            if(that.attrVal.length>=3){
-              arr2["2"]=itemValueList[i].itemPropertyThreeValue;
-            }
-            if(that.attrVal.length>=4){
-              arr2["3"]=itemValueList[i].itemPropertyFourValue;
-            }
-            if(that.attrVal.length>=5){
-              arr2["4"]=itemValueList[i].itemPropertyFiveValue;
-            }
-            if(that.attrVal.length>=6){
-              arr2["5"]=itemValueList[i].itemPropertySixValue;
-            }
-            var flag = true;
-            for(let n in that.attrVal){
-              if(that.attrVal[n]!=arr2[n]){
-                flag = false;
+        //propertyList  循环数据 itemValueList 所有属性组合
+        for(var j=0;j<that.nowGoodDetails.itemValueList.length;j++){
+          if(that.nowGoodDetails.itemValueList[j].canUse == 1){
+            var tempNum = 0
+            var temp = []
+            for(var i=0;i<that.nowGoodDetails.propertyList.length;i++){
+              if(that.nowGoodDetails.itemValueList[j][that.itemKey[i][0]] != "") {
+                if(that.nowGoodDetails.propertyList[i].checkWhich == null) {
+                  temp.push(i)
+                }else if(that.nowGoodDetails.propertyList[i].propertyInfoList[that.nowGoodDetails.propertyList[i].checkWhich].data != that.nowGoodDetails.itemValueList[j][that.itemKey[i][1]]) {
+                  tempNum++
+                  if(tempNum>1){
+                    break;
+                  }
+                  temp.push(i)
+                }
               }
             }
-            if(flag){
-              arr1.push(itemValueList[i])
+            if(tempNum == 1){
+              for(var i = 0;i<temp.length;i++){
+                for(var k=0;k<that.nowGoodDetails.propertyList[temp[i]].propertyInfoList.length;k++){
+                  if(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].data == that.nowGoodDetails.itemValueList[j][that.itemKey[temp[i]][1]] ) {
+                    that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].enabled = true
+                    console.log(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k])
+                  }
+                }
+              }
             }
           }
-          console.log("-----------------------")
-          for(let i in arr1){
-            for(let n in arr1[i]){
-              if(arr1[i].canUse==0){
+        }
 
-                console.log(arr1[i].itemPropertyInfo,arr1[i].itemPropertyTwoValue,arr1[i].itemPropertyThreeValue,arr1[i].canUse)
-              }
-            }
-            console.log("111111111111111111111111111")
-          }
+
+        // var propertyList = that.nowGoodDetails.propertyList;
+        // if(that.attrVal[indexP]){
+        //   that.attrVal.splice(indexP,1)
+        // }else{
+        //   that.attrVal[indexP] = item.propertyInfoList[indexC];//当前选中的属性，
+        // }
+        // for(let i in propertyList){
+        //   if(i==indexP){
+        //     var data = propertyList[i];
+        //     // 属性选择
+        //     if(data.propertyInfoList["checkWhich"] == indexC){
+        //       data.propertyInfoList["checkWhich"] = null;
+        //     }else{
+        //       data.propertyInfoList["checkWhich"] = indexC;
+        //     }
+        //     that.nowGoodDetails.propertyList.splice(indexP,1,data)
+        //   }
+        // }
+        // var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
+        // var itemValueList = that.nowGoodDetails.itemValueList;
+        // var arr1 = [];
+        //   for(let i in itemValueList){
+        //     var arr2 = [];
+        //     if(that.attrVal.length>=1){
+        //       arr2["0"]=itemValueList[i].itemPropertyInfo;
+        //     }
+        //     if(that.attrVal.length>=2){
+        //       arr2["1"]=itemValueList[i].itemPropertyTwoValue;
+        //     }
+        //     if(that.attrVal.length>=3){
+        //       arr2["2"]=itemValueList[i].itemPropertyThreeValue;
+        //     }
+        //     if(that.attrVal.length>=4){
+        //       arr2["3"]=itemValueList[i].itemPropertyFourValue;
+        //     }
+        //     if(that.attrVal.length>=5){
+        //       arr2["4"]=itemValueList[i].itemPropertyFiveValue;
+        //     }
+        //     if(that.attrVal.length>=6){
+        //       arr2["5"]=itemValueList[i].itemPropertySixValue;
+        //     }
+        //     var flag = true;
+        //     for(let n in that.attrVal){
+        //       if(that.attrVal[n]!=arr2[n]){
+        //         flag = false;
+        //       }
+        //     }
+        //     if(flag){
+        //       arr1.push(itemValueList[i])
+        //     }
+        //   }
+        //   console.log("-----------------------")
+        //   for(let i in arr1){
+        //     for(let n in arr1[i]){
+        //       if(arr1[i].canUse==0){
+        //         console.log(arr1[i].itemPropertyInfo,arr1[i].itemPropertyTwoValue,arr1[i].itemPropertyThreeValue,arr1[i].canUse)
+        //       }
+        //     }
+        //   }
         // var nowPrice;
         // var nowSku;
         // that.attrVal[indexP] = item.propertyInfoList[indexC];

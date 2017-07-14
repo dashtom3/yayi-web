@@ -23,12 +23,12 @@
               <div class="cargo_des" @click="gotoDetails(item)">{{item.name}}</div>
               <div class="cargo_price" @click="gotoDetails(item)">￥{{item.price}}*{{item.num}}</div>
               <div class="cargo_num" @click="gotoDetails(item)">
-                <span v-if="item.itemPropertyInfo">{{item.itemPropertyInfo+';'}}</span>
-                <span v-if="item.itemPropertyTwoValue">{{item.itemPropertyTwoValue+';'}}</span>
-                <span v-if="item.itemPropertyThreeValue">{{item.itemPropertyThreeValue+';'}}</span>
-                <span v-if="item.itemPropertyFourValue">{{item.itemPropertyFourValue+';'}}</span>
-                <span v-if="item.itemPropertyFiveValue">{{item.itemPropertyFiveValue+';'}}</span>
-                <span v-if="item.itemPropertySixValue">{{item.itemPropertySixValue+';'}}</span>
+                <span v-if="item.itemPropertyInfo">{{item.itemPropertyInfo}}</span>
+                <span v-if="item.itemPropertyTwoValue">{{';'+item.itemPropertyTwoValue}}</span>
+                <span v-if="item.itemPropertyThreeValue">{{';'+item.itemPropertyThreeValue}}</span>
+                <span v-if="item.itemPropertyFourValue">{{';'+item.itemPropertyFourValue}}</span>
+                <span v-if="item.itemPropertyFiveValue">{{';'+item.itemPropertyFiveValue}}</span>
+                <span v-if="item.itemPropertySixValue">{{';'+item.itemPropertySixValue}}</span>
               </div>
               <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
