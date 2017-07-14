@@ -37,8 +37,10 @@
         <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="推荐" prop="isThrow">
-        <el-radio class="radio" v-model="ruleForm.isThrow" label="1">是</el-radio>
-        <el-radio class="radio" v-model="ruleForm.isThrow" label="0">否</el-radio>
+        <el-radio-group v-model="ruleForm.isThrow">
+          <el-radio label="1">是</el-radio>
+          <el-radio label="0">否</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="商品属性" prop="shopType">
         <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
@@ -194,10 +196,10 @@
             { required: true, message: '请填写注册证号', trigger: 'blur' }
           ],
           isThrow: [
-            { required: true, message: '请选择是否推荐', trigger: 'blur' }
+            { required: true, message: '请选择是否推荐', trigger: 'change' }
           ],
           // shopType: [
-          //   { required: true, message: '请选择是否添加商品属性', trigger: 'blur' }
+          //   { required: true, message: '请选择是否添加商品属性', trigger: 'change' }
           // ]
         }, //验证规则
         tableData2: [],
@@ -267,6 +269,7 @@
       var that = this;
       that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
       if (that.$route.params.ruleForm == undefined) {
+        // 编辑商品进入时
         if (that.editCargo !== null ) {
           that.getAllClassify();
           that.getAllProperty();
@@ -276,16 +279,67 @@
           that.ruleForm.twoClassify = that.editCargo.twoClassify;
           that.ruleForm.threeClassify = that.editCargo.threeClassify;
           that.ruleForm.type.push(that.editCargo.oneClassify,that.editCargo.twoClassify,that.editCargo.threeClassify);
-          that.ruleForm.itemBrandId = that.editCargo.itemBrandId;
+          that.ruleForm.itemBrandId = that.editCargo.itemBrand.itemBrandId;
           that.ruleForm.registerId = that.editCargo.itemDetail.registerId;
-          that.ruleForm.isThrow = that.editCargo.itemDetail.isThrow;
-          that.shopType = that.ruleForm.shopType
-        } else {
+          that.ruleForm.isThrow = String(that.editCargo.isThrow);
+          that.ruleForm.itemSort = that.editCargo.itemSort;
+          that.shopType = that.editCargo.shopType;
+          that.input_price = that.editCargo.itemValueList[0].itemSkuPrice
+          that.input_sku = that.editCargo.itemValueList[0].itemSKU
+          that.input_percent = that.editCargo.itemValueList[0].tiChen
+          that.input_coin = that.editCargo.itemValueList[0].itemQb
+          that.input_stock = that.editCargo.itemValueList[0].stockNum
+          if (that.editCargo.itemValueList[0].canUse == 1) {
+            that.input_enable = true
+          } else {
+            that.input_enable = false
+          }
+          for (var i = 0; i < that.editCargo.itemValueList.length; i++) {
+            delete that.editCargo.itemValueList[i].itemPropertyName
+            delete that.editCargo.itemValueList[i].itemPropertyInfo
+            delete that.editCargo.itemValueList[i].itemPropertyNameTwo
+            delete that.editCargo.itemValueList[i].itemPropertyTwoValue
+            delete that.editCargo.itemValueList[i].itemPropertyNameThree
+            delete that.editCargo.itemValueList[i].itemPropertyThreeValue
+            delete that.editCargo.itemValueList[i].itemPropertyFourName
+            delete that.editCargo.itemValueList[i].itemPropertyFourValue
+            delete that.editCargo.itemValueList[i].itemPropertyFiveName
+            delete that.editCargo.itemValueList[i].itemPropertyFiveValue
+            delete that.editCargo.itemValueList[i].itemPropertySixName
+            delete that.editCargo.itemValueList[i].itemPropertySixValue
+          }
+          that.activeItems = that.editCargo.itemValueList
+          that.items = that.editCargo.propertyList.filter(function(ele,index,arr) {
+              return ele.propertyName !== '';   
+          });
+          for (var i = 0; i < that.items.length; i++) {
+            that.items[i].itemPropertyName = that.items[i].propertyName
+            that.items[i].hasItem = true 
+
+            //b[i].itempropertydList = b[i].propertyInfoList
+            var obj = {
+              itemPropertyName: that.items[i].propertyName,
+              token: '',
+            }
+            that.global.axiosPostReq('/item/queryProperty',obj).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  console.log(res.data.data[0].itempropertydList,'search')
+                  // that.items[i].itempropertydList = new Array()
+                    that.items[i].itempropertydList = res.data.data[0].itempropertydList
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+            })
+          }
+          console.log(that.activeItems,'bbbbbb')
+          //console.log(that.input_percent,that.input_coin,'koko')
+        } else { // 添加商品进入时
           that.getItemId()
           that.getAllClassify()
           that.getAllProperty()
         }
       } else {
+        // 添加商品时如果商品属性返回是
         if (that.$route.params.ruleForm.shopType == '1') {
           that.ruleForm = that.$route.params.ruleForm
           that.ruleForm.isThrow = String(that.$route.params.ruleForm.isThrow)
@@ -302,8 +356,9 @@
             }
           }
           that.activeItems = activeItems
-          console.log(activeItems,'Yes')
-        } else {
+          console.log(that.activeItems,'Yes')
+        } 
+        else { // 添加商品时如果商品属性返回否
           if (that.$route.params.ruleForm.itemValueList[0].canUse == 1) {
             that.input_enable = true
           } else {
@@ -423,16 +478,13 @@
         var temp = 0
         for(var i = 0; i < this.items[tempK].itempropertydList.length; i++) {
           if (this.items[tempK].itempropertydList[i].checked == true) {
-            // tempItem.push(this.items[tempK].itempropertydList[i])
             tempItem[this.items[tempK].itemPropertyName] = this.items[tempK].itempropertydList[i].itemPparam
             temp++
             this.items[tempK].hasItem = true
             if (tempK < this.items.length-1) {
               this.setActiveItems(tempItem, tempK + 1)
             } else {
-              // this.activeItems.push(tempItem.slice(0))
               this.activeItems.push(that.global.extendCopy(tempItem))
-              //console.log(this.activeItems)
             }
           }
         }
@@ -441,21 +493,26 @@
           if (tempK < this.items.length-1) {
             this.setActiveItems(tempItem, ++tempK)
           } else {
-            // this.activeItems.push(tempItem.slice(0))
             this.activeItems.push(that.global.extendCopy(tempItem))
-            //console.log(this.activeItems)
           }
         }
       },
       nextToFirst: function(formName) {
         var that = this;
-        console.log(that.ruleForm.itemBrand)
         that.$refs[formName].validate((valid) => {
+          if (that.shopType == '') {
+            that.$message.error('请选择是否添加商品属性！');
+            return false
+          }
           if (valid) {
             if (that.shopType !== '1') {
+              if (that.input_price == '' || that.input_percent == '' || that.input_coin == '' || that.input_stock == '' || that.input_percent == null || that.input_coin == null) {
+                that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
+                return false
+              }
               var obj = {
                 itemId: that.ruleForm.itemId,
-                itemSKU: that.input_sku,
+                itemSKU: that.ruleForm.itemId + '1',
                 itemSkuPrice: that.input_price,
                 tiChen: parseInt(that.input_percent),
                 itemQb: parseInt(that.input_coin),
@@ -497,7 +554,12 @@
                 } else {
                   subitem[i].canUse = 0
                 }
+                // if (subitem[i].itemSkuPrice == '' || subitem[i].tiChen == '' || subitem[i].itemQb == '' || subitem[i].stockNum == '' || that.input_percent == null || that.input_coin == null) {
+                //   that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
+                //   return false
+                // }
               }
+              console.log(subitem,'tttt')
               window.sessionStorage.setItem('property', JSON.stringify(subitem))
               for (var i = 0; i < subitem.length; i++) {
                   delete subitem[i].itemSkuPrice

@@ -224,7 +224,7 @@
       // 查询收入列表
       search:function(){
         var that = this;
-        if (that.searchDataPrev.length == 0) {
+        if (that.searchDataPrev.length == 0 || util.formatDate.format(new Date(that.searchDataPrev[0])) == '1970-01-01') {
           var startDate = ''
           var endDate = ''
         } else {

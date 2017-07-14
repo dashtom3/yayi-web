@@ -344,15 +344,20 @@ a {
   margin-right: 17px;
   margin-bottom: 17px;
   position: relative;
+    background-color: #fff;
 }
 .preventive_item:nth-child(4n+0) {
   margin-right: 0px;
 }
 .preventive_item:hover {
   cursor: pointer;
-}
-.preventive_item .item_img_box:hover {
   box-shadow: 7px 7px 28px #bcbcbc;
+  transition: all 0.5s ease;
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+.preventive_item:hover .item_des{
+  color: #5DB7E7;
   transition: all 0.5s ease;
 }
 .preventive_item .item_img_box .item_img {
@@ -365,7 +370,6 @@ a {
 }
 .preventive_item .item_des{
   font-size: 14px;
-  color: #000;
   margin-top: 10px;
 }
 .item_price {

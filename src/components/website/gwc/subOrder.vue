@@ -908,7 +908,7 @@ input:focus {
   width: 1200px;
   height: 40px;
   line-height: 40px;
-  margin-top: 40px;
+  margin-top: 20px;
   background-color: #E9E9E9;
 }
 .message {
@@ -958,7 +958,7 @@ input:focus {
   width: 1200px;
   height: 80px;
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 .qianbi_title {
   font-weight: bold;
@@ -966,7 +966,7 @@ input:focus {
 }
 .qianbi_des {
    margin-top: 20px;
-   margin-left: 70px;
+/*   margin-left: 70px;*/
 }
 .tax_word {
    margin-top: 10px;

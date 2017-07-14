@@ -19,6 +19,7 @@
     font-family: 'Microsoft YaHei',Arial,Helvetica,sans-serif,'宋体';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #333;
   }
 
   .clearfix {

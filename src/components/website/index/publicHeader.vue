@@ -33,7 +33,7 @@
               <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
-              <p class="fir left">共<span style="color: #D81E06;">{{total_num}}</span>件商品</p>
+              <p class="fir left">共<span style="color: #D81E06;">{{car_num}}</span>件商品</p>
               <p class="sec left">总计: <span style="color: #D81E06;">￥{{total_price}}</span></p>
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
@@ -1281,6 +1281,7 @@
     position: absolute;
     top: 30px;
     right: 0px;
+    color: #999;
   }
   .cargo_rm:hover {
     color: #5DB7E8;
