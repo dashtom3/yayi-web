@@ -45,11 +45,6 @@
       <div>
         品牌：{{itemBrand.itemBrandName}}
       </div>
-      <!-- <div style="margin:6px 0 22px 0;">
-        配送至：
-            <myAddress></myAddress>
-        <span class="fullCut">运费：8.00元，店铺满99.00免运费</span>
-      </div> -->
       <div class="">
         运费：全国满199元包邮
       </div>
@@ -67,11 +62,6 @@
             <div class="clearFloat"></div>
           </div>
         </div>
-        <!-- <span style="float:left">属性：</span>
-        <div class="shuxing">
-          <span :class="{ attSty2: index === ite }"  class="attSty1" v-on:click="changeAttSty(index,item)" v-for="(item, index) in items">{{item.itemPropertyInfo}}</span>
-          <div class="clearFloat"></div>
-        </div> -->
         <div class="clearFloat"></div>
       </div>
       <div style="line-height:40px;margin-top:20px;">
@@ -266,11 +256,17 @@ import myAddress from './selectThree'
         this.currentView = view;
       },
       changeAttSty:function(indexC,item,indexP){
+        var that = this;
+        var data1 = that.nowGoodDetails.propertyList;
+        that.attrVal = [];
+        for(let i in data1){
+          if(data1[i].propertyName){
+            that.attrVal.push(data1[i].propertyInfoList[data1[i].propertyInfoList.checkWhich])
+          }
+        }
         var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
         var nowPrice;
         var nowSku;
-        var that = this;
-        // that.attrVal[item.propertyName] = item.propertyInfoList[indexC];
         that.attrVal[indexP] = item.propertyInfoList[indexC];
         this.ite = indexC;
         this.sureGoodAttr = item.propertyInfoList[indexC];
@@ -321,8 +317,18 @@ import myAddress from './selectThree'
               }
             }
           }
-        that.nowGoodDetails.itemPrice = nowPrice;
-        that.nowGoodDetails.nowGoodSKU = nowSku;
+          var data2 = that.nowGoodDetails.itemValueList;
+          for(let q in data2){
+            if(data2[q].itemSKU==nowSku&&data2[q].canUse==1){
+              that.nowGoodDetails.itemPrice = nowPrice;
+              that.nowGoodDetails.nowGoodSKU = nowSku;
+               }else{
+
+            }
+            console.log(data2[q].canUse)
+          }
+
+
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];

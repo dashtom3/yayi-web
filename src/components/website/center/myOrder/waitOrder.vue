@@ -163,6 +163,12 @@
           path:"/details/"+item.itemId,
         });
       },
+      lookOrderDetails:function(item){
+        var that = this;
+        that.nowOrderDetails = item;
+        that.dialogVisibleToOrderDetails = true;
+        console.log(item)
+      },
       cancel_order: function(item) {
         var that = this;
         that.cancleOrderItemId = item.orderId;

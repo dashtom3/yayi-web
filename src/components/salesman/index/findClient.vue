@@ -19,23 +19,23 @@
         <el-table  :data="tableData" border style="width: 100%;text-align:center">
           <el-table-column align="center" label="单位名称"  >
             <template scope='scope'>
-              <span>{{scope.row.certification.companyName}}</span>
+              <span v-if="scope.row.certification">{{scope.row.certification.companyName}}</span>
             </template>
           </el-table-column>
           <el-table-column align="center"  label="单位地址" >
             <template scope='scope'>
-              <span>{{scope.row.certification.workAddress}}</span>
+              <span v-if="scope.row.certification">{{scope.row.certification.workAddress}}</span>
             </template>
           </el-table-column>
           <el-table-column align="center"  label="联系人">
             <template scope='scope'>
-              <span>{{scope.row.trueName}}</span>
-            </template></el-table-column>
+              <span >{{scope.row.trueName}}</span>
+            </template>
           </el-table-column>
           <el-table-column align="center"  label="联系方式">
             <template scope='scope'>
-              <span>{{scope.row.phone}}</span>
-            </template></el-table-column>
+              <span >{{scope.row.phone}}</span>
+            </template>
           </el-table-column>
         </el-table>
       </div>

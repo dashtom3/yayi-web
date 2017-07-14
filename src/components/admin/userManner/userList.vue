@@ -225,6 +225,7 @@
         that.global.axiosGetReq('/userManageList/userlist',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data,"getUserList")
             that.userList = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -283,8 +284,14 @@
         that.global.axiosPostReq('/userManageList/bind',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.userList[that.needBindSaleUserIndex].isBindSale = "是";
-            that.userList[that.needBindSaleUserIndex].saleName = that.salesList[index].name;
+            var data = that.userList[that.needBindSaleUserIndex];
+            console.log(data)
+            data.isBindSale = 1;
+            data.saleName = that.salesList[index].trueName;
+            that.userList.splice(that.needBindSaleUserIndex,1,data);
+            console.log(that.userList[that.needBindSaleUserIndex])
+            // that.userList[that.needBindSaleUserIndex].isBindSale = "是";
+            // that.userList[that.needBindSaleUserIndex].saleName = that.salesList[index].name;
             that.showBindSalAlert = false;
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -384,28 +391,24 @@
         }).then(() => {
           var obj = {
             token:"1211",
-            // token:that.global.getToken()
             salePhone:one.salePhone,
             userPhone:one.phone
           };
+          console.log(one)
           that.global.axiosPostReq('/userManageList/disBind',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.userList[index].isBindSale = "否";
-              that.userList[index].saleName = "";
-              that.$message({
-                type: 'success',
-                message: '解除成功!'
-              });
+              var data = that.userList[index];
+              data.isBindSale = 2;
+              data.saleName = "";
+              that.userList.splice(index,1,data)
+              that.$message({type: 'success',message: '解除成功!'});
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消解除'
-          });
+          that.$message({  type: 'info',  message: '已取消解除'  });
         });
       },
     },
