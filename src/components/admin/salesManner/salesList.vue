@@ -388,7 +388,7 @@
         if(that.multipleSelection1.length==0){
           this.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
-
+          
         }
       },
       cancleBindAlert:function(){

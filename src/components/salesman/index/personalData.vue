@@ -244,7 +244,8 @@
           }
         }
       })
-      if(this.toEditDraw.isActive){
+      console.log(this.toEditDraw)
+      if(this.toEditDraw && this.toEditDraw.isActive){
         this.changShowPane(2)
       }
       this.queryPersonInfo()
