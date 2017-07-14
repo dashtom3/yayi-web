@@ -357,8 +357,8 @@
               weChar: this.personalData.weChar,
               email: this.personalData.email,
               sex: this.personalData.sex,
-              birthday: util.formatDate.format(new Date(this.personalData.birthday)),
-              part: this.personalData.part && this.personalData.part.join(","),
+              birthday: this.personalData.birthday && util.formatDate.format(new Date(this.personalData.birthday)) || '1970-01-01',
+              part: this.personalData.part && this.personalData.part.join(",") || ['北京','北京市','东城区'],
               address: this.personalData.address,
               education: this.personalData.education,
               workUnit: this.personalData.workUnit,
@@ -366,6 +366,7 @@
               salePic: this.personalData.salePic,
               token: global.getSalesToken()
             }
+            console.log('gerenxinxi',params)
             global.axiosPostReq('/saleInfo/updateSale',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({

@@ -154,7 +154,7 @@
       <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
       <el-table-column  prop="created"  align="center"  label="注册时间"> 
         <template scope="scope">
-          <span>{{new Date(scope.row.created).getFullYear()+'-'+ (new Date(scope.row.created).getMonth()+1)+'-'+new Date(scope.row.created).getDate()}}</span>
+          <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())}}</span>
         </template>
       </el-table-column>
       <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
