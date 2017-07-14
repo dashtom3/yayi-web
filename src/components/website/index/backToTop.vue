@@ -5,9 +5,10 @@
       <img v-if="hoverTop" src="../../../images/index/top2.png" alt="img"/>
       <img v-else src="../../../images/index/top2_hover.png" alt="img"/>
     </div>
-    <div v-show="contact" class="contact_box" @click="question">
-       <p class="contact_title">意见反馈</p>
-      <img src="../../../images/index/contact.png" alt="img" />
+    <div v-show="contact" class="contact_box" @click="question" @mouseover="img_in2" @mouseout="img_out2">
+<!--        <p class="contact_title">意见反馈</p> -->
+      <img v-if="hoverTop2" src="../../../images/index/contact.png" alt="img"/>
+      <img v-else src="../../../images/index/contact_h.png" alt="img"/>
     </div>
   </div>
 </template>
@@ -18,6 +19,7 @@
     data () {
       return {
         hoverTop: true,
+        hoverTop2: true,
         top: false,
         contact: false,
       }
@@ -74,6 +76,14 @@
         var that = this;
         that.hoverTop = true;
       },
+      img_in2() {
+        var that = this;
+        that.hoverTop2 = false;
+      },
+      img_out2() {
+        var that = this;
+        that.hoverTop2 = true;
+      },
     }
   }
 </script>
@@ -100,11 +110,11 @@
   }
   .contact_box {
     width: 64px;
-    height: 86px;
+    height: 46px;
     padding: 5px;
     font-size: 14px;
     position: fixed;
-    top: 250px;
+    top: 290px;
     right:0px;
     z-index: 999;
     text-align: center;

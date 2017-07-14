@@ -120,7 +120,7 @@
     <el-dialog
       title="提现"
       :visible.sync="withDrawBank"
-      size="tiny">
+      size="small">
       <div style="margin:0 auto;width:380px;">
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
@@ -128,7 +128,7 @@
         <el-row>
           <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{trueName}} &nbsp;&nbsp;&nbsp;&nbsp;账户：{{bankNo}}</span></div></el-col>
         </el-row>
-        <el-form>
+        <el-form style="padding-top:10px;">
           <el-form-item label="提现金额：">
             <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
           </el-form-item>
@@ -142,7 +142,7 @@
             <button v-else class="btn_col" style="background-color: #C8C8C8;" disabled>{{Yzm1}}</button>
           </div>
         </el-form>
-        <div>
+        <div style="margin-top:30px;">
           <button class="withDrawBtn btn_col" @click="applyHandler">申请提现</button>
           <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
         </div>

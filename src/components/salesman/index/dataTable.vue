@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column prop="userPhone" align="center" label="客户手机号">
         </el-table-column>
-        <el-table-column prop="saleDataStatistics" align="center" label="商品信息">
+        <el-table-column prop="itemName" align="center" label="商品信息">
         </el-table-column>
         <el-table-column prop="totalFee"  align="center"label="商品总价">
         </el-table-column>

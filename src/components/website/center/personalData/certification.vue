@@ -146,7 +146,7 @@
           token: global.getToken(),
           type: this.certiData.type,
           companyName: this.certiData.companyName,
-          part: (this.certiData.part).join(","),
+          part: this.certiData.part && this.certiData.part.join(",") || ['北京','北京市','东城区'],
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
           judge: this.certiData.ifOnce

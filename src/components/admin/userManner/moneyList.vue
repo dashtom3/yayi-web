@@ -75,6 +75,8 @@
           }
         },
         searchDataPrev: [],
+        startDate: '',
+        endDate: '',
         searchUserId: '',
         nowUserMoneyNum:'',
         yayiCoin: '',
@@ -101,15 +103,15 @@
       pageHandler:function(data){
         var that = this
         that.pageProps.pageNum = data
-        // that.getClassify()
+        that.getClassify()
       },
       //获取用户钱币列表
       getClassify: function() {
         var that = this;
         var obj = {
-          phone: '',
-          startDate: '',
-          endDate: '',
+          phone: that.searchUserId,
+          startDate: that.startDate,
+          endDate: that.endDate,
           currentPage: that.pageProps.pageNum,
           numberPerPage: 10,
           token: ''
@@ -121,6 +123,9 @@
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
             }
+            that.startDate = ''
+            that.endDate = ''
+            console.log(res,'popop')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -132,8 +137,8 @@
         if (that.searchDataPrev.length == 0 || that.searchDataPrev[0] == null) {
           var obj = {
             phone: that.searchUserId,
-            startDate: '',
-            endDate: '',
+            startDate: that.startDate,
+            endDate: that.endDate,
             currentPage: that.pageProps.pageNum,
             numberPerPage: 10,
             token: ''
@@ -147,18 +152,20 @@
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
+              that.startDate = ''
+              that.endDate = ''
             } else {
               that.loadingCheckHead = false;
               that.$message.error('网络出错，请稍后再试！');
             }
           })
         } else {
-          var startDate = util.formatDate.format(new Date(that.searchDataPrev[0]));
-          var endDate = util.formatDate.format(new Date(that.searchDataPrev[1]));
+          that.startDate = util.formatDate.format(new Date(that.searchDataPrev[0]));
+          that.endDate = util.formatDate.format(new Date(that.searchDataPrev[1]));
           var obj = {
             phone: that.searchUserId,
-            startDate: startDate,
-            endDate: endDate,
+            startDate: that.startDate,
+            endDate: that.endDate,
             currentPage: that.pageProps.pageNum,
             numberPerPage: 10,
             token: ''

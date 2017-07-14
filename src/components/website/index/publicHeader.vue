@@ -33,7 +33,7 @@
               <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
-              <p class="fir left">共<span style="color: #D81E06;">{{total_num}}</span>件商品</p>
+              <p class="fir left">共<span style="color: #D81E06;">{{car_num}}</span>件商品</p>
               <p class="sec left">总计: <span style="color: #D81E06;">￥{{total_price}}</span></p>
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
@@ -1107,7 +1107,7 @@
     line-height: 28px;
     margin: 0 auto;
     margin-bottom: 22px;
-    font-size: 14px;
+    font-size: 12px;
     color: #000;
     z-index: 1000;
   }
@@ -1134,7 +1134,7 @@
   }
   .shopping_car .car_num {
     color: #D81E06;
-    margin-left: 20px;
+    margin-left: 10px;
   }
   .gwcHeader {
     margin-left: 30px;
@@ -1202,7 +1202,8 @@
     display: none;
     width: 337px;
     max-height: 300px;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
     position: absolute;
     top: 27px;
     left: -1px;
@@ -1228,7 +1229,7 @@
     z-index: 999;
   }
   .cargo_title {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     color: #000;
 /*    margin-top: 12px;*/
@@ -1254,6 +1255,11 @@
     position: absolute;
     top: 3px;
     left: 70px;
+    width: 200px;
+    height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   .cargo_price {
     position: absolute;
@@ -1265,11 +1271,17 @@
     position: absolute;
     top: 30px;
     left: 70px;
+    width: 200px;
+    height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   .cargo_rm {
     position: absolute;
     top: 30px;
     right: 0px;
+    color: #999;
   }
   .cargo_rm:hover {
     color: #5DB7E8;
@@ -1623,7 +1635,7 @@
   }
   .logOut {
     color: #000;
-    font-size: 14px;
+    font-size: 12px;
     margin-left: 60px;
     float: right;
     transform: translateY(-5%);

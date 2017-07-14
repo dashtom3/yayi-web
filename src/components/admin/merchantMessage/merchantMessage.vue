@@ -151,7 +151,8 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
-        <p class="detail_word">{{details.itemDetail.video}}</p>
+        <video style="width:100%;height:100%;" :src=details.itemDetail.video controls="controls"></video>
+       <!--  <p class="detail_word">{{details.itemDetail.video}}</p> -->
       </div>
     </el-form>
   </el-dialog>
@@ -322,21 +323,39 @@
       },
       search: function() {
         var that = this;
-        var obj = {
-          itemId: that.cargo.id,
-          itemName: that.cargo.name,
-          itemClassify: that.cargo.class.pop(),
-          itemBrandName: that.cargo.brand.itemBrandName,
-          state: that.stateValue,
+        if (that.cargo.class.length == 1) {
+          var obj = {
+            itemId: that.cargo.id,
+            itemName: that.cargo.name,
+            itemClassify: that.cargo.class[0],
+            itemBrandName: that.cargo.brand.itemBrandName,
+            state: that.stateValue,
+          }
+        }else if (that.cargo.class.length == 2) {
+          var obj = {
+            itemId: that.cargo.id,
+            itemName: that.cargo.name,
+            itemClassify: that.cargo.class[1],
+            itemBrandName: that.cargo.brand.itemBrandName,
+            state: that.stateValue,
+          }
+        }else if (that.cargo.class.length == 3) {
+          var obj = {
+            itemId: that.cargo.id,
+            itemName: that.cargo.name,
+            itemClassify: that.cargo.class[2],
+            itemBrandName: that.cargo.brand.itemBrandName,
+            state: that.stateValue,
+          }
         }
-        console.log(obj,'llll')
+        // console.log(obj,'llll')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
-            console.log(that.tableData);
+            // console.log(that.tableData);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -368,10 +387,64 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.editCargo = res.data.data
             if (that.editCargo !== {}) {
-              window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
-              that.$router.push({ name: 'addMerchandise'});
-              //that.$router.push({ name: 'addMerchandise', params: {editCargo:that.editCargo}});
-              console.log(that.editCargo,'oooooo');
+              if (that.editCargo.propertyList[0].propertyName == '') {
+                that.editCargo.shopType = '2'
+                window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
+                that.$router.push({ name: 'addMerchandise'});
+                console.log(that.editCargo,'shopType2否');
+              }else {
+                that.editCargo.shopType = '1'
+                for (var i = 0; i < that.editCargo.itemValueList.length; i++) {
+                  delete that.editCargo.itemValueList[i].itemSKU
+                  delete that.editCargo.itemValueList[i].itemValueId
+                  delete that.editCargo.itemValueList[i].itemId
+                  // six
+                  if( that.editCargo.itemValueList[i].itemPropertySixName == '' && that.editCargo.itemValueList[i].itemPropertySixValue == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertySixName
+                     delete that.editCargo.itemValueList[i].itemPropertySixValue
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertySixName] = that.editCargo.itemValueList[i].itemPropertySixValue
+                  }
+                  // five
+                  if( that.editCargo.itemValueList[i].itemPropertyFiveName == '' && that.editCargo.itemValueList[i].itemPropertyFiveValue == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertyFiveName
+                     delete that.editCargo.itemValueList[i].itemPropertyFiveValue
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertyFiveName] = that.editCargo.itemValueList[i].itemPropertyFiveValue
+                  }
+                  // four
+                  if( that.editCargo.itemValueList[i].itemPropertyFourName == '' && that.editCargo.itemValueList[i].itemPropertyFourValue == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertyFourName
+                     delete that.editCargo.itemValueList[i].itemPropertyFourValue
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertyFourName] = that.editCargo.itemValueList[i].itemPropertyFourValue
+                  }
+                  // three
+                  if( that.editCargo.itemValueList[i].itemPropertyNameThree == '' && that.editCargo.itemValueList[i].itemPropertyThreeValue == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertyNameThree
+                     delete that.editCargo.itemValueList[i].itemPropertyThreeValue
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertyNameThree] = that.editCargo.itemValueList[i].itemPropertyThreeValue
+                  }
+                  // two
+                  if( that.editCargo.itemValueList[i].itemPropertyNameTwo == '' && that.editCargo.itemValueList[i].itemPropertyTwoValue == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertyNameTwo
+                     delete that.editCargo.itemValueList[i].itemPropertyTwoValue
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertyNameTwo] = that.editCargo.itemValueList[i].itemPropertyTwoValue
+                  }
+                  // one
+                  if( that.editCargo.itemValueList[i].itemPropertyInfo == '' && that.editCargo.itemValueList[i].itemPropertyName == '') {
+                     delete that.editCargo.itemValueList[i].itemPropertyInfo
+                     delete that.editCargo.itemValueList[i].itemPropertyName
+                  } else {
+                    that.editCargo.itemValueList[i][that.editCargo.itemValueList[i].itemPropertyName] = that.editCargo.itemValueList[i].itemPropertyInfo
+                  }
+                }
+                window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
+                that.$router.push({ name: 'addMerchandise'});
+                console.log(that.editCargo,'shopType1是');
+              }
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
