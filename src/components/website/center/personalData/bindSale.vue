@@ -58,7 +58,7 @@
         let params = {
           salePhone: this.willBindSale,
           userPhone: global.getUser().phone,
-          token: global.getUser().token
+          token: global.getToken()
         }
         global.axiosPostReq('/userManageList/bind',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -67,6 +67,8 @@
               type: 'success'
             });
             this.queryHandler()
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
           }
         })
       }
@@ -77,7 +79,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .bindSale{
-  height: 500px;
+  height: 550px;
 }
 .content{
   margin-left: 42px;

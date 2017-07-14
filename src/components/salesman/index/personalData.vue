@@ -275,7 +275,6 @@
             this.personalData = res.data.data
             this.personalData.part = this.personalData.part && this.personalData.part.split(',')
             this.personalData.sex = res.data.data.sex || 1
-            console.log(this.personalData)
           }
         })
       },
