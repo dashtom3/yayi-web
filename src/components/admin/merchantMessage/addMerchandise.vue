@@ -182,13 +182,13 @@
             { required: true, message: '请填写商品名称', trigger: 'blur' }
           ],
           type: [
-            { type: 'array', required: true, message: '请选择商品分类', trigger: 'blur' }
+            { type: 'array', required: true, message: '请选择商品分类', trigger: 'change' }
           ],
           itemBrandId: [
-            { type: 'number', required: true, message: '请选择品牌名称', trigger: 'blur' }
+            { type: 'number', required: true, message: '请选择品牌名称', trigger: 'change' }
           ],
           itemSort: [
-            { required: true, message: '请选择商品类型', trigger: 'blur' }
+            { required: true, message: '请选择商品类型', trigger: 'change' }
           ],
           registerId: [
             { required: true, message: '请填写注册证号', trigger: 'blur' }
@@ -456,7 +456,7 @@
               var obj = {
                 itemId: that.ruleForm.itemId,
                 itemSKU: that.input_sku,
-                itemSkuPrice: parseInt(that.input_price),
+                itemSkuPrice: that.input_price,
                 tiChen: parseInt(that.input_percent),
                 itemQb: parseInt(that.input_coin),
                 stockNum: parseInt(that.input_stock),
@@ -488,7 +488,7 @@
               for (var i = 0; i < that.activeItems.length; i++) {
                 subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
                 subitem[i].itemId = that.ruleForm.itemId
-                subitem[i].itemSkuPrice = parseInt(that.activeItems[i].itemSkuPrice)
+                subitem[i].itemSkuPrice = that.activeItems[i].itemSkuPrice
                 subitem[i].tiChen = parseInt(that.activeItems[i].tiChen)
                 subitem[i].itemQb = parseInt(that.activeItems[i].itemQb)
                 subitem[i].stockNum = parseInt(that.activeItems[i].stockNum)
