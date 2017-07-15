@@ -61,9 +61,9 @@
         newForm: {},
         message: {},
         rules: {
-          registerDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ]
+          // registerDate: [
+          //   { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          // ]
         }
       }
     },
@@ -79,14 +79,14 @@
         that.secondForm.apparatusType = that.editCargo.itemDetail.apparatusType
         that.secondForm.unit = that.editCargo.itemDetail.unit
         that.secondForm.producePompany = that.editCargo.itemDetail.producePompany
-        that.secondForm.registerDate = that.editCargo.itemDetail.registerDate
+        that.secondForm.registerDate = util.formatDate.format(new Date(that.editCargo.itemDetail.registerDate));
         that.secondForm.itemPacking = that.editCargo.itemDetail.itemPacking
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
       } else {
         that.ruleForm = that.$route.params.ruleForm
       }
-      //console.log(that.ruleForm);
+      console.log(that.ruleForm);
     },
     methods: {
       nextToThird: function(formName) {

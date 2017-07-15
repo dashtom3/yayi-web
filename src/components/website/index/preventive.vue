@@ -80,7 +80,7 @@ export default {
       return this.brandListData.slice(0, 8)
     },
     filteredBrandListData1: function () {
-      return this.brandListData1.slice(9, 17)
+      return this.brandListData1.slice(8, 17)
     }
   },
   created: function () {
@@ -308,8 +308,8 @@ a {
     transition: all 0.5s ease;
   }
   .brand_container .brand_item img {
-    max-width: 50%;
-    max-height: 50%;
+    max-width: 100%;
+    max-height: 100%;
     display: inline-block;
     vertical-align: middle;
   }

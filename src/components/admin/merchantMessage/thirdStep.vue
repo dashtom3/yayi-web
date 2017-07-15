@@ -21,7 +21,7 @@
           <button class="ql-script" value="super"></button>
           <button class="ql-Image" @click="uploaImage">image</button>
       </div>
-      <div id="editor1"></div>
+      <div id="editor1" style="height:500px;"></div>
     </div>
     <div class="third_box">
       <div class="thirdTitle">图片说明：</div>
@@ -38,7 +38,7 @@
             <button class="ql-script" value="super"></button>
             <button class="ql-Image" @click="uploaImage1">image</button>
         </div>
-        <div id="editor2"></div>
+        <div id="editor2" style="height:500px;"></div>
      <!--  <div id="editor" type="text/plain" style="width: 100%; height: 500px;"></div> -->
 <!--     <button @click="submits">保存</button>  -->
 <!--       <vue-editor id="editor2" v-model="thirdForm.itemUse"></vue-editor> -->
@@ -75,6 +75,7 @@
     props: ['message'],
     data() {
       return {
+        //fileList2: [],
         fileList2: [],
         fileList: [],
         thirdForm: {
@@ -101,6 +102,11 @@
       var that = this;
       that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
       if (that.editCargo !== null) {
+        // console.log(that.editCargo,'opopop')
+        // var obj = {
+        //   url: that.editCargo.itemDetail.itemPica
+        // }
+        // that.fileList2.push(obj)
         that.thirdForm.video = that.editCargo.itemDetail.video
         that.state = 1
         console.log('buweikong')

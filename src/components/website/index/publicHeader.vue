@@ -18,11 +18,11 @@
           <div v-else class="elseLine"></div>
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
-            <div class="cargo_box" v-for="item in items" :key="item">
-              <img class="cargo_sm" :src=item.pic alt="img" @click="gotoDetails(item)">
-              <div class="cargo_des" @click="gotoDetails(item)">{{item.name}}</div>
-              <div class="cargo_price" @click="gotoDetails(item)">￥{{item.price}}*{{item.num}}</div>
-              <div class="cargo_num" @click="gotoDetails(item)">
+            <div class="cargo_box" v-for="item in items" :key="item" @click="gotoDetails(item)">
+              <img class="cargo_sm" :src=item.pic alt="img">
+              <div class="cargo_des">{{item.name}}</div>
+              <div class="cargo_price">￥{{item.price}}*{{item.num}}</div>
+              <div class="cargo_num">
                 <span v-if="item.itemPropertyInfo">{{item.itemPropertyInfo}}</span>
                 <span v-if="item.itemPropertyTwoValue">{{';'+item.itemPropertyTwoValue}}</span>
                 <span v-if="item.itemPropertyThreeValue">{{';'+item.itemPropertyThreeValue}}</span>
@@ -30,7 +30,7 @@
                 <span v-if="item.itemPropertyFiveValue">{{';'+item.itemPropertyFiveValue}}</span>
                 <span v-if="item.itemPropertySixValue">{{';'+item.itemPropertySixValue}}</span>
               </div>
-              <div class="cargo_rm" @click="delete_cargo(item)">删除</div>
+              <div class="cargo_rm" @click.stop="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
               <p class="fir left">共<span style="color: #D81E06;">{{car_num}}</span>件商品</p>
@@ -207,6 +207,7 @@
       <div class="search_box right">
         <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo">
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
+        <p class="search_p" @click="search_cargo">搜索</p>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -520,6 +521,7 @@
       gotoDetails: function(item) {
         var that = this;
         that.$router.push({path: '/details/' + item.itemId})
+        that.$router.go(0);
         window.scroll(0,0);
       },
       // 去购物车
@@ -575,12 +577,12 @@
       // 删除购物车商品
       delete_cargo: function(item) {
         var that = this;
-        console.log(item.itemSKU);
         var obj = {
           phone: that.global.getUser().phone,
           itemSKU: item.itemSKU,
           token: that.global.getToken()
         };
+        console.log(obj,'i');
         that.global.axiosPostReq('/cart/delete', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.global.axiosGetReq('/cart/list', obj).then((res) => {
@@ -617,17 +619,6 @@
             that.$message.error('网络出错，请稍后再试！');
           }
         })
-        // that.$confirm('此操作将删除该商品, 是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        // }).catch(() => {
-        //   that.$message({
-        //     type: 'info',
-        //     message: '已取消删除'
-        //   });
-        // });
       },
       // logo跳转
       logo: function() {
@@ -1673,6 +1664,7 @@
   }
   .headerSecond .search_box {
     margin-top: 18px;
+    margin-right: 110px;
     position: relative;
   }
   .headerSecond .search_word {
@@ -1680,6 +1672,7 @@
     height: 33px;
     border: 1px solid #5DB7E8;
     outline: medium;
+    padding-left: 45px;
   }
   .headerSecond .search_word:focus {
     border: 1px solid #5DB7E7 !important;
@@ -1688,12 +1681,29 @@
   .headerSecond .search_img {
     position: absolute;
     top: 5px;
-    right: 10px;
+    left: 10px;
   }
   .search_img:hover {
     cursor: pointer;
   }
   .headerSecond .logo_img:hover {
     cursor: pointer;
+  }
+  .search_p {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 60px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+    background-color: #5DB7E7;
+    text-align: center;
+    color: #fff;
+  }
+  .search_p:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 7px #5DB7E7;
+    transition: all 0.5s ease;
   }
 </style>

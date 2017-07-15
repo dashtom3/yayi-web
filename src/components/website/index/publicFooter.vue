@@ -1,7 +1,7 @@
 <template>
   <div class="publicFooter">
     <p class="footerDes">
-      <span>关于我们</span>
+      <span @click="aboutUs">关于我们</span>
       <span>联系我们</span>
       <span>联系客服</span>
       <span style="margin-right:0px; border:none;" @click="question">意见反馈</span>
@@ -17,12 +17,19 @@
       return {
       }
     },
+    created: function() {
+
+},
     methods: {
       //意见反馈
       question: function() {
         var that = this;
         window.open('http://cn.mikecrm.com/BvO3hVU');
       },
+      aboutUs: function() {
+        var that = this;
+        alert('李辉！')
+      }
     }
   }
 </script>

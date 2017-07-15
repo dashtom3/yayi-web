@@ -347,6 +347,14 @@
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
           }
+        } else if (that.cargo.class.length == 0) {
+          var obj = {
+            itemId: that.cargo.id,
+            itemName: that.cargo.name,
+            itemClassify: that.cargo.class[2],
+            itemBrandName: that.cargo.brand.itemBrandName,
+            state: that.stateValue,
+          }
         }
         // console.log(obj,'llll')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
@@ -355,7 +363,7 @@
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
-            // console.log(that.tableData);
+            //console.log(that.tableData);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
