@@ -727,9 +727,9 @@ transition: all 0.5s ease;*/
 }
 .allGoods li:hover .goodTitle{
   cursor: pointer;
-  background: #5db7e8;
+  /*background: #5db7e8;*/
   transition: all ease 0.5s;
-  color: white;
+  color: #5db7e8;
   transition: all 0.5s ease;
 }
 .goodBottom{
