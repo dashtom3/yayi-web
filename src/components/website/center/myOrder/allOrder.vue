@@ -106,7 +106,7 @@
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
-                <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+                <p style="margin-bottom: 20px;margin-top:0;">{{cargo.itemInfo.itemName}}</p>
                 <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
               </div>
               <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -214,50 +214,7 @@
         nowToOperateItem:{},
         nowOrderDetails:{},
         dialogVisibleToOrderDetails:false,
-        items: [{
-            date: '2017-05-17',
-            orderId : '19877240650895924',
-            state: 0,
-            total: 368,
-            cargo: [{
-              des: '爱丽丝 标准#',
-              color: '红色厚',
-              price: '134',
-              num: '1',
-            },{
-              des: '爱丽丝 标准#',
-              color: '红色厚',
-              price: '134',
-              num: '1',
-            },{
-              des: '爱丽丝 标准#',
-              color: '红色厚',
-              price: '100',
-              num: '1',
-            }],
-          },{
-            date: '2017-05-07',
-            orderId : '19877240650895924',
-            state: 1,
-            total: 22220,
-            cargo: [{
-              des: '爱丽丝 标准#',
-              color: '红色厚',
-              price: '2222',
-              num: '10',
-            }],
-          },{
-            date: '2017-05-01',
-            orderId : '19877240650895924',
-            total: 1500,
-            state: 2,
-            cargo: [{
-              des: '爱丽丝 标准#',
-              color: '红色厚',
-              price: '500',
-              num: '3',
-            }],
-        }],
+        items: [],
         cargos: [],
         // no_find: '暂无订单～',
         order_table: true,
@@ -401,9 +358,9 @@
           // orderId:"3334140532021"
         };
         that.global.axiosPostReq('/Exp/queryExp',obj).then((res) => {
-          var data = res.data.data;
 
           if (res.data.callStatus === 'SUCCEED') {
+            var data = res.data.data;
             that.wuliuxinxi = JSON.parse(data);
             console.log(JSON.parse(data),"haveALookAtWuLiu  ");
             for(let i in that.wuliuxinxi.Traces){
@@ -530,7 +487,7 @@
 }
 .orderDetails .order_des_right{
   top: 0 !important;
-  
+
 }
 .orderDetailsBtn{
   float: right;

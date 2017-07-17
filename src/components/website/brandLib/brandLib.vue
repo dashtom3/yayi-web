@@ -673,8 +673,6 @@ margin: 0 auto;
   height: 40px;
 }
 
-
-
 .allGoods li .imgWrap .goodImg{
   /*display: inline-block;*/
   /*vertical-align: middle;*/
@@ -686,9 +684,10 @@ margin: 0 auto;
   top: 50%;
   transform: translateY(-50%);
 }
-.allGoods li .imgWrap:hover{
+.allGoods li:hover{
   box-shadow: 7px 7px 28px #bcbcbc;
   transition: all 0.5s ease;
+  border-color:white;
 }
 .goodImg:hover{
   /*box-shadow: 7px 7px 28px #bcbcbc;
@@ -726,11 +725,12 @@ transition: all 0.5s ease;*/
     overflow: hidden;  /** 隐藏超出的内容 **/
  box-shadow: 3px 3px 5px #eaeaea;
 }
-.goodTitle:hover{
+.allGoods li:hover .goodTitle{
   cursor: pointer;
   background: #5db7e8;
   transition: all ease 0.5s;
   color: white;
+  transition: all 0.5s ease;
 }
 .goodBottom{
   color: #D81E06;

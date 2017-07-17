@@ -36,7 +36,12 @@
         <el-table-column prop="totalFee" label="总价（元）" width="120" align="center" ></el-table-column>
         <el-table-column prop="qbDed" label="乾币抵扣（元）" width="140" align="center" ></el-table-column>
         <el-table-column prop="actualPay" label="实际付款（元）" width="140" align="center" ></el-table-column>
-        <el-table-column prop="phone" label="买家信息" width="120" align="center" ></el-table-column>
+        <el-table-column  label="买家信息" width="140" align="center" >
+          <template  scope="scope">
+            <span>{{scope.row.phone}}</span><br>
+            <span>{{scope.row.reName}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="created" label="下单时间" min-width="120" align="center" >
           <template scope="scope">
             <span>{{scope.row.created}}</span>

@@ -27,7 +27,7 @@
           <img :src="cargo.picPath" alt="img">
         </div>
         <div class="left des_p">
-          <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+          <p style="margin-bottom: 20px;margin-top:0;">{{cargo.itemInfo.itemName}}</p>
           <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
@@ -51,14 +51,21 @@
 
 <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
-  <div class="">
+  <div v-if="nowOrderDetails.receiver">
     <p>收货信息：</p>
-    <p>收货信息：</p>
+    <p>
+      <span>{{nowOrderDetails.receiver.province}}</span>
+      <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+    </p>
   </div>
-  <div class="">
+  <div  v-if="nowOrderDetails.receiver">
     <p>订单信息：</p>
-    <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
-    <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+    <p style="margin-bottom: 20px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
+      <span style="float:right">创建时间：{{nowOrderDetails.created}}</span>
+    </p>
     <div class="">
       <div class="order_table" style="width:100%" >
         <div style="width:150px;" class="left cargo">商品</div>
@@ -81,7 +88,7 @@
           <div class="left des_num">{{cargo.num}}</div>
         </div>
         <!--  订单详情item 结束 -->
-        <div class="order_des_right" style="width:auto;right:25px;top:0">
+        <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
           <div class="left now_pay_des" style="margin-top:0">
             <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
             <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
@@ -107,8 +114,23 @@
     <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
   </span>
 </el-dialog>
-<el-dialog title="提示" :visible.sync="dialogVisibleHaveALookAtWuLiu" size="tiny">
-  则是物流信息
+<el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
+  <div class="wlxxWrap" v-if="wuliuxinxi">
+    <div class="wlxxLeft">
+      <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
+      <span class="lastCircle"></span>
+    </div>
+    <div class="wlxxRight">
+      <ul>
+        <li v-for="one in wuliuxinxi.Traces">
+          <span class="data">{{one.AcceptTime.split(" ")[0]}}</span>
+          <div class="placeWrap">
+            <span class="place">{{one.AcceptStation}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
   <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
   </span>
@@ -130,6 +152,7 @@
     name: 'waitRec',
     data () {
       return {
+        wuliuxinxi:false,
         pageProps:null,
         items: [],
         dialogVisibleToOrderDetails:false,
@@ -151,6 +174,11 @@
       that.getAllOrder();
     },
     methods: {
+      lookOrderDetails:function(item){
+        var that = this;
+        that.nowOrderDetails = item;
+        that.dialogVisibleToOrderDetails = true;
+      },
       pageHandler:function(data){
         this.fenYeGetData(data);
       },
@@ -159,9 +187,11 @@
         var obj = {};
         obj.currentPage = data;
         obj.numberPerpage = 10;
+        obj.state = 3;
         that.global.axiosPostReq('/OrderDetails/show',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,"..........")
             that.items = res.data.data;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
@@ -201,13 +231,27 @@
       },
       haveALookAtWuLiu:function(item){
         var that = this;
+        console.log(item)
         var obj = {
           token:that.global.getToken(),
-          orderId:that.nowToOperateItem.orderId
+          orderId:item.orderId
         };
+
         that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
-           console.log(res,"sureGetGood");
           if (res.data.callStatus === 'SUCCEED') {
+            var data = res.data.data;
+            that.wuliuxinxi = JSON.parse(data);
+            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
+            for(let i in that.wuliuxinxi.Traces){
+              var temp = 25;
+              if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){
+                that.wuliuxinxi.Traces[i].height = 36 + "px";
+              }else{
+                var num = that.wuliuxinxi.Traces[i].AcceptStation.length/temp;
+                num = parseInt(num)
+                that.wuliuxinxi.Traces[i].height = 35*(1+1) + "px";
+              }
+            }
             that.dialogVisibleHaveALookAtWuLiu = true;
           } else {
             that.$message.error('网络错误！');
@@ -224,13 +268,14 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
+          state:3
         };
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "3";
             });
-            console.log(b,"getAllOrder_waitRec");
+            console.log(res,"getAllOrder_waitRec");
             that.items = b;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created));

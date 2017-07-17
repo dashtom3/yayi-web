@@ -89,7 +89,7 @@
   </div>
   <div>
     <p>订单信息：</p>
-    <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+    <p style="margin-bottom: 30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
     <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
       <div class="order_table" style="width:100%" v-show="order_table">
@@ -106,7 +106,7 @@
             <img :src="cargo.picPath" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
-            <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+            <p style="margin-bottom: 20px;margin-top:0">{{cargo.itemInfo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -199,6 +199,7 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
+          state:4
         };
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {

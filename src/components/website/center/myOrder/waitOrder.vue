@@ -49,7 +49,9 @@
         </div>
       </div>
     </div>
-    <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <div v-if="pageProps">
+      <paging v-if="pageProps.totalNumber>pageProps.numberPerPage" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    </div>
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
       <div v-if="nowOrderDetails.receiver">
         <p>收货信息：</p>
@@ -80,7 +82,7 @@
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
-                <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+                <p style="margin-bottom: 20px;margin-top:0">{{cargo.itemInfo.itemName}}</p>
                 <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
               </div>
               <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -223,9 +225,11 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
+          state:1
         };
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            that.numberPerPage = res.data.numberPerPage;
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "1";
             });
@@ -239,8 +243,8 @@
               that.no_order = true;
             }else {
               var obj = {
-                totalPage:res.data.totalPage,
-                totalNumber:res.data.totalNumber,
+                totalPage:1,
+                totalNumber:that.items.length,
                 numberPerPage:res.data.numberPerPage
               }
               that.pageProps = obj;

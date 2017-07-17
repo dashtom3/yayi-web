@@ -64,7 +64,7 @@
   </div>
   <div class="">
     <p>订单信息：</p>
-    <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+    <p style="margin-bottom:30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
     <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
       <div class="order_table" style="width:100%" >
@@ -81,7 +81,7 @@
             <img :src="cargo.picPath" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
-            <p style="margin-top: ;">{{cargo.itemInfo.itemName}}</p>
+            <p style="margin-top:0 ;">{{cargo.itemInfo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -172,13 +172,13 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
+          state:2
         };
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "2" || ele.state == "5";
             });
-            console.log(b,"getAllOrder_waitSend");
             that.items = b;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
@@ -188,12 +188,13 @@
               that.no_order = true;
             }else{
               var obj = {
-                totalPage:res.data.totalPage,
-                totalNumber:res.data.totalNumber,
+                totalPage:1,
+                totalNumber:that.items.length,
                 numberPerPage:res.data.numberPerPage
               }
               that.pageProps = obj;
             }
+            console.log(that.items,"getAllOrder_waitSend");
           } else {
             that.$message.error('网络错误！');
           }
