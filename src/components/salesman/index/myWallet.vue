@@ -2,7 +2,7 @@
 	<el-row class="brandWarp">
     <el-col :span="24" class="warp-breadcrum1">
       <div class="grid-content bg-purple-dark">
-        <span>钱包余额：<i class="i_col_red">￥700</i></span>
+        <span>钱包余额：<i class="i_col_red">￥{{withTotalAmt}}</i></span>
         <button class="margin_l btn_col" @click="withDrawHandler">提现</button>
       </div>
       <div class="curOrder">钱包明细</div>
@@ -31,25 +31,29 @@
         </li>
       </ul>
       <div class="grid-content bg-purple-dark wallet_title">
-        <span>进账总额：<i class="i_col_blue">￥20000</i></span>
-        <span class="margin_l">提现总额：<i class="i_col_red">￥10000</i></span>
+        <span>进账总额：<i class="i_col_blue">￥{{houstonJZ}}</i></span>
+        <span class="margin_l">提现总额：<i class="i_col_red">￥{{withdrawalsTX}}</i></span>
       </div> 
     </el-col>
     <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;height:280px;">
       <el-table :data="tableData" align="center" border style="width: 100%">
-        <el-table-column prop="updated" align="center" label="日期">
+        <el-table-column prop="cashSuTime" align="center" label="日期">
+          <template scope="scope">
+            <span v-if="scope.row.cashSuTime">{{new Date(scope.row.cashSuTime).getFullYear()+'-'+ fillZero(new Date(scope.row.cashSuTime).getMonth()+1)+'-'+fillZero(new Date(scope.row.cashSuTime).getDate())}}</span>
+            <span v-if="scope.row.updated">{{new Date(scope.row.updated).getFullYear()+'-'+ fillZero(new Date(scope.row.updated).getMonth()+1)+'-'+fillZero(new Date(scope.row.updated).getDate())}}</span>
+          </template>
         </el-table-column>
         <el-table-column  prop="getMoney" align="center" label="进账">
           <template scope="scope">
-            <span class="col_blue">{{scope.row.income}}</span>
+            <span class="col_blue">{{scope.row.getMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="getMoney" align="center" label="提现">
+        <el-table-column prop="cashMoney" align="center" label="提现">
           <template scope="scope">
-            <span class="col_red">{{scope.row.withDrawals}}</span>
+            <span class="col_red">{{scope.row.cashMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="account" align="center" label="账户余额">
+        <el-table-column prop="anumber" align="center" label="账户余额">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -87,7 +91,7 @@
       size="small">
       <div class="detail_title">订单详情</div>
       <div class="custInfo">客户信息</div>
-      <div class="custContent"><b>客户姓名：</b><span>李志芳</span><b style="margin-left:80px;">客户手机号：</b><span>13861637946</span></div>
+      <div class="custContent"><b>客户姓名：</b><span>111</span><b style="margin-left:80px;">客户手机号：</b><span>222</span></div>
       <div class="custInfo">订单信息</div>
       <table class="datail_tb">
         <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
@@ -100,7 +104,7 @@
           <td>收入状态</td>
           <td>总收入元</td>
         </tr>
-        <tr class="trs" v-for="(item, index) in infoList" :key="index">
+        <tr class="trs" v-for="(item, index) in orderDetail" :key="index">
           <td>{{item.goodsName}}</td>
           <td>{{item.price}}</td>
           <td>{{item.num}}</td>
@@ -128,22 +132,22 @@
         <el-row>
           <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{trueName}} &nbsp;&nbsp;&nbsp;&nbsp;账户：{{bankNo}}</span></div></el-col>
         </el-row>
-        <el-form style="padding-top:10px;">
-          <el-form-item label="提现金额：">
-            <el-input v-model="withDrawAccount" class="item_w_input fl"></el-input>
+        <el-form style="padding-top:10px;" :model="WithDrawForm" :rules="rulesWithDraw" ref="WithDrawForm">
+          <el-form-item label="提现金额：" prop="withDrawAccount">
+            <el-input v-model.number="WithDrawForm.withDrawAccount" class="item_w_input fl"></el-input>
           </el-form-item>
           <el-form-item label="手机号：" style="padding-left:14px;">
-            <el-input v-model="withDrawPhone" class="item_w_input fl"></el-input>
+            <el-input v-model="WithDrawForm.withDrawPhone" class="item_w_input fl" :disabled="true"></el-input>
           </el-form-item>
           <div style="margin-bottom:16px;">
             <span class="fl" style="padding-left:15px;">验证码：</span>
-            <el-input v-model="rg_code" class="item_c_input fl" style="margin-left:12px;"></el-input>
+            <el-input v-model="WithDrawForm.rg_code" class="item_c_input fl" style="margin-left:12px;"></el-input>
             <button v-if="hYzm" class="btn_col" @click.prevent="hasYzm()">{{Yzm}}</button>
             <button v-else class="btn_col" style="background-color: #C8C8C8;" disabled>{{Yzm1}}</button>
           </div>
         </el-form>
         <div style="margin-top:30px;">
-          <button class="withDrawBtn btn_col" @click="applyHandler">申请提现</button>
+          <button class="withDrawBtn btn_col" @click="applyHandler('WithDrawForm')">申请提现</button>
           <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
         </div>
       </div>
@@ -156,6 +160,22 @@
   import util from '../../../common/util'
   export default {
     data(){
+      var checkAmt = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入正确的金额'));
+        }
+        setTimeout(() => {
+          if (!this.isAmt(value)) {
+            callback(new Error('金额只能是有两位小数的正数'));
+          } else {
+            if (value > this.withTotalAmt) {
+              callback(new Error('当前金额已超出提现总额'));
+            } else {
+              callback()
+            }
+          }
+        }, 1000);
+      };
       return {
         value: null,
         value: '',
@@ -168,15 +188,26 @@
         withDrawBank: false,
         withDrawBank01:false,
         detailVisible: false,
-        withDrawAccount: '',
-        withDrawPhone: '',
-        rg_code: '',
+        withTotalAmt: 700,
+        WithDrawForm: {
+          withDrawAccount: '',
+          withDrawPhone: global.getSalesUser().phone,
+          rg_code: '',
+        },
+        rulesWithDraw: {
+          withDrawAccount: [
+            { validator: checkAmt, trigger: 'blur' }
+          ]
+        },
         Yzm1: '',
         Yzm: '获取验证码',
         postalType: '',
         trueName: '',
         bankNo: '',
-        infoList: []
+        infoList: [],
+        houstonJZ: '',//进账总额
+        withdrawalsTX: '',//提现总额
+        orderDetail: null
       }
     },
     props: ['toMySon'],
@@ -189,16 +220,28 @@
       that.getMyWallet();
     },
     methods: {
+      // 检查提现金额是否合法
+      isAmt: function(str) {
+        var reg = /^[0-9]+(.[0-9]{1,2})?$/;
+        if (reg.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
+      },
+      fillZero: function(n){
+        return n<10 ? '0'+ n: n 
+      },
       // 获取验证码
       hasYzm: function() {
         var that = this;
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         var sec = 60;
-        if (that.withDrawPhone == '' || !mb.test(that.withDrawPhone)) {
+        if (that.WithDrawForm.withDrawPhone == '' || !mb.test(that.WithDrawForm.withDrawPhone)) {
           that.$message.error('请输入正确的手机号！');
           return false
         } else {
-          var obj = { phone: that.withDrawPhone }
+          var obj = { phone: that.WithDrawForm.withDrawPhone }
           that.global.axiosPostReq('/witManage/gitVcode', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               for(let i=0; i<=60; i++) {
@@ -215,7 +258,7 @@
                 }, i * 1000)
               }
             } else {
-              that.$message.error('获取验证码失败！');
+              that.$message.error('网络出错，请稍后再试！');
             }
           })
         }
@@ -234,7 +277,7 @@
       queryInfo: function(){
         let params = {
           phone: global.getSalesUser().phone,
-          token: global.getSalesToken(),
+          token: global.getSalesToken()
         }
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -248,15 +291,14 @@
       getMyWallet: function() {
         var that = this;
         var obj = {
-          token: that.global.getSalesToken(),
+          token: 2,
           state: 0,
         }
-        console.log(obj)
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,'232323')
-            //that.tableData = res.data.data;
-            //console.log(that.tableData)
+            this.houstonJZ = res.data.data.houstonJZ
+            this.withdrawalsTX = res.data.data.withdrawalsTX
+            // this.tableData = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -327,6 +369,38 @@
         }
       },
       queryDetail(index, row){
+        if(row.cashId){
+          //查看钱包详情
+          let params = {
+            cashId: row.cashId,
+            token: global.getSalesToken()
+          }
+          console.log('钱包详情',params)
+          global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              // this.orderDetail = res.data.data
+              // console.log(res.data.data)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }else if(row.orderId){
+          //查看钱包详情
+          let params = {
+            orderId: row.orderId,
+            token: global.getSalesToken()
+          }
+          console.log('钱包详情',params)
+          global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+
+              console.log(res.data.data)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
+        
         this.detailVisible = true
       },
       withDrawHandler(){
@@ -338,32 +412,40 @@
           this.withDrawSets = true
         }       
       },
-      applyHandler(){
-        let params = {
-          token: global.getSalesToken(),
-          phone: global.getSalesUser().phone,
-          type: this.postalType,
-          cashMoney: this.withDrawAccount,
-          realName: this.trueName,
-          anumber: this.withDrawAccount,
-          vCode: this.rg_code
-        }
-        //验证提现金额
-        if(this.withDrawAccount <= 0 || this.withDrawAccount){
-          this.$message.error('请输入正确的金额');
-          return false
-        }
-        global.axiosPostReq('/witManage/submitWit',params).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            this.statTip = true
-            this.withDrawAccount = ''
-            this.withDrawPhone = ''
-            this.rg_code = ''
+      applyHandler(formName){
+
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let params = {
+              token: global.getSalesToken(),
+              phone: global.getSalesUser().phone,
+              type: this.postalType,
+              cashMoney: this.WithDrawForm.withDrawAccount,
+              realName: this.trueName,
+              anumber: this.bankNo,
+              vCode: this.WithDrawForm.rg_code
+            }
+            //验证验证码
+            if(!this.WithDrawForm.rg_code){
+              this.$message.error('请输入正确的验证码');
+              return false
+            }
+            console.log('--------------',params)
+            global.axiosPostReq('/witManage/submitWit',params).then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                this.statTip = true
+                this.WithDrawForm.withDrawAccount = ''
+                this.WithDrawForm.rg_code = ''
+                this.withDrawBank = false
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            return false;
           }
-        })
-        this.withDrawBank = false
+        });
+        
       }
     }
   }
@@ -497,6 +579,9 @@
     text-align: center;
     font-size: 16px;
     background: url(../../../images/salesman/titlebg.png) 400px 34px no-repeat;
+  }
+  .el-form-item__error{
+    margin-left: 92px;
   }
   .datail_tb{
     width: 100%;

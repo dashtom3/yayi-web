@@ -126,7 +126,7 @@
           token: global.getToken(),
           type: this.certiData.type,
           companyName: this.certiData.companyName,
-          part: (this.certiData.part).join(","),
+          part: this.certiData.part.join(","),
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
           judge: this.certiData.ifOnce
@@ -146,7 +146,7 @@
           token: global.getToken(),
           type: this.certiData.type,
           companyName: this.certiData.companyName,
-          part: this.certiData.part && this.certiData.part.join(",") || ['北京','北京市','东城区'],
+          part: this.certiData.part.join(","),
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
           judge: this.certiData.ifOnce
@@ -166,6 +166,7 @@
         if(!this.userData.trueName){
           this.$message.error('请先完善个人信息部分！');
         }
+        
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -175,9 +176,8 @@
             });
             this.ifPass = true;
             this.btnVisible = false;
-
           }else{
-            this.$message.error('资质认证修改失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -233,9 +233,6 @@
               this.saveJudge();
             }
           })
-          this.ifPass = false;
-          this.btnVisible = true;
-        }else{
           this.ifPass = false;
           this.btnVisible = true;
         }

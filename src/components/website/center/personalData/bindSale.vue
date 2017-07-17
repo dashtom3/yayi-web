@@ -1,14 +1,23 @@
 <template>
   <div class="bindSale">
     <div class="content">
-      <el-form v-if="!saleData.saleName" ref="userData" :model="saleData" label-width="80px">
-        <el-form-item label="销售员手机号：" label-width="130px">
-          <el-input v-model="willBindSale"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="bindHandler">绑定</el-button>
-        </el-form-item>
-      </el-form>
+      <el-row v-if="!saleData.saleName">
+        <el-col>
+          <div class="searchWrap">
+            <span>销售员手机号：</span>
+            <input class="inputClass" v-model="willBindSale" />
+          </div>
+          <div v-show="showSearchInfo" class="showSearchInfoClass">
+            <span>真实姓名：{{findSaleName}}</span>
+          </div>
+          <div v-show="noSearchSale" class="showSearchInfoClass">
+            <span style="color:#D81E06;">非常抱歉，未找到该销售员</span>
+          </div>
+        </el-col>
+        <el-col>
+          <el-button type="primary" @click="bindHandler" class="btnPos" :disabled="!showSearchInfo">绑定</el-button>
+        </el-col>
+      </el-row>
       <div v-else class="binded">
         <p>
           <span class="left">销售员手机号：</span>
@@ -33,10 +42,28 @@
     name: 'bindSale',
     data () {
       return {
+        noSearchSale: false,
+        showSearchInfo: false,
         willBindSale:null,
+        findSaleName: '',
         saleData:{
           salePhone:'',
           saleName:''
+        }
+      }
+    },
+    watch: {
+      willBindSale: function(){
+        if(this.willBindSale.length === 11){
+          if(this.isPhone(this.willBindSale)){
+            this.validateHandler()
+          }else {
+            this.showSearchInfo = false
+            this.noSearchSale = true
+          }
+        }else if(!this.willBindSale.length){
+          this.showSearchInfo = false
+          this.noSearchSale = false
         }
       }
     },
@@ -44,6 +71,16 @@
       this.queryHandler()
     },
     methods:{
+      // 检查字符串是否为合法手机号码
+      isPhone(str) {
+        var reg = /^(13[0-9]|15[012356789]|18[0-9]|14[57]|17[678])[0-9]{8}$/;
+        if (reg.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
+      },
+      //查询是否绑定
       queryHandler(){
         let params = {
           token: global.getToken()
@@ -54,11 +91,18 @@
           }
         })
       },
+      //绑定销售员
       bindHandler(){
         let params = {
           salePhone: this.willBindSale,
           userPhone: global.getUser().phone,
           token: global.getToken()
+        }
+        //验证手机号码
+        if(!this.isPhone(this.willBindSale)){
+          this.noSearchSale = true
+          this.showSearchInfo = false
+          return false
         }
         global.axiosPostReq('/userManageList/bind',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -68,7 +112,29 @@
             });
             this.queryHandler()
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            this.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      validateHandler(){
+        let params = {
+          saleId: '',
+          phone: this.willBindSale,
+          trueName: '',
+          isBindUser: '',
+          currentPage: 1,
+          numberPerPage: 10
+        }
+        global.axiosGetReq('/saleList/query',params).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            if(res.data.data.length){
+              this.findSaleName = res.data.data[0].trueName
+              this.showSearchInfo = true
+              this.noSearchSale = false
+            }else{
+              this.noSearchSale = true
+              this.showSearchInfo = false
+            }
           }
         })
       }
@@ -78,8 +144,28 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.searchWrap{
+  margin-top:20px;
+  height: 30px;
+  color: #333;
+}
+.inputClass{
+  width: 300px;
+  height: 34px;
+  line-height: 34px;
+  padding-left: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline:none;
+}
 .bindSale{
   height: 550px;
+}
+.btnPos{
+  color:#fff;
+  position:absolute;
+  top:100px;
+  left:350px;
 }
 .content{
   margin-left: 42px;
@@ -89,6 +175,7 @@
 .showSearchInfoClass{
   color: #5db7e8;
   line-height: 50px;
+  padding-left: 110px;
 }
 .showSearchInfoClass span:nth-child(2){
   margin-left: 50px;

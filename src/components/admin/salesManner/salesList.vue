@@ -296,6 +296,7 @@
             numberPerPage: 10
           }
         }
+        console.log('--------------',params)
         global.axiosGetReq('/saleList/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.salesList = res.data.data

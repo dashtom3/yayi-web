@@ -47,13 +47,13 @@
         //查询个人信息
         global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            this.personInfo = res.data.data;
-            this.personInfo.birthday = util.formatDate.format(new Date(res.data.data.birthday));
-            this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString();
-            this.personInfo.type = res.data.data.type && res.data.data.type.toString();
-            this.personInfo.part = res.data.data.part && res.data.data.part.split(",");
+            this.personInfo = res.data.data
+            this.personInfo.birthday = res.data.data.birthday && util.formatDate.format(new Date(res.data.data.birthday))
+            this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
+            this.personInfo.type = res.data.data.type && res.data.data.type.toString()
+            this.personInfo.part = res.data.data.part && res.data.data.part.split(",")
           }else{
-            this.$message.error('个人信息查询失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       }

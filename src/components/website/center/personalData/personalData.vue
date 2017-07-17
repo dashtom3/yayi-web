@@ -36,6 +36,9 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
+            <transition name="shake">
+              <p v-show="birthDay_validate" class="error">请选择您的生日</p>
+            </transition>
           </el-form-item>
           <el-form-item label="qq：">
             <el-input v-model="personData.qq"></el-input>
@@ -58,6 +61,7 @@
       return {
         currentTabs:1,
         trueName_validate: false,
+        birthDay_validate: false,
         imageUrl: this.userData.userPic || '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
@@ -68,7 +72,7 @@
           userPic: this.userData.userPic || '',
           trueName: this.userData.trueName || '',
           sex: this.userData.sex || '1',
-          birthday: this.userData.birthday || '1990-01-01',
+          birthday: this.userData.birthday,
           qq: this.userData.qq || '',
         }
       }
@@ -88,6 +92,9 @@
         handler: function(){
           if(this.personData.trueName){
             this.trueName_validate = false
+          }
+          if(this.personData.birthday){
+            this.birthDay_validate = false
           }
         },
         deep: true
@@ -111,6 +118,11 @@
           this.trueName_validate = true;
           return false;
         }
+        //验证生日必输
+        if(!this.personData.birthday){
+          this.birthDay_validate = true;
+          return false;
+        }
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateUser', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -119,7 +131,7 @@
               type: 'success'
             });
           }else{
-            this.$message.error('个人信息修改失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
