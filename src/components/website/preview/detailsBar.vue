@@ -129,12 +129,13 @@
 
 .detailsBar{
 	width: 1200px;
-    height: 30px;
+    /*height: 30px;*/
     margin: 0 auto;
-    padding: 40px 0;
+    /*padding: 40px 0;*/
     border-top: 1px solid #e5e5e5;
-    margin-top: 10px;
-    padding-top: 60px;
+    /*margin-top: 10px;*/
+    /*padding-top: 60px;*/
+    padding: 20px 0;
 }
 .detailsBar .goodName{
   color: #5db7e8 !important;

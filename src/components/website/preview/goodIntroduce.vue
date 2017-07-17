@@ -4,7 +4,7 @@
       <div>
         <span>品名：{{instruction.addName}}</span>
         <span>单位：{{instruction.unit}}</span>
-        <span>品牌：AQUAPICK</span>
+        <span>品牌：{{instruction.itemBrandName}}</span>
       </div>
       <div>
         <span>注册证号：{{instruction.registerId}}</span>
@@ -47,7 +47,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .goodIntroduce{
-  margin-top:50px;
+  margin-top:20px;
   border:1px solid #dcdcdc;
   border-radius: 2px;
   /*padding: 0 20px;*/

@@ -3629,8 +3629,7 @@ export default {
     }
   },
   created(){
-    // console.log(this.aselected,'23232323');
-    // console.log(this.selected,'22222222');
+   
     if (this.selected !== undefined) {
       this.selectedOptions3 = this.selected
       return false
@@ -3639,12 +3638,6 @@ export default {
       this.selectedOptions3 = this.aselected
       return false
     }
-    //console.log(this.selected,'223355');
-    // if (condition) {
-    //   expression
-    // }
-    // this.selectedOptions3 = this.selected
-    // this.selectedOptions3 = this.aselected
   },
   watch: {
     selectedOptions3: function() {

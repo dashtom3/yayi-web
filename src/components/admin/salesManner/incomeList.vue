@@ -238,11 +238,15 @@
           } else {
             that.$message.error('网络出错，请稍后再试！')
           }
-        })
+        }).catch(function (error) {
+          that.$message.error('网络出错，请稍后再试！')
+          console.log(error,'oopio')
+        });
       },
       // 查询收入列表
       search:function(){
         var that = this;
+        that.pageProps.pageNum = 1
         if (that.searchDataPrev.length == 0 || util.formatDate.format(new Date(that.searchDataPrev[0])) == '1970-01-01') {
           var startDate = ''
           var endDate = ''

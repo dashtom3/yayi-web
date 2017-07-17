@@ -78,6 +78,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="small">
@@ -210,6 +211,7 @@
 </template>
 <script>
   import util from '../../../common/util'
+  import paging from '../../website/brandLib/paging0'
   export default{
     data () {
       return {
@@ -309,7 +311,14 @@
         editCargo: {},
         options: [],
         brandOptions: [],
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
       }
+    },
+    components: {
+      paging,
     },
     created: function() {
       var that = this;
@@ -326,12 +335,25 @@
       }
     },
     methods: {
+      //分页
+      pageHandler:function(data){
+        var that = this
+        that.pageProps.pageNum = data
+        that.getItemInfo();
+      },
       // 获取商品列表
       getItemInfo: function() {
         var that = this;
-        that.global.axiosPostReq('/item/itemInfoList').then((res) => {
+        // that.pageProps.pageNum = 1
+        var obj = {
+          currentPage: that.pageProps.pageNum,
+          numberPerPage: 10,
+        }
+        that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,'op')
             that.tableData = res.data.data;
+            that.pageProps.totalPage = res.data.totalPage
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
@@ -372,6 +394,7 @@
       },
       search: function() {
         var that = this;
+        that.pageProps.pageNum = 1
         if (that.cargo.class.length == 1) {
           var obj = {
             itemId: that.cargo.id,
@@ -379,6 +402,8 @@
             itemClassify: that.cargo.class[0],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
           }
         }else if (that.cargo.class.length == 2) {
           var obj = {
@@ -387,6 +412,8 @@
             itemClassify: that.cargo.class[1],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
           }
         }else if (that.cargo.class.length == 3) {
           var obj = {
@@ -395,6 +422,8 @@
             itemClassify: that.cargo.class[2],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
           }
         } else if (that.cargo.class.length == 0) {
           var obj = {
@@ -403,12 +432,15 @@
             itemClassify: that.cargo.class[2],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
+            currentPage: that.pageProps.pageNum,
+            numberPerPage: 10,
           }
         }
         // console.log(obj,'llll')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData = res.data.data;
+            that.tableData = res.data.data;            
+            that.pageProps.totalPage = res.data.totalPage
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
@@ -719,4 +751,12 @@ th,td {
   line-height: 25px;
   display: inline-block;
 }
+.pageC {
+  text-align: center;
+  margin-top: 20px;
+/*    bottom: 50px; 
+    right: 20px; */
+/*    left: 0px; 
+    margin: 0 auto;*/
+  }
 </style>

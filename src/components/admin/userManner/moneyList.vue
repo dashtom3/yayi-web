@@ -188,6 +188,7 @@
       // 查询手机号
       search: function() {
         var that = this;
+        that.pageProps.pageNum = 1
         if (that.nowUserMoneyNum == '') {
           that.$message.error('请填写手机号！');
           return false

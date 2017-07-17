@@ -25,7 +25,7 @@
     watch:{
       childmsg: { 
         handler: function(){
-          if(this.childmsg.pageNum === 1){
+          if(this.childmsg.pageNum == 1){
             this.currentPage = 0
           }
         },
