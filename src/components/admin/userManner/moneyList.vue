@@ -134,6 +134,7 @@
       // 头部查询
       searchAll: function() {
         var that = this;
+        that.pageProps.pageNum = 1
         if (that.searchDataPrev.length == 0 || that.searchDataPrev[0] == null) {
           var obj = {
             phone: that.searchUserId,

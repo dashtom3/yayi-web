@@ -6,6 +6,7 @@
         <img class="special_img" src="../../../images/gwc/pay1.png" alt="img">
         <span class="special_word">恭喜您，付款成功！</span>
       </div>
+      <div class="timer_word"><span style="color: #D81E06">{{timer}}</span>秒后自动跳转首页</div>
       <div class="paySuccess_btn">
         <div class="seeOrder" @click="see">查看订单</div>
         <div class="keepShop" @click="keep">继续购物</div>
@@ -22,16 +23,39 @@
     name: 'paySuccess',
     data () {
       return {
-        //goods: [],
+        timer: 6
       }
     },
     components: {
       publicHeader,
       publicFooter,
     },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        // if (JSON.parse(window.sessionStorage.getItem('order')) == null) {
+        //   that.$router.push({path:'/'})
+        // }else {
+        //   console.log('uiuiuiu')
+        // }
+        // console.log(that.$router.history.path,'222')
+        // that.$router.history.current.name == 'eastshui'
+      })
+    },
     created: function() {
       var that = this;
       window.sessionStorage.removeItem('order');
+      for(let i=0; i<=6; i++) {
+        window.setTimeout(function(){
+          if (that.timer !== 0) {
+            that.timer--
+          } else {
+            that.$router.push({path:'/'})
+          }
+        }, i * 1000)
+      }
     },
     mounted() {
       var kk = this.$refs.contentHeight;
@@ -78,6 +102,11 @@
   margin-top: 3.9px;
   text-align: right;
 }
+.timer_word {
+  color: #555964;
+  font-size: 16px;
+  font-weight: bold;
+}
 .paySuccess_detail {
   width: 330px;
   margin: 0 auto;
@@ -89,7 +118,7 @@
   width: 320px;
   height: 40px;
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 .seeOrder {
   width: 140px;

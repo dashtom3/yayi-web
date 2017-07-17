@@ -7,7 +7,7 @@
         <p class="first_p">订单提交成功，请您尽快付款。</p>
         <p class="second_p">未成功支付订单将在 <span style="color:#D81E06; font-weight: bold;">{{time}}分钟</span> 后自动取消，请及时付款</p>
       </div>
-      <p class="pay_price">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.sumPrice}}</span></p>
+      <p class="pay_price">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
     </div>
     <div class="pay_container">
       <div class="pay_header">支付方式</div>
@@ -21,6 +21,19 @@
       </div>
       <div class="nowPay" @click="nowpay">立即支付</div>
     </div>
+    <el-dialog :visible.sync="WxTableVisible" :before-close="handleClose" size="small">
+      <div style="margin-bottom:30px;">
+        <img class="WePayLogo" src="../../../images/gwc/WePayLogo.png" alt="img">
+        <img class="wxR" src="../../../images/gwc/wxR.png" alt="img">
+        <p class="wxRealPay">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
+      </div>
+      <div style="text-align:center;margin-bottom:10px;">
+        <img style="width:260px;height:260px;" :src="wxImg" alt="img">
+      </div>
+      <div style="text-align:center">
+        <img src="../../../images/gwc/wxDes.png" alt="img">
+      </div>
+    </el-dialog>
     <publicFooter></publicFooter>
   </div>
 </template>
@@ -38,11 +51,26 @@
         isActive1: false,
         isActive2: false,
         orderDetail: null,
+        WxTableVisible: false,
+        wxImg: '',
+        kk: 1,
       }
     },
     components: {
       publicHeader,
       publicFooter,
+    },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        if (JSON.parse(window.sessionStorage.getItem('order')) == null) {
+          that.$router.push({path:'/'})
+        }else {
+          console.log('uiuiuiu')
+        }
+      })
     },
     created: function() {
       var that = this;
@@ -64,6 +92,15 @@
         that.isActive1 = false;
         that.aliPay = false;
       },
+      // 确认关闭
+      handleClose: function() {
+        var that = this
+        that.$confirm('确认关闭微信支付页面？').then(_ => {
+          that.kk = 600
+          that.WxTableVisible = false
+          done();
+        }).catch(_ => {});
+      },
       // 立即支付
       nowpay: function() {
         var that = this;
@@ -74,16 +111,39 @@
           that.global.axiosGetReq('/pay/payParames',obj).then((res) => {
             //console.log(res.request.responseURL,'pay')
             window.location.href=res.request.responseURL
-            //window.open(res.request.responseURL)
-            //window.sessionStorage.removeItem('order')
-            // if (res.data.callStatus === 'SUCCEED') {
-               
-            // } else {
-            //   that.$message.error('网络出错，请稍后再试！');
-            // }
           })
+          return false
+        } 
+        if (that.isActive2 == true) {  // 微信支付
+          that.WxTableVisible = true
+          that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderReturnUrl' + '?orderId=' + that.orderDetail.OrderId
+          that.kk = 1
+          var timer = setInterval(function(){
+            console.log(that.kk,'kkkkk')
+              if (that.kk == 600) {
+                clearInterval(timer)
+                return false
+              }
+              var obj = {
+                out_trade_no: that.orderDetail.OrderId
+              }
+              that.global.axiosGetReq('/weixin/checkOrderState',obj).then((res) => {
+                console.log(res.data,'opopopop')
+                if (res.data.num == 2) {
+                  clearInterval(timer)
+                  that.$router.push({path:'/paySuccess'})
+                } else {
+                  that.kk++
+                  // that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            },3000);
+          return false
         }
-        //that.$router.push({path:'/paySuccess'})
+        if (that.isActive1 == false && that.isActive2 == false){ 
+          that.$message.error('请选择支付方式！');
+          return false
+        }
       }
     }
   }
@@ -186,5 +246,20 @@
   cursor: pointer;
   background-color: #5ed6dc;
   transition: all ease 0.5s;
+}
+.WePayLogo {
+  width: 125px;
+  height: 34px;
+}
+.wxR {
+  width: 79px;
+  height: 34px;
+}
+.wxRealPay {
+  float: right;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
 }
 </style>

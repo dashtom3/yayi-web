@@ -104,7 +104,6 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">商品属性：</div>
-<!--         <p class="detail_word">{{}}</p> -->
       </div>
       <table class="activeTable_box" border="1">
         <tr class="activeTable_title">
@@ -117,9 +116,23 @@
           <th class="enable">是否启用</th>
         </tr>
         <tr class="activeTable_des" v-for="(table,index) in details.itemValueList" :key="table">
-          <td v-for="name in propertyList">
-           <span>{{name.propertyInfoList[index]}}</span>
-      <!--       <span v-for="pp in name.propertyInfoList">{{pp}}</span> -->
+          <td v-if="table.itemPropertyInfo">
+           <span>{{table.itemPropertyInfo}}</span>
+          </td>
+          <td v-if="table.itemPropertyTwoValue">
+           <span>{{table.itemPropertyTwoValue}}</span>
+          </td>
+          <td v-if="table.itemPropertyThreeValue">
+           <span>{{table.itemPropertyThreeValue}}</span>
+          </td>
+          <td v-if="table.itemPropertyFourValue">
+           <span>{{table.itemPropertyFourValue}}</span>
+          </td>
+          <td v-if="table.itemPropertyFiveValue">
+           <span>{{table.itemPropertyFiveValue}}</span>
+          </td>
+          <td v-if="table.itemPropertySixValue">
+           <span>{{table.itemPropertySixValue}}</span>
           </td>
           <td class="des_skuCode">
             <span>{{table.itemSKU}}</span>
@@ -137,10 +150,46 @@
             <span>{{table.stockNum}}</span>
           </td>
           <td class="des_enable">
-            <span>{{table.canUse}}</span>
+            <span>{{table.canUse | canUse}}</span>
           </td>
         </tr>
       </table>
+      <div class="detail_box">
+        <div class="detail_cargo">商家货号：</div>
+        <p class="detail_word">{{details.itemDetail.storeItemId}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">器械类别：</div>
+        <p class="detail_word">{{details.itemDetail.apparatusType}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">单位：</div>
+        <p class="detail_word">{{details.itemDetail.unit}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">生产企业：</div>
+        <p class="detail_word">{{details.itemDetail.producePompany}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">注册证有效期／备案日期：</div>
+        <p class="detail_word">{{details.itemDetail.registerDate}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">产品包装：</div>
+        <p class="detail_word">{{details.itemDetail.itemPacking}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">产品标准：</div>
+        <p class="detail_word">{{details.itemDetail.itemLevels}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">使用范围：</div>
+        <p class="detail_word">{{details.itemDetail.itemRange}}</p>
+      </div>
+      <div class="detail_box">
+        <div class="detail_cargo">其他：</div>
+        <p class="detail_word">{{details.itemDetail.remark}}</p>
+      </div>
       <div class="detail_box">
         <div class="detail_cargo">商品详情：</div>
         <p class="detail_word" v-html="details.itemDetail.itemDesc"></p>
@@ -151,8 +200,8 @@
       </div>
       <div class="detail_box">
         <div class="detail_cargo">视频说明：</div>
-        <video style="width:100%;height:100%;" :src=details.itemDetail.video controls="controls"></video>
-       <!--  <p class="detail_word">{{details.itemDetail.video}}</p> -->
+<!--         <video style="width:100%;height:100%;" :src=details.itemDetail.video controls="controls"></video> -->
+        <p class="detail_word">{{details.itemPnamea}}</p>
       </div>
     </el-form>
   </el-dialog>

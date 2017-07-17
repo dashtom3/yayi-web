@@ -83,6 +83,18 @@ Vue.filter('operate', function (value) {
     }
     // return middleState2
 })
+
+Vue.filter('canUse', function (value) {
+    if(value == 1) {
+      var hh = '是'
+      return hh
+    }
+    if(value == 0) {
+      var hh = '否'
+      return hh
+    }
+    // return middleState2
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

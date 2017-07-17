@@ -49,14 +49,18 @@
         <div class="qianbi_des">
           <el-checkbox v-model="checked1">使用钱币（1钱币=1元）</el-checkbox>
           <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span> 
-          <div><input type="text" class="qianbi_word" v-show="qianbi_word" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span></div> 
+          <div style="margin-left:24px;">
+            <input type="text" class="qianbi_word" v-show="qianbi_word" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
+          </div> 
         </div>
       </div>
       <div class="qianbi_box">
         <div class="qianbi_title">发票</div>
         <div class="qianbi_des">
           <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox>
-          <div><input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称"></div>
+          <div style="margin-left:24px;">
+            <input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称">
+          </div>
         </div>
       </div>
       <div class="qianbi_box">
@@ -358,6 +362,18 @@
         fromGwc: '',
         orderItem: '',
       }
+    },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        if (that.fromGwc == null) {
+          that.$router.push({path:'/gwc'})
+        }else {
+          console.log(that.fromGwc,'uiuiuiu')
+        }
+      })
     },
     watch: {
       xRegion: function() {
@@ -740,8 +756,8 @@
           isRegister: that.leave_word, //是否需要产品注册证
           qbDed: that.qianbi_des, //钱币抵扣
           buyerMessage: that.leave_des, //买家留言
-          totalFee: that.gwcTotal, //总价
-          actualPay: parseInt(that.gwcTotal-that.qianbi_des), //实际付款
+          // totalFee: that.gwcTotal, //总价
+          // actualPay: that.gwcTotal-that.qianbi_des, //实际付款
           giveQb: '',  //获得乾币
           orderItem: orderItem, //JSON数组
         }
@@ -749,11 +765,15 @@
         // axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,'kkkkk')
-            let orderD = res.data.data
-            window.sessionStorage.setItem('order', JSON.stringify(orderD))
-            window.sessionStorage.removeItem('suborderData')
-            that.$router.push({ path:'/pay' });
+            if (res.data.data == null) {
+              that.$message.error('提交订单失败！');
+            } else{
+              console.log(res, 'kkkkk')
+              let orderD = res.data.data
+              window.sessionStorage.setItem('order', JSON.stringify(orderD))
+              window.sessionStorage.removeItem('suborderData')
+              that.$router.push({ path:'/pay' });
+            }
           } else {
             that.$message.error('提交订单失败！');
           }
@@ -768,7 +788,7 @@
 input {
   border: 1px solid #e9e9e9;
   outline:medium;
-  font-size: 15px;
+  font-size: 14px;
   padding: 0 7px 0 7px;
 }
 input:focus {

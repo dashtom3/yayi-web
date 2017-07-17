@@ -83,10 +83,11 @@
         that.secondForm.itemPacking = that.editCargo.itemDetail.itemPacking
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
+        that.secondForm.remark = that.editCargo.itemDetail.remark
       } else {
         that.ruleForm = that.$route.params.ruleForm
       }
-      console.log(that.ruleForm);
+      console.log(that.ruleForm,that.secondForm,'opo');
     },
     methods: {
       nextToThird: function(formName) {

@@ -94,6 +94,16 @@ export default {
   getSalesUser () {
     return JSON.parse(localStorage.getItem('salesUser'))
   },
+  // 历史记录存储
+  getHistory () {
+    return localStorage.getItem('userHistory')
+  },
+  setHistory (data) {
+    localStorage.setItem('userHistory', JSON.stringify(data))
+  },
+  removeHistory () {
+    localStorage.removeItem('userHistory')
+  },
   axiosPostReq (url, data) {
     //axios.defaults.headers['token'] = this.getToken()
     return axios.post(this.baseUrl + url, this.postHttpData(data))

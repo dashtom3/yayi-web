@@ -205,7 +205,7 @@
     <div class="headerSecond" v-show="Second">
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
       <div class="search_box right">
-        <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo">
+        <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo" autocomplete="on">
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
         <p class="search_p" @click="search_cargo">搜索</p>
       </div>
@@ -281,6 +281,7 @@
         total_num: 0,
         total_price: 0,
         searchCargo: '',
+        userHistory: [],
       }
     },
     //*******导航钩子*********//
@@ -447,13 +448,6 @@
           that.rgAgree_alert = false;
         }
       },
-      // showLogin1: function() {
-      //   var that = this;
-      //   if (that.showLogin1 == false) {
-      //     console.log('222');
-
-      //   }
-      // }
     },
     methods: {
       //获取注册登录banner
@@ -501,6 +495,9 @@
         }
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            that.userHistory.push(that.searchCargo)
+            console.log(that.userHistory)
+            // that.global.setHistory(that.userHistory)
             if (that.$router.history.current.name !== 'brandLib') {
               var data1 = res.data.data;
               var search_word = that.searchCargo;
