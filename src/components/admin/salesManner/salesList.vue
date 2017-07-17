@@ -221,6 +221,7 @@
           {value: '1',label: '是'},
           {value: '2',label: '否'}       
         ],
+        userList: []
       }
     },
     components: {
@@ -296,7 +297,6 @@
             numberPerPage: 10
           }
         }
-        console.log('--------------',params)
         global.axiosGetReq('/saleList/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.salesList = res.data.data
@@ -387,57 +387,62 @@
       //一次绑定多个
       bindAlertSearch:function(){
         var that = this;
+        var userlist = [];
         if(that.multipleSelection1.length==0){
-          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
+          that.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
           for(let i=0;i<that.multipleSelection1.length;i++){
-            let params = {
-              salePhone: this.salePhone,
-              userPhone: that.multipleSelection1[i].phone
-            }
-            global.axiosPostReq('/saleList/bind',params).then((res) => {
-              if(res.data.callStatus === 'SUCCEED'){
-                this.$message({
-                  type: 'success',
-                  message: '绑定成功!'
-                });
-              }
-            })
+            userlist.push(that.multipleSelection1[i].phone)
           }
-          this.BindSearch()
-          this.noBindSearch()
+          let params = {
+            salePhone: that.salePhone,
+            userPhone: userlist
+          }
+          global.axiosPostReq('/saleList/bind',params).then((res) => {
+            if(res.data.callStatus === 'SUCCEED'){
+              that.$message({
+                type: 'success',
+                message: '绑定成功!'
+              });
+            }
+          })
+          that.BindSearch()
+          that.noBindSearch()
         }
       },
       //一次取消绑定多个
       cancleBindAlert:function(){
         var that = this;
+        var userlist = [];
         if(that.multipleSelection2.length==0){
-          this.$alert("最少选择一个", {confirmButtonText: '确定！'});
+          that.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
           for(let i=0;i<that.multipleSelection2.length;i++){
-            let params = {
-              salePhone: this.salePhone,
-              userPhone: that.multipleSelection2[i].phone
-            }
-            global.axiosPostReq('/saleList/disBind',params).then((res) => {
-              if(res.data.callStatus === 'SUCCEED'){
-                this.$message({
-                  type: 'success',
-                  message: '取消绑定成功!'
-                });
-              }
-            })
+            userlist.push(that.multipleSelection2[i].phone)
           }
-          this.BindSearch()
-          this.noBindSearch()
+          let params = {
+            salePhone: that.salePhone,
+            userPhone: userlist
+          }
+          global.axiosPostReq('/saleList/disBind',params).then((res) => {
+            if(res.data.callStatus === 'SUCCEED'){
+              that.$message({
+                type: 'success',
+                message: '取消绑定成功!'
+              });
+            }
+          })
+          that.BindSearch()
+          that.noBindSearch()
         }
       },
       bindThisUser:function(nowUser,index){
         //绑定用户
         var that = this;
+        this.userList.push(nowUser.phone);
         var obj = {
           salePhone: this.salePhone,
-          userPhone: nowUser.phone
+          userPhone: this.userList
         }
         global.axiosPostReq('/saleList/bind',obj).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -454,10 +459,12 @@
       cancleBindThisUser:function(nowUser,index){
         //取消绑定用户
         var that = this;
+        this.userList.push(nowUser.phone);
         var obj = {
           salePhone: this.salePhone,
-          userPhone: nowUser.phone
+          userPhone: this.userList
         }
+        console.log('单个取消绑定',obj)
         global.axiosPostReq('/saleList/disBind',obj).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.$message({

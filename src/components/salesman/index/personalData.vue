@@ -207,9 +207,6 @@
           weChar: [
             { required: true, message: '请填写微信号', trigger: 'change' }
           ],
-          birthday: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
           openName:[
             { required: true, message: '请填写真实姓名', trigger: 'change' }
           ],
@@ -275,7 +272,8 @@
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
-            this.personalData.part = this.personalData.part && this.personalData.part.split(',')
+            this.personalData.part = this.personalData.part && this.personalData.part.split(',') || ['北京','北京市','东城区']
+            this.personalData.birthday = this.personalData.birthday && new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
             this.personalData.sex = res.data.data.sex || 1
           }
         })

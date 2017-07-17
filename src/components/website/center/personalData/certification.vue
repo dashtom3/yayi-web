@@ -165,6 +165,7 @@
         //编辑资质认证前需先完成个人信息验证
         if(!this.userData.trueName){
           this.$message.error('请先完善个人信息部分！');
+          return false;
         }
         
         //保存个人信息

@@ -1,7 +1,7 @@
 <template>
   <div class="paging0" v-on:click="onClickChild()">
     <span class="pageRedue" v-on:click="prev()">上一页</span>
-    <span calss="indexPage" v-show="currentPage>0" v-on:click="goIndex()">首页</span>
+    <span class="indexPage" v-show="currentPage>0" v-on:click="goIndex()">首页</span>
     <span class="noBorder" v-show="showPageBegin>0">...</span>
     <span v-on:click="goToThisPage(index)" :class="{currentPageStyle:currentPage==index}" v-show="index >= showPageBegin && index <= showPageEnd" v-for="(item,index) in childmsg.totalPage">{{item}}</span>
     <span class="noBorder" v-show="childmsg.pageNum>showPageNum && currentPage<childmsg.pageNum-1">...</span>
@@ -23,6 +23,14 @@
     },
     props:["childmsg"],
     watch:{
+      childmsg: { 
+        handler: function(){
+          if(this.childmsg.pageNum === 1){
+            this.currentPage = 0
+          }
+        },
+        deep: true
+      },
       currentPage:function(){
         this.goToPage=this.currentPage+1;
       }

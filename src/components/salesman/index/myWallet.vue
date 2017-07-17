@@ -130,7 +130,7 @@
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
         </el-row>
         <el-row>
-          <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{trueName}} &nbsp;&nbsp;&nbsp;&nbsp;账户：{{bankNo}}</span></div></el-col>
+          <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{openName}} &nbsp;&nbsp;&nbsp;&nbsp;{{postalType}}账户：{{bankNo}}</span></div></el-col>
         </el-row>
         <el-form style="padding-top:10px;" :model="WithDrawForm" :rules="rulesWithDraw" ref="WithDrawForm">
           <el-form-item label="提现金额：" prop="withDrawAccount">
@@ -203,6 +203,8 @@
         Yzm: '获取验证码',
         postalType: '',
         trueName: '',
+        openName: '',
+        bankName: '',
         bankNo: '',
         infoList: [],
         houstonJZ: '',//进账总额
@@ -281,8 +283,11 @@
         }
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
+            console.log('---------------提现方式查询',res.data.data)
             this.postalType = res.data.data.postalType
+            this.openName = res.data.data.openName
             this.trueName = res.data.data.trueName
+            this.bankName = res.data.data.bankName
             this.bankNo = res.data.data.accountNumber
           }
         })
@@ -421,7 +426,9 @@
               phone: global.getSalesUser().phone,
               type: this.postalType,
               cashMoney: this.WithDrawForm.withDrawAccount,
-              realName: this.trueName,
+              trueName: this.trueName,
+              openName: this.openName,
+              bankName: this.bankName,
               anumber: this.bankNo,
               vCode: this.WithDrawForm.rg_code
             }
