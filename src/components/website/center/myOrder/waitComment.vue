@@ -17,12 +17,11 @@
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.date}}</span>
+        <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
-
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
         <div class="left des_img" style="width:81px;height:85px;" @click="goToThisDetails(cargo)">
           <img :src="cargo.picPath" alt="img" >
@@ -36,34 +35,37 @@
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
-      <div class="order_des_right">
+      <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}">
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
           <p>（含运费：￥{{item.qbDed}}）</p>
           <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <div class="left operate_des" v-if="item.state!==0">
+        <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
-          <!-- <p class="cancelBtn" style="margin-top:0;font-size:12px;" @click="cancel_order(item)">取消订单</p> -->
         </div>
       </div>
     </div>
 <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-  <div class="comment_box">
-    <img class="comment_img" src="../../../../images/center/small.png" alt="img">
-    <p class="comment_des">爱丽丝 #标准</p>
+  <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
+    <div class="commentImgWrap">
+      <img class="comment_img" :src="item.picPath" alt="img">
+    </div>
+    <p class="comment_des">
+      <span>{{item.itemInfo.itemName}}</span>
+    </p>
     <div class="clearfix"></div>
     <div class="score_box">
       <div class="score_word">评分：</div>
-      <el-rate v-model="value2" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
-      <div class="getScore" v-show="getScore"><span style="color: #D81E06">{{score}}</span>分</div>
+      <el-rate   v-model="commentScores[index].score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
+      <div class="getScore"><span style="color: #D81E06">{{commentScores[index].score}}</span>分</div>
     </div>
     <div class="clearfix"></div>
     <div class="comment_word_box">
       <div class="comment_word_des">评价：</div>
-      <el-input type="textarea" :rows="5" placeholder="请输入评价内容~" v-model="textarea" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
+      <el-input type="textarea" :rows="5" v-model="commentScores[index].commentContent" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
       </el-input>
     </div>
     <div class="clearfix"></div>
@@ -73,15 +75,78 @@
     <el-button type="primary" @click="sureCommentThisOrder()">确 定</el-button>
   </span>
 </el-dialog>
+<el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
+  <div v-if="nowOrderDetails">
+  <div class="" >
+    <p>收货信息：</p>
+    <p>
+      <span>{{nowOrderDetails.receiver.province}}</span>
+      <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+    </p>
+  </div>
+  <div>
+    <p>订单信息：</p>
+    <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+    <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+    <div class="">
+      <div class="order_table" style="width:100%" v-show="order_table">
+        <div style="width:150px;" class="left cargo">商品</div>
+        <div class="left price">单价（元）</div>
+        <div class="left num">数量</div>
+        <div class="left now_pay">实付款（元）</div>
+        <div class="left deal_state">交易状态</div>
+      </div>
+      <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
+        <!--  订单详情item 开始 -->
+        <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
+          <div class="left des_img">
+            <img :src="cargo.picPath" alt="img">
+          </div>
+          <div style="width:220px;" class="left des_p">
+            <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+            <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+          </div>
+          <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
+          <div class="left des_num">{{cargo.num}}</div>
+        </div>
+        <!--  订单详情item 结束 -->
+        <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
+          <div class="left now_pay_des" style="margin-top:0">
+            <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
+            <p>（含运费：￥{{nowOrderDetails.postFee}}）</p>
+            <p>（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
+          </div>
+          <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" v-if="nowOrderDetails.buyerMessage">
+    <p>订单留言：</p>
+    <p>订单留言：</p>
+  </div>
+  <div class="">
+    <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
+  </div>
+  </div>
+</el-dialog>
   </div>
 </template>
 
 <script>
-  import paging0 from '../../brandLib/paging0'
+  import paging from '../../brandLib/paging0'
+  import util from '../../../../common/util'
   export default {
     name: 'waitComment',
     data () {
       return {
+        dialogVisibleToOrderDetails:false,
+        nowToOperateItem:{},
+        nowOrderDetails:null,
+        commentScores:[],
         pageProps:null,
         items: [],
         dialogVisibleComment:false,
@@ -96,7 +161,7 @@
       }
     },
     components: {
-      paging0,
+      paging,
     },
     created:function(){
       var that = this;
@@ -105,6 +170,11 @@
     methods: {
       pageHandler:function(data){
         this.fenYeGetData(data);
+      },
+      lookOrderDetails:function(item){
+        var that = this;
+        that.nowOrderDetails = item;
+        that.dialogVisibleToOrderDetails = true;
       },
       fenYeGetData:function(data){
         var that = this;
@@ -116,7 +186,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -136,6 +207,10 @@
             });
             console.log(b,"getAllOrder_waitComment");
             that.items = b;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
+            }
             if(that.items.length == 0){
               that.no_order = true;
             }else{
@@ -185,6 +260,10 @@
         };
         if(item.state == 4) {
           // 评论
+          that.commentScores = [];
+          for(let i in that.nowToOperateItem.orderitemList){
+            that.commentScores.push({score:5,commentContent:"默认好评！"});
+          }
           that.dialogVisibleComment = true;
         }
       },
@@ -339,7 +418,6 @@
   .now_pay_des {
     width: 180px;
     text-align: center;
-    margin-top: 30px;
   }
   .now_pay_des p {
     margin-bottom: 5px;
@@ -351,7 +429,6 @@
   }
   .wait_pay_des {
     width: 100px;
-    margin-top: 53px;
     margin-left: 10px;
     text-align: center;
   }
@@ -363,8 +440,6 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 49px;
-    /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;

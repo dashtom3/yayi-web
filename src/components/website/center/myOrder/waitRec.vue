@@ -17,7 +17,7 @@
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.date}}</span>
+        <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
@@ -35,18 +35,16 @@
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
-      <div class="order_des_right">
-        <div class="left now_pay_des">
+      <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}">
+        <div class="left now_pay_des" >
           <p class="spe_p">￥{{item.actualPay}}</p>
           <p>（含运费：￥{{item.qbDed}}）</p>
           <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <div class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
-          <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
+        <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
-          <p class="cancelBtn" @click="cancel_order(item)">取消订单</p>
+          <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
         </div>
       </div>
     </div>
@@ -126,7 +124,8 @@
 </template>
 
 <script>
-  import paging0 from '../../brandLib/paging0'
+  import paging from '../../brandLib/paging0'
+  import util from '../../../../common/util'
   export default {
     name: 'waitRec',
     data () {
@@ -145,7 +144,7 @@
       }
     },
     components: {
-      paging0,
+      paging,
     },
     created:function(){
       var that = this;
@@ -165,7 +164,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -232,6 +232,10 @@
             });
             console.log(b,"getAllOrder_waitRec");
             that.items = b;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
+            }
             if(that.items.length==0){
               that.no_order = true;
             }else{
@@ -421,7 +425,7 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 36px;
+    /*margin-top: 36px;*/
     /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;
@@ -434,8 +438,6 @@
     transition: all ease 0.2s;
   }
   .cancelBtn {
-    margin-top: 36px;
-    font-size: 14px;
     color: #999999;
   }
   .cancelBtn:hover {

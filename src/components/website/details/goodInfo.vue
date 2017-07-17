@@ -236,6 +236,7 @@ import myAddress from './selectThree'
             that.commentList = that.nowGoodDetails.commentList;
             that.instructions = that.nowGoodDetails.itemDetail;
             that.instructions.addName = that.nowGoodDetails.itemName;
+            that.instructions.itemBrandName = that.nowGoodDetails.itemBrand.itemBrandName;
             for(let i in that.nowGoodDetails.propertyList){
               if(that.nowGoodDetails.propertyList.propertyName){
                 that.attrLength+=1;

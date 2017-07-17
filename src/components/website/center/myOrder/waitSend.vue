@@ -17,7 +17,7 @@
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.date}}</span>
+        <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
@@ -35,14 +35,14 @@
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
-      <div class="order_des_right">
+      <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}">
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
-          <p>（含运费：￥{{item.qbDed}}）</p>
-          <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
+          <p>（含运费：￥{{item.postFee}}）</p>
+          <p>（乾币已抵扣：￥{{item.qbDed}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <p class="payBtn" @click="lookOrderDetails(item)">订单详情</p>
+
         <div class="left operate_des" v-if="item.state!==0">
           <!-- <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p> -->
         </div>
@@ -52,9 +52,15 @@
 
     <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
-  <div class="">
+  <div class="" v-if="nowOrderDetails.receiver">
     <p>收货信息：</p>
-    <p>收货信息：</p>
+    <p>
+      <span>{{nowOrderDetails.receiver.province}}</span>
+      <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+    </p>
   </div>
   <div class="">
     <p>订单信息：</p>
@@ -75,14 +81,14 @@
             <img :src="cargo.picPath" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
-            <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+            <p style="margin-top: ;">{{cargo.itemInfo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
           <div class="left des_num">{{cargo.num}}</div>
         </div>
         <!--  订单详情item 结束 -->
-        <div class="order_des_right" style="width:auto;right:25px;top:0">
+        <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
           <div class="left now_pay_des" style="margin-top:0">
             <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
             <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
@@ -106,6 +112,7 @@
 
 <script>
   import paging from '../../brandLib/paging0'
+  import util from '../../../../common/util'
   export default {
     name: 'waitSend',
     data () {
@@ -128,6 +135,12 @@
       that.getAllOrder();
     },
     methods: {
+      lookOrderDetails:function(item){
+        var that = this;
+        that.nowOrderDetails = item;
+        that.dialogVisibleToOrderDetails = true;
+        console.log(item)
+      },
       goToThisDetails:function(item){
         var that = this;
         that.$router.push({
@@ -147,7 +160,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -162,10 +176,14 @@
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var b = res.data.data.filter(function(ele,index,arr) {
-                return ele.state == "2";
+                return ele.state == "2" || ele.state == "5";
             });
             console.log(b,"getAllOrder_waitSend");
             that.items = b;
+            for(let i in that.items){
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
+            }
             if(that.items.length==0){
               that.no_order = true;
             }else{
@@ -189,7 +207,6 @@
 <style scoped>
 .waitSend{
   margin-top: 30px;
-  border: 1px solid #d7d7d7;
 }
   .left {
     float: left;

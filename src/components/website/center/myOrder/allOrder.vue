@@ -59,17 +59,15 @@
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
-      <div class="order_des_right">
+      <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}">
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
-          <p>（含运费：￥{{item.qbDed}}）</p>
-          <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
+          <p>（含运费：￥{{item.postFee}}）</p>
+          <p>（乾币已抵扣：￥{{item.qbDed}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <div class="left operate_des" v-if="item.state!==0">
-
-
-          <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
+        <div  class="left operate_des" v-if="item.state!==0">
+          <p class="payBtn" v-if="item.state!=2&&item.state!=5" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="cancelBtn" style="margin-top:0;font-size:12px;" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
@@ -79,9 +77,15 @@
     <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
-      <div class="">
+      <div class="" v-if="nowOrderDetails.receiver">
         <p>收货信息：</p>
-        <p>收货信息：</p>
+        <p>
+          <span>{{nowOrderDetails.receiver.province}}</span>
+          <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+        </p>
       </div>
       <div class="">
         <p>订单信息：</p>
@@ -109,11 +113,11 @@
               <div class="left des_num">{{cargo.num}}</div>
             </div>
             <!--  订单详情item 结束 -->
-            <div class="order_des_right" style="width:auto;right:25px;top:0">
+            <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
               <div class="left now_pay_des" style="margin-top:0">
                 <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-                <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
-                <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+                <p>（含运费：￥{{nowOrderDetails.postFee}}）</p>
+                <p>（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
               </div>
               <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
             </div>
@@ -137,8 +141,23 @@
       </span>
     </el-dialog>
     <!-- 物流信息 -->
-    <el-dialog title="提示" :visible.sync="dialogVisibleHaveALookAtWuLiu" size="tiny">
-      则是物流信息
+    <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
+      <div class="wlxxWrap" v-if="wuliuxinxi">
+        <div class="wlxxLeft">
+          <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
+          <span class="lastCircle"></span>
+        </div>
+        <div class="wlxxRight">
+          <ul>
+            <li v-for="one in wuliuxinxi.Traces">
+              <span class="data">{{one.AcceptTime.split(" ")[0]}}</span>
+              <div class="placeWrap">
+                <span class="place">{{one.AcceptStation}}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
       </span>
@@ -153,23 +172,23 @@
     </el-dialog>
     <!-- 评价 -->
     <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-      <div  class="comment_box" v-for="item in nowToOperateItem.orderitemList">
+      <div  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
         <div class="commentImgWrap">
           <img class="comment_img" :src="item.picPath" alt="img">
         </div>
         <p class="comment_des">
-          <span>{{item.itemName}}</span>
+          <span>{{item.itemInfo.itemName}}</span>
         </p>
         <div class="clearfix"></div>
         <div class="score_box">
-          <div class="score_word">评分：</div>
-          <el-rate v-model="item.commentScore" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
-          <div class="getScore" v-show="item.commentScore"><span style="color: #D81E06">{{item.commentScore}}</span>分</div>
+          <!-- <div class="score_word">评分：</div> -->
+          <el-rate   v-model="commentScores[index].score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
+          <div class="getScore"><span style="color: #D81E06">{{commentScores[index].score}}</span>分</div>
         </div>
         <div class="clearfix"></div>
         <div class="comment_word_box">
           <div class="comment_word_des">评价：</div>
-          <el-input type="textarea" :rows="5" placeholder="请输入评价内容~" v-model="item.commentContent" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
+          <el-input type="textarea" :rows="5" v-model="commentScores[index].commentContent" :autosize="{ minRows: 5, maxRows: 5}" class="textarea_des">
           </el-input>
         </div>
         <div class="clearfix"></div>
@@ -189,6 +208,8 @@
     name: 'allOrder',
     data () {
       return {
+        commentScores:[],
+        wuliuxinxi:null,
         pageProps:null,
         nowToOperateItem:{},
         nowOrderDetails:{},
@@ -246,9 +267,9 @@
         dialogVisible: false,
         dialogVisibleComment: false,
         operate_close: true,
-        value2: null,
+        // value2: null,
         textarea: '',
-        score : '',
+        // score : '',
         getScore: false,
         dialogVisibleGetGood:false,
         dialogVisibleHaveALookAtWuLiu:false
@@ -266,30 +287,30 @@
     },
     watch: {
       value2: function() {
-        var that = this;
-        if (that.value2 == 0) {
-          that.getScore = false;
-        }
-        if (that.value2 == 1) {
-          that.getScore = true;
-          that.score = '1';
-        }
-        if (that.value2 == 2) {
-          that.getScore = true;
-          that.score = '2';
-        }
-        if (that.value2 == 3) {
-          that.getScore = true;
-          that.score = '3';
-        }
-        if (that.value2 == 4) {
-          that.getScore = true;
-          that.score = '4';
-        }
-        if (that.value2 == 5) {
-          that.getScore = true;
-          that.score = '5';
-        }
+        // var that = this;
+        // if (that.value2 == 0) {
+        //   that.getScore = false;
+        // }
+        // if (that.value2 == 1) {
+        //   that.getScore = true;
+        //   that.score = '1';
+        // }
+        // if (that.value2 == 2) {
+        //   that.getScore = true;
+        //   that.score = '2';
+        // }
+        // if (that.value2 == 3) {
+        //   that.getScore = true;
+        //   that.score = '3';
+        // }
+        // if (that.value2 == 4) {
+        //   that.getScore = true;
+        //   that.score = '4';
+        // }
+        // if (that.value2 == 5) {
+        //   that.getScore = true;
+        //   that.score = '5';
+        // }
         // console.log(that.value2);
       }
     },
@@ -300,6 +321,7 @@
       fenYeGetData:function(data){
         var that = this;
         var obj = {};
+        console.log(obj.currentPage)
         obj.currentPage = data;
         obj.numberPerpage = 10;
         that.global.axiosPostReq('/OrderDetails/show',obj)
@@ -307,7 +329,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -318,7 +341,6 @@
         var that = this;
         that.nowOrderDetails = item;
         that.dialogVisibleToOrderDetails = true;
-        console.log(item)
       },
       //显示所有订单
       getAllOrder: function() {
@@ -331,7 +353,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
             if(that.items.length==0){
               that.no_order = true;
@@ -374,11 +397,25 @@
         var that = this;
         var obj = {
           token:that.global.getToken(),
-          orderId:that.nowToOperateItem.orderId
+          orderId:item.orderId
+          // orderId:"3334140532021"
         };
-        that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
-           console.log(res,"sureGetGood");
+        that.global.axiosPostReq('/Exp/queryExp',obj).then((res) => {
+          var data = res.data.data;
+
           if (res.data.callStatus === 'SUCCEED') {
+            that.wuliuxinxi = JSON.parse(data);
+            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
+            for(let i in that.wuliuxinxi.Traces){
+              var temp = 25;
+              if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){
+                that.wuliuxinxi.Traces[i].height = 36 + "px";
+              }else{
+                var num = that.wuliuxinxi.Traces[i].AcceptStation.length/temp;
+                num = parseInt(num)
+                that.wuliuxinxi.Traces[i].height = 35*(1+1) + "px";
+              }
+            }
             that.dialogVisibleHaveALookAtWuLiu = true;
           } else {
             that.$message.error('网络错误！');
@@ -390,10 +427,18 @@
         var obj = {
           token:that.global.getToken(),
           orderId:that.nowToOperateItem.orderId,
-          itemId:that.nowToOperateItem.orderitemList[0].itemId,
-          score:that.value2,
-          data:taht.textarea
+          itemIdList:[]
         };
+        console.log(that.nowToOperateItem.orderitemList)
+        for(let i in that.nowToOperateItem.orderitemList){
+          var obj2 = {
+            itemId:that.nowToOperateItem.orderitemList[i].itemId,
+            score:that.commentScores[i].score,
+            data:that.commentScores[i].data,
+          };
+          obj.itemIdList.push(obj2);
+        }
+        obj.itemIdList = JSON.stringify(obj.itemIdList);
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
            console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
@@ -435,32 +480,35 @@
       operate: function(item) {
         var that = this;
         that.nowToOperateItem = item;
-        var obj = {
-          token:that.global.getToken(),
-          orderId:item.orderId
-        };
+        // var obj = {
+        //   token:that.global.getToken(),
+        //   orderId:item.orderId
+        // };
         // if(value == 0) {
         // 	var hh = '交易关闭'
-
         // if (value == 2) {
         // 	var ee = '待发货'
-
         // if (value == 5) {
         // 	var ee = '确定定单'
-
         // if (value == 6) {
         // 	var ee = '退货中'
         if(item.state == 4) {
           // 评论
+          that.commentScores = [];
+          for(let i in that.nowToOperateItem.orderitemList){
+            that.commentScores.push({score:5,commentContent:"默认好评！"});
+          }
           that.dialogVisibleComment = true;
         }else if(item.state == 1){
           // 支付
+          // actualPay
           var orderD = {
             OrderId: item.orderId,
             giveQbNum: item.giveQb,
             itemSum: '',
             postFee: item.postFee,
             sumPrice: item.actualPay,
+            actualPay:item.actualPay
           }
           window.sessionStorage.setItem('order', JSON.stringify(orderD))
           that.$router.push({ path:'/pay' });
@@ -473,8 +521,16 @@
   }
 </script>
 <style >
+.spe_p{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
 .orderDetails{
   width: 860px !important;
+}
+.orderDetails .order_des_right{
+  top: 0 !important;
+  
 }
 .orderDetailsBtn{
   float: right;
@@ -482,18 +538,7 @@
   cursor: pointer;
   color: #5DB7E7;
 }
-.order_item .des_img {
-  margin-right: 20px;
-  border: 1px solid #D7D7D7;
-  cursor: pointer;
-}
-</style>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
 
-.orderDetails{
-  width: 860px !important;
-}
 .orderDetails div p:nth-child(1){
   margin-top: 30px;
   margin-bottom: 20px;
@@ -502,6 +547,154 @@
 .orderDetails div p:nth-child(2){
 color: #333333;
 }
+.order_item{
+  overflow: hidden;
+}
+.order_item .des_img {
+  margin-right: 20px;
+  border: 1px solid #D7D7D7;
+  cursor: pointer;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.des_img > img{
+ max-width: 100%;
+ max-height: 100%;
+ display: block;
+ margin: auto;
+ margin-top: 50%;
+ transform: translateY(-50%);
+}
+.cancelBtn {
+  font-size: 12px;
+  color: #999999;
+}
+.cancelBtn:hover {
+  cursor: pointer;
+  color: #D81E06;
+  transition: all ease 0.2s;
+}
+.order_des_right{
+  transform: translateY(-50%);
+}
+.operate_des p {
+  margin-bottom: 10px !important;
+}
+.payBtn{
+  margin-top: 0;
+}
+.order_des_right .now_pay_des{
+  margin-top: 0 !important;
+}
+.order_des_right .wait_pay_des{
+  margin-top: 0 !important;
+}
+.wlxxWrap .wlxxLeft{
+  float: left;
+      padding-top: 15px;
+      position: relative;
+}
+.wlxxWrap .wlxxLeft span{
+  background: #dfdfdf;
+}
+ .wlxxWrap .wlxxLeft .lastCircle{
+   background: #5db7e8;
+   position: absolute;
+   width: 6px;
+   height: 6px;
+   bottom: -3px;
+   left: -2.5px;
+   border-radius: 50%;
+ }
+.wlxxWrap .wlxxLeft .line{
+  display: block;
+  width: 1px;
+  /*height: 16px;*/
+  position: relative;
+}
+.wlxxWrap .wlxxLeft .circle{
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: -3px;
+  left: -2.5px;
+  border-radius: 50%;
+}
+.wlxxWrap .wlxxRight{
+  margin-left: 40px;
+}
+.wlxxWrap .wlxxRight li{
+  line-height: 35px;
+}
+
+.wlxxWrap .wlxxRight li .data{
+  font-weight: 600;
+  margin-right: 50px;
+  float: left;
+}
+.wlxxWrap .wlxxRight li .placeWrap{
+  padding-left: 160px;
+}
+.wlxxWrapWrap{
+  width: 622px !important;
+}
+.commentImgWrap{
+  width: 60px;
+  height: 60px;
+  border: 1px solid #eeeeee;
+  float: left;
+  margin-right: 10px;
+}
+.comment_img {
+  border: 1px solid #e9e9e9;
+  margin-right: 15px;
+  float: left;
+  max-width: 60px;
+  max-height: 60px;
+}
+./* 评论评分框 */
+  .comment_box {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+
+  .comment_des {
+    /*margin-top: 18px;*/
+    float: left;
+  }
+  .score_box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .score_word {
+    float: left;
+    margin-right: 20px;
+  }
+  .score_des {
+    float: left;
+  }
+  .comment_word_box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .comment_word_des {
+    float: left;
+    margin-right: 20px;
+  }
+  .textarea_des {
+    width: 80%;
+  }
+  .getScore {
+    float: left;
+    margin-left: 20px;
+  }
+</style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
   .left {
     float: left;
   }
@@ -600,6 +793,7 @@ color: #333333;
     margin-left: 43px;
     margin-right: 43px;
   }
+
   .order_des {
     width: 633px;
     height: 82px;
@@ -612,10 +806,7 @@ color: #333333;
     border-top: none !important;
   }
 
-  .des_img > img{
-   width: 81px;
-   height: 81px;
-  }
+
   .des_p {
     width: 270px;
   }
@@ -643,7 +834,7 @@ color: #333333;
   .now_pay_des {
     width: 180px;
     text-align: center;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
   }
   .now_pay_des p {
     margin-bottom: 5px;
@@ -655,7 +846,7 @@ color: #333333;
   }
   .wait_pay_des {
     width: 100px;
-    margin-top: 53px;
+    /*margin-top: 53px;*/
     margin-left: 10px;
     text-align: center;
   }
@@ -667,7 +858,7 @@ color: #333333;
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 49px;
+    /*margin-top: 49px;*/
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;
@@ -678,16 +869,7 @@ color: #333333;
     background-color: #5ed6dc;
     transition: all ease 0.2s;
   }
-  .cancelBtn {
-    font-size: 14px;
-    color: #999999;
-    margin-top: 36px;
-  }
-  .cancelBtn:hover {
-    cursor: pointer;
-    color: #D81E06;
-    transition: all ease 0.2s;
-  }
+
 /* 暂无订单,没有符合条件的订单*/
   .order_table_spe {
     width: 1069px;
@@ -706,53 +888,5 @@ color: #333333;
     margin-top: 30px;
     border: 1px solid #D7D7D7;
   }
-/* 评论评分框 */
-  .comment_box {
-    width: 100%;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e9e9e9;
-  }
-  .commentImgWrap{
-    width: 60px;
-    height: 60px;
-    border: 1px solid #eeeeee;
-  }
-  .comment_img {
-    border: 1px solid #e9e9e9;
-    margin-right: 15px;
-    float: left;
-    max-width: 60px;
-    max-height: 60px;
-  }
-  .comment_des {
-    margin-top: 18px;
-    float: left;
-  }
-  .score_box {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .score_word {
-    float: left;
-    margin-right: 20px;
-  }
-  .score_des {
-    float: left;
-  }
-  .comment_word_box {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .comment_word_des {
-    float: left;
-    margin-right: 20px;
-  }
-  .textarea_des {
-    width: 80%;
-  }
-  .getScore {
-    float: left;
-    margin-left: 20px;
-  }
+
 </style>

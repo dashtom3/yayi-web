@@ -51,7 +51,7 @@ Vue.filter('frisco', function (value) {
     	return ee
     }
     if (value == 5) {
-    	var ee = '确定定单'
+    	var ee = '待发货'
     	return ee
     }
     if (value == 6) {

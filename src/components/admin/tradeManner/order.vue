@@ -402,12 +402,12 @@
         if(that.value){
           // 订单状态
           // {value: '0',label: '全部'},
-              // for(let b in that.state){
-              //   if(that.state[b].label==that.value&&that.state[b].value!="0"){
-              //     obj.state = that.state[b].value;
-              //   }
-              // }
-              // obj.state = that.value;
+              for(let b in that.state){
+                if(that.state[b].label==that.value&&that.state[b].value!="0"){
+                  obj.state = that.state[b].value;
+                }
+              }
+              obj.orderState = that.value;
         }
         if(that.value3.length!=0){
           var date1,date2;

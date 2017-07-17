@@ -74,6 +74,10 @@
         that.$router.push({
           path:"/brandLib/0-0-0AND"+id,
         });
+        var str = window.location.pathname;
+        if(str.indexOf("brandLib")>0){
+          window.location.href=window.location.href;
+        }
         window.scroll(0,0);
       },
         getAllBrandList:function(){
@@ -114,15 +118,22 @@
       goToClassfy1:function(id){
         var that = this;
         var classfyArg = that.goOne+"-0-0AND0";
-        that.$router.push({path: '/brandLib/'+classfyArg})
-        // that.$router.go(0);
+        that.$router.push({path: '/brandLib/'+classfyArg});
+        var str = window.location.pathname;
+        if(str.indexOf("brandLib")>0){
+          window.location.href=window.location.href;
+        }
         window.scroll(0,0);
       },
       goToClassfy2:function(index,two){
         var that = this;
         var index = parseInt(index)+1;
         var classfyArg = that.goOne+"-"+index+"-0AND0";
-        that.$router.push({path: '/brandLib/'+classfyArg})
+        that.$router.push({path: '/brandLib/'+classfyArg});
+        var str = window.location.pathname;
+        if(str.indexOf("brandLib")>0){
+          window.location.href=window.location.href;
+        }
         // that.$router.go(0);
         window.scroll(0,0);
       },
@@ -131,7 +142,11 @@
         var index1 = parseInt(index)+1;
         var index2 = parseInt(index3)+1;
         var classfyArg = that.goOne+"-"+index1+"-"+index2+"AND0";
-        that.$router.push({path: '/brandLib/'+classfyArg})
+        that.$router.push({path: '/brandLib/'+classfyArg});
+        var str = window.location.pathname;
+        if(str.indexOf("brandLib")>0){
+          window.location.href=window.location.href;
+        }
         // that.$router.go(0);
         window.scroll(0,0);
       },
@@ -211,7 +226,6 @@
     float: left;
     color:white;
     min-height: 630px;
-    font-size: 16px;
   }
   .classfyDetail_left li {
     cursor: pointer;

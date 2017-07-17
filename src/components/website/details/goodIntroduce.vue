@@ -4,7 +4,7 @@
       <div>
         <span>品名：{{instruction.addName}}</span>
         <span>单位：{{instruction.unit}}</span>
-        <span>品牌：AQUAPICK</span>
+        <span>品牌：{{instruction.itemBrandName}}</span>
       </div>
       <div>
         <span>注册证号：{{instruction.registerId}}</span>

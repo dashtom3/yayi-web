@@ -35,14 +35,14 @@
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
-      <div class="order_des_right">
+      <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}" >
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
-          <p>（含运费：￥{{item.qbDed}}）</p>
-          <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
+          <p>（含运费：￥{{item.postFee}}）</p>
+          <p>（乾币已抵扣：￥{{item.qbDed}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
-        <div class="left operate_des" v-if="item.state!==0">
+        <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="payBtn" v-if="item.state!=2" @click="operate(item)">{{item.state | operate}}</p>
           <p class="cancelBtn" style="margin-top:0;font-size:12px;" @click="cancel_order(item)">取消订单</p>
@@ -51,13 +51,19 @@
     </div>
     <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
-      <div class="">
+      <div v-if="nowOrderDetails.receiver">
         <p>收货信息：</p>
-        <p>收货信息：</p>
+        <p>
+          <span>{{nowOrderDetails.receiver.province}}</span>
+          <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+        </p>
       </div>
       <div class="">
         <p>订单信息：</p>
-        <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
+        <p style="margin-bottom: 20px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
         <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
         <div class="">
           <div class="order_table" style="width:100%" >
@@ -81,7 +87,7 @@
               <div class="left des_num">{{cargo.num}}</div>
             </div>
             <!--  订单详情item 结束 -->
-            <div class="order_des_right" style="width:auto;right:25px;top:0">
+            <div class="order_des_right" :style="{marginTop:nowOrderDetails.btnsMarginTop}" style="right: -77px;">
               <div class="left now_pay_des" style="margin-top:0">
                 <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
                 <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
@@ -152,6 +158,7 @@
             itemSum: '',
             postFee: item.postFee,
             sumPrice: item.actualPay,
+            actualPay:item.actualPay
           }
           window.sessionStorage.setItem('order', JSON.stringify(orderD))
           that.$router.push({ path:'/pay' });
@@ -204,7 +211,8 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -224,7 +232,8 @@
             console.log(b,"getAllOrder_waitPay");
             that.items = b;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created))
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
             if(that.items==0){
               that.no_order = true;
@@ -418,8 +427,6 @@
     width: 70px;
     height: 28px;
     margin: 0 auto;
-    margin-top: 49px;
-    /*margin-bottom: 5px;*/
     line-height: 28px;
     background-color: #5DB7E7;
     color: #fff;
