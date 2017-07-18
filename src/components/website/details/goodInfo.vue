@@ -281,7 +281,6 @@ import myAddress from './selectThree'
             } else {
               that.nowGoodDetails.propertyList[i].propertyInfoList[j].enabled = false
             }
-
           }
         }
         //propertyList  循环数据 itemValueList 所有属性组合
@@ -289,12 +288,11 @@ import myAddress from './selectThree'
           if(that.nowGoodDetails.itemValueList[j].canUse == 1){
             var tempNum = 0
             var temp = []
-            var temptrue = false
+            var temp2 = []
             for(var i=0;i<that.nowGoodDetails.propertyList.length;i++){
               if(that.nowGoodDetails.itemValueList[j][that.itemKey[i][0]] != "") {
                 if(that.nowGoodDetails.propertyList[i].checkWhich == null) {
-                  temp.push(i)
-                  temptrue = true
+                  temp2.push(i)
                 }else if(that.nowGoodDetails.propertyList[i].propertyInfoList[that.nowGoodDetails.propertyList[i].checkWhich].data != that.nowGoodDetails.itemValueList[j][that.itemKey[i][1]]) {
                   tempNum++
                   if(tempNum>1){
@@ -304,12 +302,19 @@ import myAddress from './selectThree'
                 }
               }
             }
-            if((tempNum == 1 && temptrue == false )||(tempNum == 0 && temptrue == true)){
+            if(tempNum == 0){
+              for(var i = 0;i<temp2.length;i++){
+                for(var k=0;k<that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList.length;k++){
+                  if(that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList[k].data == that.nowGoodDetails.itemValueList[j][that.itemKey[temp2[i]][1]] ) {
+                    that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList[k].enabled = true
+                  }
+                }
+              }
+            }else if(tempNum == 1){
               for(var i = 0;i<temp.length;i++){
                 for(var k=0;k<that.nowGoodDetails.propertyList[temp[i]].propertyInfoList.length;k++){
                   if(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].data == that.nowGoodDetails.itemValueList[j][that.itemKey[temp[i]][1]] ) {
                     that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].enabled = true
-                    console.log(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k])
                   }
                 }
               }
