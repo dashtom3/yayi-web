@@ -210,7 +210,7 @@
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
         <p class="search_p" @click="search_cargo">搜索</p>
         <p>
-          <span class="historySearch" v-for="item in filteredHrecord">{{item.word}} </span>
+          <span class="historySearch" v-for="item in filteredHrecord" @click="search_cargo(item)">{{item.word}} </span>
         </p>
       </div>
     </div>
@@ -505,8 +505,11 @@
         that.$router.push({path: '/center'});
       },
       //首页搜索框
-      search_cargo: function() {
+      search_cargo: function(item) {
         var that = this;
+        if (item.word !== undefined) {
+          that.searchCargo = item.word
+        }
         if (that.searchCargo == '') {
           that.$message.error('请输入查询条件！');
           return false
@@ -516,16 +519,18 @@
         }
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            var obj = {
-              word: that.searchCargo
+            if (res.data.data.length !== 0) {
+              var obj = {
+                word: that.searchCargo
+              }
+              if (JSON.parse(that.global.getHistory()) == null) {
+                that.userHistory = []
+              } else {
+                that.userHistory = JSON.parse(that.global.getHistory());
+              }
+              that.userHistory.push(obj)
+              that.global.setHistory(that.userHistory)
             }
-            if (JSON.parse(that.global.getHistory()) == null) {
-              that.userHistory = []
-            } else {
-              that.userHistory = JSON.parse(that.global.getHistory());
-            }
-            that.userHistory.push(obj)
-            that.global.setHistory(that.userHistory)
             if (that.$router.history.current.name !== 'brandLib') {
               var data1 = res.data.data;
               var search_word = that.searchCargo;
