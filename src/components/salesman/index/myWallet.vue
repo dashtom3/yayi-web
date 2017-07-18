@@ -3,8 +3,8 @@
     <el-col :span="24" class="warp-breadcrum1">
       <div class="grid-content bg-purple-dark">
         <span>钱包余额：<i class="i_col_red">￥{{withTotalAmt}}</i></span>
-        <button class="margin_l btn_col" @click="withDrawHandler">提现</button>
-        <span class="infoColor" v-show="true">正在审核中，请耐心等待...</span>
+        <button class="margin_l btn_col" @click="withDrawHandler" :disabled="withDrawState">提现</button>
+        <span class="infoColor" v-show="withDrawState">正在审核中，请耐心等待...</span>
       </div>
       <div class="curOrder">钱包明细</div>
       <ul class="sel_wrap">
@@ -186,6 +186,7 @@
         classStat: 0,
         withDrawSets: false,
         statTip: false,
+        withDrawState: false,
         withDrawBank: false,
         withDrawBank01:false,
         detailVisible: false,
@@ -446,6 +447,7 @@
                 this.WithDrawForm.withDrawAccount = ''
                 this.WithDrawForm.rg_code = ''
                 this.withDrawBank = false
+                this.withDrawState = true
               } else {
                 this.$message.error('网络出错，请稍后再试！');
               }

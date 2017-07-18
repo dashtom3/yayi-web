@@ -16,7 +16,7 @@
     </el-col>
     <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
-    <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
 	</el-row> 
 </template>
 

@@ -41,7 +41,7 @@
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
     <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
   </div>
 </template>
 
