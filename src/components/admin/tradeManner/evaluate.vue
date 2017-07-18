@@ -133,7 +133,7 @@
             this.pageProps.totalPage = res.data.totalPage
             console.log(res.data.data)
           }else{
-            this.$message.error('查询评论失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },

@@ -288,6 +288,7 @@
             this.trueName = res.data.data.trueName
             this.bankName = res.data.data.bankName
             this.bankNo = res.data.data.accountNumber
+            console.log(res.data.data)
           }
         })
       },
@@ -417,8 +418,8 @@
           this.withDrawSets = true
         }       
       },
+      //申请提现
       applyHandler(formName){
-
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let params = {

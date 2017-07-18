@@ -113,7 +113,7 @@
       //通过操作
       passThisGet:function(scope){
         var that = this;
-        that.$confirm('确定通过将打款至该支付宝账户，是否继续?', {
+        that.$confirm('确定通过将打款至该账户，是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -133,10 +133,7 @@
             }
           })
         }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '打款取消'
-          });
+          
         });
       },
     },
