@@ -39,7 +39,7 @@
           <el-table-column  prop="itemBrandName" align="center" label="品牌名称"></el-table-column>
           <el-table-column  prop="itemBrandLogo"  align="center"  label="logo">
             <template scope="scope">
-              <img style="cursor: pointer;width:150px;height:150px;" v-on:click="showBigImg(scope.$index)" :src="tableData[scope.$index].itemBrandLogo" alt="点击查看大图" title="点击查看大图">
+              <img style="cursor: pointer;width:32px;height:32px;vertical-align:middle;" v-on:click="showBigImg(scope.$index)" :src="tableData[scope.$index].itemBrandLogo" alt="点击查看大图" title="点击查看大图">
             </template>
           </el-table-column>
           <el-table-column  prop="itemBrandHome"  align="center"  label="产地">  </el-table-column>
@@ -50,6 +50,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="block" style="position:absolute;top:650px;right:100px;">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pagesize"
+            layout="prev, pager, next, jumper"
+            :total="totalCount">
+          </el-pagination>
+        </div>
     </el-col>
     <div class="clearfix"></div>
 
@@ -105,6 +114,12 @@
           value: '进口',
           label: '进口'
         }],
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         value: '',
         bindTitle:null,
         itemBrandId: null,
@@ -138,6 +153,10 @@
       this.queryHandler();//初始化请求
     },
     methods: {
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.queryHandler()
+      },
       uploadFile(res, file) {
         this.itemBrandLogoAdd = global.qiniuShUrl + file.response.key
         this.imageUrl = global.qiniuShUrl + file.response.key
@@ -158,13 +177,16 @@
       queryHandler: function(){
         let params = {
           itemBrandName: this.itemBrandName,
-          itemBrandHome: this.itemBrandHome
+          itemBrandHome: this.itemBrandHome,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize
         }
         global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.tableData = res.data.data;
+            this.totalCount = res.data.totalNumber;
           }else{
-            this.$message.error('查询商品品牌失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },

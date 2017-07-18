@@ -57,7 +57,7 @@
       <el-table-column  prop="certification.doctorPic"  align="center"  label="资格证" class-name="imgWrap">
         <template scope="scope">
           <el-tooltip class="item" effect="dark" content="点击查看大图" placement="left">
-            <img style="width:150px;height:150px;cursor:pointer;vertical-align:middle;" :src="certificationList[scope.$index].certification.doctorPic" v-on:click="showBigImg(scope.$index)">
+            <img style="width:32px;height:32px;cursor:pointer;vertical-align:middle;" :src="certificationList[scope.$index].certification.doctorPic" v-on:click="showBigImg(scope.$index)">
           </el-tooltip>
         </template>
       </el-table-column>
@@ -137,7 +137,7 @@
             type: this.searchType,
             state: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 4
+            numberPerPage: 10
           }
         }else if(this.selectVal === "真实姓名"){
           params = {
@@ -147,7 +147,7 @@
             type: this.searchType,
             state: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 4
+            numberPerPage: 10
           }
         }else if(this.selectVal === "单位名称"){
           params = {
@@ -157,7 +157,7 @@
             type: this.searchType,
             state: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 4
+            numberPerPage: 10
           }
         }else{
           params = {
@@ -167,7 +167,7 @@
             type: this.searchType,
             state: this.searchState,
             currentPage: this.pageProps.pageNum,
-            numberPerPage: 4
+            numberPerPage: 10
           }
         }
         global.axiosGetReq('/userCertificationList/list',params).then((res) => {

@@ -10,7 +10,7 @@
     <el-col  class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
       <el-form :inline="true" class="clearfix">
         <el-form-item>
-          <el-input v-model="searchUserContent" class="fl t_input_w">
+          <el-input v-model="searchUserContent" class="fl t_input_w"  @change="pageInitHandler">
             <el-select v-model="searchUserType" slot="prepend" class="fl t_select_width" placeholder="请选择"  @change="selectOpt">
               <el-option label="手机号" value="手机号"></el-option>
               <el-option label="真实姓名" value="真实姓名"></el-option>
@@ -18,7 +18,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="是否绑定客户：">
-          <el-select v-model="searchState" placeholder="请选择" >
+          <el-select v-model="searchState" placeholder="请选择" @change="pageInitHandler">
             <el-option  v-for="item in states"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
@@ -29,7 +29,7 @@
     </el-col>
     <!-- 绑定弹窗 -->
     <el-dialog :visible.sync="bindSalseAlert">
-      <h4>当前已绑定人数（人）：<span>{{bindedUserList.length}}</span></h4>
+      <h4>当前已绑定人数（人）：<span>{{totalCount}}</span></h4>
       <el-tabs v-model="activeName2" type="card" @tab-click="tabHandler">
         <el-tab-pane label="未绑定" name="first">
           <el-form :inline="true" >
@@ -43,21 +43,30 @@
                 <el-button slot="append" icon="search" @click="noBindSearch()"></el-button>
               </el-input>
             </el-form-item>
-            <el-form-item style="font-size:40px;float:right">
+            <el-form-item style="float:right">
               <el-button type="primary" v-on:click="bindAlertSearch()">绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" max-height="500">
-            <el-table-column  type="selection"  width="55">  </el-table-column>
-            <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
-            <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
-            <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
-            <el-table-column  label="操作"  align="center" >
+          <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" height="480">
+            <el-table-column  type="selection" width="55"></el-table-column>
+            <el-table-column  prop="trueName" align="center" label="真实姓名"></el-table-column>
+            <el-table-column  prop="phone" align="center" label="手机号"></el-table-column>
+            <el-table-column  prop="certification.companyName" align="center" label="单位名称"></el-table-column>
+            <el-table-column  label="操作" align="center">
               <template scope="scope">
                 <el-button type="primary" v-on:click="bindThisUser(scope.row,scope.$index)">绑定</el-button>
               </template>
             </el-table-column>
           </el-table>
+          <div class="block" style="position:absolute;top:502px;right:100px;" v-show="this.totalCountNoBind">
+            <el-pagination
+              @current-change="handleCurrentChangeNoBind"
+              :current-page.sync="currentPageNoBind"
+              :page-size="pagesizeNoBind"
+              layout="prev, pager, next, jumper"
+              :total="totalCountNoBind">
+            </el-pagination>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="已绑定" name="second">
           <el-form :inline="true" >
@@ -75,7 +84,7 @@
               <el-button type="primary" v-on:click="cancleBindAlert()">取消绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" max-height="500">
+          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="480">
             <el-table-column  type="selection"  width="55">  </el-table-column>
             <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
@@ -86,9 +95,17 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="block" style="position:absolute;top:502px;right:100px;" v-show="this.totalCount">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage"
+              :page-size="pagesize"
+              layout="prev, pager, next, jumper"
+              :total="totalCount">
+            </el-pagination>
+          </div>
         </el-tab-pane>
       </el-tabs>
-      <!-- <paging :childmsg="d_pageProps" style="text-align:center;margin-top:20px;" @childSay="d_pageHandler" ></paging> -->
     </el-dialog>
 
     <!-- 详情 -->
@@ -140,13 +157,20 @@
         </div>
       </div>
       <h3>绑定的客户信息</h3>
-      <el-table :data="someOneUserDetails.bindUsers" border>
-        <el-table-column align="center" property="userId" label="用户编号" width="150"></el-table-column>
+      <el-table :data="someOneUserDetails.bindUsers" border height="480">
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
-        <el-table-column align="center" property="trueName" label="真实姓名" width="200"></el-table-column>
+        <el-table-column align="center" property="trueName" label="真实姓名"></el-table-column>
         <el-table-column align="center" property="certification.companyName" label="单位名称"></el-table-column>
       </el-table>
-      
+      <div class="block" style="position:absolute;top:1029px;right:100px;" v-show="this.totalCount">
+        <el-pagination
+          @current-change="handleCurrentChangeDetail"
+          :current-page.sync="currentPageDetail"
+          :page-size="pagesizeDetail"
+          layout="prev, pager, next"
+          :total="totalCountDetail">
+        </el-pagination>
+      </div>
     </el-dialog>
 
     <!-- 主要列表 -->
@@ -189,12 +213,21 @@
           pageNum: 1,
           totalPage: 1
         },
-        d_pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
+        pagesizeNoBind: 10,
+        currentPageNoBind: 1,
+        totalCountNoBind: 1000,
+        pagesizeDetail: 10,
+        currentPageDetail: 1,
+        totalCountDetail: 1000,
         noBindSearchContent:null,
         BindSearchContent:null,
+        detailPhone: '',
         multipleSelection1: [],
         multipleSelection2: [],
         activeName2: 'first',
@@ -258,6 +291,22 @@
       this.queryHandler()
     },
     methods: {
+      //查询条件改变时初始化pageNum为1
+      pageInitHandler(){
+        this.pageProps.pageNum = 1;
+      },
+      handleCurrentChangeDetail(val){
+        this.currentPageDetail = val 
+        this.saleDetail()
+      },
+      handleCurrentChangeNoBind(val){
+        this.currentPageNoBind = val 
+        this.noBindSearch()
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.BindSearch()
+      },
       tabHandler(tab, event){
         if(tab.name === 'first'){
           this.noBindSearch()
@@ -271,6 +320,7 @@
       selectOpt(key){
         this.searchUserType = key;
         this.searchUserContent = '';
+        this.pageProps.pageNum = 1;
       },
       selectOption(key){
         this.noBindSearchType = key;
@@ -308,12 +358,8 @@
         this.pageProps.pageNum = data
         this.queryHandler();
       },
-      d_pageHandler(data){
-        this.d_pageProps.pageNum = data
-        this.noBindSearch() //未绑定分页查询
-      },
-      BindSearch:function(){
-        //查询已绑定用户
+      //查询已绑定用户
+      BindSearch:function(){ 
         let params;
         if(this.BindSearchType === "手机号"){
           params = {
@@ -322,8 +368,8 @@
             trueName: '',
             companyName: '',
             isBind: 2,
-            // currentPage: 1,
-            // numberPerPage: 10
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }else if(this.BindSearchType === "真实姓名"){
           params = {
@@ -331,7 +377,9 @@
             userPhone: '',
             trueName: this.BindSearchContent,
             companyName: '',
-            isBind: 2
+            isBind: 2,
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }else if(this.BindSearchType === "单位名称"){
           params = {
@@ -339,19 +387,20 @@
             userPhone: '',
             trueName: '',
             companyName: this.BindSearchContent,
-            isBind: 2
+            isBind: 2,
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }
         global.axiosGetReq('/saleList/userlist',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.bindedUserList = res.data.data
+            this.totalCount = res.data.totalNumber
           }
         })
-        // this.BindSearchContent = null;//清空搜索内容
-        
       },
+      //查询未绑定的用户
       noBindSearch:function(){
-        //查询未绑定的用户
         let params;
         if(this.noBindSearchType === "手机号"){
           params = {
@@ -360,8 +409,8 @@
             trueName: '',
             companyName: '',
             isBind: 1,
-            // currentPage: this.d_pageProps.pageNum,
-            // numberPerPage: 10
+            currentPage: this.currentPageNoBind,
+            numberPerPage: this.pagesizeNoBind
           }
         }else if(this.noBindSearchType === "真实姓名"){
           params = {
@@ -370,8 +419,8 @@
             trueName: this.noBindSearchContent,
             companyName: '',
             isBind: 1,
-            // currentPage: this.d_pageProps.pageNum,
-            // numberPerPage: 10
+            currentPage: this.currentPageNoBind,
+            numberPerPage: this.pagesizeNoBind
           }
         }else if(this.noBindSearchType === "单位名称"){
           params = {
@@ -380,14 +429,14 @@
             trueName: '',
             companyName: this.noBindSearchContent,
             isBind: 1,
-            // currentPage: this.d_pageProps.pageNum,
-            // numberPerPage: 10
+            currentPage: this.currentPageNoBind,
+            numberPerPage: this.pagesizeNoBind
           }
         }
         global.axiosGetReq('/saleList/userlist',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.noBindUserList = res.data.data
-            this.d_pageProps.totalPage = res.data.totalPage
+            this.totalCountNoBind = res.data.totalNumber
           }
         })
         // this.noBindSearchContent = null;//清空搜索内容
@@ -439,14 +488,14 @@
                 type: 'success',
                 message: '取消绑定成功!'
               });
+              that.BindSearch()
+              that.noBindSearch()
             }
           })
-          that.BindSearch()
-          that.noBindSearch()
         }
       },
+      //绑定用户
       bindThisUser:function(nowUser,index){
-        //绑定用户
         var that = this;
         var userList02 = [];
         userList02.push(nowUser.phone);
@@ -464,10 +513,9 @@
             this.noBindSearch()
           }
         })
-        
       },
+      //取消绑定用户
       cancleBindThisUser:function(nowUser,index){
-        //取消绑定用户
         var that = this;
         var userlist01 = [];
         userlist01.push(nowUser.phone);
@@ -475,7 +523,6 @@
           salePhone: this.salePhone,
           userPhone: userlist01
         }
-        console.log('单个取消绑定',obj)
         global.axiosPostReq('/saleList/disBind',obj).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.$message({
@@ -516,17 +563,21 @@
         this.BindSearch();
         this.noBindSearch();
       },
+      //查看详情
       saleDetail:function(index, row){
-        //查看详情
         this.showSaleDetailInfor = true;
+        if(row){
+          this.detailPhone = row.phone
+        }
         let params = {
-          phone: row.phone,
-          // currentPage: this.d_pageProps.pageNum,
-          numberPerPage: 10
+          phone: this.detailPhone,
+          currentPage: this.currentPageDetail,
+          numberPerPage: this.pagesizeDetail
         }
         global.axiosGetReq('/saleList/detail',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.someOneUserDetails.info = res.data.data
+            this.totalCountDetail = res.data.totalNumber
             this.someOneUserDetails.bindUsers = res.data.data.user
             this.someOneUserDetails.getMoneyStyle = {
               postalType: res.data.data.postalType,
