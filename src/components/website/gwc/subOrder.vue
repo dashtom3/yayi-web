@@ -74,11 +74,11 @@
         <input class="leave_word" v-model="leave_des" type="text" placeholder="对本次交易的说明">
       </div>
       <div class="checked_box">
-        <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}.00</span></p>
-        <p class="second_p">运费：¥{{freight}}.00</p>
-        <p class="third_p">乾币抵扣：¥{{qbdk}}.00</p>
-        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}.00</span></p>
-        <p class="fifth_p">本次可获得乾币：¥0.00</p>
+        <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}</span></p>
+        <p class="second_p">运费：¥{{freight}}</p>
+        <p class="third_p">乾币抵扣：¥{{qbdk}}</p>
+        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}</span></p>
+        <p class="fifth_p">本次可获得乾币：¥0</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>

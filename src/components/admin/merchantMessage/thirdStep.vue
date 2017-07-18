@@ -1,8 +1,8 @@
 <template>
   <div class="thirdStep" v-show="thirdStep">
     <div class="firstTitle">商品图片：(最多5个)</div>
-    <el-upload class="upload-demo" :on-remove="handleRemove" :on-success="uploadFile" :data="qiNiuToken" :action="qiNiuUrl" :file-list="fileList2" list-type="picture">
-      <el-button size="small" type="primary">添加图片</el-button>
+    <el-upload class="upload-demo" :on-remove="handleRemove" :on-success="uploadFile" :data="qiNiuToken" :action="qiNiuUrl" :file-list="fileList2" list-type="picture" :disabled="enoughImg">
+      <el-button size="small" type="primary" :disabled="enoughImg">添加图片</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
     </el-upload>
     <div class="clearfix"></div>
@@ -75,7 +75,6 @@
     props: ['message'],
     data() {
       return {
-        //fileList2: [],
         fileList2: [],
         fileList: [],
         thirdForm: {
@@ -96,20 +95,63 @@
         imageUrl: '',
         fwb: '',
         state: null,
+        enoughImg: false,
+      }
+    },
+    watch: {
+      fileList: function() {
+        var that = this
+        if (that.fileList.length == 5) {
+          that.enoughImg = true
+        } else {
+          that.enoughImg = false
+        }
+      },
+      fileList2: function() {
+        var that = this
+        for (var i = 0; i < that.fileList2.length; i++) {
+          var img_src = that.fileList2[i].url
+          that.fileList.push(img_src)
+        }
       }
     },
     created: function() {
       var that = this;
       that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
       if (that.editCargo !== null) {
-        // console.log(that.editCargo,'opopop')
-        // var obj = {
-        //   url: that.editCargo.itemDetail.itemPica
-        // }
-        // that.fileList2.push(obj)
+        if (that.editCargo.itemDetail.itemPica !== null) {
+          var obj1 = {
+            url: that.editCargo.itemDetail.itemPica
+          }
+          that.fileList2.push(obj1)
+        }
+        if (that.editCargo.itemDetail.itemPicb !== null) {
+          var obj2 = {
+            url: that.editCargo.itemDetail.itemPicb
+          }
+          that.fileList2.push(obj2)
+        }
+        if (that.editCargo.itemDetail.itemPicc !== null) {
+          var obj3 = {
+            url: that.editCargo.itemDetail.itemPicc
+          }
+          that.fileList2.push(obj3)
+        }
+        if (that.editCargo.itemDetail.itemPicd !== null) {
+          var obj4 = {
+            url: that.editCargo.itemDetail.itemPicd
+          }
+          that.fileList2.push(obj4)
+        }
+        if (that.editCargo.itemDetail.itemPice !== null) {
+          var obj5 = {
+            url: that.editCargo.itemDetail.itemPice
+          }
+          that.fileList2.push(obj5)
+        }
         that.thirdForm.video = that.editCargo.itemDetail.video
         that.state = 1
-        console.log('buweikong')
+        console.log(that.fileList2,'opop')
         // 获取七牛云token
         global.axiosGetReq('/file/getUpToken').then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
@@ -187,7 +229,6 @@
       },
       handleAvatarSuccess(file, fileList) {
         var that = this;
-        // console.log(file,fileList)
         that.imageUrl = global.qiniuShUrl + file.key;
         console.log(that.imageUrl)
       },
@@ -222,7 +263,6 @@
         global.axiosPostReq('/vid/showVid',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             that.options = res.data.data
-            console.log(that.options,'xs');
           }else{
             that.$message.error('查询失败！');
           }
@@ -238,18 +278,23 @@
       // 删除图片触发的钩子
       handleRemove(file, fileList) {
         var that = this;
-        var img_src = global.qiniuShUrl + file.response.key;
-        // console.log(img_src);
+        // console.log(fileList,'opop')
+        if (fileList.length < that.fileList.length && fileList.length > 0) {
+          var img_src = global.qiniuShUrl + file.response.key
+        } else if(fileList.length == 0) {
+          var img_src = file.url
+        }
         var b = that.fileList.filter(function(ele,index,arr) {
-            //console.log(ele,'3333333');
             return ele !== img_src;   
         });
         that.fileList = b;
+        console.log(that.fileList,'opopoppop')
       },
       // 保存新增商品
       save: function() {
         var that = this;
         if (that.state !== 1) {
+          console.log('进入新增商品')
           // that.quill1.insertText(1, 'Hello', 'bold', true);
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
@@ -265,7 +310,6 @@
           delete that.thirdForm.shopType
           delete that.thirdForm.items
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-          // console.log(itemValueList)
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
           xhr.setRequestHeader("Content-Type", "application/json")
@@ -290,7 +334,7 @@
             }
           }
         } else {
-          console.log('xiugai')
+          console.log('进入修改商品')
           // that.quill1.insertText(1, 'Hello', 'bold', true);
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
@@ -306,7 +350,7 @@
           delete that.thirdForm.shopType
           delete that.thirdForm.items
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-          console.log(itemValueList)
+          console.log(that.thirdForm,'sdsdji')
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "http://47.93.48.111:8080/api/item/updateItemValue")
           xhr.setRequestHeader("Content-Type", "application/json")

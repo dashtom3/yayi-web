@@ -108,8 +108,7 @@ export default {
             }
           })
         }
-        console.log(that.classifyItems,'llllll')
-        // console.log(that.items[i])
+        // console.log(that.classifyItems,'llllll')
       } else {
         that.$message.error('网络出错，请稍后再试2！');
       }
@@ -195,7 +194,7 @@ export default {
       var that = this;
       that.global.axiosGetReq('/item/brandList')
       .then((res) => {
-        console.log(res.data.data)
+        // console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') {
           that.brandListData = res.data.data;
           that.brandListData1 = res.data.data;
@@ -213,12 +212,10 @@ export default {
     prev() {
       var that = this;
       that.$refs.carousel.prev();
-      console.log('22');
     },
     next() {
       var that = this;
       that.$refs.carousel.next();
-      console.log('22');
     },
   }
 }

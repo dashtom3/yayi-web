@@ -11,6 +11,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     name: 'publicFooter',
     data () {
@@ -19,7 +20,7 @@
     },
     created: function() {
 
-},
+    },
     methods: {
       //意见反馈
       question: function() {
@@ -28,7 +29,10 @@
       },
       aboutUs: function() {
         var that = this;
-        alert('李辉！')
+        axios.defaults.headers['token'] = that.global.getToken()
+        that.global.axiosPostReq('/test').then((res) => {
+          console.log(res,'opop')
+        })
       }
     }
   }
@@ -36,32 +40,32 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.publicFooter {
-  width: 100%;
-  height: 110px;
-  background-color: #F2F2F2;
-  text-align: center;
-  padding-top: 35px;
-}
-.footerDes {
-  font-size: 14px;
-  color: #000;
-  margin-bottom: 35px;
-}
-.footerDes span {
-/*  margin-right: 92px;*/
-  padding-right: 46px;
-  padding-left: 46px;
-  border-right: 1px #bcbcbc solid;
-}
-.footerDes span:hover {
-  cursor: pointer;
-  color: #5DB7E7;
-  transition: all ease 0.5s;
-  text-decoration: underline;
-}
-.copyright {
-  font-size: 14px;
-  color: #000;
-}
+  .publicFooter {
+    width: 100%;
+    height: 110px;
+    background-color: #F2F2F2;
+    text-align: center;
+    padding-top: 35px;
+  }
+  .footerDes {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 35px;
+  }
+  .footerDes span {
+    /*  margin-right: 92px;*/
+    padding-right: 46px;
+    padding-left: 46px;
+    border-right: 1px #bcbcbc solid;
+  }
+  .footerDes span:hover {
+    cursor: pointer;
+    color: #5DB7E7;
+    transition: all ease 0.5s;
+    text-decoration: underline;
+  }
+  .copyright {
+    font-size: 14px;
+    color: #000;
+  }
 </style>

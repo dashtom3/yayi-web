@@ -209,6 +209,9 @@
         <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo" autocomplete="on">
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
         <p class="search_p" @click="search_cargo">搜索</p>
+        <p>
+          <span class="historySearch" v-for="item in filteredHrecord">{{item.word}} </span>
+        </p>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -279,6 +282,7 @@
         isActive: false,
         line: false,
         Gtoken: null,
+        Hrecord: [],
         total_num: 0,
         total_price: 0,
         searchCargo: '',
@@ -297,6 +301,13 @@
     created: function() {
       var that = this;
       that.Gtoken = that.global.getToken();
+      if (JSON.parse(that.global.getHistory()) == null) {
+        that.Hrecord = []
+      } else {
+        that.Hrecord = JSON.parse(that.global.getHistory());
+        that.Hrecord.reverse()
+      }
+      // console.log(that.Hrecord,'ooooo')
       window.addEventListener('scroll', that.menu);
       if (that.global.getToken() !== null) {
         var username = that.global.getUser();
@@ -307,6 +318,11 @@
       }
       that.init();
       // console.log(that.global.getToken());
+    },
+    computed: {
+      filteredHrecord: function () {
+        return this.Hrecord.slice(0, 6)
+      }
     },
     watch: {
       msgFromGoodInfo() {
@@ -325,7 +341,7 @@
           that.showLogin1 = true;
           // that.msgFromGoodInfo = "";
         // }
-        console.log(that.msgFromGoodInfo,'2222');
+        // console.log(that.msgFromGoodInfo,'2222');
       },
       //购物车
       Gtoken: function() {
@@ -334,7 +350,6 @@
           that.car_num = 0;
         } else {
           var obj = {
-            // phone:that.global.getUser().phone,
             token:that.global.getToken()
           };
           that.global.axiosGetReq('/cart/list', obj)
@@ -501,9 +516,16 @@
         }
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.userHistory.push(that.searchCargo)
-            console.log(that.userHistory)
-            // that.global.setHistory(that.userHistory)
+            var obj = {
+              word: that.searchCargo
+            }
+            if (JSON.parse(that.global.getHistory()) == null) {
+              that.userHistory = []
+            } else {
+              that.userHistory = JSON.parse(that.global.getHistory());
+            }
+            that.userHistory.push(obj)
+            that.global.setHistory(that.userHistory)
             if (that.$router.history.current.name !== 'brandLib') {
               var data1 = res.data.data;
               var search_word = that.searchCargo;
@@ -1708,5 +1730,15 @@
     cursor: pointer;
     box-shadow: 0px 0px 7px #5DB7E7;
     transition: all 0.5s ease;
+  }
+  .historySearch {
+    font-size: 14px;
+    color: #333;
+
+  }
+  .historySearch:hover {
+    cursor: pointer;
+    color: #5db7e8;
+    transition: all ease 0.5s;
   }
 </style>

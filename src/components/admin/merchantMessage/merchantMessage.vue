@@ -339,7 +339,11 @@
       pageHandler:function(data){
         var that = this
         that.pageProps.pageNum = data
-        that.getItemInfo();
+        if (data == 1 && that.pageProps.totalPage == 1) {
+          return false
+        } else {
+          that.getItemInfo();
+        }
       },
       // 获取商品列表
       getItemInfo: function() {
@@ -392,6 +396,7 @@
         that.addMerchandise = false;
         //console.log(data);
       },
+      // 查询
       search: function() {
         var that = this;
         that.pageProps.pageNum = 1
@@ -436,7 +441,6 @@
             numberPerPage: 10,
           }
         }
-        // console.log(obj,'llll')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;            
@@ -444,7 +448,7 @@
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
-            //console.log(that.tableData);
+            // console.log(res.data,'999999');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

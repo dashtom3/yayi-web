@@ -55,7 +55,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
   </el-row>
 </template>
 <script>
@@ -89,10 +89,21 @@
           pageNum: 1,
           totalPage: 1
         },
+        paging: true
       }
     },
     components: {
       paging,
+    },
+    watch: {
+      moneyList: function() {
+        var that = this
+        if (that.moneyList.length == 0) {
+          that.paging = false
+        } else {
+          that.paging = true
+        }
+      }
     },
     created: function() {
       var that = this;
@@ -103,7 +114,11 @@
       pageHandler:function(data){
         var that = this
         that.pageProps.pageNum = data
-        that.getClassify()
+        if (data == 1 && that.pageProps.totalPage == 1) {
+          return false
+        } else {
+          that.getClassify()
+        }
       },
       //获取用户钱币列表
       getClassify: function() {
@@ -188,7 +203,6 @@
       // 查询手机号
       search: function() {
         var that = this;
-        that.pageProps.pageNum = 1
         if (that.nowUserMoneyNum == '') {
           that.$message.error('请填写手机号！');
           return false
@@ -217,6 +231,7 @@
       // 保存修改
       saveUserMoney:function() {
         var that = this;
+        that.pageProps.pageNum = 1
         if (that.nowUserMoneyNum == '') {
           that.$message.error('请输入手机号！');
           return false
@@ -234,6 +249,7 @@
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
           console.log(res);
           if (res.data.callStatus === 'SUCCEED') {
+            that.pageProps.pageNum = 1
             that.getClassify()
             that.nowUserMoneyNum = ''
             that.yayiCoin = ''
@@ -261,9 +277,6 @@
   .pageC {
     text-align: center;
     margin-top: 20px; 
-    position: fixed; 
-    bottom: 50px; 
-    right: 20px; 
 /*    left: 0px; 
     margin: 0 auto;*/
   }

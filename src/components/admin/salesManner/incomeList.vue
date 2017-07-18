@@ -128,7 +128,7 @@
       </table>
     </div>
     </el-dialog>
-    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
   </el-row>
 </template>
 <script>
@@ -166,6 +166,7 @@
           pageNum: 1,
           totalPage: 1
         },
+        paging: true,
       }
     },
     components: {
@@ -175,12 +176,26 @@
       var that = this;
       that.getAllIn();
     },
+    watch: {
+      getMoneyList: function() {
+        var that = this
+        if (that.getMoneyList.length == 0) {
+          that.paging = false
+        } else {
+          that.paging = true
+        }
+      }
+    },
     methods: {
       //分页
       pageHandler:function(data){
         var that = this
         that.pageProps.pageNum = data
-        that.getAllIn()
+        if (data == 1 && that.pageProps.totalPage == 1) {
+          return false
+        } else {
+          that.getAllIn()
+        }
       },
       //获取收入列表
       getAllIn: function() {
