@@ -3,10 +3,11 @@ import Router from 'vue-router'
 import Index from '@/components/website/index/index'
 import Details from '@/components/website/details/details'
 import BrandLib from '@/components/website/brandLib/brandLib'
+import Center from '@/components/website/center/center'
 // 懒加载方式，当路由被访问的时候才加载对应组件
 // const Details = resolve => require(['@/components/website/details/details'], resolve)
 // const BrandLib = resolve => require(['@/components/website/brandLib/brandLib'], resolve)
-const Center = resolve => require(['@/components/website/center/center'], resolve)
+// const Center = resolve => require(['@/components/website/center/center'], resolve)
 const Gwc = resolve => require(['@/components/website/gwc/gwc'], resolve)
 const Suborder = resolve => require(['@/components/website/gwc/suborder'], resolve)
 const Pay = resolve => require(['@/components/website/gwc/pay'], resolve)

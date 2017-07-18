@@ -506,10 +506,10 @@
           }
           if (valid) {
             if (that.shopType !== '1') {
-              if (that.input_price == '' || that.input_percent == '' || that.input_coin == '' || that.input_stock == '' || that.input_percent == null || that.input_coin == null) {
-                that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
-                return false
-              }
+              // if (that.input_price == '' || that.input_percent == '' || that.input_coin == '' || that.input_stock == '' || that.input_percent == null || that.input_coin == null) {
+              //   that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
+              //   return false
+              // }
               var obj = {
                 itemId: that.ruleForm.itemId,
                 itemSKU: that.ruleForm.itemId + '1',

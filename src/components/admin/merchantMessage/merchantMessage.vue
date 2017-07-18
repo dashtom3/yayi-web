@@ -769,9 +769,5 @@ th,td {
 .pageC {
   text-align: center;
   margin-top: 20px;
-/*    bottom: 50px; 
-    right: 20px; */
-/*    left: 0px; 
-    margin: 0 auto;*/
-  }
+}
 </style>

@@ -3,7 +3,7 @@
     <div class="headerBox" :class="{ speH: isActive }">
       <div class="headerFirst">
         <div class="system_enter left" @click="gotoIndex">首页</div>
-        <div class="left" style="margin-left:60px;cursor:pointer;" @click="salesEntry">绑定销售员入口</div>
+        <div class="yayi left" @click="salesEntry">绑定销售员入口</div>
         <div class="yayi left" @click="gotoSales">创客系统入口</div>
         <div v-if="hasLogin" class="log right">
           <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
@@ -502,7 +502,14 @@
       //绑定销售员入口
       salesEntry: function() {
         var that = this;
-        that.$router.push({path: '/center'});
+        if (that.global.getToken() !== null) {
+          that.$router.push({ name: 'center', params: {currentView: 'tab04'}});
+        } else {
+          that.changeForget1 = true;
+          that.changeForget2 = false;
+          that.changeForget3 = false;
+          that.showLogin1 = true;
+        }
       },
       //首页搜索框
       search_cargo: function(item) {
@@ -1591,7 +1598,7 @@
     width: 130px;
     height: 40px;
     line-height: 40px;
-    background-color: #5DB7E7;
+    background-color: #5DB7E7;yayi
     color: #fff;
     text-align: center;
   }

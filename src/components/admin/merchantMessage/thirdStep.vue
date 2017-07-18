@@ -151,7 +151,6 @@
         }
         that.thirdForm.video = that.editCargo.itemDetail.video
         that.state = 1
-        console.log(that.fileList2,'opop')
         // 获取七牛云token
         global.axiosGetReq('/file/getUpToken').then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
@@ -195,6 +194,12 @@
         theme: 'snow',
         // imageHandler: that.imageHandler
       });
+      if (that.editCargo !== null) {
+        that.quill1.clipboard.dangerouslyPasteHTML(that.editCargo.itemDetail.itemDesc);
+        that.quill2.clipboard.dangerouslyPasteHTML(that.editCargo.itemDetail.itemUse);
+      } else {
+        console.log(that.editCargo,'opop')
+      }
     },
     methods: {
       // 插入图片至富文本框

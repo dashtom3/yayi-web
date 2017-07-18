@@ -13,7 +13,7 @@
       <div class="right_box">
         <!-- 点击导航后要切换的内容 -->
         <transition name="component-fade" mode="out-in">
-          <component :is="currentView" keep-alive></component>
+          <component :salesman="message" :is="currentView" keep-alive></component>
         </transition>
       </div>
       <div class="clearfix"></div>
@@ -50,6 +50,7 @@
         tab04Text: "tab04",
         tab05Text: "tab05",
         currentView: 'tab01', //默认选中的导航栏
+        message: 3,
       }
     },
     components: {
@@ -61,6 +62,25 @@
       tab03: myCollection,
       tab04: personal,
       tab05: myAdd,
+    },
+    mounted: function() {
+      var that = this;
+      // console.log(that.$route.params.currentView,'oooooo')
+      // that.currentView = that.$route.params.currentView;
+      // that.isActive1 = false;
+      // that.isActive2 = false;
+      // that.isActive3 = false;
+      // that.isActive4 = true;
+      // that.isActive5 = false;
+      // console.log(that.$route.params.data,'op')
+      if (that.$route.params.currentView == 'tab04'){
+        that.currentView = that.$route.params.currentView;
+        that.isActive1 = false;
+        that.isActive2 = false;
+        that.isActive3 = false;
+        that.isActive4 = true;
+        that.isActive5 = false;
+      }
     },
     methods: {
       changeActive1: function(tabText) {

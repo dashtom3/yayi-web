@@ -27,8 +27,11 @@
         personInfo: {}
       }
     },
-    created(){
-      this.init();
+    props: ['salesman'],
+    created: function() {
+      var that = this
+      that.currentTabs = that.salesman;
+      that.init()
     },
     components:{
       personalData,
