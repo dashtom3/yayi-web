@@ -123,6 +123,7 @@
           this.birthDay_validate = true;
           return false;
         }
+        console.log('web',params)
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateUser', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {

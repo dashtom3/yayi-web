@@ -38,6 +38,9 @@
     methods:{
       changeTabs:function(index){
         this.currentTabs = index;
+        if(index == 2){
+          this.init()
+        }
       },
       init(){
         var obj = {

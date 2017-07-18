@@ -193,7 +193,20 @@
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
         bindGetMoneyCount:{},
-        personalData:{},
+        personalData:{
+          trueName: '',
+          idCard: '',
+          weChar: '',
+          email: '',
+          sex: '',
+          birthday: '',
+          part: [],
+          address: '',
+          education: '',
+          workUnit: '',
+          workPosition: '',
+          salePic: ''
+        },
         personalDataRule:{
           trueName: [
             { required: true, message: '请填写真实姓名', trigger: 'change' }
@@ -272,9 +285,10 @@
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.personalData = res.data.data
-            this.personalData.part = this.personalData.part && this.personalData.part.split(',') || ['北京','北京市','东城区']
-            this.personalData.birthday = this.personalData.birthday && new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+            this.personalData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
+            this.personalData.birthday = res.data.data.birthday && res.data.data.birthday || new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
             this.personalData.sex = res.data.data.sex || 1
+            this.personalData.postalType = res.data.data.postalType && res.data.data.postalType || '支付宝'
           }
         })
       },
@@ -354,7 +368,11 @@
               salePic: this.personalData.salePic,
               token: global.getSalesToken()
             }
-            
+            //验证生日必输
+            if(!this.personalData.birthday){
+              this.birthDay_validate = true;
+              return false;
+            }
             global.axiosPostReq('/saleInfo/updateSale',params).then((res) => {
               if(res.data.callStatus === 'SUCCEED'){
                 this.$message({

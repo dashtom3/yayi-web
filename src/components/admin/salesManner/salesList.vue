@@ -47,7 +47,7 @@
               <el-button type="primary" v-on:click="bindAlertSearch()">绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" height="500">
+          <el-table ref="multipleTable" :data="noBindUserList"  border style="width: 100%" @selection-change="handleSelectionChange1" max-height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
             <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
@@ -75,7 +75,7 @@
               <el-button type="primary" v-on:click="cancleBindAlert()">取消绑定</el-button>
             </el-form-item>
           </el-form>
-          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" height="500">
+          <el-table ref="multipleTable1" :data="bindedUserList"  border style="width: 100%" @selection-change="handleSelectionChange2" max-height="500">
             <el-table-column  type="selection"  width="55">  </el-table-column>
             <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
             <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
@@ -88,6 +88,7 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
+      <!-- <paging :childmsg="d_pageProps" style="text-align:center;margin-top:20px;" @childSay="d_pageHandler" ></paging> -->
     </el-dialog>
 
     <!-- 详情 -->
@@ -145,7 +146,7 @@
         <el-table-column align="center" property="trueName" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="certification.companyName" label="单位名称"></el-table-column>
       </el-table>
-      <paging :childmsg="d_pageProps" style="text-align:center;margin-top:20px;" @childSay="d_pageHandler"></paging>
+      
     </el-dialog>
 
     <!-- 主要列表 -->
@@ -172,7 +173,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="position:absolute;top:680px;right:0;" v-show="this.salesList.length" @childSay="pageHandler"></paging>
   </el-row>
 </template>
 <script>
@@ -220,8 +221,7 @@
           {value: '',label: '全部'},
           {value: '1',label: '是'},
           {value: '2',label: '否'}       
-        ],
-        userList: []
+        ]
       }
     },
     components: {
@@ -300,6 +300,7 @@
         global.axiosGetReq('/saleList/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.salesList = res.data.data
+            this.pageProps.totalPage = res.data.totalPage
           }
         })
       },
@@ -309,7 +310,7 @@
       },
       d_pageHandler(data){
         this.d_pageProps.pageNum = data
-        //this.saleDetail(index, row) //详情分页查询
+        this.noBindSearch() //未绑定分页查询
       },
       BindSearch:function(){
         //查询已绑定用户
@@ -358,7 +359,9 @@
             userPhone: this.noBindSearchContent,
             trueName: '',
             companyName: '',
-            isBind: 1
+            isBind: 1,
+            // currentPage: this.d_pageProps.pageNum,
+            // numberPerPage: 10
           }
         }else if(this.noBindSearchType === "真实姓名"){
           params = {
@@ -366,7 +369,9 @@
             userPhone: '',
             trueName: this.noBindSearchContent,
             companyName: '',
-            isBind: 1
+            isBind: 1,
+            // currentPage: this.d_pageProps.pageNum,
+            // numberPerPage: 10
           }
         }else if(this.noBindSearchType === "单位名称"){
           params = {
@@ -374,12 +379,15 @@
             userPhone: '',
             trueName: '',
             companyName: this.noBindSearchContent,
-            isBind: 1
+            isBind: 1,
+            // currentPage: this.d_pageProps.pageNum,
+            // numberPerPage: 10
           }
         }
         global.axiosGetReq('/saleList/userlist',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.noBindUserList = res.data.data
+            this.d_pageProps.totalPage = res.data.totalPage
           }
         })
         // this.noBindSearchContent = null;//清空搜索内容
@@ -387,16 +395,16 @@
       //一次绑定多个
       bindAlertSearch:function(){
         var that = this;
-        var userlist = [];
+        var userslist01 = [];
         if(that.multipleSelection1.length==0){
           that.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
           for(let i=0;i<that.multipleSelection1.length;i++){
-            userlist.push(that.multipleSelection1[i].phone)
+            userslist01.push(that.multipleSelection1[i].phone)
           }
           let params = {
             salePhone: that.salePhone,
-            userPhone: userlist
+            userPhone: userslist01
           }
           global.axiosPostReq('/saleList/bind',params).then((res) => {
             if(res.data.callStatus === 'SUCCEED'){
@@ -404,25 +412,26 @@
                 type: 'success',
                 message: '绑定成功!'
               });
+              that.BindSearch()
+              that.noBindSearch()
             }
           })
-          that.BindSearch()
-          that.noBindSearch()
+          
         }
       },
       //一次取消绑定多个
       cancleBindAlert:function(){
         var that = this;
-        var userlist = [];
+        var userslist02 = [];
         if(that.multipleSelection2.length==0){
           that.$alert("最少选择一个", {confirmButtonText: '确定！'});
         }else{
           for(let i=0;i<that.multipleSelection2.length;i++){
-            userlist.push(that.multipleSelection2[i].phone)
+            userslist02.push(that.multipleSelection2[i].phone)
           }
           let params = {
             salePhone: that.salePhone,
-            userPhone: userlist
+            userPhone: userslist02
           }
           global.axiosPostReq('/saleList/disBind',params).then((res) => {
             if(res.data.callStatus === 'SUCCEED'){
@@ -439,10 +448,11 @@
       bindThisUser:function(nowUser,index){
         //绑定用户
         var that = this;
-        this.userList.push(nowUser.phone);
+        var userList02 = [];
+        userList02.push(nowUser.phone);
         var obj = {
           salePhone: this.salePhone,
-          userPhone: this.userList
+          userPhone: userList02
         }
         global.axiosPostReq('/saleList/bind',obj).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -459,10 +469,11 @@
       cancleBindThisUser:function(nowUser,index){
         //取消绑定用户
         var that = this;
-        this.userList.push(nowUser.phone);
+        var userlist01 = [];
+        userlist01.push(nowUser.phone);
         var obj = {
           salePhone: this.salePhone,
-          userPhone: this.userList
+          userPhone: userlist01
         }
         console.log('单个取消绑定',obj)
         global.axiosPostReq('/saleList/disBind',obj).then((res) => {
@@ -510,7 +521,7 @@
         this.showSaleDetailInfor = true;
         let params = {
           phone: row.phone,
-          currentPage: this.d_pageProps.pageNum,
+          // currentPage: this.d_pageProps.pageNum,
           numberPerPage: 10
         }
         global.axiosGetReq('/saleList/detail',params).then((res) => {

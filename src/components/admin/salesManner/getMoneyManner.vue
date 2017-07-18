@@ -34,8 +34,8 @@
         <el-table-column prop="phone" align="center" label="手机号"></el-table-column>
         <el-table-column prop="cashMoney" align="center" label="提现金额"></el-table-column>
         <el-table-column prop="type" align="center" label="类型"></el-table-column>
-        <el-table-column prop="openName" align="center" label="开户者"></el-table-column>
-        <el-table-column prop="bankName" align="center" label="银行"></el-table-column>
+        <el-table-column prop="accountUser" align="center" label="开户者"></el-table-column>
+        <el-table-column prop="bank" align="center" label="银行"></el-table-column>
         <el-table-column prop="anumber" align="center" label="账号"></el-table-column>
         <el-table-column prop="appTime" align="center" label="申请时间"></el-table-column>
         <el-table-column prop="cashState" align="center" label="提现状态">

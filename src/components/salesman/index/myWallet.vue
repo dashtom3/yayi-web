@@ -132,7 +132,7 @@
         <el-row>
           <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{openName}} &nbsp;&nbsp;&nbsp;&nbsp;{{postalType}}账户：{{bankNo}}</span></div></el-col>
         </el-row>
-        <el-form style="padding-top:10px;" :model="WithDrawForm" :rules="rulesWithDraw" ref="WithDrawForm">
+        <el-form style="padding-top:10px;" :model="WithDrawForm" :rules="rulesWithDraw" id="WithDrawForm" ref="WithDrawForm">
           <el-form-item label="提现金额：" prop="withDrawAccount">
             <el-input v-model.number="WithDrawForm.withDrawAccount" class="item_w_input fl"></el-input>
           </el-form-item>
@@ -283,7 +283,6 @@
         }
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            console.log('---------------提现方式查询',res.data.data)
             this.postalType = res.data.data.postalType
             this.openName = res.data.data.openName
             this.trueName = res.data.data.trueName
@@ -301,6 +300,7 @@
         }
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
             this.houstonJZ = res.data.data.houstonJZ
             this.withdrawalsTX = res.data.data.withdrawalsTX
             // this.tableData = res.data.data
@@ -427,8 +427,8 @@
               type: this.postalType,
               cashMoney: this.WithDrawForm.withDrawAccount,
               trueName: this.trueName,
-              openName: this.openName,
-              bankName: this.bankName,
+              accountUser: this.openName,
+              bank: this.bankName,
               anumber: this.bankNo,
               vCode: this.WithDrawForm.rg_code
             }
@@ -437,7 +437,7 @@
               this.$message.error('请输入正确的验证码');
               return false
             }
-            console.log('--------------',params)
+
             global.axiosPostReq('/witManage/submitWit',params).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 this.statTip = true
@@ -445,7 +445,7 @@
                 this.WithDrawForm.rg_code = ''
                 this.withDrawBank = false
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                this.$message.error('网络出错，请稍后再试！');
               }
             })
           } else {
@@ -587,7 +587,7 @@
     font-size: 16px;
     background: url(../../../images/salesman/titlebg.png) 400px 34px no-repeat;
   }
-  .el-form-item__error{
+  #WithDrawForm .el-form-item__error{
     margin-left: 92px;
   }
   .datail_tb{
