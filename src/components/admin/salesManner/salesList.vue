@@ -162,7 +162,7 @@
         <el-table-column align="center" property="trueName" label="真实姓名"></el-table-column>
         <el-table-column align="center" property="certification.companyName" label="单位名称"></el-table-column>
       </el-table>
-      <div class="block" style="position:absolute;top:1029px;right:100px;" v-show="this.totalCount">
+      <div class="block" style="position:absolute;top:1029px;right:100px;" v-show="this.totalCountDetail">
         <el-pagination
           @current-change="handleCurrentChangeDetail"
           :current-page.sync="currentPageDetail"

@@ -8,7 +8,7 @@
     <el-col :span="24" class="warp-main">
       <el-form :inline="true" class="clearfix">
         <el-form-item class="fl">
-          <el-input v-model="sel_input" class="t_input_w">
+          <el-input v-model="sel_input" class="t_input_w" @change="pageInitHandler">
             <el-select v-model="sel_value" slot="prepend" class="t_select_width" @change="selectOpt">
               <el-option
                 v-for="item in goodsName"
@@ -20,7 +20,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="品牌名称" class="fl">
-          <el-select v-model="brandName">
+          <el-select v-model="brandName" @change="pageInitHandler">
             <el-option
               v-for="item in brands"
               :key="item.value1"
@@ -54,7 +54,7 @@
       <el-table-column prop="refundNum" label="累计退款次数" align="center" >
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="position:absolute;top:650px;right:0;" @childSay="pageHandler" v-show="this.goodsList.length"></paging>
   </el-row>
 </template>
 
@@ -115,6 +115,10 @@
           }
         })
       },
+      //查询条件改变时初始化pageNum为1
+      pageInitHandler(){
+        this.pageProps.pageNum = 1;
+      },
       queryHandler(){
         var params;
         if(this.sel_value == '1'){
@@ -158,6 +162,7 @@
       selectOpt(key){
         this.sel_value = key;
         this.sel_input = '';
+        this.pageProps.pageNum = 1;
       },
       pageHandler(data){
         this.pageProps.pageNum = data

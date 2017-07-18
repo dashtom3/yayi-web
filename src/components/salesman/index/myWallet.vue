@@ -4,6 +4,7 @@
       <div class="grid-content bg-purple-dark">
         <span>钱包余额：<i class="i_col_red">￥{{withTotalAmt}}</i></span>
         <button class="margin_l btn_col" @click="withDrawHandler">提现</button>
+        <span class="infoColor" v-show="true">正在审核中，请耐心等待...</span>
       </div>
       <div class="curOrder">钱包明细</div>
       <ul class="sel_wrap">
@@ -490,6 +491,10 @@
     color: #20a0ff;
     font-weight: bold;
     font-style: normal;
+  }
+  .infoColor{
+    color: #56bff8;
+    margin-left: 30px;
   }
   .col_blue{
     color: #20a0ff;

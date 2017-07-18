@@ -77,7 +77,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="position:absolute;top:800px;right:0;" @childSay="pageHandler" v-show="this.certificationList.length"></paging>
+    <paging :childmsg="pageProps" style="position:absolute;top:650px;right:0;" @childSay="pageHandler" v-show="this.certificationList.length"></paging>
   </el-row>
 </template>
 <script>

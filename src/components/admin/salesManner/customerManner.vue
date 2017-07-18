@@ -48,7 +48,7 @@
         </template>
       </el-table-column>
     </el-table>
-		<paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+		<!-- <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging> -->
     <!-- 添加视频 -->
     					 
     <el-dialog :title="!isEdit? '添加客户信息':'修改客户信息'" size="tiny" v-model="customerVisible" :close-on-click-modal="true">
@@ -120,34 +120,42 @@
         this.sel_value = key;
         this.selectInput = '';
       },
-      pageHandler(data){
-        this.pageProps.pageNum = data
-        this.queryHandler();
-      },
+      // pageHandler(data){
+      //   this.pageProps.pageNum = data
+      //   this.queryHandler()
+      // },
       queryHandler(){
       	var params;
       	if(this.sel_value == '1'){
       		params = {
       			companyName: this.selectInput,
       			companyAdd: '',
-      			linkMan: ''
+      			linkMan: '',
+      			// currentPage: this.pageProps.pageNum,
+         //    numberPerPage: 10
       		}	
       	}else if(this.sel_value == '2'){
       		params = {
       			companyName: '',
       			companyAdd: this.selectInput,
-      			linkMan: ''
+      			linkMan: '',
+      			// currentPage: this.pageProps.pageNum,
+         //    numberPerPage: 10
       		}	
       	}else if(this.sel_value == '3'){
       		params = {
       			companyName: '',
       			companyAdd: '',
-      			linkMan: this.selectInput
+      			linkMan: this.selectInput,
+      			// currentPage: this.pageProps.pageNum,
+         //    numberPerPage: 10
       		}	
       	}
         global.axiosPostReq('/cus/show',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.customerList = res.data.data
+            // console.log(this.customerList)
+            // this.pageProps.totalPage = res.data.totalPage
           }
         })
       },

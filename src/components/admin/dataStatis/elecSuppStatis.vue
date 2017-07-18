@@ -7,7 +7,7 @@
     </el-col>
     <el-col :span="24" class="warp-main">
       <el-form :inline="true" class="clearfix">
-        <el-input v-model="selectInput" class="fl t_input_w">
+        <el-input v-model="selectInput" class="fl t_input_w" @change="pageInitHandler">
           <el-select v-model="sel_value" slot="prepend" class="fl t_select_width"  @change="selectOpt">
             <el-option
               v-for="item in optSelect"
@@ -17,7 +17,7 @@
             </el-option>
           </el-select>
         </el-input>
-        <el-form-item label="下单时间" class="fl" style="margin-left:10px;">
+        <el-form-item label="下单时间" class="fl" style="margin-left:10px;" @change="pageInitHandler">
           <div class="block">
             <el-date-picker
               v-model="data_val"
@@ -47,7 +47,7 @@
       <el-table-column prop="latelyOrderDate" label="最近一次下单时间" sortable align="center" >
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <paging :childmsg="pageProps" style="position:absolute;top:650px;right:0;" @childSay="pageHandler" v-show="this.elecList.length"></paging>
   </el-row>
 </template>
 
@@ -83,9 +83,14 @@
       this.queryHandler()
     },
     methods: {
+      //查询条件改变时初始化pageNum为1
+      pageInitHandler(){
+        this.pageProps.pageNum = 1;
+      },
       selectOpt(key){
         this.sel_value = key;
         this.selectInput = '';
+        this.pageProps.pageNum = 1;
       },
       changeHandler(val){  
         if(val){
