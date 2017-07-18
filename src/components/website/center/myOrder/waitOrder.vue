@@ -194,8 +194,10 @@
            console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
-              if(that.items.orderId==that.cancleOrderItemId){
-                that.items.splice(i,1);
+              if(that.cancleOrderItemId==that.items[i].orderId){
+                var data = that.items[i];
+                data.state = 1;
+                that.items[i].splice(i,1,data);
               }else{
                 continue;
               }

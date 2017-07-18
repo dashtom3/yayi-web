@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <publicHeader></publicHeader>
-    <img class="notLogin" v-if="gwcGoods.length<=0" src="../../../images/gwc/4.png" alt="">
+    <img class="notLogin" v-if="gwcGoods.length<=0" src="../../../images/gwc/5.png" alt="">
     <div v-else class="gwcWrap" >
       <div class="lgoinConfirm" v-if="isLogin==false">
         您还没有登陆，登录后购物车的商品将保存到您账户中!

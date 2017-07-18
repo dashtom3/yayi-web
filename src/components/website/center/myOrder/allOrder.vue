@@ -173,7 +173,7 @@
     </el-dialog>
     <!-- 评价 -->
     <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-      <div  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
+      <div  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList" v-if="commentScores.length>0">
         <div class="commentImgWrap">
           <img class="comment_img" :src="item.picPath" alt="img">
         </div>
@@ -181,7 +181,7 @@
           <span>{{item.itemInfo.itemName}}</span>
         </p>
         <div class="clearfix"></div>
-        <div class="score_box">
+        <div class="score_box" >
           <!-- <div class="score_word">评分：</div> -->
           <el-rate   v-model="commentScores[index].score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
           <div class="getScore"><span style="color: #D81E06">{{commentScores[index].score}}</span>分</div>
@@ -352,7 +352,7 @@
                 continue;
               }
             }
-            that.dialogVisible = false;
+            that.dialogVisibleGetGood = false;
           } else {
             that.$message.error('网络错误！');
           }
@@ -425,7 +425,15 @@
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
            console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
-
+            for(let i in that.items){
+              if(that.cancleOrderItemId==that.items[i].orderId){
+                var data = that.items[i];
+                data.state = 1;
+                that.items[i].splice(i,1,data);
+              }else{
+                continue;
+              }
+            }
             that.dialogVisible = false;
             that.$message('取消订单成功！');
           } else {
@@ -446,6 +454,7 @@
       operate: function(item) {
         var that = this;
         that.nowToOperateItem = item;
+        console.log(item.state)
         // var obj = {
         //   token:that.global.getToken(),
         //   orderId:item.orderId

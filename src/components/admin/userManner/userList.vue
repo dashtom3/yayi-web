@@ -239,6 +239,7 @@
         that.global.axiosGetReq('/userManageList/salelist',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log("........")
             that.salesList = res.data.data;
             that.bindSaleCurrentPage = res.data.currentPage;
             that.bindSaleNumTotal = res.data.totalNumber;
