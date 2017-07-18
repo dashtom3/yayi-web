@@ -7,7 +7,12 @@ import App from './App'
 import router from './router'
 // import axios from 'axios'
 import Global from './components/global/global'
+import Promise from 'promise-polyfill';   
 
+// To add to window  
+if (!window.Promise) {  
+  window.Promise = Promise;  
+}
 Vue.use(ElementUI)
 // Vue.component(Button.name, Button)
 // Vue.component(Select.name, Select)

@@ -37,6 +37,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
     </el-col>
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
@@ -59,6 +60,7 @@
   </el-row>
 </template>
 <script>
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -91,15 +93,27 @@
         },
         a: [],
         addNew: true,
+        pageProps: {
+          pageNum: 1,
+          totalPage: 1
+        },
+        paging: true,
         // formLabelWidth: '120px'
         // -----------------------------------
       }
     },
-    watch:{
-
+    watch: {
+      tableData: function() {
+        var that = this
+        if (that.tableData.length == 0) {
+          that.paging = false
+        } else {
+          that.paging = true
+        }
+      }
     },
-    components:{
-      // abc
+    components: {
+      paging,
     },
     created: function () {
       var that = this;
@@ -107,18 +121,31 @@
       that.getAllClassify();
     },
     methods: {
+      //分页
+      pageHandler:function(data){
+        var that = this
+        that.pageProps.pageNum = data
+        if (data == 1 && that.pageProps.totalPage == 1) {
+          return false
+        } else {
+          that.getClassify();
+        }
+      },
       //获取分类列表
       getClassify: function() {
         var that = this;
-        that.global.axiosGetReq('/item/showItemClassify').then((res) => {
+        var obj = {
+          currentPage: that.pageProps.pageNum,
+          numberPerPage: 10,
+        }
+        that.global.axiosGetReq('/item/showItemClassify',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            // console.log(that.tableData)
+            that.pageProps.totalPage = res.data.totalPage
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
-        // console.log(that.tableData,'hahahaha')
       },
       //获取所有分类列表
       getAllClassify: function() {
@@ -155,14 +182,18 @@
       // 查询分类
       search:function () {
         var that = this;
+        that.pageProps.pageNum = 1
         var obj = {
           itemClassifyName: that.searchClassfyName,
           itemPreviousClassify: that.searchParentClassfyName,
+          currentPage: that.pageProps.pageNum,
+          numberPerPage: 10,
         }
         that.global.axiosPostReq('/item/showItemClassify',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.tableData = res.data.data;
-            console.log(that.tableData,'23232323')
+            that.tableData = res.data.data
+            that.pageProps.totalPage = res.data.totalPage
+            // console.log(that.tableData,'23232323')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -335,5 +366,9 @@
 }
 .cascader {
   width: 260px;
+}
+.pageC {
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

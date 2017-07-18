@@ -31,7 +31,7 @@
                   </div>
                   <div>
                     <span>验证码：</span>
-                    <input class="rightCode" type="text" v-model="ms_yzm">
+                    <input class="rightCode" type="text" v-model="ms_yzm" @keyup.enter="ms_logIn">
                     <button class="getCode" @click="hasYzm(ms_mobilephone)" v-if="hYzm">{{Yzm}}</button>
                     <button class="getCode" @click="hasYzm()" style="background-color: #C8C8C8;" v-else disabled>{{Yzm1}}</button>
                     <transition name="shake">
@@ -50,7 +50,7 @@
                   </div>
                   <div class="pwd_box">
                     <span>密码：</span>
-                    <input class="pwd" type="password" v-model="pwd_pwd">
+                    <input class="pwd" type="password" v-model="pwd_pwd" @keyup.enter="pwd_logIn">
                     <transition name="shake">
                       <p v-show="pwdpwd_alert" class="error">请输入正确的密码！</p>
                     </transition>
@@ -98,7 +98,7 @@
                   </div>
                   <div class="fg_confirmPwd_box">
                     <span>确认密码：</span>
-                    <input class="fg_confirmPwd" type="password" v-model="fg_confirmPwd">
+                    <input class="fg_confirmPwd" type="password" v-model="fg_confirmPwd" @keyup.enter="fg_confirm">
                     <transition name="shake">
                       <p v-show="fgConfirmPwd_alert" class="error">设置密码与确认密码不一致！</p>
                     </transition>
@@ -146,7 +146,7 @@
                   </div>
                   <div class="rg_confirmPwd_box">
                     <span>确认密码：</span>
-                    <input class="rg_confirmPwd" type="password" v-model="rg_confirmPwd">
+                    <input class="rg_confirmPwd" type="password" v-model="rg_confirmPwd" @keyup.enter="rg_register">
                     <transition name="shake">
                       <p v-show="rgConfirmPwd_alert" class="error">设置密码与确认密码不一致!</p>
                     </transition>

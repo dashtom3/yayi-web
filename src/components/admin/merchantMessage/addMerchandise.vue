@@ -43,8 +43,8 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="商品属性" prop="shopType">
-        <el-radio class="radio" v-model="shopType" label="1">是</el-radio>
-        <el-radio class="radio" v-model="shopType" label="2">否</el-radio>
+        <el-radio class="radio" v-model="shopType" label="1">有</el-radio>
+        <el-radio class="radio" v-model="shopType" label="2">无</el-radio>
         <el-button v-if="chooseShopType" type="primary" @click="chooseType()" :disabled='true'>选择属性</el-button>
         <el-button v-else type="primary" @click="chooseType()">选择属性</el-button>
       </el-form-item>

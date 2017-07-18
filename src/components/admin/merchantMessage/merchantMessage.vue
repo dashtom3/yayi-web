@@ -78,7 +78,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
+      <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="small">
@@ -315,10 +315,21 @@
           pageNum: 1,
           totalPage: 1
         },
+        paging: true,
       }
     },
     components: {
       paging,
+    },
+    watch: {
+      tableData: function() {
+        var that = this
+        if (that.tableData.length == 0) {
+          that.paging = false
+        } else {
+          that.paging = true
+        }
+      }
     },
     created: function() {
       var that = this;

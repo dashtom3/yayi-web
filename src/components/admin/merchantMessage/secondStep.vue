@@ -101,7 +101,11 @@
               that.secondStep = false;
               that.thirdStep = true;
             } else {
-              that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
+              if (that.secondForm.registerDate == '') {
+                console.log('22')
+              } else {
+                that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
+              }
               Object.assign(that.newForm,that.secondForm,that.ruleForm);
               // that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
               that.secondStep = false;
