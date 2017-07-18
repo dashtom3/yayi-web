@@ -73,12 +73,13 @@
         </div>
       </div>
     </div>
-
-    <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    <div v-if="pageProps">
+      <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    </div>
 
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
       <div class="" v-if="nowOrderDetails.receiver">
-        <p>收货信息：</p>
+        <p >收货信息：</p>
         <p>
           <span>{{nowOrderDetails.receiver.province}}</span>
           <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
@@ -92,7 +93,7 @@
         <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
         <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
         <div class="">
-          <div class="order_table" style="width:100%" v-show="order_table">
+          <div class="order_table" style="width:100%;margin-top:10px;;margin-bottom:0px;" v-show="order_table">
             <div style="width:150px;" class="left cargo">商品</div>
             <div class="left price">单价（元）</div>
             <div class="left num">数量</div>
@@ -106,8 +107,8 @@
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
-                <p style="margin-bottom: 20px;margin-top:0;">{{cargo.itemInfo.itemName}}</p>
-                <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+                <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
+                <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
               </div>
               <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
               <div class="left des_num">{{cargo.num}}</div>
@@ -116,8 +117,8 @@
             <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
               <div class="left now_pay_des" style="margin-top:0">
                 <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-                <p>（含运费：￥{{nowOrderDetails.postFee}}）</p>
-                <p>（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
+                <p class="postFeeAndMoney">（含运费：￥{{nowOrderDetails.postFee}}）</p>
+                <p class="postFeeAndMoney">（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
               </div>
               <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
             </div>
@@ -126,7 +127,7 @@
       </div>
       <div class="" v-if="nowOrderDetails.buyerMessage">
         <p>订单留言：</p>
-        <p>订单留言：</p>
+        <p>{{nowOrderDetails.buyerMessage}}</p>
       </div>
       <div class="">
         <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
@@ -278,9 +279,9 @@
       fenYeGetData:function(data){
         var that = this;
         var obj = {};
-        console.log(obj.currentPage)
         obj.currentPage = data;
         obj.numberPerpage = 10;
+        obj.token = that.global.getToken(),
         that.global.axiosPostReq('/OrderDetails/show',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -344,7 +345,14 @@
         that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
            console.log(res,"sureGetGood");
           if (res.data.callStatus === 'SUCCEED') {
-            that.dialogVisibleGetGood = false;
+            for(let i in that.items){
+              if(that.items.orderId==that.nowToOperateItem.orderId){
+                that.items.splice(i,1);
+              }else{
+                continue;
+              }
+            }
+            that.dialogVisible = false;
           } else {
             that.$message.error('网络错误！');
           }
@@ -417,6 +425,7 @@
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
            console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
+
             that.dialogVisible = false;
             that.$message('取消订单成功！');
           } else {
@@ -477,199 +486,28 @@
     }
   }
 </script>
-<style >
-.spe_p{
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-.orderDetails{
-  width: 860px !important;
-}
-.orderDetails .order_des_right{
-  top: 0 !important;
 
-}
-.orderDetailsBtn{
-  float: right;
-  margin-right: 20px;
-  cursor: pointer;
-  color: #5DB7E7;
-}
-
-.orderDetails div p:nth-child(1){
-  margin-top: 30px;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-.orderDetails div p:nth-child(2){
-color: #333333;
-}
-.order_item{
-  overflow: hidden;
-}
-.order_item .des_img {
-  margin-right: 20px;
-  border: 1px solid #D7D7D7;
-  cursor: pointer;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.des_img > img{
- max-width: 100%;
- max-height: 100%;
- display: block;
- margin: auto;
- margin-top: 50%;
- transform: translateY(-50%);
-}
-.cancelBtn {
-  font-size: 12px;
-  color: #999999;
-}
-.cancelBtn:hover {
-  cursor: pointer;
-  color: #D81E06;
-  transition: all ease 0.2s;
-}
-.order_des_right{
-  transform: translateY(-50%);
-}
-.operate_des p {
-  margin-bottom: 10px !important;
-}
-.payBtn{
-  margin-top: 0;
-}
-.order_des_right .now_pay_des{
-  margin-top: 0 !important;
-}
-.order_des_right .wait_pay_des{
-  margin-top: 0 !important;
-}
-.wlxxWrap .wlxxLeft{
-  float: left;
-      padding-top: 15px;
-      position: relative;
-}
-.wlxxWrap .wlxxLeft span{
-  background: #dfdfdf;
-}
- .wlxxWrap .wlxxLeft .lastCircle{
-   background: #5db7e8;
-   position: absolute;
-   width: 6px;
-   height: 6px;
-   bottom: -3px;
-   left: -2.5px;
-   border-radius: 50%;
- }
-.wlxxWrap .wlxxLeft .line{
-  display: block;
-  width: 1px;
-  /*height: 16px;*/
-  position: relative;
-}
-.wlxxWrap .wlxxLeft .circle{
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  top: -3px;
-  left: -2.5px;
-  border-radius: 50%;
-}
-.wlxxWrap .wlxxRight{
-  margin-left: 40px;
-}
-.wlxxWrap .wlxxRight li{
-  line-height: 35px;
-}
-
-.wlxxWrap .wlxxRight li .data{
-  font-weight: 600;
-  margin-right: 50px;
-  float: left;
-}
-.wlxxWrap .wlxxRight li .placeWrap{
-  padding-left: 160px;
-}
-.wlxxWrapWrap{
-  width: 622px !important;
-}
-.commentImgWrap{
-  width: 60px;
-  height: 60px;
-  border: 1px solid #eeeeee;
-  float: left;
-  margin-right: 10px;
-}
-.comment_img {
-  border: 1px solid #e9e9e9;
-  margin-right: 15px;
-  float: left;
-  max-width: 60px;
-  max-height: 60px;
-}
-./* 评论评分框 */
-  .comment_box {
-    width: 100%;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e9e9e9;
-  }
-
-  .comment_des {
-    /*margin-top: 18px;*/
-    float: left;
-  }
-  .score_box {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .score_word {
-    float: left;
-    margin-right: 20px;
-  }
-  .score_des {
-    float: left;
-  }
-  .comment_word_box {
-    width: 100%;
-    margin-top: 20px;
-  }
-  .comment_word_des {
-    float: left;
-    margin-right: 20px;
-  }
-  .textarea_des {
-    width: 80%;
-  }
-  .getScore {
-    float: left;
-    margin-left: 20px;
-  }
-</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .left {
-    float: left;
-  }
-  .search_box {
-    width: 300px;
-    height: 40px;
-    margin-top: 30px;
-    position: relative;
-  }
-  .search_word {
-    width: 300px;
-    height: 40px;
-    padding-left: 10px;
-    font-size: 14px;
-    border: 1px solid #5DB7E8;
-    outline: medium;
-  }
-  .search_word:focus {
+    .left {
+      float: left;
+    }
+    .search_box {
+      width: 300px;
+      height: 40px;
+      margin-top: 30px;
+      position: relative;
+    }
+    .search_word {
+      width: 300px;
+      height: 40px;
+      padding-left: 10px;
+      font-size: 14px;
+      border: 1px solid #5DB7E8;
+      outline: medium;
+    }
+    .search_word:focus {
     border: 1px solid #5DB7E7 !important;
 /*    transition: all linear 0.2s;*/
   }
@@ -846,4 +684,197 @@ color: #333333;
     border: 1px solid #D7D7D7;
   }
 
+</style>
+
+<style >
+.spe_p{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.orderDetails{
+  width: 860px !important;
+}
+.orderDetails .order_des_right{
+  top: 0 !important;
+}
+.orderDetails .order_item .orderDetail_title{
+   margin-bottom: 20px;
+   margin-top:0;
+   font-weight:500
+}
+.orderDetails .order_item .postFeeAndMoney{
+  color: #999999;
+}
+.orderDetails .order_table{
+  border: 1px solid #eeeeee;
+  border-bottom: none;
+}
+.orderDetails .order_item *{
+  color: #333;
+}
+.orderDetails .order_item{
+  border-top: none;
+}
+.orderDetails .el-dialog__body{
+  padding-top: 0;
+}
+.orderDetailsBtn{
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+  color: #5DB7E7;
+}
+
+.orderDetails div p:nth-child(1){
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.orderDetails div p:nth-child(2){
+color: #333333;
+}
+.order_item{
+  overflow: hidden;
+}
+.order_item .des_img {
+  margin-right: 20px;
+  border: 1px solid #D7D7D7;
+  cursor: pointer;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.des_img > img{
+ max-width: 100%;
+ max-height: 100%;
+ display: block;
+ margin: auto;
+ margin-top: 50%;
+ transform: translateY(-50%);
+}
+.cancelBtn {
+  font-size: 12px;
+  color: #999999;
+}
+.cancelBtn:hover {
+  cursor: pointer;
+  color: #D81E06;
+  transition: all ease 0.2s;
+}
+.order_des_right{
+  transform: translateY(-50%);
+}
+.operate_des p {
+  margin-bottom: 10px !important;
+}
+.payBtn{
+  margin-top: 0;
+}
+.order_des_right .now_pay_des{
+  margin-top: 0 !important;
+}
+.order_des_right .wait_pay_des{
+  margin-top: 0 !important;
+}
+.wlxxWrap .wlxxLeft{
+  float: left;
+      padding-top: 15px;
+      position: relative;
+}
+.wlxxWrap .wlxxLeft span{
+  background: #dfdfdf;
+}
+ .wlxxWrap .wlxxLeft .lastCircle{
+   background: #5db7e8;
+   position: absolute;
+   width: 6px;
+   height: 6px;
+   bottom: -3px;
+   left: -2.5px;
+   border-radius: 50%;
+ }
+.wlxxWrap .wlxxLeft .line{
+  display: block;
+  width: 1px;
+  /*height: 16px;*/
+  position: relative;
+}
+.wlxxWrap .wlxxLeft .circle{
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: -3px;
+  left: -2.5px;
+  border-radius: 50%;
+}
+.wlxxWrap .wlxxRight{
+  margin-left: 40px;
+}
+.wlxxWrap .wlxxRight li{
+  line-height: 35px;
+}
+
+.wlxxWrap .wlxxRight li .data{
+  font-weight: 600;
+  margin-right: 50px;
+  float: left;
+}
+.wlxxWrap .wlxxRight li .placeWrap{
+  padding-left: 160px;
+}
+.wlxxWrapWrap{
+  width: 622px !important;
+}
+.commentImgWrap{
+  width: 60px;
+  height: 60px;
+  border: 1px solid #eeeeee;
+  float: left;
+  margin-right: 10px;
+}
+.comment_img {
+  border: 1px solid #e9e9e9;
+  margin-right: 15px;
+  float: left;
+  max-width: 60px;
+  max-height: 60px;
+}
+./* 评论评分框 */
+  .comment_box {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+
+  .comment_des {
+    /*margin-top: 18px;*/
+    float: left;
+  }
+  .score_box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .score_word {
+    float: left;
+    margin-right: 20px;
+  }
+  .score_des {
+    float: left;
+  }
+  .comment_word_box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .comment_word_des {
+    float: left;
+    margin-right: 20px;
+  }
+  .textarea_des {
+    width: 80%;
+  }
+  .getScore {
+    float: left;
+    margin-left: 20px;
+  }
 </style>

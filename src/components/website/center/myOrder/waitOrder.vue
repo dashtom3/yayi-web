@@ -28,7 +28,7 @@
         </div>
         <div class="left des_p">
           <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
-          <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+          <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -65,10 +65,10 @@
       </div>
       <div class="">
         <p>订单信息：</p>
-        <p style="margin-bottom: 20px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
+        <p >订单编号：<span>{{nowOrderDetails.orderId}}</span>
         <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
         <div class="">
-          <div class="order_table" style="width:100%" >
+          <div class="order_table" style="width:100%;margin-top:10px;" >
             <div style="width:150px;" class="left cargo">商品</div>
             <div class="left price">单价（元）</div>
             <div class="left num">数量</div>
@@ -82,8 +82,8 @@
                 <img :src="cargo.picPath" alt="img">
               </div>
               <div style="width:220px;" class="left des_p">
-                <p style="margin-bottom: 20px;margin-top:0">{{cargo.itemInfo.itemName}}</p>
-                <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+                <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
+                <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
               </div>
               <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
               <div class="left des_num">{{cargo.num}}</div>
@@ -92,8 +92,8 @@
             <div class="order_des_right" :style="{marginTop:nowOrderDetails.btnsMarginTop}" style="right: -77px;">
               <div class="left now_pay_des" style="margin-top:0">
                 <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-                <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
-                <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+                <p class="postFeeAndMoney">（含运费：￥{{nowOrderDetails.postFee}}）</p>
+                <p class="postFeeAndMoney">（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
               </div>
               <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
             </div>
@@ -102,7 +102,7 @@
       </div>
       <div class="" v-if="nowOrderDetails.buyerMessage">
         <p>订单留言：</p>
-        <p>订单留言：</p>
+        <p>{{nowOrderDetails.buyerMessage}}</p>
       </div>
       <div class="">
         <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
@@ -193,8 +193,14 @@
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
            console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
+            for(let i in that.items){
+              if(that.items.orderId==that.cancleOrderItemId){
+                that.items.splice(i,1);
+              }else{
+                continue;
+              }
+            }
             that.dialogVisible = false;
-            that.$message('取消订单成功！');
           } else {
             that.$message.error('网络错误！');
           }
@@ -260,6 +266,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.orderDetails .order_table{
+  margin-bottom: 0
+}
+.orderDetails .order_item{
+  border-top: none;
+}
 .waitOrder{
   /*border: 1px solid #d7d7d7;
   margin-top: 30px;*/

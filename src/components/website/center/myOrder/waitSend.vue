@@ -67,7 +67,7 @@
     <p style="margin-bottom:30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
     <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
-      <div class="order_table" style="width:100%" >
+      <div class="order_table" style="width:100%;margin-top:10px;" >
         <div style="width:150px;" class="left cargo">商品</div>
         <div class="left price">单价（元）</div>
         <div class="left num">数量</div>
@@ -101,7 +101,7 @@
   </div>
   <div class="" v-if="nowOrderDetails.buyerMessage">
     <p>订单留言：</p>
-    <p>订单留言：</p>
+    <p>{{nowOrderDetails.buyerMessage}}</p>
   </div>
   <div class="">
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>

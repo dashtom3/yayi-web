@@ -44,10 +44,15 @@
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="cancelBtn" v-if="item.state==4" @click="haveALookAtWuLiu(item)">查看物流</p>
         </div>
       </div>
     </div>
-<paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+<div v-if="pageProps>1">
+  <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+</div>
+
+
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
   <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
     <div class="commentImgWrap">
@@ -89,10 +94,10 @@
   </div>
   <div>
     <p>订单信息：</p>
-    <p style="margin-bottom: 30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
+    <p >订单编号：<span>{{nowOrderDetails.orderId}}</span>
     <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
-      <div class="order_table" style="width:100%" v-show="order_table">
+      <div class="order_table" style="width:100%;margin-top:10px;" >
         <div style="width:150px;" class="left cargo">商品</div>
         <div class="left price">单价（元）</div>
         <div class="left num">数量</div>
@@ -106,7 +111,7 @@
             <img :src="cargo.picPath" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
-            <p style="margin-bottom: 20px;margin-top:0">{{cargo.itemInfo.itemName}}</p>
+            <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -116,8 +121,8 @@
         <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
           <div class="left now_pay_des" style="margin-top:0">
             <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-            <p>（含运费：￥{{nowOrderDetails.postFee}}）</p>
-            <p>（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
+            <p class="postFeeAndMoney">（含运费：￥{{nowOrderDetails.postFee}}）</p>
+            <p class="postFeeAndMoney">（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
           </div>
           <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
         </div>
@@ -126,12 +131,33 @@
   </div>
   <div class="" v-if="nowOrderDetails.buyerMessage">
     <p>订单留言：</p>
-    <p>订单留言：</p>
+    <p>{{nowOrderDetails.buyerMessage}}</p>
   </div>
   <div class="">
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
   </div>
   </div>
+</el-dialog>
+<el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
+  <div class="wlxxWrap" v-if="wuliuxinxi">
+    <div class="wlxxLeft">
+      <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
+      <span class="lastCircle"></span>
+    </div>
+    <div class="wlxxRight">
+      <ul>
+        <li v-for="one in wuliuxinxi.Traces">
+          <span class="data">{{one.AcceptTime.split(" ")[0]}}</span>
+          <div class="placeWrap">
+            <span class="place">{{one.AcceptStation}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
+  </span>
 </el-dialog>
   </div>
 </template>
@@ -143,11 +169,13 @@
     name: 'waitComment',
     data () {
       return {
+        dialogVisibleHaveALookAtWuLiu:false,
+        wuliuxinxi:null,
         dialogVisibleToOrderDetails:false,
         nowToOperateItem:{},
         nowOrderDetails:null,
         commentScores:[],
-        pageProps:null,
+        pageProps:{},
         items: [],
         dialogVisibleComment:false,
         value2:null,
@@ -234,7 +262,7 @@
           orderId:that.nowToOperateItem.orderId,
           itemId:that.nowToOperateItem.orderitemList[0].itemId,
           score:that.value2,
-          data:taht.textarea
+          data:that.textarea
         };
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
            console.log(res,"makeSureCom");
@@ -251,6 +279,34 @@
         that.$router.push({
           path:"/details/"+item.itemId,
         });
+      },
+      haveALookAtWuLiu:function(item){
+        var that = this;
+        console.log(item)
+        var obj = {
+          token:that.global.getToken(),
+          orderId:item.orderId
+        };
+        that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            var data = res.data.data;
+            that.wuliuxinxi = JSON.parse(data);
+            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
+            for(let i in that.wuliuxinxi.Traces){
+              var temp = 25;
+              if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){
+                that.wuliuxinxi.Traces[i].height = 36 + "px";
+              }else{
+                var num = that.wuliuxinxi.Traces[i].AcceptStation.length/temp;
+                num = parseInt(num)
+                that.wuliuxinxi.Traces[i].height = 35*(1+1) + "px";
+              }
+            }
+            that.dialogVisibleHaveALookAtWuLiu = true;
+          } else {
+            that.$message.error('网络错误！');
+          }
+        })
       },
       operate: function(item) {
         var that = this;
@@ -274,7 +330,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.orderDetails .order_table{
+  margin-bottom: 0
+}
+.orderDetails .order_item{
+  border-top: none;
+}
   .left {
     float: left;
   }
@@ -454,7 +515,7 @@
   .cancelBtn {
     font-size: 14px;
     color: #999999;
-    margin-top: 36px;
+    /*margin-top: 36px;*/
   }
   .cancelBtn:hover {
     cursor: pointer;

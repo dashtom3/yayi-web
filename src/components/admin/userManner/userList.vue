@@ -64,6 +64,12 @@
           </template>
         </el-table-column>
       </el-table>
+
+
+      <div v-if="pageProps">
+        <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
+      </div>
+
     </el-col>
     <el-dialog title="绑定销售员" :visible.sync="showBindSalAlert">
       <el-form :inline="true" >
@@ -88,6 +94,11 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination    @current-change="handleCurrentChange"  :current-page.sync="bindSaleCurrentPage"
+      :page-size="10"
+      layout="prev, pager, next, jumper"
+      :total="bindSaleNumTotal">
+    </el-pagination>
     </el-dialog>
 
     <!-- 用户详情 -->
@@ -101,7 +112,9 @@
         </div>
         <div class="">
           <span>手机号：{{someOneUserDetails.phone}}</span>
-          <span>性别：{{someOneUserDetails.sex}}</span>
+          <span v-if="someOneUserDetails.sex==1">性别：男</span>
+          <span v-else-if="someOneUserDetails.sex==2">性别：女</span>
+          <span v-else>性别：</span>
         </div>
         <div class="">
           <span>生日：{{someOneUserDetails.birthday}}</span>
@@ -125,14 +138,13 @@
       </div>
       <h3>绑定的销售</h3>
       <el-table :data="someOneUserDetails.bindSales" border>
-        <el-table-column align="center" property="bianhao" label="销售员编号" width="150"></el-table-column>
         <el-table-column align="center" property="name" label="真实姓名" width="200"></el-table-column>
         <el-table-column align="center" property="phone" label="手机号"></el-table-column>
         <el-table-column align="center" property="time" label="注册时间"></el-table-column>
         <el-table-column align="center" property="hehushu" label="客户数"></el-table-column>
       </el-table>
       <h3>收货地址</h3>
-      <el-table :data="someOneUserDetails.Receiver">
+      <el-table :data="someOneUserDetails.receiverList">
         <el-table-column align="center" property="receiverName" label="收货人" width="150"></el-table-column>
          <el-table-column align="center" label="所在地区" width="200">
           <template scope="scope">
@@ -142,16 +154,19 @@
          </template>
         </el-table-column>
         <el-table-column align="center" property="receiverDetail" label="详细地址"></el-table-column>
-        <el-table-column align="center" property="receiverPhone" label="手机/电话"></el-table-column>
+        <el-table-column align="center" property="phone" label="手机/电话"></el-table-column>
       </el-table>
     </el-dialog>
   </el-row>
 </template>
 <script>
-
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
+        bindSaleCurrentPage:1,
+        bindSaleNumTotal:1,
+        pageProps:{},
         needBindSaleUserIndex:null,
         needBindUserPhone:null,
         showBindSalAlert:false,
@@ -193,6 +208,9 @@
         salesList:[]
       }
     },
+    components: {
+      paging,
+    },
     created:function(){
       var that = this;
       that.getUserList();
@@ -210,6 +228,94 @@
       }
     },
     methods: {
+      handleCurrentChange:function(val) {
+        var that = this;
+        var obj = {
+          salePhone:'',
+          currentPage:val,
+          saleName:'',
+          token:"111"
+        };
+        that.global.axiosGetReq('/userManageList/salelist',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.salesList = res.data.data;
+            that.bindSaleCurrentPage = res.data.currentPage;
+            that.bindSaleNumTotal = res.data.totalNumber;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        // var obj = {
+        //   // token:that.global.getToken()
+        //   phone:"",
+        //   trueName:"",
+        //   companyName:"",
+        //   isBindSale:"",
+        //   type:"",
+        //   saleName:"",
+        //   token:"111"
+        // };
+        var obj = {
+          saleName:that.searchSaleName,
+          token:"111"
+        };
+        // 收索用户类型
+        if(that.searchUserStyle=="手机号"){
+          obj.phone = that.searchUserContent;
+          obj.trueName = "";
+          obj.companyName = "";
+        }else if(that.searchUserStyle=="单位名称"){
+          obj.phone = "";
+          obj.trueName = "";
+          obj.companyName = that.searchUserContent;
+        }else if(that.searchUserStyle=="真实姓名"){
+          obj.phone = "";
+          obj.trueName = that.searchUserContent;
+          obj.companyName = "";
+        }
+        //类型
+        if(that.searchtype=="全部"){
+          obj.type = "";
+        }else if(that.searchtype=="选项2"){
+          obj.type = 1;
+        }else if(that.searchtype=="选项3"){
+          obj.type = 2;
+        }
+        //是否绑定销售
+        if(that.searchisBindSale=="全部"){
+          obj.isBindSale = "";
+        }else if(that.searchisBindSale=="选项2"){
+          obj.isBindSale = 1;
+        }else if(that.searchisBindSale=="选项3"){
+          obj.isBindSale = 2;
+        }
+        if(!that.searchSaleName){
+          that.searchSaleName = "";
+        }
+        obj.currentPage = data;
+        that.global.axiosGetReq('/userManageList/userlist',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,"getUserList")
+            that.userList = res.data.data;
+            var obj = {
+              numberPerPage:res.data.numberPerPage,
+              totalNumber:res.data.totalNumber,
+              totalPage:res.data.totalPage
+            };
+            that.pageProps = obj;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       getUserList:function(){
         var that = this;
         var obj = {
@@ -225,8 +331,14 @@
         that.global.axiosGetReq('/userManageList/userlist',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,"getUserList")
+            console.log(res,"getUserList")
             that.userList = res.data.data;
+            var obj = {
+              numberPerPage:res.data.numberPerPage,
+              totalNumber:res.data.totalNumber,
+              totalPage:res.data.totalPage
+            };
+            that.pageProps = obj;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -244,6 +356,8 @@
           console.log(res,"saleList");
           if (res.data.callStatus === 'SUCCEED') {
             that.salesList = res.data.data;
+            that.bindSaleCurrentPage = res.data.currentPage;
+            that.bindSaleNumTotal = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -324,6 +438,8 @@
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.salesList = res.data.data;
+              that.bindSaleCurrentPage = res.data.currentPage;
+              that.bindSaleNumTotal = res.data.totalNumber;
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
@@ -333,7 +449,6 @@
         }
       },
       search:function(){
-        var flag = true;
         var that = this;
         var obj = {
           saleName:that.searchSaleName,
@@ -378,6 +493,12 @@
             console.log(res,"headSearchResult")
             if (res.data.callStatus === 'SUCCEED') {
               that.userList = res.data.data;
+              var obj = {
+                numberPerPage:res.data.numberPerPage,
+                totalNumber:res.data.totalNumber,
+                totalPage:res.data.totalPage
+              };
+              that.pageProps = obj;
               //清空搜寻项目
             } else {
               that.$message.error('网络出错，请稍后再试！');

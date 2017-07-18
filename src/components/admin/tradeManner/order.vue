@@ -81,8 +81,10 @@
         </el-table-column>
       </el-table>
 
+      <div class="pageC" v-if="pageProps">
+        <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
 
-      <paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+      </div>
 
       <!--详情界面-->
       <el-dialog v-if="nowOrderDetails" title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true">
@@ -90,9 +92,9 @@
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
           <el-table :data="receivingInfo" style="width: 100%" >
-            <el-table-column prop="userId" label="用户编号" :span="3" align="center" >
-            </el-table-column>
             <el-table-column prop="receiverName" label="收货人" :span="3" align="center">
+            </el-table-column>
+            <el-table-column prop="userPhone" label="收件人手机号" :span="3" align="center">
             </el-table-column>
             <el-table-column  label="所在地区" :span="3" align="center">
               <template scope="scope">
@@ -123,13 +125,13 @@
         <div class="order_box clearfix">
           <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList">
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
-            <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.itemInfo.itemName}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
           </div>
           <div class="order_sum fl">
-            <div class="order_h">{{'￥'+nowOrderDetails.actualPay}}</div>
+            <div class="order_h">{{'￥'+nowOrderDetails.totalFee}}</div>
             <div class="order_h">{{'（含运费: '+nowOrderDetails.postFee+ '）'}}</div>
             <div class="order_h">{{'（乾币已抵扣: '+nowOrderDetails.qbDed+ '）'}}</div>
           </div>
@@ -142,12 +144,17 @@
             <li>订单留言</li>
           </ul>
           <ul class="fl">
-            <li>{{nowOrderDetails.payType}}</li>
+            <li v-if="nowOrderDetails.payType==1">微信支付</li>
+            <li v-else-if="nowOrderDetails.payType==0">支付宝支付</li>
             <li>
-              <div>不申请发票<i class="i_col_red margin_l_30">申请发票</i><i class="i_col_red margin_l_30">发票抬头：xxxxxx</i></div>
+              <div v-if="nowOrderDetails.invoiceHand">不申请发票</i></div>
+              <div v-else>
+                发票抬头：{{nowOrderDetails.invoiceHand}}
+              </div>
             </li>
             <li>
-              <div>不需要产品认证<i class="i_col_red margin_l_30">不需要产品认证</i></div>
+              <div v-if="nowOrderDetails.isRegister==0">不需要产品认证</div>
+              <div v-else>需要产品认证</div>
             </li>
             <li v-if="!nowOrderDetails.buyerMessage">留言为空</li>
             <li v-else>{{nowOrderDetails.buyerMessage}}</li>
@@ -463,7 +470,8 @@
             this.detailVisible = true;
             this.nowOrderDetails = res.data.data;
             this.receivingInfo = [];
-            this.receivingInfo.push(res.data.data.receiver)
+            res.data.data.receiver.userPhone = oneOrder.phone;
+            this.receivingInfo.push(res.data.data.receiver);
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

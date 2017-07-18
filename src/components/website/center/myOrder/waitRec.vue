@@ -27,7 +27,7 @@
           <img :src="cargo.picPath" alt="img">
         </div>
         <div class="left des_p">
-          <p style="margin-bottom: 20px;margin-top:0;">{{cargo.itemInfo.itemName}}</p>
+          <p style="margin-top:0;margin-bottom:20px;">{{cargo.itemInfo.itemName}}</p>
           <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
@@ -48,8 +48,11 @@
         </div>
       </div>
     </div>
+    <div v-if="pageProps">
+      <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
 
-<paging v-if="pageProps" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
+    </div>
+
 <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
   <div v-if="nowOrderDetails.receiver">
     <p>收货信息：</p>
@@ -67,7 +70,7 @@
       <span style="float:right">创建时间：{{nowOrderDetails.created}}</span>
     </p>
     <div class="">
-      <div class="order_table" style="width:100%" >
+      <div class="order_table" style="width:100%;margin-top:10px;" >
         <div style="width:150px;" class="left cargo">商品</div>
         <div class="left price">单价（元）</div>
         <div class="left num">数量</div>
@@ -81,7 +84,7 @@
             <img :src="cargo.picPath" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
-            <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
+            <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
             <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
@@ -91,8 +94,8 @@
         <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
           <div class="left now_pay_des" style="margin-top:0">
             <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-            <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
-            <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+            <p class="postFeeAndMoney">（含运费：￥{{nowOrderDetails.qbDed}}）</p>
+            <p class="postFeeAndMoney">（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
           </div>
           <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
         </div>
@@ -101,7 +104,7 @@
   </div>
   <div class="" v-if="nowOrderDetails.buyerMessage">
     <p>订单留言：</p>
-    <p>订单留言：</p>
+    <p>{{nowOrderDetails.buyerMessage}}</p>
   </div>
   <div class="">
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
@@ -236,7 +239,6 @@
           token:that.global.getToken(),
           orderId:item.orderId
         };
-
         that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
@@ -302,6 +304,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.orderDetails .order_table{
+  margin-bottom: 0
+}
+.orderDetails .order_item{
+  border-top: none;
+}
   .left {
     float: left;
   }

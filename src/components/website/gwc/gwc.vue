@@ -206,22 +206,23 @@
           that.$confirm('此操作将移除所有商品, 是否继续?', '删除所有商品', {
             confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
           }).then(() => {
+            var obj = {
+              token:that.global.getToken(),
+              itemSKU:[]
+            };
             for(let i in that.sendDataList){
-              var obj = {
-                phone:that.global.getUser().phone,
-                itemSKU:that.sendDataList[i].itemSKU,
-                token:that.global.getToken()
-              };
-              that.global.axiosPostReq('/cart/delete', obj)
-              .then((res) => {
-                if (res.data.callStatus === 'SUCCEED') {
-                  that.gwcGoods=[];
-                  that.$message({  type: 'success',  message: '删除成功!'});
-                } else {
-                  that.$message.error('网络出错，请稍后再试！');
-                }
-              })
+              obj.itemSKU.push(that.sendDataList[i].itemSKU);
             }
+            obj.itemSKU = obj.itemSKU.join(",");
+            that.global.axiosPostReq('/cart/delete', obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                that.gwcGoods=[];
+                that.$message({  type: 'success',  message: '删除成功!'});
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }).catch(() => {
             that.$message({type: 'info',message: '已取消'});
           });
@@ -235,22 +236,25 @@
           that.$confirm('添加至收藏夹后，商品将不在购物车显示，是否全部添加到收藏夹', '全部添加至收藏夹', {
             confirmButtonText: '确定',cancelButtonText: '取消', type: 'warning'
           }).then(() => {
+            var obj = {
+              token:that.global.getToken(),
+              itemId:[],
+              itemSKU:[]
+            };
             for(let i in that.sendDataList){
-              var obj = {
-                phone:that.global.getUser().phone,
-                itemId:that.sendDataList[i].itemId,
-                itemSKU:that.sendDataList[i].itemSKU,
-                token:that.global.getToken()
-              };
-              that.global.axiosPostReq('/cart/star', obj)
-              .then((res) => {
-                if (res.data.callStatus === 'SUCCEED') {
-                  this.gwcGoods=[];
-                } else {
-                  that.$message.error('网络出错，请稍后再试！');
-                }
-              })
+                itemId.push(that.sendDataList[i].itemId);
+                itemSKU.push(that.sendDataList[i].itemSKU);
             }
+            obj.itemSKU = obj.itemSKU.join(",");
+            obj.itemId = obj.itemId.join(",");
+            that.global.axiosPostReq('/cart/star', obj)
+            .then((res) => {
+              if (res.data.callStatus === 'SUCCEED') {
+                this.gwcGoods=[];
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }).catch(() => {
             that.$message({type: 'info',message: '已取消'});
           });

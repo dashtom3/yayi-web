@@ -52,7 +52,8 @@ Vue.filter('frisco', function (value) {
     	return ee
     }
     if (value == 4) {
-    	var ee = '待评价'
+    	// var ee = '待评价'
+      var ee = "交易成功"
     	return ee
     }
     if (value == 5) {
@@ -61,6 +62,11 @@ Vue.filter('frisco', function (value) {
     }
     if (value == 6) {
     	var ee = '退货中'
+    	return ee
+    }
+    if (value == 9) {
+      // 9是已评价
+    	var ee = '交易成功'
     	return ee
     }
 })
