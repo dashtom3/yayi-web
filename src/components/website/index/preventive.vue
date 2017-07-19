@@ -36,14 +36,14 @@
     </div>
     <!--  品牌库页面 结束 -->
     <!--  一级分类页面 开始 -->
-    <div class="preventive_box d_jump" :class="{active:index%2==1}" v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
+    <div class="preventive_box d_jump" :style="{background: 'url('+backgroundImgs[index%2==0?index%4:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
       <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
         <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
         <p class="classifyName">{{classifyItem.oneClassify}}</p>
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-for="item in classifyItem.items" :key="item" @click="toDetail(item)">
+        <div class="preventive_item" v-if="index<8" v-for="(item,index) in classifyItem.items" :key="item" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src=item.itemDetail.itemPica alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
@@ -62,6 +62,7 @@ export default {
   name: 'medical',
   data () {
     return {
+      backgroundImgs:["http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_1.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_4.jpg"],
       img_change: true,
       yayi: null,
       isActive: false,
@@ -232,6 +233,7 @@ a {
   position: fixed;
   z-index: 9999;
   top: 140px;
+
   /*  left: -165px;*/
 }
 .sideBtn {
@@ -317,7 +319,9 @@ a {
   margin: 0 auto;
   position: relative;
   text-align: center;
-  background-color: #F2F2F2;
+  /*background-color: #F2F2F2;*/
+  background-repeat: no-repeat;
+    background-size: cover;
 }
 .active {
   background-color: #fff !important;

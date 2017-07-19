@@ -228,6 +228,13 @@
         that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
            console.log(res,"sureGetGood");
           if (res.data.callStatus === 'SUCCEED') {
+            for(let i in that.items){
+              if(that.items.orderId==that.nowToOperateItem.orderId){
+                that.items.splice(i,1);
+              }else{
+                continue;
+              }
+            }
             that.dialogVisibleGetGood = false;
           } else {
             that.$message.error('网络错误！');

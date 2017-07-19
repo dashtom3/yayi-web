@@ -144,10 +144,9 @@
             <li>订单留言</li>
           </ul>
           <ul class="fl">
-            <li>
+            <li v-if="nowOrderDetails.payType">
               <div v-if="nowOrderDetails.payType==1"> 微信支付 </div>
               <div v-else-if="nowOrderDetails.payType==0">支付宝支付</div>
-              <div v-else>返回值一定是null</div>
             </li>
             <li>
               <div v-if="nowOrderDetails.invoiceHand">不申请发票</i></div>
