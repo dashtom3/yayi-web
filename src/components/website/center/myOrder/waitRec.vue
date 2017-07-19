@@ -57,11 +57,12 @@
   <div v-if="nowOrderDetails.receiver">
     <p>收货信息：</p>
     <p>
+      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.phone}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.province}}</span>
       <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
-      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
     </p>
   </div>
   <div  v-if="nowOrderDetails.receiver">
@@ -109,6 +110,7 @@
   <div class="">
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
   </div>
+  <div class="closeBtn">关闭</div>
 </el-dialog>
 <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
   <span>确定取消订单吗？</span>

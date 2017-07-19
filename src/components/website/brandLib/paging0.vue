@@ -23,10 +23,11 @@
     },
     props:["childmsg"],
     watch:{
-      childmsg: { 
+      childmsg: {
         handler: function(){
           if(this.childmsg.pageNum == 1){
-            this.currentPage = 0
+            this.currentPage = 0;
+            this.goIndex();
           }
         },
         deep: true
@@ -66,21 +67,24 @@
         this.currentPage = index;
       },
       goToInputPage:function(){
-        var num = this.goToPage;
-        if(this.goToPage<8){
+        var num = parseInt(this.goToPage);
+        if(num<8){
           this.showPageBegin=0;
           this.showPageEnd=7
           this.currentPage = num-1;
+        }else{
+          this.currentPage = num-1;
+          this.showPageBegin=num-4;
+          this.showPageEnd=num+3;
         }
-        if(this.goToPage>this.childmsg.totalPage){
+        if(num>this.childmsg.totalPage){
           this.$alert("输入页码过大，请重新输入", {confirmButtonText: '确定'});
           this.currentPage = this.childmsg.pageNum-1;
         }else{
-          this.showPageEnd = this.goToPage;
-          this.showPageBegin = this.showPageEnd - 8;
-          this.currentPage = num-1;
+          // this.showPageEnd = num + 7;
+          // this.showPageBegin = this.showPageEnd - 7;
+          // this.currentPage = num-1;
         }
-
       },
       goIndex:function(){
         this.currentPage = 0;

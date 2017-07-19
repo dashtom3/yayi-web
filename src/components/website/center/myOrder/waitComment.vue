@@ -15,7 +15,7 @@
       <div><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
     </div>
     <!--  暂无订单结束 -->
-    <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="(item,index) in items" :key="item" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
@@ -43,7 +43,7 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div  class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="payBtn" @click="operate(item,index)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==4" @click="haveALookAtWuLiu(item)">查看物流</p>
         </div>
       </div>
@@ -85,11 +85,12 @@
   <div class="" >
     <p>收货信息：</p>
     <p>
+      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+      <span>{{nowOrderDetails.receiver.phone}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.province}}</span>
       <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
-      <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
     </p>
   </div>
   <div>
@@ -137,6 +138,7 @@
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
   </div>
   </div>
+  <div class="closeBtn">关闭</div>
 </el-dialog>
 <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
   <div class="wlxxWrap" v-if="wuliuxinxi">
@@ -260,13 +262,23 @@
         var obj = {
           token:that.global.getToken(),
           orderId:that.nowToOperateItem.orderId,
-          itemId:that.nowToOperateItem.orderitemList[0].itemId,
-          score:that.value2,
-          data:that.textarea
+          itemIdList:[]
         };
+        for(let i in that.nowToOperateItem.orderitemList){
+          var obj2 = {
+            itemId:that.nowToOperateItem.orderitemList[i].itemId,
+            score:that.commentScores[i].score,
+            data:that.commentScores[i].data,
+          };
+          obj.itemIdList.push(obj2);
+        }
+        obj.itemIdList = JSON.stringify(obj.itemIdList);
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
            console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
+            var data = that.items[that.nowToOperateItemIndex];
+            data.state = 9;
+            that.items.splice(that.nowToOperateItemIndex,1,data);
             that.dialogVisibleComment = false;
             that.$alert('评论成功！',  {confirmButtonText: '确定',});
           } else {

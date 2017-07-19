@@ -15,7 +15,7 @@
           <el-input v-model="buyerInfo" placeholder="输入收件人姓名或手机号"></el-input>
         </el-form-item>
         <el-form-item label="订单状态" class="fl">
-          <el-select v-model="value" placeholder="全部" class="t_select_width">
+          <el-select v-model="value"  class="t_select_width">
 				    <el-option v-for="item in state" :key="item.value" :label="item.label" :value="item.value"> </el-option>
 				  </el-select>
         </el-form-item>
@@ -144,20 +144,23 @@
             <li>订单留言</li>
           </ul>
           <ul class="fl">
-            <li v-if="nowOrderDetails.payType==1">微信支付</li>
-            <li v-else-if="nowOrderDetails.payType==0">支付宝支付</li>
+            <li>
+              <div v-if="nowOrderDetails.payType==1"> 微信支付 </div>
+              <div v-else-if="nowOrderDetails.payType==0">支付宝支付</div>
+              <div v-else>返回值一定是null</div>
+            </li>
             <li>
               <div v-if="nowOrderDetails.invoiceHand">不申请发票</i></div>
-              <div v-else>
-                发票抬头：{{nowOrderDetails.invoiceHand}}
-              </div>
+              <div v-else>发票抬头：{{nowOrderDetails.invoiceHand}}</div>
             </li>
             <li>
               <div v-if="nowOrderDetails.isRegister==0">不需要产品认证</div>
               <div v-else>需要产品认证</div>
             </li>
-            <li v-if="!nowOrderDetails.buyerMessage">留言为空</li>
-            <li v-else>{{nowOrderDetails.buyerMessage}}</li>
+            <li>
+              <div v-if="!nowOrderDetails.buyerMessage"> 留言为空 </div>
+              <div v-else>{{nowOrderDetails.buyerMessage}}</div>
+            </li>
           </ul>
         </div>
         <div class="refund_info">
@@ -363,14 +366,56 @@
       fenYeGetData:function(data){
         var that = this;
         var obj = {};
+        if(that.orderCode){
+          obj.orderId = that.orderCode;
+        }
+        if(that.buyerInfo){
+          obj.buyerInfo = that.buyerInfo;
+        }
+        if(that.value){
+          // 订单状态
+          // {value: '0',label: '全部'},
+              // for(let b in that.state){
+              //   if(that.state[b].label==that.value&&that.state[b].value!="0"){
+              //     obj.state = that.state[b].value;
+              //   }
+              // }
+              if(that.value!="全部"){
+                obj.orderState = that.value;
+              }
+        }
+        if(that.value3.length!=0){
+          var date1,date2;
+          date1 = that.value3[0].toLocaleString();
+          date2 = that.value3[1].toLocaleString();
+          date1 = date1.split(" ");
+          date2 = date2.split(" ");
+          date1 = date1[0].split("/").join("-");
+          date2 = date2[0].split("/").join("-");
+          obj.orderCTime = date1;
+          obj.orderETime = date2;
+        }
+        // if(that.value1){
+        //   // 退款状态
+        //     for(let a in that.drawback){
+        //       if(that.value1 == that.drawback[a].label1){
+        //         obj.isRefund = that.drawback[a].value1;
+        //       }
+        //     }
+        // }
         obj.currentPage = data;
         obj.numberPerpage = 10;
-        console.log(obj)
         that.global.axiosGetReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
           console.log(res,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
+            var obj = {
+              totalPage:res.data.totalPage,
+              totalNumber:res.data.totalNumber,
+              numberPerPage:res.data.numberPerPage,
+            }
+            that.pageProps = obj;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -404,7 +449,6 @@
       search:function(){
         var that = this;
         var obj = {};
-        var flag = false;
         if(that.orderCode){
           obj.orderId = that.orderCode;
         }
@@ -413,13 +457,9 @@
         }
         if(that.value){
           // 订单状态
-          // {value: '0',label: '全部'},
-              for(let b in that.state){
-                if(that.state[b].label==that.value&&that.state[b].value!="0"){
-                  obj.state = that.state[b].value;
-                }
+              if(that.value!="全部"){
+                obj.orderState = that.value;
               }
-              obj.orderState = that.value;
         }
         if(that.value3.length!=0){
           var date1,date2;
@@ -432,14 +472,14 @@
           obj.orderCTime = date1;
           obj.orderETime = date2;
         }
-        if(that.value1){
-          // 退款状态
-            for(let a in that.drawback){
-              if(that.value1 == that.drawback[a].label1&&that.drawback[a].value1!="0"){
-                obj.isRefund = that.drawback[a].value1;
-              }
-            }
-        }
+        // if(that.value1){
+        //   // 退款状态
+        //     for(let a in that.drawback){
+        //       if(that.value1 == that.drawback[a].label1){
+        //         obj.isRefund = that.drawback[a].value1;
+        //       }
+        //     }
+        // }
         console.log(obj,"searchObj")
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
@@ -449,7 +489,8 @@
             var obj = {
               totalPage:res.data.totalPage,
               totalNumber:res.data.totalNumber,
-              numberPerPage:res.data.numberPerPage
+              numberPerPage:res.data.numberPerPage,
+              pageNum:1
             }
             that.pageProps = obj;
           } else {

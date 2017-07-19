@@ -39,7 +39,7 @@
       <div><img src="../../../../images/center/noSearch.png" alt="img"></div>
     </div>
     <!--  查询无数据订单结束 -->
-    <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="(item,index) in items" :key="item" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.created}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
@@ -67,7 +67,7 @@
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div  class="left operate_des" v-if="item.state!==0">
-          <p class="payBtn" v-if="item.state!=2&&item.state!=5" @click="operate(item)">{{item.state | operate}}</p>
+          <p class="payBtn" v-if="item.state!=2&&item.state!=5&&item.state!=9" @click="operate(item,index)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
           <p class="cancelBtn" style="margin-top:0;font-size:12px;" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
@@ -81,11 +81,12 @@
       <div class="" v-if="nowOrderDetails.receiver">
         <p >收货信息：</p>
         <p>
+          <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
+          <span>{{nowOrderDetails.receiver.phone}}&nbsp;</span>
           <span>{{nowOrderDetails.receiver.province}}</span>
           <span>{{nowOrderDetails.receiver.city}}&nbsp;</span>
           <span>{{nowOrderDetails.receiver.county}}&nbsp;</span>
           <span>{{nowOrderDetails.receiver.receiverDetail}}&nbsp;</span>
-          <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
         </p>
       </div>
       <div class="">
@@ -132,6 +133,7 @@
       <div class="">
         <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
       </div>
+      <div class="closeBtn">关闭</div>
     </el-dialog>
     <!-- 取消订单 -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
@@ -366,7 +368,6 @@
           // orderId:"3334140532021"
         };
         that.global.axiosPostReq('/Exp/queryExp',obj).then((res) => {
-
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             that.wuliuxinxi = JSON.parse(data);
@@ -394,7 +395,6 @@
           orderId:that.nowToOperateItem.orderId,
           itemIdList:[]
         };
-        console.log(that.nowToOperateItem.orderitemList)
         for(let i in that.nowToOperateItem.orderitemList){
           var obj2 = {
             itemId:that.nowToOperateItem.orderitemList[i].itemId,
@@ -408,6 +408,9 @@
            console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
             that.dialogVisibleComment = false;
+            var data = that.items[that.nowToOperateItemIndex];
+            data.state = 9;
+            that.items.splice(that.nowToOperateItemIndex,1,data);
             that.$alert('评论成功！',  {confirmButtonText: '确定',});
           } else {
             that.$message.error('网络错误！');
@@ -451,9 +454,10 @@
         });
       },
       // 交易操作
-      operate: function(item) {
+      operate: function(item,index) {
         var that = this;
         that.nowToOperateItem = item;
+        that.nowToOperateItemIndex = index;
         console.log(item.state)
         // var obj = {
         //   token:that.global.getToken(),
@@ -696,6 +700,17 @@
 </style>
 
 <style >
+.closeBtn{
+  width: 160px;
+  line-height: 44px;
+  color: white;
+  border-radius: 3px;
+  background: #5db7e8;
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
 .spe_p{
   margin-top: 0 !important;
   margin-bottom: 0 !important;

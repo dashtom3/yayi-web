@@ -42,6 +42,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <div v-if="pageProps">
+          <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+      </div>
     </el-col>
 
     <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr">
@@ -74,10 +77,11 @@
   </el-row>
 </template>
 <script>
-
+  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
+        pageProps:null,
         formData:{
           addGoodAttrName:null,
           addGoodAttrOneVal:null
@@ -107,6 +111,9 @@
         flag1:true,
       }
     },
+    components: {
+      paging,
+    },
     created:function(){
       var that = this;
       that.getGoodAttrList();
@@ -117,9 +124,15 @@
         that.global.axiosGetReq('/item/queryProperty')
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,"getGoodAttrList");
+            console.log(res,"getGoodAttrList");
             var data = res.data.data;
             that.tableData = data;
+            var obj = {
+              totalPage:res.data.totalPage,
+              totalNumber:res.data.totalNumber,
+              numberPerPage:res.data.numberPerPage
+            };
+            that.pageProps = obj;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -175,6 +188,13 @@
             // console.log(res.data.data,"search")
             if (res.data.callStatus === 'SUCCEED') {
               that.tableData = res.data.data;
+              var obj = {
+                totalPage:res.data.totalPage,
+                totalNumber:res.data.totalNumber,
+                numberPerPage:res.data.numberPerPage,
+                pageNum:1
+              };
+              that.pageProps = obj;
               // console.log(that.tableData)
               // that.searchAttrName = null;//清空收索内容
             } else {

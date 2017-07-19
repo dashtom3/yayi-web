@@ -7,14 +7,14 @@
         <span>品牌：{{instruction.itemBrandName}}</span>
       </div>
       <div>
-        <span>注册证号：{{instruction.registerId}}</span>
+        <span>注册证有效期\注册证号：{{instruction.registerId}}</span>
         <span>产品包装：{{instruction.itemPacking}}</span>
         <span>医械类别：{{instruction.apparatusType}}</span>
       </div>
       <div>
-        <span>注册证有效期/备案日期：{{instruction.registerDate}}</span>
-        <span>商家货号：{{instruction.storeItemId}}</span>
         <span>其他：{{instruction.remark}}</span>
+        <span>备案日期：{{instruction.registerDate}}</span>
+        <span>商家货号：{{instruction.storeItemId}}</span>
       </div>
       <div>
         <span>使用范围：{{instruction.itemRange}}</span>
@@ -26,14 +26,24 @@
 </template>
 
 <script>
-
+  import util from '../../../common/util'
   export default {
     name: 'goodIntroduce',
     data () {
       return {
       }
     },
-    props:["instruction"]
+    props:["instruction"],
+    // watch:{
+    //   instruction:{
+    //     handler:function(){
+    //       var that = this;
+    //       that.instruction.registerDate = util.formatDate.format(new Date(that.instruction.registerDate));
+    //     },
+    //     deep:true
+    //   }
+    //
+    // }
   }
 </script>
 <style >
