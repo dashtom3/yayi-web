@@ -13,8 +13,12 @@
       <el-form-item label="生产企业">
         <el-input v-model="secondForm.producePompany"></el-input>
       </el-form-item>
-      <el-form-item label="注册证有效期／备案日期" prop="registerDate">
-        <el-date-picker format="yyyy-MM-dd" v-model="secondForm.registerDate" type="date" placeholder="选择日期">
+      <el-form-item label="注册证有效期" prop="registerDate">
+        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date1" type="date" placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="备案日期" prop="registerDate">
+        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date2" type="date" placeholder="选择日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="产品包装">
@@ -57,6 +61,10 @@
           itemRange: '', //商品使用范围
           remark: '', //其他
         },
+        registerDate:{
+          date1: '',
+          date2: ''
+        },
         ruleForm: {},
         newForm: {},
         message: {},
@@ -79,11 +87,13 @@
         that.secondForm.apparatusType = that.editCargo.itemDetail.apparatusType
         that.secondForm.unit = that.editCargo.itemDetail.unit
         that.secondForm.producePompany = that.editCargo.itemDetail.producePompany
-        that.secondForm.registerDate = util.formatDate.format(new Date(that.editCargo.itemDetail.registerDate));
+        // that.secondForm.registerDate= util.formatDate.format(new Date(that.editCargo.itemDetail.registerDate));
         that.secondForm.itemPacking = that.editCargo.itemDetail.itemPacking
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
         that.secondForm.remark = that.editCargo.itemDetail.remark
+        that.registerDate.date1 = that.secondForm.registerDate.substring(0,10)
+        that.registerDate.date2 = that.secondForm.registerDate.substring(11,22)
       } else {
         that.ruleForm = that.$route.params.ruleForm
       }
@@ -95,19 +105,22 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if (that.editCargo !== null) {
-              that.secondForm.registerDate = util.formatDate.format(new Date(that.secondForm.registerDate));
+              if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
+                that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
+                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2);
+                that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
+              }
               Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              // that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
               that.secondStep = false;
               that.thirdStep = true;
             } else {
-              if (that.secondForm.registerDate == '') {
-                console.log('22')
-              } else {
-                that.secondForm.registerDate = util.formatDate.format(that.secondForm.registerDate);
+              if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
+                that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
+                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2);
+                that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
+                console.log(that.secondForm.registerDate,'223')
               }
               Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              // that.newForm.apparatusType = parseInt(that.newForm.apparatusType);
               that.secondStep = false;
               that.thirdStep = true;
             }

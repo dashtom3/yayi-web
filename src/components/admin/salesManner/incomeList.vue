@@ -3,7 +3,7 @@
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><b>销售员管理</b></el-breadcrumb-item>
-        <el-breadcrumb-item>收入列表</el-breadcrumb-item>
+        <el-breadcrumb-item>销售员业绩列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
 
@@ -50,7 +50,7 @@
     <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
     <el-table-column prop="saleIncomeVo.saleName" align="center" label="真实姓名"></el-table-column>
     <el-table-column prop="saleIncomeVo.salePhone" align="center" label="手机号"></el-table-column>
-    <el-table-column prop="orderId" align="center" label="订单编号"></el-table-column>
+<!--     <el-table-column prop="orderId" align="center" label="订单编号"></el-table-column>
     <el-table-column prop="orderState" align="center" label="订单状态">
       <template scope="scope">
         <span v-if="scope.row.orderState == 0">订单取消</span>
@@ -68,8 +68,8 @@
         <span v-if="scope.row.saleIncomeVo.signLateSeven == 1">是</span>
         <span v-if="scope.row.saleIncomeVo.signLateSeven == 2">否</span>
       </template>s
-    </el-table-column>
-    <el-table-column prop="saleIncomeVo.getMoney" align="center" label="收入"></el-table-column>
+    </el-table-column> -->
+    <el-table-column prop="saleIncomeVo.getMoney" align="center" label="收入" sortable></el-table-column>
     <el-table-column prop="saleIncomeVo.getState" align="center" label="收入状态">
       <template scope="scope">
         <span v-if="scope.row.saleIncomeVo.getState == 1">待结算</span>

@@ -231,7 +231,7 @@ a {
   width: 145px;
   height: 246px;
   position: fixed;
-  z-index: 9999;
+  z-index: 100;
   top: 140px;
 
   /*  left: -165px;*/
@@ -266,12 +266,12 @@ a {
   .prev {
     position: absolute;
     left: 0;
-    z-index: 998;
+    z-index: 99;
   }
   .next {
     position: absolute;
     right: 0;
-    z-index: 998;
+    z-index: 99;
   }
   .prev:hover, .next:hover{
     opacity: 0.8;

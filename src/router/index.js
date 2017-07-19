@@ -193,7 +193,7 @@ let router = new Router({
       iconCls: 'iconfont icon-users', // 图标样式class
       children: [
         {path: '/admin/salesManner/salesList', component: SalesManner_salesList, name: '销售员列表', menuShow: true},
-				{path: '/admin/salesManner/incomeList', component: SalesManner_incomeList, name: '收入列表', menuShow: true},
+				{path: '/admin/salesManner/incomeList', component: SalesManner_incomeList, name: '销售员业绩列表', menuShow: true},
 				{path: '/admin/salesManner/getMoneyManner', component: SalesManner_getMoneyManner, name: '提现管理', menuShow: true},
         {path: '/admin/salesManner/customerManner', component: SalesManner_customerManner, name: '客户资源管理', menuShow: true}
       ]

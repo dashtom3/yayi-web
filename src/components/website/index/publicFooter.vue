@@ -18,8 +18,7 @@
       return {
       }
     },
-    created: function() {
-
+    created: function() { 
     },
     methods: {
       //意见反馈

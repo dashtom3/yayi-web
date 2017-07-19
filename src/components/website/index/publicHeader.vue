@@ -209,9 +209,9 @@
         <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo" autocomplete="on">
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
         <p class="search_p" @click="search_cargo">搜索</p>
-        <p>
-          <span class="historySearch" v-for="item in filteredHrecord" @click="search_cargo(item)">{{item.word}} </span>
-        </p>
+        <div class="historySearch_box">
+          <span class="historySearch" v-for="(item,index) in filteredHrecord" @click="search_cargo(item,index)">{{item}}</span>
+        </div>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -512,10 +512,10 @@
         }
       },
       //首页搜索框
-      search_cargo: function(item) {
+      search_cargo: function(item,index) {
         var that = this;
-        if (item.word !== undefined) {
-          that.searchCargo = item.word
+        if (typeof(item) !== 'object') {
+          that.searchCargo = item
         }
         if (that.searchCargo == '') {
           that.$message.error('请输入查询条件！');
@@ -527,15 +527,37 @@
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length !== 0) {
-              var obj = {
-                word: that.searchCargo
-              }
+              // var obj = {
+              //   word: that.searchCargo
+              // }
               if (JSON.parse(that.global.getHistory()) == null) {
                 that.userHistory = []
+                that.userHistory.push(that.searchCargo)
+                that.global.setHistory(that.userHistory)
               } else {
-                that.userHistory = JSON.parse(that.global.getHistory());
+                that.userHistory = JSON.parse(that.global.getHistory())
+                that.userHistory.push(that.searchCargo)
+                var userHistoryData = []
+                // for (var i = 0; i < that.userHistory[i].length; i++) {
+                //   if (userHistoryData.indexOf(that.userHistory[i]) == -1) {
+                //     userHistoryData.push(that.userHistory[i])
+                //     that.userHistory = userHistoryData
+                //   }
+                // }
+                // console.log(that.userHistory,userHistoryData,'1234567890')
+                // for (var i = 0; i < that.userHistory[i].length; i++) {
+                //   for (var j = i+1; j < that.userHistory[j].length; j++)
+                //     console.log(that.userHistory[i].word,that.userHistory[j].word)
+                //   if(that.userHistory[i].word == that.userHistory[j].word) {
+                //     j = false;
+                //     break;
+                //   }
+                //   if(j) {
+                //     userHistoryData.push(that.userHistory[i])
+                //   }
+                // }
               }
-              that.userHistory.push(obj)
+              console.log(that.userHistory,'iisaa')
               that.global.setHistory(that.userHistory)
             }
             if (that.$router.history.current.name !== 'brandLib') {
@@ -548,6 +570,7 @@
               var search_word2 = that.searchCargo;
               data2.push(search_word2);
               that.$emit('listenToBrand', data2);
+              window.scroll(0,0);
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -1128,6 +1151,7 @@
     border-bottom: 1px #eee solid;
     box-shadow: 1px 1px 5px #eee;
     margin-bottom: 30px;
+    z-index: 100;
   }
   .headerFirst {
     width: 1200px;
@@ -1167,6 +1191,7 @@
   .gwcHeader {
     margin-left: 30px;
     width: 71px;
+    z-index: 1000;
   }
   .logIn:hover, .register:hover, .my_order:hover, .yayi:hover, .system_enter:hover{
     color: #5DB7E7;
@@ -1743,10 +1768,16 @@
     box-shadow: 0px 0px 7px #5DB7E7;
     transition: all 0.5s ease;
   }
+  .historySearch_box {
+    margin-top: 10px;
+    position: absolute;
+    top: 34px;
+    font-size: 12px;
+  }
   .historySearch {
-    font-size: 14px;
-    color: #333;
-
+    font-size: 12px;
+    color: #999;
+    margin-right: 10px;
   }
   .historySearch:hover {
     cursor: pointer;
