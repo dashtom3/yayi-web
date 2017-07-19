@@ -45,12 +45,12 @@
           <el-table-column  prop="itemBrandHome"  align="center"  label="产地">  </el-table-column>
           <el-table-column  align="center"  label="操作">
             <template scope="scope">
-              <el-button  type="text"  v-on:click="changeOneBrand(scope.$index)"  >修改</el-button>
-              <el-button  type="text"  v-on:click="DELEONE(scope.$index)"  >删除</el-button>
+              <el-button  type="text"  v-on:click="changeOneBrand(scope.$index)">修改</el-button>
+              <el-button  type="text"  v-on:click="DELEONE(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="block" style="position:absolute;top:650px;right:100px;">
+        <div class="block" style="position:absolute;top:650px;right:100px;" v-show="this.totalCount > this.pagesize">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
@@ -124,7 +124,7 @@
         bindTitle:null,
         itemBrandId: null,
         itemBrandName:null,
-        itemBrandHome:null,
+        itemBrandHome:'',
         itemBrandLogo:null,
         // 1增加。2修改
         brandOperaType:1,
@@ -155,7 +155,7 @@
     methods: {
       handleCurrentChange(val) {
         this.currentPage = val 
-        this.queryHandler()
+        this.queryPageHandler()
       },
       uploadFile(res, file) {
         this.itemBrandLogoAdd = global.qiniuShUrl + file.response.key
@@ -175,6 +175,23 @@
         // return isJPG && isLt2M;
       },
       queryHandler: function(){
+        this.currentPage = 1
+        let params = {
+          itemBrandName: this.itemBrandName,
+          itemBrandHome: this.itemBrandHome,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize
+        }
+        global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.tableData = res.data.data;
+            this.totalCount = res.data.totalNumber;
+          }else{
+            this.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      queryPageHandler: function(){
         let params = {
           itemBrandName: this.itemBrandName,
           itemBrandHome: this.itemBrandHome,
@@ -226,10 +243,7 @@
             }
           })
         }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          
         });
 
       },
@@ -247,7 +261,7 @@
       },
       saveOneBrand:function(){
         var that = this;
-        //增加商品信息
+        //增加商品品牌
         if(this.brandOperaType==1){
           let params = {
             itemBrandName: this.itemBrandNameAdd,
@@ -280,7 +294,7 @@
               });
               that.queryHandler();
             }else{
-              this.$message.error('商品品牌添加失败！');
+              this.$message.error('网络出错，请稍后再试！');
             }
           })
         }
@@ -300,7 +314,7 @@
               });
               that.queryHandler();
             }else{
-              this.$message.error('商品品牌修改失败！');
+              this.$message.error('网络出错，请稍后再试！');
             }
           })
         }

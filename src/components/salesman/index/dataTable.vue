@@ -5,34 +5,33 @@
     </el-col>
     <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
       <div class="grid-content bg-purple-dark fl">
-        <span>总收入：<i class="i_col_red">￥<span>{{tableData.allCommission}}</span></i></span>
-        <span class="margin_l">待结算：<i class="i_col_red">￥{{tableData.stayCommission}}</i></span>
-        <span class="margin_l">已结算：<i class="i_col_red">￥{{tableData.hasCommission}}</i></span>
+        <span>销售总额：<i class="i_col_red">￥<span>{{tableData.allCommission}}</span></i></span>
+        <span class="margin_l">耗材类销售总额：<i class="i_col_red">￥{{tableData.stayCommission}}</i></span>
+        <span class="margin_l">工具设备类销售总额：<i class="i_col_red">￥{{tableData.hasCommission}}</i></span>
       </div>
       <div class="grid-content bg-purple-dark fr">
-        <span>订单总额：<i class="i_col_red">￥{{tableData.sumOrderMoney}}</i></span>
-        <span class="margin_l">订单量：<i class="i_col_red">￥{{tableData.orderNum}}</i></span>
+        <span class="margin_l">共：<i class="i_col_red">{{tableData.orderNum}}</i>单</span>
       </div>
     </el-col>
 		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
+        <el-table-column type="index" align="center" label="序号">
+        </el-table-column>
         <el-table-column prop="orderCreated" align="center" label="下单时间">
         </el-table-column>
         <el-table-column prop="userName" align="center" label="客户姓名">
         </el-table-column>
         <el-table-column prop="userPhone" align="center" label="客户手机号">
         </el-table-column>
-        <el-table-column prop="itemName" align="center" label="商品信息">
+        <el-table-column prop="itemName" align="center" label="销售额（元）">
         </el-table-column>
-        <el-table-column prop="totalFee"  align="center"label="商品总价">
+        <el-table-column prop="totalFee"  align="center"label="耗材类（元）">
+        </el-table-column>
+        <el-table-column prop="refundMoney" align="center" label="工具设备类（元）">
         </el-table-column>
         <el-table-column prop="refundMoney" align="center" label="已退款金额（元）">
         </el-table-column>
-        <el-table-column prop="getMoney" align="center" label="收入（元）">
-        </el-table-column>
-        <el-table-column prop="getState" align="center" label="状态">
-        </el-table-column>
-        <el-table-column prop="getUpdated" align="center" label="结算时间">
+        <el-table-column prop="refundMoney" align="center" label="实际销售额（元）">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -49,29 +48,27 @@
     <el-dialog
       :visible.sync="detailVisible"
       size="small">
-      <div class="detail_title">订单详情</div>
+      <div class="detail_title">业绩详情</div>
       <div class="custInfo">客户信息</div>
       <div class="custContent"><b>客户姓名：</b><span>李志芳</span><b style="margin-left:80px;">客户手机号：</b><span>13861637946</span></div>
       <div class="custInfo">订单信息</div>
       <table class="datail_tb">
         <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
         <tr class="trs">
-          <td>商品名称</td>
+          <td>商品名称+属性</td>
           <td>价格（元）</td>
           <td>数量</td>
           <td>小计</td>
-          <td>退款金额（元）</td>
-          <td>收入状态</td>
-          <td>总收入元</td>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
           <td>{{item.goodsName}}</td>
           <td>{{item.price}}</td>
           <td>{{item.num}}</td>
           <td>{{item.totalPrice}}</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
-          <td :rowspan="infoList.length" v-if="index == 0">已结算</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
+        </tr>
+        <tr class="trs">
+          <td colspan="3">商品总价（元）</td>
+          <td>180</td>
         </tr>
       </table>
       <span slot="footer" class="dialog-footer">
@@ -130,7 +127,7 @@ export default {
       // 绘制图表
       mainChart.setOption({
           title: {
-              text: '收入（元）'
+              text: '当日销售额（元）'
           },
           tooltip: {
               trigger: 'axis'

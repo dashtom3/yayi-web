@@ -13,13 +13,13 @@
           <el-input v-model="searchUserContent" class="fl t_input_w"  @change="pageInitHandler">
             <el-select v-model="searchUserType" slot="prepend" class="fl t_select_width" placeholder="请选择"  @change="selectOpt">
               <el-option label="手机号" value="手机号"></el-option>
-              <el-option label="真实姓名" value="真实姓名"></el-option>
+              <el-option label="销售员姓名" value="销售员姓名"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
         <el-form-item label="是否绑定客户：">
           <el-select v-model="searchState" placeholder="请选择" @change="pageInitHandler">
-            <el-option  v-for="item in states"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
+            <el-option  v-for="item in states"  :key="item.value"  :label="item.label"  :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -108,6 +108,48 @@
       </el-tabs>
     </el-dialog>
 
+    <!-- 钱包 -->
+    <el-dialog title="钱包" :visible.sync="walletVisible" size="small">
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="修改余额" name="first">
+          <el-form ref="form" :model="walletform" label-width="120px" class="tab01">
+            <el-form-item label="当前余额：">
+              <span class="amt_color">{{walletform.balance}}</span>
+            </el-form-item>
+            <el-form-item label="修改类型：">
+              <el-radio-group v-model="walletform.type">
+                <el-radio label="1">增加余额</el-radio>
+                <el-radio label="2">减少余额</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="数量：">
+              <el-input v-model="walletform.num" class="wallet_w"></el-input>
+            </el-form-item>
+            <el-form-item label="修改后的余额：">
+              <span class="amt_color">{{walletform.remainder}}</span>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">保存</el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="钱包明细" name="second">
+          <el-table :data="tableData" border style="width: 100%">
+            <el-table-column prop="income" align="center" label="进账（元）" width="180">
+            </el-table-column>
+            <el-table-column prop="outAccount" align="center" label="出账（元）" width="180">
+            </el-table-column>
+            <el-table-column prop="wallet" align="center" label="钱包余额（元）">
+            </el-table-column>
+            <el-table-column prop="updateTime" align="center" label="更新时间">
+            </el-table-column>
+            <el-table-column prop="desc" align="center" label="描述">
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
+
     <!-- 详情 -->
     <el-dialog custom-class="asgagewgf" title="销售员详情" :visible.sync="showSaleDetailInfor">
       <div class="personalInfor">
@@ -172,11 +214,11 @@
         </el-pagination>
       </div>
     </el-dialog>
-
+    
     <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
-      <el-table-column  prop="trueName"  align="center"  label="真实姓名">  </el-table-column>
-      <el-table-column  prop="phone"  align="center"  label="手机号">  </el-table-column>
+      <el-table-column  prop="trueName"  align="center"  label="销售员姓名"></el-table-column>
+      <el-table-column  prop="phone"  align="center"  label="手机号"></el-table-column>
       <el-table-column  prop="created"  align="center"  label="注册时间"> 
         <template scope="scope">
           <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())}}</span>
@@ -188,11 +230,13 @@
           <span v-else-if="scope.row.isBindUser===2">否</span>
         </template>
       </el-table-column>
-      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">  </el-table-column>
+      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量"></el-table-column>
+      <el-table-column  prop="bindUserNum"  align="center" sortable label="累计收入（元）"></el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
             <el-button v-if="scope.row.isBindUser===2" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
             <el-button v-else type="text" v-on:click="cancleBindUser(scope.$index, scope.row)">取消绑定</el-button>
+            <el-button type="text" v-on:click="walletHandler(scope.$index,scope.row)">钱包</el-button>
             <el-button type="text" v-on:click="saleDetail(scope.$index,scope.row)">详情</el-button>
         </template>
       </el-table-column>
@@ -232,11 +276,13 @@
         multipleSelection2: [],
         activeName2: 'first',
         showSaleDetailInfor:false,
+        walletVisible: false,
         bindSalseAlert:false,
         searchUserContent:'',
         searchUserType:"手机号",
         searchState:"",
         salePhone: '',
+        activeName: 'first',
         bindedUserList:[],
         noBindUserList:[],
         someOneUserDetails:{
@@ -254,7 +300,44 @@
           {value: '',label: '全部'},
           {value: '1',label: '是'},
           {value: '2',label: '否'}       
-        ]
+        ],
+        walletform: {
+          balance: '100',
+          type: '1',
+          num: '10',
+          remainder: '110'
+        },
+        tableData: [{
+          income: '2016-05-02',
+          outAccount: '王小虎',
+          wallet: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '2017-01-01',
+          desc: 'yayayayayay'
+        }, {
+          income: '2016-05-02',
+          outAccount: '王小虎',
+          wallet: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '2017-01-01',
+          desc: 'yayayayayay'
+        },{
+          income: '2016-05-02',
+          outAccount: '王小虎',
+          wallet: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '2017-01-01',
+          desc: 'yayayayayay'
+        },{
+          income: '2016-05-02',
+          outAccount: '王小虎',
+          wallet: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '2017-01-01',
+          desc: 'yayayayayay'
+        },{
+          income: '2016-05-02',
+          outAccount: '王小虎',
+          wallet: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '2017-01-01',
+          desc: 'yayayayayay'
+        }]
       }
     },
     components: {
@@ -291,6 +374,16 @@
       this.queryHandler()
     },
     methods: {
+      onSubmit() {
+        console.log('submit!');
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      walletHandler(index, row){
+        this.walletVisible = true
+        console.log(row)
+      },
       //查询条件改变时初始化pageNum为1
       pageInitHandler(){
         this.pageProps.pageNum = 1;
@@ -337,7 +430,7 @@
             currentPage: this.pageProps.pageNum,
             numberPerPage: 10
           }
-        }else if(this.searchUserType === '真实姓名'){
+        }else if(this.searchUserType === '销售员姓名'){
           params = {
             saleId: '',
             phone: '',
@@ -629,5 +722,15 @@
   .t_select_width{
     width:120px;
   }
-
+  .wallet_w{
+    width: 220px;
+  }
+  .tab01{
+    width: 400px;
+    height: 300px;
+    margin: 100px auto;
+  }
+  .amt_color{
+    color: #20a0ff;
+  }
 </style>

@@ -5,7 +5,7 @@
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
-        <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的订单</div>
+        <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
         <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
         <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
         <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">我的钱包</div>

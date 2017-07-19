@@ -12,7 +12,7 @@
           <div class="block">
             <span class="demonstration">时间：</span>
             <el-date-picker
-              v-model="value"
+              v-model="dateVal"
               type="daterange"
               placeholder="选择日期范围" @change="chooseDate">
             </el-date-picker>
@@ -31,9 +31,9 @@
           </div>
         </li>
       </ul>
-      <div class="grid-content bg-purple-dark wallet_title">
-        <span>进账总额：<i class="i_col_blue">￥{{houstonJZ}}</i></span>
-        <span class="margin_l">提现总额：<i class="i_col_red">￥{{withdrawalsTX}}</i></span>
+      <div class="wallet_title">
+        <span>进账总额：<i class="i_col_blue">{{houstonJZ}}</i>元</span>
+        <span class="margin_l">出账总额：<i class="i_col_red">{{withdrawalsTX}}</i>元</span>
       </div> 
     </el-col>
     <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;height:280px;">
@@ -49,7 +49,7 @@
             <span class="col_blue">{{scope.row.getMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="cashMoney" align="center" label="提现">
+        <el-table-column prop="cashMoney" align="center" label="出账">
           <template scope="scope">
             <span class="col_red">{{scope.row.cashMoney}}</span>
           </template>
@@ -126,14 +126,21 @@
       title="提现"
       :visible.sync="withDrawBank"
       size="small">
-      <div style="margin:0 auto;width:380px;">
+      <div>
         <el-row>
           <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
         </el-row>
         <el-row>
-          <el-col :span="24" align="center"><div class="i_title"><span>姓名：{{openName}} &nbsp;&nbsp;&nbsp;&nbsp;{{postalType}}账户：{{bankNo}}</span></div></el-col>
+          <el-col :span="24" align="center">
+            <div class="i_title">
+              <span class="padding_l">类型：{{postalType}}</span>
+              <span v-if="bankName">（{{bankName}}）</span>
+              <span class="padding_l">开户者：{{openName}}</span>
+              <span class="padding_l">{{postalType}}账户：{{bankNo}}</span>
+            </div>
+          </el-col>
         </el-row>
-        <el-form style="padding-top:10px;" :model="WithDrawForm" :rules="rulesWithDraw" id="WithDrawForm" ref="WithDrawForm">
+        <el-form style="padding-top:10px;margin:0 auto;width:380px;" :model="WithDrawForm" :rules="rulesWithDraw" id="WithDrawForm" ref="WithDrawForm">
           <el-form-item label="提现金额：" prop="withDrawAccount">
             <el-input v-model.number="WithDrawForm.withDrawAccount" class="item_w_input fl"></el-input>
           </el-form-item>
@@ -145,12 +152,12 @@
             <el-input v-model="WithDrawForm.rg_code" class="item_c_input fl" style="margin-left:12px;"></el-input>
             <button v-if="hYzm" class="btn_col" @click.prevent="hasYzm()">{{Yzm}}</button>
             <button v-else class="btn_col" style="background-color: #C8C8C8;" disabled>{{Yzm1}}</button>
-          </div>
+          </div> 
         </el-form>
-        <div style="margin-top:30px;">
-          <button class="withDrawBtn btn_col" @click="applyHandler('WithDrawForm')">申请提现</button>
-          <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
-        </div>
+        <div style="margin:30px auto;width:380px;">
+            <button class="withDrawBtn btn_col" @click="applyHandler('WithDrawForm')">申请提现</button>
+            <el-button class="withDrawBtn1" @click="withDrawBank = false">取 消</el-button>
+          </div>
       </div>
     </el-dialog>
 	</el-row> 
@@ -178,11 +185,11 @@
         }, 1000);
       };
       return {
-        value: null,
+        dateVal: [new Date().getTime() - 3600 * 1000 * 24 * 30, new Date()],
         value: '',
         hYzm: true,
         tableData: [],
-        classify: ['全部','进账','提现'],
+        classify: ['全部','进账','出账'],
         classStat: 0,
         withDrawSets: false,
         statTip: false,
@@ -226,7 +233,7 @@
     methods: {
       // 检查提现金额是否合法
       isAmt: function(str) {
-        var reg = /^[0-9]+(.[0-9]{1,2})?$/;
+        var reg = /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/;
         if (reg.test(str)) {
             return true;
         } else {
@@ -448,7 +455,9 @@
                 this.WithDrawForm.rg_code = ''
                 this.withDrawBank = false
                 this.withDrawState = true
-              } else {
+              }else if(res.data.callStatus === 'FAILED'){
+                this.$message.error(res.data.msg)
+              }else{
                 this.$message.error('网络出错，请稍后再试！');
               }
             })
@@ -502,14 +511,14 @@
     color: #20a0ff;
   }
   .margin_l{
-    margin-left: 20px;
+    margin-left: 76px;
   }
   .warp-breadcrum1{
     margin-top: 36px;
   }
   .wallet_title{
-    margin-top: 30px;
-    margin-bottom: 8px;
+    margin: 32px 0;
+    text-align: center;
   }
   .curOrder{
     height: 30px;
@@ -571,6 +580,9 @@
   .i_title{
     height: 30px;
     line-height: 30px;
+  }
+  .padding_l{
+    padding-left: 8px;
   }
   .withDrawBtn{
     width: 100px;

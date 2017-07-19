@@ -11,7 +11,7 @@
         </el-date-picker>
       </div>
       <div class="fr total_box">
-        历年已结算收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
+        累计收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
       </div>
     </el-col>
     <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
@@ -38,16 +38,61 @@ export default {
         month: new Date().getMonth()+1
       },
       orderInfo: {
-        // allCommission: '',
-        // dayCommission: '',
-        // dayOrderNum: '',
-        // getUpdated: '',
-        // hasCommission: '',
-        // orderNum: '',
-        // saleIncomeVoList: '',
-        // stayCommission: '',
-        // sumOrderMoney: '',
-        // myOrderVoList: []
+        allCommission: '',
+        dayCommission: '',
+        dayOrderNum: '',
+        getUpdated: '',
+        hasCommission: '',
+        orderNum: '',
+        saleIncomeVoList: '',
+        stayCommission: '',
+        sumOrderMoney: '',
+        myOrderVoList: [{
+          orderTime: '2017-01-01',
+          custName: '测试01',
+          custPhone: '18652599279',
+          saleAmt: '200',
+          materialAmt: '50',
+          equipAmt: '70',
+          refundAmt: '40',
+          realSaleAmt: '60'
+        },{
+          orderTime: '2017-01-01',
+          custName: '测试01',
+          custPhone: '18652599279',
+          saleAmt: '200',
+          materialAmt: '50',
+          equipAmt: '70',
+          refundAmt: '40',
+          realSaleAmt: '60'
+        },{
+          orderTime: '2017-01-01',
+          custName: '测试01',
+          custPhone: '18652599279',
+          saleAmt: '200',
+          materialAmt: '50',
+          equipAmt: '70',
+          refundAmt: '40',
+          realSaleAmt: '60'
+        },{
+          orderTime: '2017-01-01',
+          custName: '测试01',
+          custPhone: '18652599279',
+          saleAmt: '200',
+          materialAmt: '50',
+          equipAmt: '70',
+          refundAmt: '40',
+          realSaleAmt: '60'
+        },{
+          orderTime: '2017-01-01',
+          custName: '测试01',
+          custPhone: '18652599279',
+          saleAmt: '200',
+          materialAmt: '50',
+          equipAmt: '70',
+          refundAmt: '40',
+          realSaleAmt: '60'
+        }]
       },
       echartData: []
     }
@@ -74,7 +119,7 @@ export default {
           // this.replayList = res.data.data
           // this.pageProps.totalPage = res.data.totalPage
           console.log('查询订单数据',res.data.data)
-          this.orderInfo = res.data.data
+          // this.orderInfo = res.data.data
           this.overYearHasCommission = res.data.data.overYearHasCommission
           this.pageProps.totalPage = res.data.totalPage
         }else{
