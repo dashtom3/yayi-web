@@ -242,6 +242,7 @@
         if(rule){
           obj.rule = rule;
         }
+        obj.numberPerPage = 12;
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -249,6 +250,7 @@
             if(res.data.data.length>0){
               that.ifHaveData = true;
               this.allGoods = res.data.data;
+              console.log(res)
             }else{
               that.ifHaveData = false;
             }
