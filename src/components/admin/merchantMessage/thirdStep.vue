@@ -52,7 +52,7 @@
     </div>
     <div class="clearfix"></div>
     <div style="margin-left: 30px; margin-top:50px;">
-      <el-button type="primary" @click="save()">保存</el-button>
+      <el-button type="primary" :loading="saveLoading" @click="save()">保存</el-button>
       <el-button @click="returnSecond()">返回</el-button>
     </div>
     <el-dialog title="上传图片" :visible.sync="dialogVisible" size="small">
@@ -96,6 +96,7 @@
         fwb: '',
         state: null,
         enoughImg: false,
+        saveLoading: false
       }
     },
     watch: {
@@ -283,12 +284,24 @@
       // 删除图片触发的钩子
       handleRemove(file, fileList) {
         var that = this;
-        // console.log(fileList,'opop')
-        if (fileList.length < that.fileList.length && fileList.length > 0) {
-          var img_src = global.qiniuShUrl + file.response.key
-        } else if(fileList.length == 0) {
+        if (file.name == undefined) {
           var img_src = file.url
+        }else {
+          var img_src = global.qiniuShUrl + file.response.key
         }
+        // console.log(file.name,'iiiiii')
+        // console.log(fileList,'opop')
+        // console.log(that.fileList,'opop2')
+        // if (fileList.length < that.fileList.length && fileList.length > 0) {
+        //   console.log('1')
+        //   var img_src = global.qiniuShUrl + file.response.key
+        // } else if(fileList.length == 0) {
+        //   var img_src = file.url
+        //   console.log('2')
+        // } else if (fileList.length < that.fileList.length ) {
+        //   var img_src = file.url
+        //   console.log('3')
+        // }
         var b = that.fileList.filter(function(ele,index,arr) {
             return ele !== img_src;   
         });
@@ -298,6 +311,7 @@
       // 保存新增商品
       save: function() {
         var that = this;
+        that.saveLoading = true
         if (that.state !== 1) {
           console.log('进入新增商品')
           // that.quill1.insertText(1, 'Hello', 'bold', true);
@@ -329,13 +343,16 @@
                 if (res.data.callStatus === 'SUCCEED') {
                   console.log(res,'保存成功！');
                   that.$message('保存成功！');
+                  that.saveLoading = false
                   that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
+                  that.saveLoading = false
                 }
               })
             } else {
               that.$message.error('保存失败！');
+              that.saveLoading = false
             }
           }
         } else {
@@ -371,13 +388,16 @@
                   console.log(res,'修改商品成功！');
                   that.$message('修改商品成功！');
                   window.sessionStorage.removeItem('editCargo')
+                  that.saveLoading = false
                   that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
+                  that.saveLoading = false
                 }
               })
             } else {
               that.$message.error('保存失败！');
+              that.saveLoading = false
             }
           }
         }

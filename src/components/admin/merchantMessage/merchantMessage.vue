@@ -78,7 +78,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+      <div class="block">
+        <!-- 分页 -->
+        <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+        </el-pagination>
+        <!-- 分页 -->
+      </div>
+<!--       <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging> -->
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="small">
@@ -211,7 +217,7 @@
 </template>
 <script>
   import util from '../../../common/util'
-  import paging from '../../website/brandLib/paging0'
+  // import paging from '../../website/brandLib/paging0'
   export default{
     data () {
       return {
@@ -311,16 +317,18 @@
         editCargo: {},
         options: [],
         brandOptions: [],
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         paging: true,
       }
     },
-    components: {
-      paging,
-    },
+    // components: {
+    //   paging,
+    // },
     watch: {
       tableData: function() {
         var that = this
@@ -346,29 +354,23 @@
       }
     },
     methods: {
-      //分页
-      pageHandler:function(data){
+      handleCurrentChange(val) {
         var that = this
-        that.pageProps.pageNum = data
-        if (data == 1 && that.pageProps.totalPage == 1) {
-          return false
-        } else {
-          that.getItemInfo();
-        }
+        that.currentPage = val
+        that.search(val)
       },
       // 获取商品列表
       getItemInfo: function() {
         var that = this;
-        // that.pageProps.pageNum = 1
         var obj = {
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
         }
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res,'op')
             that.tableData = res.data.data;
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
@@ -408,9 +410,13 @@
         //console.log(data);
       },
       // 查询
-      search: function() {
+      search: function(val) {
         var that = this;
-        that.pageProps.pageNum = 1
+        if (val == undefined) {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
         if (that.cargo.class.length == 1) {
           var obj = {
             itemId: that.cargo.id,
@@ -418,8 +424,8 @@
             itemClassify: that.cargo.class[0],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
           }
         }else if (that.cargo.class.length == 2) {
           var obj = {
@@ -428,8 +434,8 @@
             itemClassify: that.cargo.class[1],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
           }
         }else if (that.cargo.class.length == 3) {
           var obj = {
@@ -438,8 +444,8 @@
             itemClassify: that.cargo.class[2],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
           }
         } else if (that.cargo.class.length == 0) {
           var obj = {
@@ -448,18 +454,18 @@
             itemClassify: that.cargo.class[2],
             itemBrandName: that.cargo.brand.itemBrandName,
             state: that.stateValue,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
           }
         }
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;            
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
-            // console.log(res.data,'999999');
+            console.log(res.data,'999999');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

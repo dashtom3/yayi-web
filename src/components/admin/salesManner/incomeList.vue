@@ -70,6 +70,7 @@
       </template>s
     </el-table-column> -->
     <el-table-column prop="saleIncomeVo.getMoney" align="center" label="收入" sortable></el-table-column>
+    <el-table-column prop="saleIncomeVo.salePhone" align="center" label="收入所属年月"></el-table-column>
     <el-table-column prop="saleIncomeVo.getState" align="center" label="收入状态">
       <template scope="scope">
         <span v-if="scope.row.saleIncomeVo.getState == 1">待结算</span>

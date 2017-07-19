@@ -87,13 +87,13 @@
         that.secondForm.apparatusType = that.editCargo.itemDetail.apparatusType
         that.secondForm.unit = that.editCargo.itemDetail.unit
         that.secondForm.producePompany = that.editCargo.itemDetail.producePompany
-        // that.secondForm.registerDate= util.formatDate.format(new Date(that.editCargo.itemDetail.registerDate));
         that.secondForm.itemPacking = that.editCargo.itemDetail.itemPacking
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
         that.secondForm.remark = that.editCargo.itemDetail.remark
-        that.registerDate.date1 = that.secondForm.registerDate.substring(0,10)
-        that.registerDate.date2 = that.secondForm.registerDate.substring(11,22)
+        that.registerDate.date1 = that.editCargo.itemDetail.registerDate.substring(0,10)
+        that.registerDate.date2 = that.editCargo.itemDetail.registerDate.substring(11,22)
+        console.log(that.registerDate,'o',that.editCargo)
       } else {
         that.ruleForm = that.$route.params.ruleForm
       }
@@ -106,26 +106,26 @@
           if (valid) {
             if (that.editCargo !== null) {
               if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
-                that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
-                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2);
+                // that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
+                // that.registerDate.date2 = util.formatDate.format(that.registerDate.date2)
                 that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
               }
-              Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              that.secondStep = false;
-              that.thirdStep = true;
+              Object.assign(that.newForm,that.secondForm,that.ruleForm)
+              that.secondStep = false
+              that.thirdStep = true
             } else {
               if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
                 that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
-                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2);
+                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2)
                 that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
                 console.log(that.secondForm.registerDate,'223')
               }
-              Object.assign(that.newForm,that.secondForm,that.ruleForm);
-              that.secondStep = false;
-              that.thirdStep = true;
+              Object.assign(that.newForm,that.secondForm,that.ruleForm)
+              that.secondStep = false
+              that.thirdStep = true
             }
           } else {
-            console.log('error submit!!');
+            console.log('error submit!!')
             return false;
           }
         });

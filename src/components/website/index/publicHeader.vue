@@ -6,7 +6,7 @@
         <div class="yayi left" @click="salesEntry">绑定销售员入口</div>
         <div class="yayi left" @click="gotoSales">创客系统入口</div>
         <div v-if="hasLogin" class="log right">
-          <span class="logIn" @click="logIn">登录</span>/<span class="register" @click="register">注册</span>
+          <span class="logIn" @click="logIn" v-bind:style="{ color: activeInColor }">登录</span>/<span class="register" @click="register" v-bind:style="{ color: activeOutColor }">注册</span>
         </div>
         <div v-else class="log right">
           <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut">退出</span>
@@ -287,6 +287,9 @@
         total_price: 0,
         searchCargo: '',
         userHistory: [],
+        activeInColor: '#333',
+        activeOutColor: '#333',
+        //activeColor: '#5DB7E7'
       }
     },
     //*******导航钩子*********//
@@ -325,6 +328,24 @@
       }
     },
     watch: {
+      // 登录变色
+      showLogin1 : function() {
+        var that = this;
+        if (that.showLogin1 == true) {
+          that.activeInColor = '#5DB7E7'
+        } else {
+          that.activeInColor = '#333'
+        }
+      },
+      // 注册变色
+      showLogin3 : function() {
+        var that = this;
+        if (that.showLogin3 == true) {
+          that.activeOutColor = '#5DB7E7'
+        } else {
+          that.activeOutColor = '#333'
+        }
+      },
       msgFromGoodInfo() {
         var that = this;
         // if (that.msgFromGoodInfo == 'sayToLogin') {
@@ -334,7 +355,6 @@
           // that.showLogin2 = false;
           // that.showLogin3 = false;
           // that.showLogin1 = !that.showLogin1;
-
           that.changeForget1 = true;
           that.changeForget2 = false;
           that.changeForget3 = false;
@@ -527,37 +547,21 @@
         that.global.axiosPostReq('/item/itemSearch', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length !== 0) {
-              // var obj = {
-              //   word: that.searchCargo
-              // }
               if (JSON.parse(that.global.getHistory()) == null) {
                 that.userHistory = []
                 that.userHistory.push(that.searchCargo)
-                that.global.setHistory(that.userHistory)
               } else {
                 that.userHistory = JSON.parse(that.global.getHistory())
                 that.userHistory.push(that.searchCargo)
                 var userHistoryData = []
-                // for (var i = 0; i < that.userHistory[i].length; i++) {
-                //   if (userHistoryData.indexOf(that.userHistory[i]) == -1) {
-                //     userHistoryData.push(that.userHistory[i])
-                //     that.userHistory = userHistoryData
-                //   }
-                // }
-                // console.log(that.userHistory,userHistoryData,'1234567890')
-                // for (var i = 0; i < that.userHistory[i].length; i++) {
-                //   for (var j = i+1; j < that.userHistory[j].length; j++)
-                //     console.log(that.userHistory[i].word,that.userHistory[j].word)
-                //   if(that.userHistory[i].word == that.userHistory[j].word) {
-                //     j = false;
-                //     break;
-                //   }
-                //   if(j) {
-                //     userHistoryData.push(that.userHistory[i])
-                //   }
-                // }
+                for (var i = 0; i < that.userHistory.length; i++) {
+                  if (userHistoryData.indexOf(that.userHistory[i]) == -1) {
+                    userHistoryData.push(that.userHistory[i])
+                  }
+                }
+                that.userHistory = userHistoryData
+                // console.log(that.userHistory,'9999')
               }
-              console.log(that.userHistory,'iisaa')
               that.global.setHistory(that.userHistory)
             }
             if (that.$router.history.current.name !== 'brandLib') {
