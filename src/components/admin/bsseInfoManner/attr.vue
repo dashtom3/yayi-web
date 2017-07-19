@@ -119,6 +119,32 @@
       that.getGoodAttrList();
     },
     methods: {
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        this.fenyeNum = data;
+        var obj = {
+          currentPage:data
+        };
+        that.global.axiosGetReq('/item/queryProperty',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,"getGoodAttrList");
+            var data = res.data.data;
+            that.tableData = data;
+            var obj = {
+              totalPage:res.data.totalPage,
+              totalNumber:res.data.totalNumber,
+              numberPerPage:res.data.numberPerPage
+            };
+            that.pageProps = obj;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        },(err) => {that.$message.error('网络出错，请稍后再试！');})
+
+      },
       getGoodAttrList:function(){
         var that = this;
         that.global.axiosGetReq('/item/queryProperty')

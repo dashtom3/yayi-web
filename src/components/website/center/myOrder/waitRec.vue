@@ -231,11 +231,12 @@
             for(let i in that.items){
               if(that.items.orderId==that.nowToOperateItem.orderId){
                 that.items.splice(i,1);
+                that.dialogVisibleGetGood = false;
+                break;
               }else{
                 continue;
               }
             }
-            that.dialogVisibleGetGood = false;
           } else {
             that.$message.error('网络错误！');
           }

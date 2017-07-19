@@ -620,7 +620,9 @@ import myAddress from './selectThree'
     margin-right: 15px;
     vertical-align: middle;
   }
-
+.goodInfo .infoRight .attSty1{
+  background: none;
+}
   .goodInfo .infoRight .attSty1:hover {
     /*color:#5db7e8;
     border:1px solid #5db7e8;*/
