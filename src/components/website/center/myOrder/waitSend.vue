@@ -66,7 +66,7 @@
   <div class="">
     <p>订单信息：</p>
     <p style="margin-bottom:30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
-    <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+    <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
       <div class="order_table" style="width:100%;margin-top:10px;" >
         <div style="width:150px;" class="left cargo">商品</div>
@@ -92,8 +92,8 @@
         <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">
           <div class="left now_pay_des" style="margin-top:0">
             <p class="spe_p">￥{{nowOrderDetails.actualPay}}</p>
-            <p>（含运费：￥{{nowOrderDetails.qbDed}}）</p>
-            <p>（乾币已抵扣：￥{{nowOrderDetails.yunfei}}）</p>
+            <p>（含运费：￥{{nowOrderDetails.postFee}}）</p>
+            <p>（乾币已抵扣：￥{{nowOrderDetails.qbDed}}）</p>
           </div>
           <div class="left wait_pay_des">{{nowOrderDetails.state | frisco}}</div>
         </div>
@@ -107,7 +107,7 @@
   <div class="">
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
   </div>
-  <div class="closeBtn">关闭</div>
+  <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
 </el-dialog>
   </div>
 </template>

@@ -78,15 +78,19 @@
               <span><img src="../../../images/brandLib/5.png" alt="购物车"></span>
             </div>
           </li>
+          <div class="clearfix">
+
+          </div>
         </ul>
         <div v-else style="text-align:center;margin-top:100px;">
           <h4>{{noGoods}}</h4>
         </div>
       </div>
+      <div v-if="pageProps" >
+          <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler" ></paging>
+      </div>
     </div>
-    <!-- <div class="fenye">
-        <paging0 ></paging0>
-    </div> -->
+
 
     <publicFooter></publicFooter>
     <backToTop></backToTop>
@@ -99,7 +103,7 @@
   import classify from '../index/classify'
   import publicFooter from '../index/publicFooter'
   import checkBox from './checkBox'
-  import paging0 from './paging0'
+  import paging from './paging0'
   export default {
     name: 'brandLib',
     data () {
@@ -140,6 +144,7 @@
         allGoods:[],
         aaaaa1:null,
         aaaaa2:null,
+        pageProps:null
       }
     },
     components: {
@@ -148,7 +153,7 @@
       backToTop,
       publicFooter,
       checkBox,
-      paging0
+      paging
     },
     created: function() {
       var that = this;
@@ -189,6 +194,30 @@
       },
     },
     methods: {
+      pageHandler:function(data){
+        this.fenYeGetData(data);
+      },
+      fenYeGetData:function(data){
+        this.fenyeNum = data;
+        this.getNowClassfyAndBrandGoods();
+        // var that = this;
+        // var obj = {};
+        // obj.currentPage = data;
+        // obj.numberPerpage = 12;
+        // obj.token = that.global.getToken(),
+        // that.global.axiosPostReq('/OrderDetails/show',obj)
+        // .then((res) => {
+        //   if (res.data.callStatus === 'SUCCEED') {
+        //     that.items = res.data.data;
+        //     for(let i in that.items){
+        //       that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+        //       that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
+        //     }
+        //   } else {
+        //     that.$message.error('网络出错，请稍后再试！');
+        //   }
+        // })
+      },
       //监听publicHeader标签
       msgFromHeader: function(data) {
         var that = this;
@@ -242,15 +271,25 @@
         if(rule){
           obj.rule = rule;
         }
+        if(that.fenyeNum){
+          obj.currentPage = that.fenyeNum;
+        }else{
+          obj.currentPage = 1;
+        }
         obj.numberPerPage = 12;
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            // console.log(res.data.data)
+            console.log(res)
             if(res.data.data.length>0){
               that.ifHaveData = true;
               this.allGoods = res.data.data;
-              console.log(res)
+              var obj = {
+                totalPage:res.data.totalPage,
+                totalNumber:res.data.totalNumber,
+                numberPerPage:res.data.numberPerPage
+              };
+              that.pageProps = obj;
             }else{
               that.ifHaveData = false;
             }
@@ -664,7 +703,7 @@ margin: 0 auto;
   display: inline-block;
   cursor: pointer;
   margin-right: 19px;
-
+overflow: hidden;
 }
 
 .allGoods li .ifGold{
@@ -725,7 +764,7 @@ transition: all 0.5s ease;*/
     -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
     -webkit-line-clamp: 2; /** 显示的行数 **/
     overflow: hidden;  /** 隐藏超出的内容 **/
- box-shadow: 3px 3px 5px #eaeaea;
+ /*box-shadow: 3px 3px 5px #eaeaea;*/
 }
 .allGoods li:hover .goodTitle{
   cursor: pointer;

@@ -38,8 +38,8 @@
       <div class="order_des_right" :style="{marginTop:item.btnsMarginTop}">
         <div class="left now_pay_des">
           <p class="spe_p">￥{{item.actualPay}}</p>
-          <p>（含运费：￥{{item.qbDed}}）</p>
-          <p>（乾币已抵扣：￥{{item.yunfei}}）</p>
+          <p>（含运费：￥{{item.postFee}}）</p>
+          <p>（乾币已抵扣：￥{{item.qbDed}}）</p>
         </div>
         <div class="left wait_pay_des">{{item.state | frisco}}</div>
         <div  class="left operate_des" v-if="item.state!==0">
@@ -96,7 +96,7 @@
   <div>
     <p>订单信息：</p>
     <p >订单编号：<span>{{nowOrderDetails.orderId}}</span>
-    <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+    <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
       <div class="order_table" style="width:100%;margin-top:10px;" >
         <div style="width:150px;" class="left cargo">商品</div>
@@ -138,7 +138,7 @@
     <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
   </div>
   </div>
-  <div class="closeBtn">关闭</div>
+  <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
 </el-dialog>
 <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
   <div class="wlxxWrap" v-if="wuliuxinxi">

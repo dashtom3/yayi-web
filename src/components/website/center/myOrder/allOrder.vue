@@ -69,7 +69,7 @@
         <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" v-if="item.state!=2&&item.state!=5&&item.state!=9" @click="operate(item,index)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
-          <p class="cancelBtn" v-if="item.state==9" >已评价！</p>
+          <p class="cancelBtn" v-if="item.state==9" >评价成功！</p>
           <p class="cancelBtn" style="margin-top:0;font-size:12px;" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
@@ -93,7 +93,7 @@
       <div class="">
         <p>订单信息：</p>
         <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
-        <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+        <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
         <div class="">
           <div class="order_table" style="width:100%;margin-top:10px;;margin-bottom:0px;" v-show="order_table">
             <div style="width:150px;" class="left cargo">商品</div>
@@ -134,7 +134,7 @@
       <div class="">
         <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
       </div>
-      <div class="closeBtn">关闭</div>
+      <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
     </el-dialog>
     <!-- 取消订单 -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
@@ -711,6 +711,7 @@
   margin-top: 30px;
   margin-bottom: 30px;
   text-align: center;
+  cursor: pointer;
 }
 .spe_p{
   margin-top: 0 !important;

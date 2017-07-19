@@ -36,7 +36,8 @@
     </div>
     <!--  品牌库页面 结束 -->
     <!--  一级分类页面 开始 -->
-    <div class="preventive_box d_jump" :style="{background: 'url('+backgroundImgs[index%2==0?index%4:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
+    <div class="preventive_box d_jump" :style="{background: 'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
+      {{index%2==0?index/2:''}}
       <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
         <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
@@ -62,7 +63,7 @@ export default {
   name: 'medical',
   data () {
     return {
-      backgroundImgs:["http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_1.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_4.jpg"],
+      backgroundImgs:["http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_1.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_4.jpg","http://orl5769dk.bkt.clouddn.com/yaYiIndexBack_3.jpg"],
       img_change: true,
       yayi: null,
       isActive: false,

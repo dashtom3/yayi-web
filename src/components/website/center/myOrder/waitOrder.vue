@@ -67,7 +67,7 @@
       <div class="">
         <p>订单信息：</p>
         <p >订单编号：<span>{{nowOrderDetails.orderId}}</span>
-        <span style="float:right">创建时间：{{nowOrderDetails.created}}</span></p>
+        <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
         <div class="">
           <div class="order_table" style="width:100%;margin-top:10px;" >
             <div style="width:150px;" class="left cargo">商品</div>
@@ -108,7 +108,7 @@
       <div class="">
         <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
       </div>
-      <div class="closeBtn">关闭</div>
+      <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
     </el-dialog>
     <!-- 确定取消订单吗？ -->
     <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">

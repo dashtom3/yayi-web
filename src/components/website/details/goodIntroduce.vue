@@ -1,7 +1,31 @@
 <template>
   <div class="">
     <div class="goodIntroduce">
-      <div>
+      <div class="left">
+        <ul>
+          <li>品名：{{instruction.addName}}</li>
+          <li>注册证有效期\注册证号：{{instruction.registerId}}</li>
+          <li>其他：{{instruction.remark}}</li>
+          <li>使用范围：{{instruction.itemRange}}</li>
+        </ul>
+      </div>
+      <div class="center">
+        <ul>
+          <li>单位：{{instruction.unit}}</li>
+          <li>产品包装：{{instruction.itemPacking}}</li>
+          <li>备案日期：{{instruction.registerDate}}</li>
+          <li>生产企业名称：{{instruction.producePompany}}</li>
+        </ul>
+      </div>
+      <div class="right">
+        <ul>
+          <li>品牌：{{instruction.itemBrandName}}</li>
+          <li>医械类别：{{instruction.apparatusType}}</li>
+          <li>商家货号：{{instruction.storeItemId}}</li>
+        </ul>
+      </div>
+      <div style="clear:both;float:none"></div>
+      <!-- <div>
         <span>品名：{{instruction.addName}}</span>
         <span>单位：{{instruction.unit}}</span>
         <span>品牌：{{instruction.itemBrandName}}</span>
@@ -19,7 +43,7 @@
       <div>
         <span>使用范围：{{instruction.itemRange}}</span>
         <span>生产企业名称：{{instruction.producePompany}}</span>
-      </div>
+      </div> -->
     </div>
     <div class="instruction" v-html="instruction.itemDesc"></div>
   </div>
@@ -68,19 +92,22 @@
   margin-right: 46px;
 }
 
-.goodIntroduce div{
+.goodIntroduce div li{
   line-height: 45px;
+  text-decoration: none;
 }
-.goodIntroduce div span{
-  display:inline-block;
+.goodIntroduce div {
+  float: left;
+  /*display:inline-block;*/
 }
-.goodIntroduce div span:nth-child(1){
-  width:50%;
+.goodIntroduce div:nth-child(1){
+  width:47%;
+  padding-right: 50px;
 }
-.goodIntroduce div span:nth-child(2){
+.goodIntroduce div:nth-child(2){
   width:30%;
 }
-.goodIntroduce div span:nth-child(3){
+.goodIntroduce div:nth-child(3){
   width:18%;
 }
 </style>
