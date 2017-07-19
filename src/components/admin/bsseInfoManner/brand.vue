@@ -50,7 +50,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="block" style="position:absolute;top:650px;right:100px;" v-show="this.totalCount > this.pagesize">
+        <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
@@ -155,7 +155,7 @@
     methods: {
       handleCurrentChange(val) {
         this.currentPage = val 
-        this.queryPageHandler()
+        this.queryHandler(val)
       },
       uploadFile(res, file) {
         this.itemBrandLogoAdd = global.qiniuShUrl + file.response.key
@@ -174,24 +174,12 @@
         // }
         // return isJPG && isLt2M;
       },
-      queryHandler: function(){
-        this.currentPage = 1
-        let params = {
-          itemBrandName: this.itemBrandName,
-          itemBrandHome: this.itemBrandHome,
-          currentPage: this.currentPage,
-          numberPerPage: this.pagesize
+      queryHandler: function(val){
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
         }
-        global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') { 
-            this.tableData = res.data.data;
-            this.totalCount = res.data.totalNumber;
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      queryPageHandler: function(){
         let params = {
           itemBrandName: this.itemBrandName,
           itemBrandHome: this.itemBrandHome,

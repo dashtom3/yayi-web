@@ -94,7 +94,7 @@ import global from '../../global/global'
 let echarts = require('../../../../node_modules/echarts/lib/echarts')
 // 引入折线图组件
 require('echarts/lib/chart/line');
-// // 引入提示框和title组件
+// 引入提示框和title组件
 require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
@@ -137,13 +137,14 @@ export default {
       // 绘制图表
       mainChart.setOption({
           title: {
-              text: '当日销售额（元）'
+              text: '2017年6月份业绩记录',
+              left: 'center'
           },
           tooltip: {
               trigger: 'axis'
           },
           legend: {
-              data:['收入']
+              data:['当日销售额（元）']
           },
           grid: {
               left: '3%',
@@ -158,21 +159,27 @@ export default {
           },
           xAxis: {
               type: 'category',
+              name: '6月',
               boundaryGap: false,
-              data: ['0','5','10','15','20','25','30']
+              axisLabel:{
+                 //X轴刻度配置
+                interval: 0 //0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
+              },
+              data: ['1','2','3','4','5','6','7','8','9','10','20','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30']
           },
           yAxis: {
               type: 'value',
+              name: '当日销售额（元）',
               max: 4000,
               min: 0,
               splitNumber: 10,
-          },
+          },  
           series: [
               {
                   name:'总收入',
                   type:'line',
                   stack: '总收入',
-                  data: this.echartData
+                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3,999]
               }
           ]
       });

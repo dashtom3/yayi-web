@@ -4,7 +4,7 @@
       <div class="block fl">
         <span class="demonstration" style="margin-right:20px;">时间</span>
         <el-date-picker
-          v-model="value"
+          v-model="monthVal"
           type="month"
           placeholder="选择日期"
           @change="selHandler">
@@ -27,7 +27,7 @@ import paging from '../../website/brandLib/paging0'
 export default {
   data() {
     return {
-      value: '',
+      monthVal: '',
       overYearHasCommission: '',
       pageProps: {
         pageNum: 1,
@@ -100,12 +100,18 @@ export default {
   created(){
     this.init()
     this.echartPic()
+    //初始化为当前月份
+    this.monthVal = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
   },
   components:{
     dataTable,
     paging
   },
   methods: {
+    //月份补0
+    fillZero(n){
+      return n<10 ? '0'+ n: n 
+    },
     //查询订单数据
     init(){
       let params = {

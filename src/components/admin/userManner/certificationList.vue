@@ -9,7 +9,7 @@
     <el-col class="toolbar" style="padding-bottom: 0px;padding-top:20px;">
       <el-form :inline="true" >
         <el-form-item>
-            <el-input v-model="searchUserContent" @change="pageInitHandler">
+            <el-input v-model="searchUserContent">
             <el-select v-model="searchUserType" slot="prepend" @change="selectOpt">
               <el-option label="真实姓名" value="真实姓名"></el-option>
               <el-option label="手机号" value="手机号"></el-option>
@@ -18,12 +18,12 @@
           </el-input>
         </el-form-item>
         <el-form-item label="类型：">
-          <el-select v-model="searchType" @change="pageInitHandler">
+          <el-select v-model="searchType">
             <el-option  v-for="item in userTypes"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：">
-          <el-select v-model="searchState" @change="pageInitHandler">
+          <el-select v-model="searchState">
             <el-option  v-for="item in states"  :key="item.value"  :label="item.label"  :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
@@ -77,12 +77,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="position:absolute;top:650px;right:0;" @childSay="pageHandler" v-show="this.certificationList.length"></paging>
+    <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pagesize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
+    </div>
   </el-row>
 </template>
 <script>
   import global from '../../global/global'
-  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -94,10 +101,12 @@
         certificationList:[],
         bigImgSrc: '',
         selectVal: '',
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         userTypes: [
           {value: '',label: '全部'},
           {value: 1,label: '个人'},
@@ -111,24 +120,25 @@
         ],
       }
     },
-    components: {
-      paging
-    },
     created(){
       this.search();
     },
     methods: {
-      //查询条件改变时初始化pageNum为1
-      pageInitHandler(){
-        this.pageProps.pageNum = 1;
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.search(val)
       },
       selectOpt(key){
         this.selectVal = key;
         this.searchUserContent = '';
-        this.pageProps.pageNum = 1;
       },
-      search:function(){
+      search:function(val){
         var params;
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         if(this.selectVal === "手机号"){
           params = {
             phone: this.searchUserContent,
@@ -136,8 +146,8 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }else if(this.selectVal === "真实姓名"){
           params = {
@@ -146,8 +156,8 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }else if(this.selectVal === "单位名称"){
           params = {
@@ -156,8 +166,8 @@
             companyName: this.searchUserContent,
             type: this.searchType,
             state: this.searchState,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }else{
           params = {
@@ -166,14 +176,14 @@
             companyName: '',
             type: this.searchType,
             state: this.searchState,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize
           }
         }
         global.axiosGetReq('/userCertificationList/list',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.certificationList = res.data.data
-            this.pageProps.totalPage = res.data.totalPage
+            this.totalCount = res.data.totalNumber
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }
@@ -240,10 +250,6 @@
       showBigImg:function(index){
         this.ifShowBigImg = true;
         this.bigImgSrc = this.certificationList[index].certification.doctorPic;
-      },
-      pageHandler:function(data){
-        this.pageProps.pageNum = data
-        this.search();
       }
     },
   }
