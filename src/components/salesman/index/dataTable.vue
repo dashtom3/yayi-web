@@ -54,7 +54,7 @@
       <div class="custInfo">订单信息</div>
       <table class="datail_tb">
         <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
-        <tr class="trs">
+        <tr class="trs tr_title">
           <td>商品名称+属性</td>
           <td>价格（元）</td>
           <td>数量</td>
@@ -66,15 +66,25 @@
           <td>{{item.num}}</td>
           <td>{{item.totalPrice}}</td>
         </tr>
-        <tr class="trs">
+        <tr class="trs tr_title">
           <td colspan="3">商品总价（元）</td>
           <td>180</td>
         </tr>
       </table>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="detailVisible = false">取 消</el-button>
-        <el-button type="primary" @click="detailVisible = false">确 定</el-button>
-      </span>
+      <div class="custInfo" style="margin-top:20px;">订单详细</div>
+      <el-table class="datail_tb" :data="infoList" border show-summary style="width: 100%">
+        <el-table-column prop="goodsName" label="商品类型" align="center">
+        </el-table-column>
+        <el-table-column prop="price" label="销售额（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="num" label="已退款金额（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="totalPrice" label="实际销售额（元）" align="center">
+        </el-table-column>
+      </el-table>
+      <div style="text-align:center;margin-top:20px;">
+        <el-button @click="detailVisible = false">关 闭</el-button>
+      </div>
     </el-dialog>
 	</div>
 </template>
@@ -235,7 +245,7 @@ export default {
     height: 30px;
     line-height: 30px;
     padding-left: 24px;
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted #EEF1F6;
     background: url(../../../images/salesman/arrow.png) 0 8px no-repeat;
   }
   .detail_title{
@@ -248,7 +258,6 @@ export default {
   .datail_tb{
     width: 100%;
     border-collapse: collapse;/* 边框合并属性  */
-    border: none;
     margin-top: 20px;
   }
   .custContent{
@@ -258,13 +267,19 @@ export default {
   }
   .datail_tb tr{
     width: 100%;
-    height: 30px;
-    line-height: 30px;
-    border: 1px solid #ccc;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #EEF1F6;
   }
   .trs td{
     width: 100px;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 1px solid #EEF1F6;
+  }
+  .tr_title{
+    background: #EEF1F6;
+  }
+  .tr_title td{
+    border: 1px solid #E8EAED;
   }
 </style>

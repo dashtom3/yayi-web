@@ -38,10 +38,10 @@
     </el-col>
     <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;height:280px;">
       <el-table :data="tableData" align="center" border style="width: 100%">
-        <el-table-column prop="cashSuTime" align="center" label="日期">
+        <el-table-column prop="date" align="center" label="日期">
           <template scope="scope">
-            <span v-if="scope.row.cashSuTime">{{new Date(scope.row.cashSuTime).getFullYear()+'-'+ fillZero(new Date(scope.row.cashSuTime).getMonth()+1)+'-'+fillZero(new Date(scope.row.cashSuTime).getDate())}}</span>
-            <span v-if="scope.row.updated">{{new Date(scope.row.updated).getFullYear()+'-'+ fillZero(new Date(scope.row.updated).getMonth()+1)+'-'+fillZero(new Date(scope.row.updated).getDate())}}</span>
+            <span v-if="scope.row.date">{{new Date(scope.row.date).getFullYear()+'-'+ fillZero(new Date(scope.row.date).getMonth()+1)+'-'+fillZero(new Date(scope.row.date).getDate())}}</span>
+            <!-- <span v-if="scope.row.updated">{{new Date(scope.row.updated).getFullYear()+'-'+ fillZero(new Date(scope.row.updated).getMonth()+1)+'-'+fillZero(new Date(scope.row.updated).getDate())}}</span> -->
           </template>
         </el-table-column>
         <el-table-column  prop="getMoney" align="center" label="进账">
@@ -86,39 +86,51 @@
       <div>正在审核中，请耐心等待~~</div>
     </el-dialog>
 
-    <!-- 详情 -->
+    <!-- 进账详情 -->
     <el-dialog
-      :visible.sync="detailVisible"
+      :visible.sync="incomeVisible"
       size="small">
-      <div class="detail_title">订单详情</div>
-      <div class="custInfo">客户信息</div>
-      <div class="custContent"><b>客户姓名：</b><span>111</span><b style="margin-left:80px;">客户手机号：</b><span>222</span></div>
-      <div class="custInfo">订单信息</div>
-      <table class="datail_tb">
-        <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
-        <tr class="trs">
-          <td>商品名称</td>
-          <td>价格（元）</td>
-          <td>数量</td>
-          <td>小计</td>
-          <td>退款金额（元）</td>
-          <td>收入状态</td>
-          <td>总收入元</td>
-        </tr>
-        <tr class="trs" v-for="(item, index) in orderDetail" :key="index">
-          <td>{{item.goodsName}}</td>
-          <td>{{item.price}}</td>
-          <td>{{item.num}}</td>
-          <td>{{item.totalPrice}}</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
-          <td :rowspan="infoList.length" v-if="index == 0">已结算</td>
-          <td :rowspan="infoList.length" v-if="index == 0">123</td>
-        </tr>
-      </table>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="detailVisible = false">取 消</el-button>
-        <el-button type="primary" @click="detailVisible = false">确 定</el-button>
-      </span>
+      <div class="detail_title">进账详情</div>
+      
+      <div style="margin-bottom:10px;"><b>时间 2017-07-11 12:00:00</b></div>
+      <el-table :data="incomeDetail" border show-summary style="width: 100%">
+        <el-table-column prop="commodityType" label="商品类型" align="center">
+        </el-table-column>
+        <el-table-column prop="saleVal" label="销售额（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="refundAmt" label="已退款金额（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="actualAmt" label="实际销售额（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="income" label="收入（元）" align="center">
+        </el-table-column>
+        <el-table-column prop="ranking" label="排名奖励" align="center">
+        </el-table-column>
+        <el-table-column prop="totalAmt" label="进账总额" align="center">
+        </el-table-column>
+      </el-table>
+      <div class="rules">
+        <span><a href="javascript:;">收入规则</a></span><span><a href="javascript:;">公司奖励规则</a></span>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <el-button @click="incomeVisible = false">关 闭</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 出账详情 -->
+    <el-dialog
+      :visible.sync="outVisible"
+      size="small">
+      <div class="detail_title">出账详情</div>
+      <el-table :data="outDetail" border style="width: 100%">
+        <el-table-column prop="outTime" label="时间" align="center">
+        </el-table-column>
+        <el-table-column prop="outDesc" label="描述" align="center">
+        </el-table-column>
+      </el-table>
+      <div style="text-align:center;margin-top:20px;">
+        <el-button @click="outVisible = false">关 闭</el-button>
+      </div>
     </el-dialog>
 
     <!-- 银行卡提现 -->
@@ -188,7 +200,22 @@
         dateVal: [new Date().getTime() - 3600 * 1000 * 24 * 30, new Date()],
         value: '',
         hYzm: true,
-        tableData: [],
+        tableData: [{
+          date: '2017-01-01',
+          getMoney: '90',
+          cashMoney: '',
+          anumber: '999'
+        },{
+          date: '2017-01-01',
+          getMoney: '',
+          cashMoney: '30',
+          anumber: '999'
+        },{
+          date: '2017-01-01',
+          getMoney: '90',
+          cashMoney: '',
+          anumber: '999'
+        }],
         classify: ['全部','进账','出账'],
         classStat: 0,
         withDrawSets: false,
@@ -196,7 +223,8 @@
         withDrawState: false,
         withDrawBank: false,
         withDrawBank01:false,
-        detailVisible: false,
+        incomeVisible: false,
+        outVisible: false,
         withTotalAmt: 700,
         WithDrawForm: {
           withDrawAccount: '',
@@ -218,7 +246,31 @@
         infoList: [],
         houstonJZ: '',//进账总额
         withdrawalsTX: '',//提现总额
-        orderDetail: null
+        incomeDetail: [{
+          commodityType: '耗材类',
+          saleVal: 90,
+          refundAmt: 10,
+          actualAmt: 80,
+          income: 8,
+          ranking: 0,
+          totalAmt: 8
+        },
+        {
+          commodityType: '耗材类',
+          saleVal: 90,
+          refundAmt: 10,
+          actualAmt: 80,
+          income: 8,
+          ranking: 0,
+          totalAmt: 0
+        }],
+        outDetail: [{
+          outTime: '2017-03-03',
+          outDesc: 'yaya'
+        },{
+          outTime: '2017-03-03',
+          outDesc: 'yaya'
+        }]
       }
     },
     props: ['toMySon'],
@@ -384,39 +436,43 @@
         }
       },
       queryDetail(index, row){
-        if(row.cashId){
-          //查看钱包详情
-          let params = {
-            cashId: row.cashId,
-            token: global.getSalesToken()
-          }
-          console.log('钱包详情',params)
-          global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              // this.orderDetail = res.data.data
-              // console.log(res.data.data)
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }else if(row.orderId){
-          //查看钱包详情
-          let params = {
-            orderId: row.orderId,
-            token: global.getSalesToken()
-          }
-          console.log('钱包详情',params)
-          global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
+        // if(row.cashId){
+        //   //查看钱包详情
+        //   let params = {
+        //     cashId: row.cashId,
+        //     token: global.getSalesToken()
+        //   }
+        //   console.log('钱包详情',params)
+        //   global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
+        //     if (res.data.callStatus === 'SUCCEED') {
+        //       // this.orderDetail = res.data.data
+        //       // console.log(res.data.data)
+        //     } else {
+        //       that.$message.error('网络出错，请稍后再试！');
+        //     }
+        //   })
+        // }else if(row.orderId){
+        //   //查看钱包详情
+        //   let params = {
+        //     orderId: row.orderId,
+        //     token: global.getSalesToken()
+        //   }
+        //   console.log('钱包详情',params)
+        //   global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
+        //     if (res.data.callStatus === 'SUCCEED') {
 
-              console.log(res.data.data)
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
+        //       console.log(res.data.data)
+        //     } else {
+        //       that.$message.error('网络出错，请稍后再试！');
+        //     }
+        //   })
+        // }
+        if(row.getMoney){
+          this.incomeVisible = true
+        }else{
+          this.outVisible = true
         }
         
-        this.detailVisible = true
       },
       withDrawHandler(){
         if(this.postalType ==='银行卡'){
@@ -631,5 +687,12 @@
     width: 100px;
     text-align: center;
     border: 1px solid #ccc;
+  }
+  .rules{
+    margin-top: 20px;
+  }
+  .rules a{
+    color: #56bff8;
+    margin-left: 20px;
   }
 </style>
