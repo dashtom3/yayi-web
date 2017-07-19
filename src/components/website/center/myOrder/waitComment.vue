@@ -48,9 +48,16 @@
         </div>
       </div>
     </div>
-<div v-if="pageProps>1">
+<!-- <div v-if="pageProps>1">
   <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
-</div>
+</div> -->
+
+    <div class="block">
+      <!-- 分页 -->
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+      </el-pagination>
+      <!-- 分页 -->
+    </div>
 
 
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
@@ -171,6 +178,12 @@
     name: 'waitComment',
     data () {
       return {
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         dialogVisibleHaveALookAtWuLiu:false,
         wuliuxinxi:null,
         dialogVisibleToOrderDetails:false,
@@ -198,8 +211,15 @@
       that.getAllOrder();
     },
     methods: {
-      pageHandler:function(data){
-        this.fenYeGetData(data);
+      handleCurrentChange(val) {
+        var that = this
+        that.currentPage = val
+        if (val == undefined) {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
+        this.fenYeGetData(that.currentPage);
       },
       lookOrderDetails:function(item){
         var that = this;
@@ -219,6 +239,7 @@
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
               that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -245,13 +266,9 @@
             if(that.items.length == 0){
               that.no_order = true;
             }else{
-              var obj = {
-                totalPage:res.data.totalPage,
-                totalNumber:res.data.totalNumber,
-                numberPerPage:res.data.numberPerPage
-              }
-              that.pageProps = obj;
+
             }
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络错误！');
           }

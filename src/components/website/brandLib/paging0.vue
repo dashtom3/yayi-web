@@ -63,7 +63,6 @@
           if(this.currentPage<4){
             this.showPageEnd = 0;
             this.showPageBegin = 7;
-            console.log(this.showPageEnd,this.showPageBegin)
           }else{
             this.showPageEnd++;
             this.showPageBegin++;

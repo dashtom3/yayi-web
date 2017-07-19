@@ -66,8 +66,11 @@
       </el-table>
 
 
-      <div v-if="pageProps">
-        <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler"></paging>
+      <div class="block">
+        <!-- 分页 -->
+        <el-pagination @current-change="pageHandler" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+        </el-pagination>
+        <!-- 分页 -->
       </div>
 
     </el-col>
@@ -164,6 +167,12 @@
   export default{
     data(){
       return {
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         bindSaleCurrentPage:1,
         bindSaleNumTotal:1,
         pageProps:{},
@@ -228,6 +237,16 @@
       }
     },
     methods: {
+      pageHandler(val) {
+        var that = this
+        that.currentPage = val
+        if (val == undefined) {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
+        this.fenYeGetData(that.currentPage);
+      },
       handleCurrentChange:function(val) {
         var that = this;
         var obj = {
@@ -306,12 +325,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res,"getUserList")
             that.userList = res.data.data;
-            var obj = {
-              numberPerPage:res.data.numberPerPage,
-              totalNumber:res.data.totalNumber,
-              totalPage:res.data.totalPage
-            };
-            that.pageProps = obj;
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -334,12 +348,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res,"getUserList")
             that.userList = res.data.data;
-            var obj = {
-              numberPerPage:res.data.numberPerPage,
-              totalNumber:res.data.totalNumber,
-              totalPage:res.data.totalPage
-            };
-            that.pageProps = obj;
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -494,12 +503,7 @@
             console.log(res,"headSearchResult")
             if (res.data.callStatus === 'SUCCEED') {
               that.userList = res.data.data;
-              var obj = {
-                numberPerPage:res.data.numberPerPage,
-                totalNumber:res.data.totalNumber,
-                totalPage:res.data.totalPage
-              };
-              that.pageProps = obj;
+              that.totalCount=res.data.totalNumber;
               //清空搜寻项目
             } else {
               that.$message.error('网络出错，请稍后再试！');
