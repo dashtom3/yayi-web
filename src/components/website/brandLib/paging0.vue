@@ -68,22 +68,20 @@
       },
       goToInputPage:function(){
         var num = parseInt(this.goToPage);
-        if(num<8){
-          this.showPageBegin=0;
-          this.showPageEnd=7
-          this.currentPage = num-1;
-        }else{
-          this.currentPage = num-1;
-          this.showPageBegin=num-4;
-          this.showPageEnd=num+3;
-        }
+
         if(num>this.childmsg.totalPage){
           this.$alert("输入页码过大，请重新输入", {confirmButtonText: '确定'});
           this.currentPage = this.childmsg.pageNum-1;
         }else{
-          // this.showPageEnd = num + 7;
-          // this.showPageBegin = this.showPageEnd - 7;
-          // this.currentPage = num-1;
+          if(num<8){
+            this.showPageBegin=0;
+            this.showPageEnd=7
+            this.currentPage = num-1;
+          }else{
+            this.currentPage = num-1;
+            this.showPageBegin=num-4;
+            this.showPageEnd=num+3;
+          }
         }
       },
       goIndex:function(){
