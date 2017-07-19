@@ -37,7 +37,12 @@
             </template>
           </el-table-column>
         </el-table>
-        <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+        <div class="block">
+          <!-- 分页 -->
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+          </el-pagination>
+          <!-- 分页 -->
+        </div>
     </el-col>
     <el-dialog :title="bindTitle" :visible.sync="dialogFormVisible" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
@@ -60,7 +65,6 @@
   </el-row>
 </template>
 <script>
-  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -93,27 +97,15 @@
         },
         a: [],
         addNew: true,
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
-        paging: true,
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         // formLabelWidth: '120px'
         // -----------------------------------
       }
-    },
-    watch: {
-      tableData: function() {
-        var that = this
-        if (that.tableData.length == 0) {
-          that.paging = false
-        } else {
-          that.paging = true
-        }
-      }
-    },
-    components: {
-      paging,
     },
     created: function () {
       var that = this;
@@ -122,26 +114,22 @@
     },
     methods: {
       //分页
-      pageHandler:function(data){
+      handleCurrentChange(val) {
         var that = this
-        that.pageProps.pageNum = data
-        if (data == 1 && that.pageProps.totalPage == 1) {
-          return false
-        } else {
-          that.getClassify();
-        }
+        that.currentPage = val
+        that.search(val)
       },
       //获取分类列表
       getClassify: function() {
         var that = this;
         var obj = {
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
         }
         that.global.axiosGetReq('/item/showItemClassify',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -180,20 +168,23 @@
         that.addNew = true;
       },
       // 查询分类
-      search:function () {
+      search:function (val) {
         var that = this;
-        that.pageProps.pageNum = 1
+        if (val == undefined || typeof(val) == 'object') {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
         var obj = {
           itemClassifyName: that.searchClassfyName,
           itemPreviousClassify: that.searchParentClassfyName,
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
         }
         that.global.axiosPostReq('/item/showItemClassify',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data
-            that.pageProps.totalPage = res.data.totalPage
-            // console.log(that.tableData,'23232323')
+            that.totalCount = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -366,9 +357,5 @@
 }
 .cascader {
   width: 260px;
-}
-.pageC {
-  text-align: center;
-  margin-top: 20px;
 }
 </style>

@@ -129,12 +129,16 @@
       </table>
     </div>
     </el-dialog>
-    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+    <div class="block">
+      <!-- 分页 -->
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+      </el-pagination>
+      <!-- 分页 -->
+    </div>
   </el-row>
 </template>
 <script>
   import util from '../../../common/util'
-  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -163,40 +167,24 @@
         showChangeUserMoney:false,
         orderTime: '',
         orderState: '',
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
-        paging: true,
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
       }
-    },
-    components: {
-      paging,
     },
     created: function() {
       var that = this;
       that.getAllIn();
     },
-    watch: {
-      getMoneyList: function() {
-        var that = this
-        if (that.getMoneyList.length == 0) {
-          that.paging = false
-        } else {
-          that.paging = true
-        }
-      }
-    },
     methods: {
       //分页
-      pageHandler:function(data){
+      handleCurrentChange(val) {
         var that = this
-        that.pageProps.pageNum = data
-        if (data == 1 && that.pageProps.totalPage == 1) {
-          return false
-        } else {
-          that.getAllIn()
-        }
+        that.currentPage = val
+        that.search(val)
       },
       //获取收入列表
       getAllIn: function() {
@@ -222,15 +210,15 @@
           getState: that.searchMoneyType,
           startDate: startDate,
           endDate: endDate,
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
           token: ''
         }
         that.global.axiosPostReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data)
             that.getMoneyList = res.data.data
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！')
           }
@@ -260,9 +248,13 @@
         });
       },
       // 查询收入列表
-      search:function(){
+      search:function(val){
         var that = this;
-        that.pageProps.pageNum = 1
+        if (val == undefined || typeof(val) == 'object') {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
         if (that.searchDataPrev.length == 0 || util.formatDate.format(new Date(that.searchDataPrev[0])) == '1970-01-01') {
           var startDate = ''
           var endDate = ''
@@ -284,14 +276,14 @@
           getState: that.searchMoneyType,
           startDate: startDate,
           endDate: endDate,
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
           token: ''
         }
         that.global.axiosPostReq('/saleIncomeList/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
             // for (var i = 0; i < that.getMoneyList.length; i++) {
             //   if (that.getMoneyList[i].orderVoList.length !== 0) {
             //     that.getMoneyList[i].orderCreated = that.getMoneyList[i].orderVoList[0].orderCreated

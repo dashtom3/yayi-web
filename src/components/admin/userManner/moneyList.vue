@@ -55,12 +55,16 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+    <div class="block">
+      <!-- 分页 -->
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+      </el-pagination>
+      <!-- 分页 -->
+    </div>
   </el-row>
 </template>
 <script>
   import util from '../../../common/util'
-  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -85,24 +89,12 @@
         loadingCheck: false,
         loadingCheckHead: false,
         moneyList:[],
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
-        paging: true
-      }
-    },
-    components: {
-      paging,
-    },
-    watch: {
-      moneyList: function() {
-        var that = this
-        if (that.moneyList.length == 0) {
-          that.paging = false
-        } else {
-          that.paging = true
-        }
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
       }
     },
     created: function() {
@@ -111,14 +103,10 @@
     },
     methods: {
       //分页
-      pageHandler:function(data){
+      handleCurrentChange(val) {
         var that = this
-        that.pageProps.pageNum = data
-        if (data == 1 && that.pageProps.totalPage == 1) {
-          return false
-        } else {
-          that.getClassify()
-        }
+        that.currentPage = val
+        that.searchAll(val)
       },
       //获取用户钱币列表
       getClassify: function() {
@@ -127,14 +115,14 @@
           phone: that.searchUserId,
           startDate: that.startDate,
           endDate: that.endDate,
-          currentPage: that.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
           token: ''
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.moneyList = res.data.data;
-            that.pageProps.totalPage = res.data.totalPage
+            that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.moneyList.length; i++) {
               that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
             }
@@ -147,16 +135,20 @@
         })
       },
       // 头部查询
-      searchAll: function() {
+      searchAll: function(val) {
         var that = this;
-        that.pageProps.pageNum = 1
+        if (val == undefined || typeof(val) == 'object') {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
         if (that.searchDataPrev.length == 0 || that.searchDataPrev[0] == null) {
           var obj = {
             phone: that.searchUserId,
             startDate: that.startDate,
             endDate: that.endDate,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
             token: ''
           }
           that.loadingCheckHead = true;
@@ -164,7 +156,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
-              that.pageProps.totalPage = res.data.totalPage
+              that.totalCount = res.data.totalNumber;
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
@@ -182,8 +174,8 @@
             phone: that.searchUserId,
             startDate: that.startDate,
             endDate: that.endDate,
-            currentPage: that.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
             token: ''
           }
           that.loadingCheckHead = true;
@@ -192,7 +184,7 @@
               console.log(res.data);
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
-              that.pageProps.totalPage = res.data.totalPage
+              that.totalCount = res.data.totalNumber;
               for (var i = 0; i < that.moneyList.length; i++) {
                 that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
               }
@@ -273,11 +265,5 @@
 <style>
   .moneyWrap .el-select .el-input {
     min-width: 110px;
-  }
-  .pageC {
-    text-align: center;
-    margin-top: 20px; 
-/*    left: 0px; 
-    margin: 0 auto;*/
   }
 </style>

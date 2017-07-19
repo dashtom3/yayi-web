@@ -84,7 +84,6 @@
         </el-pagination>
         <!-- 分页 -->
       </div>
-<!--       <paging :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging> -->
   </el-row>
   <!-- 查看商品属性详情面板 开始 -->
   <el-dialog title="商品详情" :visible.sync="dialogTableVisible" size="small">
@@ -217,7 +216,6 @@
 </template>
 <script>
   import util from '../../../common/util'
-  // import paging from '../../website/brandLib/paging0'
   export default{
     data () {
       return {
@@ -323,20 +321,6 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1000,
-        paging: true,
-      }
-    },
-    // components: {
-    //   paging,
-    // },
-    watch: {
-      tableData: function() {
-        var that = this
-        if (that.tableData.length == 0) {
-          that.paging = false
-        } else {
-          that.paging = true
-        }
       }
     },
     created: function() {
@@ -412,7 +396,7 @@
       // 查询
       search: function(val) {
         var that = this;
-        if (val == undefined) {
+        if (val == undefined || typeof(val) == 'object') {
           that.currentPage = 1
         } else {
           that.currentPage = val
@@ -771,9 +755,5 @@ th,td {
   color: #000;
   line-height: 25px;
   display: inline-block;
-}
-.pageC {
-  text-align: center;
-  margin-top: 20px;
 }
 </style>
