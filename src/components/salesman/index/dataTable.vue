@@ -17,21 +17,21 @@
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
         <el-table-column type="index" align="center" label="序号">
         </el-table-column>
-        <el-table-column prop="orderCreated" align="center" label="下单时间">
+        <el-table-column prop="orderTime" align="center" label="下单时间">
         </el-table-column>
-        <el-table-column prop="userName" align="center" label="客户姓名">
+        <el-table-column prop="custName" align="center" label="客户姓名">
         </el-table-column>
-        <el-table-column prop="userPhone" align="center" label="客户手机号">
+        <el-table-column prop="custPhone" align="center" label="客户手机号">
         </el-table-column>
-        <el-table-column prop="itemName" align="center" label="销售额（元）">
+        <el-table-column prop="saleAmt" align="center" label="销售额（元）">
         </el-table-column>
-        <el-table-column prop="totalFee"  align="center"label="耗材类（元）">
+        <el-table-column prop="materialAmt"  align="center"label="耗材类（元）">
         </el-table-column>
-        <el-table-column prop="refundMoney" align="center" label="工具设备类（元）">
+        <el-table-column prop="equipAmt" align="center" label="工具设备类（元）">
         </el-table-column>
-        <el-table-column prop="refundMoney" align="center" label="已退款金额（元）">
+        <el-table-column prop="refundAmt" align="center" label="已退款金额（元）">
         </el-table-column>
-        <el-table-column prop="refundMoney" align="center" label="实际销售额（元）">
+        <el-table-column prop="realSaleAmt" align="center" label="实际销售额（元）">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -55,10 +55,10 @@
       <table class="datail_tb">
         <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
         <tr class="trs tr_title">
-          <td>商品名称+属性</td>
-          <td>价格（元）</td>
-          <td>数量</td>
-          <td>小计</td>
+          <th>商品名称+属性</th>
+          <th>价格（元）</th>
+          <th>数量</th>
+          <th>小计</th>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
           <td>{{item.goodsName}}</td>
@@ -72,14 +72,14 @@
         </tr>
       </table>
       <div class="custInfo" style="margin-top:20px;">订单详细</div>
-      <el-table class="datail_tb" :data="infoList" border show-summary style="width: 100%">
-        <el-table-column prop="goodsName" label="商品类型" align="center">
+      <el-table class="datail_tb" :data="orderDetailList" border show-summary     style="width: 100%">
+        <el-table-column prop="itemName" label="商品类型" align="center">
         </el-table-column>
-        <el-table-column prop="price" label="销售额（元）" align="center">
+        <el-table-column prop="salesAmt" label="销售额（元）" align="center">
         </el-table-column>
-        <el-table-column prop="num" label="已退款金额（元）" align="center">
+        <el-table-column prop="refundAmt" label="已退款金额（元）" align="center">
         </el-table-column>
-        <el-table-column prop="totalPrice" label="实际销售额（元）" align="center">
+        <el-table-column prop="realSaleAmt" label="实际销售额（元）" align="center">
         </el-table-column>
       </el-table>
       <div style="text-align:center;margin-top:20px;">
@@ -99,12 +99,12 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-  props: ['orderInfo','echartData','echartsTitle'],
+  props: ['orderInfo','echartData','echartsTitle','monthX'],
   data() {
     return {
       detailVisible: false,
       tableData: null,
-      monthX: 31,
+      monthxVal: 31,
       monthList: [],
       infoList: [{
         goodsName: '商品名称1',
@@ -121,17 +121,32 @@ export default {
         price: 30,
         num: 2,
         totalPrice: 60
+      }],
+      orderDetailList: [{
+        itemName: '耗材类',
+        salesAmt: 3000,
+        refundAmt: 200,
+        realSaleAmt: 2800
+      },
+      {
+        itemName: '工具设备类',
+        salesAmt: 4000,
+        refundAmt: 100,
+        realSaleAmt: 3900
       }]
     }
   },
   created(){
     this.tableData = this.orderInfo
-    for(var i=1;i<this.monthX;i++){
+    for(var i=1;i<this.monthxVal;i++){
       this.monthList.push(i)
     }
   },
   watch: {
     echartsTitle: function(){
+      this.drawLine();
+    },
+    monthX: function(){
       this.drawLine();
     }
   },
@@ -169,7 +184,7 @@ export default {
           },
           xAxis: {
               type: 'category',
-              name: '6月',
+              name: this.monthX+"月",
               boundaryGap: false,
               axisLabel:{
                  //X轴刻度配置
@@ -186,9 +201,9 @@ export default {
           },  
           series: [
               {
-                  name:'总收入',
+                  name:'当日销售额（元）',
                   type:'line',
-                  stack: '总收入',
+                  stack: '当日销售额（元）',
                   data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1,3800]
               }
           ]
@@ -296,7 +311,7 @@ export default {
   .tr_title{
     background: #EEF1F6;
   }
-  .tr_title td{
+  .tr_title td, .tr_title th{
     border: 1px solid #E8EAED;
   }
 </style>

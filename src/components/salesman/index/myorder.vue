@@ -14,7 +14,7 @@
         累计收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
 	</el-row> 
@@ -28,7 +28,8 @@ export default {
   data() {
     return {
       monthVal: '',
-      overYearHasCommission: '',
+      monthX: '',
+      overYearHasCommission: 0,
       echartsTitle: '',
       pageProps: {
         pageNum: 1,
@@ -39,15 +40,15 @@ export default {
         month: new Date().getMonth()+1
       },
       orderInfo: {
-        allCommission: '',
-        dayCommission: '',
-        dayOrderNum: '',
-        getUpdated: '',
-        hasCommission: '',
-        orderNum: '',
-        saleIncomeVoList: '',
-        stayCommission: '',
-        sumOrderMoney: '',
+        allCommission: 0,
+        dayCommission: 0,
+        dayOrderNum: 0,
+        getUpdated: 0,
+        hasCommission: 0,
+        orderNum: 0,
+        saleIncomeVoList: 0,
+        stayCommission: 0,
+        sumOrderMoney: 0,
         myOrderVoList: [{
           orderTime: '2017-01-01',
           custName: '测试01',
@@ -105,6 +106,8 @@ export default {
     this.monthVal = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
     //默认echarts标题
     this.echartsTitle = new Date().getFullYear() + '年'+ (new Date().getMonth() + 1) +'月份业绩记录'
+    //默认月份
+    this.monthX = new Date().getMonth() + 1
   },
   components:{
     dataTable,
@@ -162,7 +165,7 @@ export default {
       this.dateInfo.year = val.split("-")[0]
       this.dateInfo.month = val.split("-")[1]
       this.echartsTitle = this.dateInfo.year + '年'+ parseInt(this.dateInfo.month) +'月份业绩记录'
-      console.log(this.echartsTitle)
+      this.monthX = parseInt(this.dateInfo.month)
       this.echartPic()
     } 
   }
