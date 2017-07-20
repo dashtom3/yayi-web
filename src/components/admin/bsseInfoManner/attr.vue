@@ -53,7 +53,7 @@
       </div>
     </el-col>
 
-    <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr">
+    <el-dialog :title="bindTitle" :visible.sync="showAddGoodAttr" :before-close="reloadPage">
       <el-form label-width="100px" class="demo-dynamic" :model="formData" ref="formData" :rules="rules1">
         <el-form-item  prop="addGoodAttrName"  label="属性名称：">
           <el-input v-model="formData.addGoodAttrName"></el-input>
@@ -123,9 +123,6 @@
         flag1:true,
       }
     },
-    // components: {
-    //   paging,
-    // },
     created:function(){
       var that = this;
       that.getGoodAttrList();
@@ -141,9 +138,6 @@
         }
         this.fenYeGetData(that.currentPage);
       },
-      // pageHandler:function(data){
-      //   this.fenYeGetData(data);
-      // },
       fenYeGetData:function(data){
         var that = this;
         this.fenyeNum = data;
@@ -172,6 +166,23 @@
             var data = res.data.data;
             that.tableData = data;
             that.totalCount=res.data.totalNumber;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        },(err) => {that.$message.error('网络出错，请稍后再试！');})
+      },
+      reloadPage:function(done){
+        var that = this;
+        var obj = {};
+        obj.currentPage = this.currentPage;
+        that.global.axiosGetReq('/item/queryProperty',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,"reloadPage");
+            var data = res.data.data;
+            that.tableData = data;
+            that.totalCount=res.data.totalNumber;
+            done();
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -291,19 +302,20 @@
             }
             obj.itemPparamList = arr;
             obj.itemPropertyName = that.formData.addGoodAttrName;
-            that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
-            .then((res) => {
-              console.log(res)
-              if (res.data.callStatus === 'SUCCEED') {
-                obj.itempropertydList = arr2;
-                that.tableData.push(obj);
-                that.addGoodAttrValues = [];
-                that.formData.addGoodAttrName= null;
-                that.showAddGoodAttr  = false;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
-              }
-            })
+            console.log(obj)
+            // that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
+            // .then((res) => {
+            //   console.log(res)
+            //   if (res.data.callStatus === 'SUCCEED') {
+            //     obj.itempropertydList = arr2;
+            //     that.tableData.push(obj);
+            //     that.addGoodAttrValues = [];
+            //     that.formData.addGoodAttrName= null;
+            //     that.showAddGoodAttr  = false;
+            //   } else {
+            //     that.$message.error('网络出错，请稍后再试！');
+            //   }
+            // })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }
@@ -312,16 +324,19 @@
           // 修改
           if(that.flag1){
             var obj2 = {
-              itemPropertyId:that.channgAttrId,
-              itemPropertyName:that.formData.addGoodAttrName
+              itemPropertyId:parseInt(that.tableData[that.changAttrIndex].itemPropertyId),
+              itemPropertyName:that.tableData[that.changAttrIndex].itemPropertyName,
+              itemPparamList:[]
             };
-            console.log(that.tableData[that.changAttrIndex])
+            for(let i in that.tableData[that.changAttrIndex].itempropertydList){
+              obj2.itemPparamList.push(that.tableData[that.changAttrIndex].itempropertydList[i].itemPparam)
+            }
+            console.log(obj2,"asas")
             that.global.axiosPostReq('/item/updateProperty',obj2)
             .then((res) => {
+              console.log(res);
               if (res.data.callStatus === 'SUCCEED') {
-                that.tableData[that.changAttrIndex].itemPropertyName = that.formData.addGoodAttrName;
-                that.tableData[that.changAttrIndex].itempropertydList = that.addGoodAttrValues;
-                that.showAddGoodAttr  = false;
+                that.showAddGoodAttr = false;
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
@@ -336,19 +351,8 @@
         if(that.attOperaType==2){
           that.$confirm('确定删除该属性值吗, 是否继续?', {confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'})
           .then(() => {
-              var obj = {
-                itemSKU:item.itemSKU
-              };
-
-              that.global.axiosPostReq('/item/deletePropertyd',obj)
-              .then((res) => {
-                if (res.data.callStatus === 'SUCCEED') {
-                  that.addGoodAttrValues.splice(index, 1);
-                  that.changeThisAll = null;
-                } else {
-                  that.$message.error('网络出错，请稍后再试！');
-                }
-            })
+            that.addGoodAttrValues.splice(index, 1);
+            that.changeThisAll = null;
           });
         }else{
           that.addGoodAttrValues.splice(index, 1);
@@ -367,22 +371,22 @@
                 }
               }
               if(msg==true){
-                var obj = {
-                  itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
-                  itemPparam:that.formData.addGoodAttrOneVal
-                };
-                that.global.axiosPostReq('/item/addToPropertyd',obj)
-                .then((res) => {
-                  if (res.data.callStatus === 'SUCCEED') {
+                // var obj = {
+                //   itemPid:that.tableData[that.changAttrIndex].itemPropertyId,
+                //   itemPparam:that.formData.addGoodAttrOneVal
+                // };
+                // that.global.axiosPostReq('/item/addToPropertyd',obj)
+                // .then((res) => {
+                //   if (res.data.callStatus === 'SUCCEED') {
                     var aa= {};
                     aa.itemPparam = that.formData.addGoodAttrOneVal;
                     that.addGoodAttrValues.push(aa);
                     that.formData.addGoodAttrOneVal = null;
                     that.flag1 = true;
-                  } else {
-                    that.$message.error('网络出错，请稍后再试！');
-                  }
-                })
+                //   } else {
+                //     that.$message.error('网络出错，请稍后再试！');
+                //   }
+                // })
               }else{
                 that.alertMsg(msg);
               }

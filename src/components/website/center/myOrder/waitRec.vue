@@ -17,7 +17,7 @@
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
       <div class="order_title">
-        <span class="order_date">{{item.created}}</span>
+        <span class="order_date">{{item.created.split(" ")[0]}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
@@ -214,7 +214,7 @@
             console.log(res,"..........")
             that.items = res.data.data;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss');
               that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
             that.totalCount=res.data.totalNumber;
@@ -307,7 +307,7 @@
             console.log(res,"getAllOrder_waitRec");
             that.items = b;
             for(let i in that.items){
-              that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
+              that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss');
               that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
             }
             if(that.items.length==0){

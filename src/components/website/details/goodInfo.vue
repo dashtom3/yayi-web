@@ -535,6 +535,7 @@ import myAddress from './selectThree'
           that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
         }
       },
+      
       nowToBuyThis:function(){
         var that = this;
         var userToken = that.global.getToken();

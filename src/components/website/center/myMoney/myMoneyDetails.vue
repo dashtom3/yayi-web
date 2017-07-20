@@ -3,6 +3,7 @@
     <div class="tab_box">
       <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">乾币充值</div>
       <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">乾币明细</div>
+      <span>当前钱币：{{}}</span>
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
@@ -22,6 +23,7 @@
     name: 'myMoneyList',
     data () {
       return {
+        getMoneyList:[],
         isActive1: true,
         isActive2: false,
         tab01Text: "tab01",
@@ -33,6 +35,25 @@
       tab01: myMoneyAdd,
       tab02: myMoney,
     },
+    created:function(){
+      this.getMoneyList();
+    },
+    watch:{
+      getMoneyList:{
+        handler:function(){ // 计算当前乾币
+          for(var i in this.getMoneyList){
+            if(this.getMoneyList[i].qbRget!=0){
+              this.myAllMoney.currentMoney += this.getMoneyList[i].qbRget;
+            }
+            if(this.getMoneyList[i].qbRout!=0){
+              this.myAllMoney.currentMoney -= this.getMoneyList[i].qbRout;
+            }
+          }
+          this.myAllMoney.details = this.getMoneyList.slice(0,this.everyPageShowNum);
+        },
+        deep:true
+      },
+    },
     methods: {
       changeActive1: function(tabText) {
         this.currentView = tabText;
@@ -43,6 +64,24 @@
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = true;
+      },
+      getMoneyList:function(){
+        var that = this;
+        var obj = {
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/userMyQb/query', obj)
+        .then((res) => {
+          // console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            this.getMoneyList = res.data.data;
+            console.log(res)
+            // that.totalCount=res.data.totalNumber;
+            // this.childConfig.pageNum = parseInt(this.getMoneyList.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
     }
   }

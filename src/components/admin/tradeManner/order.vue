@@ -221,7 +221,10 @@
       <el-dialog title="退款处理" v-model="refundVisible" :close-on-click-modal="true">
         <table class="refund_tb">
             <tr class="bgc">
-              <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">订单编号：{{orderInfo.orderNo}}</span><span style="padding-left:100px;">乾币抵扣：{{orderInfo.deductible}}</span></td>
+              <td colspan="7" style="text-align:left;">
+                <span style="padding-left:20px;">订单编号：{{orderInfo.orderId}}</span>
+                <span style="padding-left:100px;">乾币抵扣：{{orderInfo.qbDed}}</span>
+              </td>
             </tr>
             <tr class="bgc">
               <td>是否退款</td>
@@ -232,24 +235,24 @@
               <td>退回乾币数</td>
               <td>扣除乾币数</td>
             </tr>
-            <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index" style="height:46px;">
+            <tr v-for="(item, index) in orderInfo.orderitemList" :key="index" style="height:46px;">
               <td>
                 <template>
                   <el-checkbox v-model="item.checked" size="small"></el-checkbox>
                 </template>
               </td>
-              <td>{{item.goodsName}}</td>
-              <td>{{item.price + '*' + item.goodsNum}}</td>
+              <td>{{item.itemInfo.itemName}}</td>
+              <td>{{item.price + '*' + item.num}}</td>
               <td style="width:200px;position:relative;">
-                <div id="inputCenter" v-show="item.goodsNum" style="position:absolute;top:4px;">
+                <div id="inputCenter" v-show="item.num" style="position:absolute;top:4px;">
                   <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" :class="{i_disabled: !item.checked}" @click="reduceCount(index, item)">-</i>
                   <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
                   <i style="position:absolute;left:150px;top:2px" class="icon_i_r" :class="{i_disabled: !item.checked}" @click="addCount(index, item)">+</i>
                 </div>
               </td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.untread}}</td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.untread}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
             </tr>
           </table>
           <div class="btn_box">
@@ -359,7 +362,6 @@
         }
       }
     },
-
     created:function(){
       var that = this;
       that.getOrderList();
@@ -375,9 +377,6 @@
         }
         this.fenYeGetData(that.currentPage);
       },
-      // pageHandler:function(data){
-      //   this.fenYeGetData(data);
-      // },
       fenYeGetData:function(data){
         var that = this;
         var obj = {};
@@ -593,7 +592,34 @@
       },
       //退款处理
       handleDrawback(index, row) {
-        this.refundVisible = true;
+        var that = this;
+        var obj = {
+          orderId:row.orderId
+        };
+        that.global.axiosPostReq('/showUserOrderManage/queryOrderDetails',obj)
+        .then((res) => {
+          console.log(res,"getOneOrderDetailsById")
+          if (res.data.callStatus === 'SUCCEED') {
+            for(let i in res.data.data.orderitemList){
+              res.data.data.orderitemList[i].count = 1;
+              res.data.data.orderitemList[i].checked= false;
+            }
+            res.data.data.refundAmt = 0;
+            // totalPrice: 156,
+            // refundAmt: 78,
+            // outCoins: 2,
+            // untread: 6,
+            // freight: 68,
+            // deductible: 2,
+            // orderInfo.refundAmt}}</td>
+            // <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.untread}}</td>
+            // <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.outCoins
+            that.orderInfo = res.data.data;
+            this.refundVisible = true;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       //仓库发货
       handleDelivery(index, row) {
@@ -603,13 +629,13 @@
         that.fahuoIndex = index;
       },
       reduceCount(index, item){
-        if(item.checked && this.orderInfo.goodsInfo[index].count !== 1){
-          this.orderInfo.goodsInfo[index].count -= 1;
+        if(item.checked && this.orderInfo.orderitemList[index].count !== 1){
+          this.orderInfo.orderitemList[index].count -= 1;
         }
       },
       addCount(index, item){
-        if(item.checked && this.orderInfo.goodsInfo[index].count < this.orderInfo.goodsInfo[index].goodsNum){
-          this.orderInfo.goodsInfo[index].count += 1;
+        if(item.checked && this.orderInfo.orderitemList[index].count < this.orderInfo.orderitemList[index].goodsNum){
+          this.orderInfo.orderitemList[index].count += 1;
         }
       },
       goToBackMoney:function(){

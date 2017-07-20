@@ -55,10 +55,10 @@
         <div class="qianbi_title">钱币抵扣</div>
         <div class="qianbi_des">
           <el-checkbox v-model="checked1">使用钱币（1钱币=1元）</el-checkbox>
-          <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span> 
+          <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span>
           <div style="margin-left:24px;">
             <input type="text" class="qianbi_word" v-show="qianbi_word" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
-          </div> 
+          </div>
         </div>
       </div>
       <div class="qianbi_box">
@@ -526,7 +526,7 @@
             console.log(res.data.data);
             that.items = res.data.data;
             var a = that.items.filter(function(ele,index,arr) {
-                return ele.isDefault == true;   
+                return ele.isDefault == true;
             })
             that.name = a[0].receiverName
             that.phone = a[0].phone
@@ -589,8 +589,8 @@
           that.$message({
             type: 'info',
             message: '已取消删除'
-          });          
-        });  
+          });
+        });
       },
       // 选择所在区域
       showFromChild: function(data) {
@@ -954,7 +954,6 @@ input:focus {
   width: 1160px;
   height: 63px;
   padding: 40px 20px 40px 20px;
-/*  background-color: #A08F65;*/
 }
 .des_img {
   margin-right: 20px;
@@ -962,7 +961,7 @@ input:focus {
 }
 .des_p {
   width: 420px;
-} 
+}
 .des_price {
   width: 75px;
   text-align: center;
