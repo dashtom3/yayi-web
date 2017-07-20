@@ -99,11 +99,13 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-  props: ['orderInfo','echartData'],
+  props: ['orderInfo','echartData','echartsTitle'],
   data() {
     return {
       detailVisible: false,
       tableData: null,
+      monthX: 31,
+      monthList: [],
       infoList: [{
         goodsName: '商品名称1',
         price: 30,
@@ -124,6 +126,14 @@ export default {
   },
   created(){
     this.tableData = this.orderInfo
+    for(var i=1;i<this.monthX;i++){
+      this.monthList.push(i)
+    }
+  },
+  watch: {
+    echartsTitle: function(){
+      this.drawLine();
+    }
   },
   mounted() {
     this.drawLine();
@@ -137,7 +147,7 @@ export default {
       // 绘制图表
       mainChart.setOption({
           title: {
-              text: '2017年6月份业绩记录',
+              text: this.echartsTitle,
               left: 'center'
           },
           tooltip: {
@@ -165,7 +175,7 @@ export default {
                  //X轴刻度配置
                 interval: 0 //0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
               },
-              data: ['1','2','3','4','5','6','7','8','9','10','20','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30']
+              data: this.monthList
           },
           yAxis: {
               type: 'value',
@@ -179,7 +189,7 @@ export default {
                   name:'总收入',
                   type:'line',
                   stack: '总收入',
-                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3,999]
+                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1,3800]
               }
           ]
       });

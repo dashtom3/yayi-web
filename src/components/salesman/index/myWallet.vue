@@ -90,7 +90,7 @@
     <el-dialog
       :visible.sync="incomeVisible"
       size="small">
-      <div class="detail_title">进账详情</div>
+      <div class="detail_title">详情</div>
       
       <div style="margin-bottom:10px;"><b>时间 2017-07-11 12:00:00</b></div>
       <el-table :data="incomeDetail" border show-summary style="width: 100%">
@@ -104,13 +104,11 @@
         </el-table-column>
         <el-table-column prop="income" label="收入（元）" align="center">
         </el-table-column>
-        <el-table-column prop="ranking" label="排名奖励" align="center">
-        </el-table-column>
         <el-table-column prop="totalAmt" label="进账总额" align="center">
         </el-table-column>
       </el-table>
       <div class="rules">
-        <span><a href="javascript:;">收入规则</a></span><span><a href="javascript:;">公司奖励规则</a></span>
+        <span><a href="javascript:;">收入规则</a></span>
       </div>
       <div style="text-align:center;margin-top:20px;">
         <el-button @click="incomeVisible = false">关 闭</el-button>
@@ -121,8 +119,8 @@
     <el-dialog
       :visible.sync="outVisible"
       size="small">
-      <div class="detail_title">出账详情</div>
-      <el-table :data="outDetail" border style="width: 100%">
+      <div class="detail_title">详情</div>
+      <el-table :data="outDetail" border style="width: 100%;margin-top:20px;">
         <el-table-column prop="outTime" label="时间" align="center">
         </el-table-column>
         <el-table-column prop="outDesc" label="描述" align="center">
@@ -252,7 +250,6 @@
           refundAmt: 10,
           actualAmt: 80,
           income: 8,
-          ranking: 0,
           totalAmt: 8
         },
         {
@@ -261,7 +258,6 @@
           refundAmt: 10,
           actualAmt: 80,
           income: 8,
-          ranking: 0,
           totalAmt: 0
         }],
         outDetail: [{

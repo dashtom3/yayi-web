@@ -66,7 +66,7 @@
         </el-table-column>
         <el-table-column prop="recoveryState" label="回复状态" :span="3" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.orderitemList[0].commentList[0].recoveryState == '0'">未回复</span>
+            <span v-if="scope.row.orderitemList[0].commentList[0].recoveryState == null">未回复</span>
             <span v-if="scope.row.orderitemList[0].commentList[0].recoveryState == '1'">已回复</span>
           </template>  
         </el-table-column>
@@ -80,13 +80,19 @@
             <el-button
               size="small"
               type="info"
-              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.recoveryState == '0'">回复</el-button>
+              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.orderitemList[0].commentList[0].recoveryState == null">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
-
-      <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" v-show="this.replayList.length" @childSay="pageHandler"></paging>
-
+      <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pagesize"
+          layout="prev, pager, next, jumper"
+          :total="totalCount">
+        </el-pagination>
+      </div>
       <!-- 回复弹窗 -->
       <el-dialog title="回复评价" size="tiny" v-model="replayBtn" :close-on-click-modal="true">
         <el-input
@@ -106,12 +112,17 @@
 
 <script>
   import global from '../../global/global'
-  import paging from '../../website/brandLib/paging0'
 	export default {
 		data(){
 			return {
 				orderCode: "",
 				userCode: "",
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
 				replayStat: [{
           value: '',
           label: '全部'
@@ -122,10 +133,6 @@
           value: '1',
           label: '已回复'
         }],
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
         value: '',
         //回复列表
         replayList: [],
@@ -135,26 +142,32 @@
         itemId: ''
 			}
 		},
-    components: {
-      paging
-    },
     created(){
       this.queryHandler()
     },
 		methods: {
-      queryHandler(){
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.queryHandler(val)
+      },
+      queryHandler(val){
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         let params = {
           orderId: this.orderCode,
           phone: this.userCode,
           recoveryState: this.value,
-          currentPage: this.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize
         }
         console.log(params)
         global.axiosPostReq('/commentManage/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.replayList = res.data.data
-            this.pageProps.totalPage = res.data.totalPage
+            this.totalCount = res.data.totalNumber
             console.log(res.data.data)
           }else{
             this.$message.error('网络出错，请稍后再试！');

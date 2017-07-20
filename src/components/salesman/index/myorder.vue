@@ -14,7 +14,7 @@
         累计收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
 	</el-row> 
@@ -29,6 +29,7 @@ export default {
     return {
       monthVal: '',
       overYearHasCommission: '',
+      echartsTitle: '',
       pageProps: {
         pageNum: 1,
         totalPage: 1
@@ -102,6 +103,8 @@ export default {
     this.echartPic()
     //初始化为当前月份
     this.monthVal = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
+    //默认echarts标题
+    this.echartsTitle = new Date().getFullYear() + '年'+ (new Date().getMonth() + 1) +'月份业绩记录'
   },
   components:{
     dataTable,
@@ -156,8 +159,10 @@ export default {
       this.init();
     },
     selHandler(val){
-      this.dateInfo.year = val.split("-")[0],
+      this.dateInfo.year = val.split("-")[0]
       this.dateInfo.month = val.split("-")[1]
+      this.echartsTitle = this.dateInfo.year + '年'+ parseInt(this.dateInfo.month) +'月份业绩记录'
+      console.log(this.echartsTitle)
       this.echartPic()
     } 
   }
