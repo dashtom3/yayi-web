@@ -121,6 +121,63 @@ export default {
   getQiNiuToken () {
     return this.axiosGetQiNiuReq('qiniu/getQiNiuToken')
   },
+  //买商品给钱币规则
+  // 道邦
+      // 该商品购买金额<300,赠送钱币数量=档次购买金额*3%
+      // 300<=该商品购买金额<600,赠送钱币数量=档次购买金额*5%
+      // 600<=该商品购买金额<1200,赠送钱币数量=档次购买金额*8%
+      // 1200<=该商品购买金额<2500,赠送钱币数量=档次购买金额*12%
+      // 该商品购买金额>=2500,赠送钱币数量=档次购买金额*15%
+  // 其他品牌
+      // 耗材类
+          // 该商品购买金额<500,赠送钱币数量=档次购买金额*3%
+          // 500<=该商品购买金额<1000,赠送钱币数量=档次购买金额*5%
+          // 1000<=该商品购买金额<3000,赠送钱币数量=档次购买金额*8%
+          // 该商品购买金额>=3000,赠送钱币数量=档次购买金额*12%
+      // 工具设备类
+          // 该商品1件，赠送钱币数量=档次购买金额*5%
+          // 该商品>=2件，赠送钱币数量=档次购买金额*10%
+  goodToMoney:function(goodList){
+    // goodList 本次购买商品的；列表
+    var finalyMoney = 0;//计算后返回的钱币数量
+    for(let i in goodList){
+      var thisGoodAllMoney = goodList[i].price * 100 * goodList[i].num / 100;
+      var rate;
+      if(goodList[i].goodBrandName=="上海道邦"){
+        if(thisGoodAllMoney<300){
+          rate = 3;
+        }else if(300<=thisGoodAllMoney<600){
+          rate = 5;
+        }else if(600<=thisGoodAllMoney<1200){
+          rate = 8;
+        }else if(1200<=thisGoodAllMoney<2500){
+          rate = 12;
+        }else if(2500<=thisGoodAllMoney){
+          rate = 15;
+        }
+      }else{
+        if(goodList[i].goodSort=="耗材类"){
+          if(thisGoodAllMoney<500){
+            rate = 3;
+          }else if(500<=thisGoodAllMoney<1000){
+            rate = 5;
+          }else if(1000<=thisGoodAllMoney<3000){
+            rate = 8;
+          }else if(3000<=thisGoodAllMoney){
+            rate = 12;
+          }
+        }else if(goodList[i].goodSort=="工具设备类"){
+          if(goodList[i].num==1){
+            rate = 5;
+          }else if(goodList[i].num>=2){
+            rate = 10;
+          }
+        }
+      }
+      finalyMoney += thisGoodAllMoney * 100 * rate / 10000;
+    }
+    return finalyMoney;
+  },
   // RMB兑换钱币规则
   moneyToMoney:function(money){
     // money--需要兑换的人民币数量

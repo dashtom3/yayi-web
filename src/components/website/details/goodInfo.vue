@@ -556,7 +556,10 @@ import myAddress from './selectThree'
               num:that.goodDefaultNum,
               itemSKU:nowSku,
               price:that.nowGoodDetails.itemPrice,
+              goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
+              goodSort:that.nowGoodDetails.itemSort
             };
+            // console.log(obj)
             sendData.haveSelectedGoodNum = that.goodDefaultNum;
             sendData.details.push(obj)
             window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
