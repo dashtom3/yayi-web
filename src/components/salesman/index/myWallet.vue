@@ -104,11 +104,9 @@
         </el-table-column>
         <el-table-column prop="income" label="收入（元）" align="center">
         </el-table-column>
-        <el-table-column prop="totalAmt" label="进账总额" align="center">
-        </el-table-column>
       </el-table>
       <div class="rules">
-        <span><a href="javascript:;">收入规则</a></span>
+        <a href="javascript:;"><img src="../../../images/salesman/question.png" alt="收入规则"><span style="padding-left:20px;">收入规则</span></a>
       </div>
       <div style="text-align:center;margin-top:20px;">
         <el-button @click="incomeVisible = false">关 闭</el-button>
@@ -138,7 +136,7 @@
       size="small">
       <div>
         <el-row>
-          <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确</div></el-col>
+          <el-col :span="24" align="center"><div class="i_red i_title">请检查账户是否正确！</div></el-col>
         </el-row>
         <el-row>
           <el-col :span="24" align="center">
@@ -223,7 +221,7 @@
         withDrawBank01:false,
         incomeVisible: false,
         outVisible: false,
-        withTotalAmt: 700,
+        withTotalAmt: 770,
         WithDrawForm: {
           withDrawAccount: '',
           withDrawPhone: global.getSalesUser().phone,
@@ -249,16 +247,14 @@
           saleVal: 90,
           refundAmt: 10,
           actualAmt: 80,
-          income: 8,
-          totalAmt: 8
+          income: 8
         },
         {
           commodityType: '耗材类',
           saleVal: 90,
           refundAmt: 10,
           actualAmt: 80,
-          income: 8,
-          totalAmt: 0
+          income: 8
         }],
         outDetail: [{
           outTime: '2017-03-03',
@@ -331,6 +327,21 @@
         }
         that.$emit('msgFromChild',editWithDraw);
         this.withDrawSets = false
+      },
+      //获取余额
+      getAllMoney: function() {
+        var that = this;
+        var params = {
+          token: global.getSalesToken()
+        }
+        that.global.axiosGetReq('/witManage/show',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.withTotalAmt = res.data.data;
+            console.log(res.data.data)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       //查询提现方式
       queryInfo: function(){
@@ -486,12 +497,7 @@
             let params = {
               token: global.getSalesToken(),
               phone: global.getSalesUser().phone,
-              type: this.postalType,
-              cashMoney: this.WithDrawForm.withDrawAccount,
-              trueName: this.trueName,
-              accountUser: this.openName,
-              bank: this.bankName,
-              anumber: this.bankNo,
+              moneyNnm: this.WithDrawForm.withDrawAccount,
               vCode: this.WithDrawForm.rg_code
             }
             //验证验证码
@@ -499,7 +505,6 @@
               this.$message.error('请输入正确的验证码');
               return false
             }
-
             global.axiosPostReq('/witManage/submitWit',params).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 this.statTip = true
@@ -516,8 +521,7 @@
           } else {
             return false;
           }
-        });
-        
+        }); 
       }
     }
   }
@@ -685,10 +689,18 @@
     border: 1px solid #ccc;
   }
   .rules{
+    height: 20px;
+    line-height: 20px;
     margin-top: 20px;
+  }
+  .rules img{
+    position: absolute;
+    top: 1px;
+    width: 18px;
   }
   .rules a{
     color: #56bff8;
     margin-left: 20px;
+    position: relative;
   }
 </style>

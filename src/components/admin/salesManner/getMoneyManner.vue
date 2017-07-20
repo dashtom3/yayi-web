@@ -32,22 +32,22 @@
         <!-- <el-table-column prop="userId" align="center" label="销售员编号"></el-table-column> -->
         <el-table-column prop="trueName" align="center" label="真实姓名"></el-table-column>
         <el-table-column prop="phone" align="center" label="手机号"></el-table-column>
-        <el-table-column prop="cashMoney" align="center" label="提现金额"></el-table-column>
+        <el-table-column prop="balanceOut" align="center" label="提现金额"></el-table-column>
         <el-table-column prop="type" align="center" label="类型"></el-table-column>
-        <el-table-column prop="accountUser" align="center" label="开户者"></el-table-column>
-        <el-table-column prop="bank" align="center" label="银行"></el-table-column>
-        <el-table-column prop="anumber" align="center" label="账号"></el-table-column>
-        <el-table-column prop="appTime" align="center" label="申请时间"></el-table-column>
-        <el-table-column prop="cashState" align="center" label="提现状态">
+        <el-table-column prop="openName" align="center" label="开户者"></el-table-column>
+        <el-table-column prop="bankName" align="center" label="银行"></el-table-column>
+        <el-table-column prop="accountNumber" align="center" label="账号"></el-table-column>
+        <el-table-column prop="create" align="center" label="申请时间"></el-table-column>
+        <el-table-column prop="describey" align="center" label="提现状态">
           <template scope="scope">
-            <span v-if="scope.row.cashState == 1">提现成功</span>
-            <span v-if="scope.row.cashState == 0">申请中</span>
+            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">提现中</span>
+            <span v-if="scope.row.describey.indexOf('提现完成') !== -1 ">提现完成</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template scope="scope">
-            <span v-if="scope.row.cashState == 0">
-              <el-button type="text" v-on:click="passThisGet(scope)">通过</el-button>
+            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">
+              <el-button type="text" v-on:click="passThisGet(scope.row)">通过</el-button>
               <!-- <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button> -->
             </span>
           </template>
@@ -79,7 +79,6 @@
         that.global.axiosGetReq('/witManage/query').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
-            console.log(that.getMoneyList,'222');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -99,19 +98,17 @@
           state: that.state,
           message: that.searchUserContent,
         }
-        console.log(obj);
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
           console.log(res,'23')
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
-            console.log(that.getMoneyList,'222');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
       //通过操作
-      passThisGet:function(scope){
+      passThisGet:function(row){
         var that = this;
         that.$confirm('确定通过将打款至该账户，是否继续?', {
           confirmButtonText: '确定',
@@ -119,14 +116,14 @@
           type: 'warning'
         }).then(() => {
           var obj = {
-            cashId: scope.row.cashId,
+            balacceId: row.balanceId,
           }
           that.global.axiosGetReq('/witManage/oper',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.getAllMoney();
               that.$message({
                 type: 'success',
-                message: '打款成功!'
+                message: '提现成功!'
               });
             } else {
               that.$message.error('网络出错，请稍后再试！');

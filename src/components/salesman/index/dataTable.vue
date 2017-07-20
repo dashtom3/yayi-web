@@ -104,7 +104,7 @@ export default {
     return {
       detailVisible: false,
       tableData: null,
-      monthxVal: 31,
+      monthxVal: 30,
       monthList: [],
       infoList: [{
         goodsName: '商品名称1',
@@ -138,7 +138,7 @@ export default {
   },
   created(){
     this.tableData = this.orderInfo
-    for(var i=1;i<this.monthxVal;i++){
+    for(var i=0;i<this.monthxVal+1;i++){
       this.monthList.push(i)
     }
   },
@@ -188,7 +188,7 @@ export default {
               boundaryGap: false,
               axisLabel:{
                  //X轴刻度配置
-                interval: 0 //0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
+                interval: 4 //0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
               },
               data: this.monthList
           },
@@ -204,7 +204,7 @@ export default {
                   name:'当日销售额（元）',
                   type:'line',
                   stack: '当日销售额（元）',
-                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1,3800]
+                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1,3800,2000]
               }
           ]
       });
