@@ -94,6 +94,16 @@ export default {
   getSalesUser () {
     return JSON.parse(localStorage.getItem('salesUser'))
   },
+  // 后台系统token
+  getAdminToken () {
+    return sessionStorage.getItem('adminToken')
+  },
+  removeAdminMsg () {
+    sessionStorage.removeItem('adminToken')
+  },
+  setAdminToken (data) {
+    sessionStorage.setItem('adminToken',data)
+  },
   // 历史记录存储
   getHistory () {
     return localStorage.getItem('userHistory')
@@ -176,7 +186,7 @@ export default {
       }
       finalyMoney += thisGoodAllMoney * 100 * rate / 10000;
     }
-    return finalyMoney;
+    return Math.round(finalyMoney);
   },
   // RMB兑换钱币规则
   moneyToMoney:function(money){
@@ -201,7 +211,7 @@ export default {
         rate = 125;
       }
       finalyMoney = money * rate / 100;
-      return finalyMoney;
+      return Math.round(finalyMoney);
     }
   },
 }

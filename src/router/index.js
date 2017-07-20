@@ -272,9 +272,10 @@ let router = new Router({
 
 // router.beforeEach((to, from, next) => {
 // 	console.log(to.path)
-// 	let admin = JSON.parse(window.sessionStorage.getItem('access-user'));
-// 	var isIn = to.path.indexOf("/admin")<0;
-// 	if(isIn==false){
+// 	let admin = window.sessionStorage.getItem('adminToken')
+//   console.log(admin,'admin')
+// 	// var isIn = to.path.indexOf("/admin")<0;
+// 	if(admin){
 // 		//判断是否是后台登陆 isIn==false是后台
 // 		if(to.path=="/admin/login"){
 // 			next();

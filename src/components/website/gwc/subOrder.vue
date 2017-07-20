@@ -32,7 +32,7 @@
           <div class="left stotal">小计（元）</div>
         </div>
         <div class="list_des" v-for="cargo in cargos">
-          <div class="left des_img">
+          <div class="left des_img_img">
             <img style="width:60px;height:60px;" :src=cargo.picPath alt="img">
           </div>
           <div class="left des_p">
@@ -85,7 +85,7 @@
         <p class="second_p">运费：¥{{freight}}</p>
         <p class="third_p">乾币抵扣：¥{{qbdk}}</p>
         <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}</span></p>
-        <p class="fifth_p">本次可获得乾币：¥0</p>
+        <p class="fifth_p">本次可获得乾币：¥{{canHasCoin}}</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>
@@ -368,6 +368,7 @@
         freight: '',
         fromGwc: '',
         orderItem: '',
+        canHasCoin: 0,
       }
     },
     //*******导航钩子*********//
@@ -378,7 +379,9 @@
         if (that.fromGwc == null) {
           that.$router.push({path:'/gwc'})
         }else {
-          console.log(that.fromGwc,'uiuiuiu')
+          that.canHasCoin = that.global.goodToMoney(that.fromGwc.details)
+          // console.log(that.fromGwc.details,'uiuiuiu')
+          // console.log(that.global.goodToMoney(that.fromGwc.details),'papapap')
         }
       })
     },
@@ -460,6 +463,7 @@
       that.cargos = arr.details;
       that.gwcTotal = arr.allMoney;
       that.haveSelectedGoodNum = arr.haveSelectedGoodNum
+      that.canHasCoin = that.global.goodToMoney(that.fromGwc.details)
     },
     methods: {
       //失去焦点时
@@ -955,7 +959,7 @@ input:focus {
   height: 63px;
   padding: 40px 20px 40px 20px;
 }
-.des_img {
+.des_img_img {
   margin-right: 20px;
   border: 1px solid #D7D7D7;
 }

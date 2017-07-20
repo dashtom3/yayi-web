@@ -55,27 +55,8 @@
               <div class="logIn_box">
                 <p class="ms_register" @click="ms_register" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">注册</p>
                 <div class="logIn_header">
-                  <div class="messageLog" :class="{ speBottom: isLog1}" @click="messageLog">短信登录</div>
                   <div class="pwdLog" :class="{ speBottom: isLog2}" @click="pwdLog">密码登录</div>
-                </div>
-                <div v-show="changeLog1" class="des_box">
-                  <div>
-                    <span>手机号：</span>
-                    <input class="mobilePhone" type="text" v-model="ms_mobilephone">
-                    <transition name="shake">
-                      <p v-show="msPhone_alert" class="error">请输入正确的手机号!</p>
-                    </transition>
-                  </div>
-                  <div>
-                    <span>验证码：</span>
-                    <input class="rightCode" type="text" v-model="ms_yzm" @keyup.enter="ms_logIn">
-                    <button class="getCode" @click="hasYzm(ms_mobilephone)" v-if="hYzm">{{Yzm}}</button>
-                    <button class="getCode" @click="hasYzm()" style="background-color: #C8C8C8;" v-else disabled>{{Yzm1}}</button>
-                    <transition name="shake">
-                      <p v-show="msCode_alert" class="error">请输入正确的验证码!</p>
-                    </transition>
-                  </div>
-                  <div class="logIn_btn" @click="ms_logIn">登录</div>
+                  <div class="messageLog" :class="{ speBottom: isLog1}" @click="messageLog">短信登录</div>
                 </div>
                 <div v-show="changeLog2" class="des_box">
                   <div>
@@ -95,6 +76,25 @@
                   <p class="forgetPwd" @click="forgetPwd">忘记密码</p>
                   <div class="logIn_btn2" @click="pwd_logIn">登录</div>
                   <!-- <p class="logIn_error">账号不存在，请重试！</p> -->
+                </div>
+                <div v-show="changeLog1" class="des_box">
+                  <div>
+                    <span>手机号：</span>
+                    <input class="mobilePhone" type="text" v-model="ms_mobilephone">
+                    <transition name="shake">
+                      <p v-show="msPhone_alert" class="error">请输入正确的手机号!</p>
+                    </transition>
+                  </div>
+                  <div>
+                    <span>验证码：</span>
+                    <input class="rightCode" type="text" v-model="ms_yzm" @keyup.enter="ms_logIn">
+                    <button class="getCode" @click="hasYzm(ms_mobilephone)" v-if="hYzm">{{Yzm}}</button>
+                    <button class="getCode" @click="hasYzm()" style="background-color: #C8C8C8;" v-else disabled>{{Yzm1}}</button>
+                    <transition name="shake">
+                      <p v-show="msCode_alert" class="error">请输入正确的验证码!</p>
+                    </transition>
+                  </div>
+                  <div class="logIn_btn" @click="ms_logIn">登录</div>
                 </div>
               </div>
             </div>
@@ -250,10 +250,10 @@
         rg_pwd: '',
         rg_confirmPwd: '',
         isNum: false,
-        changeLog1: true,
-        changeLog2: false,
-        isLog1: true,
-        isLog2: false,
+        changeLog1: false,
+        changeLog2: true,
+        isLog1: false,
+        isLog2: true,
         agree: false,
         hYzm: true,
         fg_hYzm: true,
@@ -705,6 +705,7 @@
             });
             that.hasLogin = true;
             that.car_num = 0;
+            that.activeInColor = '#333333'
           } else {
             that.$message.error('退出失败！');
           }
@@ -1112,7 +1113,7 @@
   }
   .error {
     position: absolute;
-    left: 127px;
+    left: 90px;
     font-size: 12px;
     color: #D81E06;
   }
@@ -1353,34 +1354,35 @@
 /*-------------------短信密码登录 start----------------------*/
   .transition-box {
     width: 100%;
-    height: 500px;
+    height: 398px;
     background-repeat: no-repeat;
     background-position: center;
 /*    background: url(../../../images/index/logBg.jpg) center no-repeat;*/
     text-align: center;
+    box-shadow: 1px 1px 5px #eee;
   }
   .transition-box .logIn_container {
     width: 1200px;
-    height: 500px;
+    height: 398px;
     margin: 0 auto;
     position: relative;
 /*    background-color: #EECE7C;*/
   }
   .transition-box .logIn_container .logIn_box {
-    width: 572px;
-    height: 427px;
-    padding: 12px 11px 0 11px;
+    width: 432px;
+    height: 361px;
+    padding: 10px 10px 0 10px;
     position: absolute;
-    top: 30px;
+    top: 14px;
     right: 0px;
     background-color: #fff;
     box-shadow: 7px 7px 28px #778899;
     font-size: 14px;
-    color: #000;
+    color: #333;
   }
   .ms_register {
     text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
   .ms_register:hover {
     color: #5DB7E7;
@@ -1389,7 +1391,7 @@
 */  }
   .logIn_header {
     width: 100%;
-    height: 36px;
+    height: 45px;
     border-bottom: 1px solid #e9e9e9;
   }
   .messageLog {
@@ -1400,8 +1402,10 @@
     float: left;
     text-align: center;
     margin-right: 20px;
+    padding-bottom: 8px;
   }
   .speBottom {
+    color: #5DB7E8;
     border-bottom: 3px solid #5DB7E7;
   }
   .pwdLog {
@@ -1411,6 +1415,7 @@
     font-size: 16px;
     float: left;
     text-align: center;
+    padding-bottom: 8px;
   }
   .messageLog:hover, .pwdLog:hover{
     cursor: pointer;
@@ -1419,37 +1424,38 @@
   }
   .des_box {
     width: 100%;
-    height: 320px;
+/*    height: 280px;*/
     margin-top: 2px;
   }
   .mobilePhone {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 50px;
+    margin-top: 30px;
   }
   .rightCode {
-    width: 256px;
+    width: 170px;
     height: 39px;
-    margin-top: 39px;
+    margin-top: 30px;
     margin-right: 10px;
   }
   .pwd_box {
     margin-left: 11px;
   }
   .pwd {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 39px;
+    margin-top: 30px;
   }
   .getCode {
     display: inline-block;
     width: 130px;
-    height: 40px;
+    height: 41px;
     line-height: 40px;
     background-color: #5DB7E7;
     color: #fff;
 /*    background-color: #EBEBEB;*/
     text-align: center;
+    transform: translateY(-5%);
   }
   .getCode:hover {
     cursor: pointer;
@@ -1476,7 +1482,7 @@
     height: 40px;
     line-height: 40px;
     margin: 0 auto;
-    margin-top: 16px;
+    margin-top: 20px;
     text-align: center;
     background-color: #5DB7E7;
     color: #fff;
@@ -1492,8 +1498,8 @@
     margin-top: 5px;
   }
   .forgetPwd {
-    margin-top: 5px;
-    margin-right: 55px;
+    margin-top: 20px;
+    margin-right: 20px;
     text-align: right;
   }
   .forgetPwd:hover {
@@ -1504,26 +1510,26 @@
 /*-------------------短信密码登录 end----------------------*/
 /*-------------------忘记密码 strat----------------------*/
   .forgetPwd_box {
-    width: 572px;
-    height: 427px;
-    padding: 12px 11px 0 11px;
+    width: 432px;
+    height: 361px;
+    padding: 10px 10px 0 10px;
     position: absolute;
-    top: 30px;
+    top: 14px;
     right: 0px;
     background-color: #fff;
     box-shadow: 7px 7px 28px #778899;
     font-size: 14px;
-    color: #000;
+    color: #333;
   }
   .fg_mobilePhone {
-    width: 399px;
+    width: 315px;
     height: 39px;
     margin-top: 30px;
   }
   .fg_rightCode {
-    width: 256px;
+    width: 170px;
     height: 39px;
-    margin-top: 20px;
+    margin-top: 16px;
     margin-right: 10px;
   }
   .fg_getCode {
@@ -1539,14 +1545,14 @@
     margin-left: 11px;
   }
   .fg_pwd {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 39px;
+    margin-top: 16px;
   }
   .fg_confirmPwd {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 20px;
+    margin-top: 16px;
   }
   .fg_confirmPwd_box {
     margin-right: 15px;
@@ -1555,14 +1561,14 @@
     width: 250px;
     height: 40px;
     margin: 0 auto;
-    margin-top: 39px;
+    margin-top: 25px;
     line-height: 40px;
     text-align: center;
     background-color: #5DB7E7;
     color: #fff;
   }
   .fg_alrHave {
-    margin-right: 55px;
+    margin-right: 20px;
     margin-top: 5px;
     text-align: right;
   }
@@ -1579,36 +1585,37 @@
 /*-------------------忘记密码 end----------------------*/
 /*-------------------注册页 statt----------------------*/
   .register_box {
-    width: 572px;
-    height: 427px;
-    padding: 12px 11px 0 11px;
+    width: 432px;
+    height: 361px;
+    padding: 10px 10px 0 10px;
     position: absolute;
-    top: 30px;
+    top: 14px;
     right: 0px;
     background-color: #fff;
     box-shadow: 7px 7px 28px #778899;
     font-size: 14px;
-    color: #000;
+    color: #333;
   }
   .rg_mobilePhone {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 30px;
+    margin-top: 10px;
   }
   .rg_rightCode {
-    width: 256px;
+    width: 170px;
     height: 39px;
-    margin-top: 20px;
+    margin-top: 16px;
     margin-right: 10px;
   }
   .rg_getCode {
     display: inline-block;
     width: 130px;
-    height: 40px;
-    line-height: 40px;
-    background-color: #5DB7E7;yayi
+    height: 41px;
+    line-height: 41px;
+    background-color: #5DB7E7;
     color: #fff;
     text-align: center;
+    transform: translateY(-1px);
   }
   .rg_getCode:hover {
     cursor: pointer;
@@ -1619,14 +1626,14 @@
     margin-left: 11px;
   }
   .rg_pwd {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 30px;
+    margin-top: 16px;
   }
   .rg_confirmPwd {
-    width: 399px;
+    width: 315px;
     height: 39px;
-    margin-top: 20px;
+    margin-top: 16px;
   }
   .rg_confirmPwd_box {
     margin-right: 15px;
@@ -1635,7 +1642,7 @@
     width: 250px;
     height: 40px;
     margin: 0 auto;
-    margin-top: 39px;
+    margin-top: 26px;
     line-height: 40px;
     text-align: center;
     background-color: #5DB7E7;
@@ -1682,7 +1689,7 @@
     transition: all ease 0.5s;
   }
   .rg_choose_box {
-    margin-top: 15px;
+    margin-top: 10px;
     font-size: 12px;
     position: relative;
   }

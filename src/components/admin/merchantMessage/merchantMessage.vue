@@ -617,6 +617,7 @@
           that.global.axiosPostReq('/item/down',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.getItemInfo();
+              that.clearWord();
               that.$message({
                 type: 'success',
                 message: '下架成功!'

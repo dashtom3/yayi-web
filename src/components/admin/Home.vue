@@ -30,7 +30,7 @@
           <i class="iconfont icon-menufold" v-show="!collapsed"></i>
           <i class="iconfont icon-menuunfold" v-show="collapsed"></i>
         </div>
-
+<!--  v-show="item.name!=='系统管理'&&this.accountType!==2" -->
         <!--菜单展开时的显示情况-->
         <el-menu v-show="!collapsed" default-active="0" @open="handleOpen" @close="handleClose" router>
           <template v-for="(item,index) in $router.options.routes" v-if="item.menuShow">
@@ -89,7 +89,23 @@
         sysUserName: '',
         sysUserAvatar: '',
         collapsed: false,
+        accountType: '',
       }
+    },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        let admin = window.sessionStorage.getItem('adminToken')
+        that.accountType = window.sessionStorage.getItem('accountType')
+        // console.log(,'管理员身份')
+        if(admin){
+          console.log('欢迎光临！')
+        }else{
+          that.$router.push('/admin/login');
+        }
+      })
     },
     methods: {
       handleOpen() {

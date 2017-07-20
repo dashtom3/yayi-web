@@ -1,5 +1,5 @@
 <template>
-  <el-row class="warp">
+  <el-row class="warp" v-if="accountP">
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><b>管理员列表</b></el-breadcrumb-item>
@@ -68,6 +68,14 @@
       </el-dialog>
     </el-col>
   </el-row>
+   <el-row class="warp" v-else>
+    <el-col :span="24" class="warp-breadcrum">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item><b>管理员列表</b></el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-col>
+    <div>权限不足</div>
+  </el-row>
 </template>
 
 <script>
@@ -95,11 +103,27 @@
 				}],
 				adminAddBtn: false,
 				adminstratorId: '',
-				isEdit: false
+				isEdit: false,
+				accountP: false,
 			}
 		},
+        //*******导航钩子*********//
+        beforeRouteEnter (to, from, next) {
+          // 通过 `vm` 访问组件实例
+          next(vm => {
+            var that = vm;
+          })
+        },
 		created(){
-			this.queryHandler()
+			var that = this
+            console.log(window.sessionStorage.getItem('accountType'),'ioioio')
+            let accountType = window.sessionStorage.getItem('accountType')
+            if( accountType == 2 ){
+              that.accountP = true
+            } else {
+              that.accountP = false
+            }
+			that.queryHandler()
 		},
 		methods: {
 			queryHandler(){
