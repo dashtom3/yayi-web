@@ -221,7 +221,7 @@
         withDrawBank01:false,
         incomeVisible: false,
         outVisible: false,
-        withTotalAmt: 770,
+        withTotalAmt: 0,
         WithDrawForm: {
           withDrawAccount: '',
           withDrawPhone: global.getSalesUser().phone,
@@ -273,6 +273,7 @@
       }
       that.queryInfo();
       that.getMyWallet();
+      this.getBalance();
     },
     methods: {
       // 检查提现金额是否合法
@@ -329,15 +330,14 @@
         this.withDrawSets = false
       },
       //获取余额
-      getAllMoney: function() {
+      getBalance: function() {
         var that = this;
         var params = {
           token: global.getSalesToken()
         }
-        that.global.axiosGetReq('/witManage/show',params).then((res) => {
+        that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.withTotalAmt = res.data.data;
-            console.log(res.data.data)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -364,14 +364,17 @@
       getMyWallet: function() {
         var that = this;
         var obj = {
-          token: 2,
-          state: 0,
+          token: global.getSalesToken(),
+          state: '',
+          startTime: '',
+          endTime: ''
         }
+        console.log('----------------',obj)
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
-            this.houstonJZ = res.data.data.houstonJZ
-            this.withdrawalsTX = res.data.data.withdrawalsTX
+            // this.houstonJZ = res.data.data.houstonJZ
+            // this.withdrawalsTX = res.data.data.withdrawalsTX
             // this.tableData = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -381,8 +384,8 @@
       // 选择时间段
       chooseDate: function() {
         var that = this;
-        var startDate = util.formatDate.format(new Date(that.value[0]));
-        var endDate = util.formatDate.format(new Date(that.value[1]));
+        var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+        var endDate = util.formatDate.format(new Date(that.dateVal[1]));
         // var obj = {
         //   token: that.global.getSalesToken(),
         //   state: 0,
