@@ -6,7 +6,7 @@
       <span>联系客服</span>
       <span style="margin-right:0px; border:none;" @click="question">意见反馈</span>
     </p> 
-    <p class="copyright">Copyright © 2017 yayiABC.com 版权所有</p>
+    <p class="copyright">Copyright © 2017 yayiABC.com 版权所有 <span @click="beian">沪ICP 备14038156</span></p>
   </div>
 </template>
 
@@ -23,15 +23,19 @@
     methods: {
       //意见反馈
       question: function() {
-        var that = this;
-        window.open('http://cn.mikecrm.com/BvO3hVU');
+        var that = this
+        window.open('http://cn.mikecrm.com/BvO3hVU')
+      },
+      beian: function() {
+        var that = this
+        window.open('http://www.miibeian.gov.cn')
       },
       aboutUs: function() {
-        var that = this;
-        axios.defaults.headers['token'] = that.global.getToken()
-        that.global.axiosPostReq('/test').then((res) => {
-          console.log(res,'opop')
-        })
+        // var that = this;
+        // axios.defaults.headers['token'] = that.global.getToken()
+        // that.global.axiosPostReq('/test').then((res) => {
+        //   console.log(res,'opop')
+        // })
       }
     }
   }
@@ -57,7 +61,7 @@
     padding-left: 46px;
     border-right: 1px #bcbcbc solid;
   }
-  .footerDes span:hover {
+  span:hover {
     cursor: pointer;
     color: #5DB7E7;
     transition: all ease 0.5s;

@@ -36,8 +36,15 @@
             <img style="width:60px;height:60px;" :src=cargo.picPath alt="img">
           </div>
           <div class="left des_p">
-            <p style="margin-bottom: 40px;">{{cargo.itemName}}</p>
-            <p>{{cargo.itemPropertyNamea}}</p>
+            <p style="margin-bottom: 25px;">{{cargo.itemName}}</p>
+            <p>
+              <span v-if="cargo.itemPropertyInfo">{{cargo.itemPropertyInfo}}</span>
+              <span v-if="cargo.itemPropertyTwoValue">{{';'+cargo.itemPropertyTwoValue}}</span>
+              <span v-if="cargo.itemPropertyThreeValue">{{';'+cargo.itemPropertyThreeValue}}</span>
+              <span v-if="cargo.itemPropertyFourValue">{{';'+cargo.itemPropertyFourValue}}</span>
+              <span v-if="cargo.itemPropertyFiveValue">{{';'+cargo.itemPropertyFiveValue}}</span>
+              <span v-if="cargo.itemPropertySixValue">{{';'+cargo.itemPropertySixValue}}</span>
+            </p>
           </div>
           <div class="left des_price">¥{{cargo.price}}</div>
           <div class="left des_num">{{cargo.num}}</div>

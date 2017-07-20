@@ -74,9 +74,6 @@ export default {
     }
   },
   computed: {
-    // filteredItems: function () {
-    //   return this.items.slice(0, 8)
-    // },
     filteredBrandListData: function () {
       return this.brandListData.slice(0, 8)
     },
@@ -184,7 +181,6 @@ export default {
     },
     img_in(classifyItem) {
       var that = this;
-      //console.log(classifyItem.oneId);
       that.img_change = classifyItem.oneId;
     },
     img_out(classifyItem) {
@@ -232,9 +228,7 @@ a {
   height: 246px;
   position: fixed;
   z-index: 100;
-  top: 140px;
-
-  /*  left: -165px;*/
+  top: 139px;
 }
 .sideBtn {
   width: 145px;
@@ -261,7 +255,6 @@ a {
     margin: 0 auto;
     text-align: center;
     position: relative;
-    /*    background-color: #EECE7C;*/
   }
   .prev {
     position: absolute;
@@ -319,10 +312,9 @@ a {
   margin: 0 auto;
   position: relative;
   text-align: center;
-  /*background-color: #F2F2F2;*/
   background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-size: cover;
+  background-position: center;
 }
 .active {
   background-color: #fff !important;
@@ -333,9 +325,7 @@ a {
 }
 .preventive_container {
   width: 1200px;
-/*  height: 1000px;*/
   margin: 0 auto;
-/*  background-color: #EECE7C;*/
 }
 .preventive_item {
   width: 265px;

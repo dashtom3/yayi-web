@@ -102,7 +102,6 @@
     text-align: center;
   }
   .top_box:hover {
-/*    opacity: 0.8;*/
     cursor: pointer;
   }
   .top_title {

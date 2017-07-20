@@ -52,7 +52,6 @@ Vue.filter('frisco', function (value) {
     	return ee
     }
     if (value == 4) {
-    	// var ee = '待评价'
       var ee = "交易成功"
     	return ee
     }
@@ -80,10 +79,6 @@ Vue.filter('operate', function (value) {
       var hh = '付款'
       return false
     }
-    // if (value == 1) {
-    //   var aa = '无'
-    //   return aa
-    // }
     if (value == 4) {
       var ee = '评价'
       return ee
@@ -104,7 +99,6 @@ Vue.filter('canUse', function (value) {
       var hh = '否'
       return hh
     }
-    // return middleState2
 })
 /* eslint-disable no-new */
 new Vue({
@@ -113,7 +107,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
-// Vue.nextTick(function(){
-//   console.log("asdas")
-// });
 //#5DB7E7;#5ed6dc;#04D8DD;红色#D81E06;

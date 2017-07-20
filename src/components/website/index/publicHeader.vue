@@ -292,15 +292,6 @@
         //activeColor: '#5DB7E7'
       }
     },
-    //*******导航钩子*********//
-    // beforeRouteEnter (to, from, next) {
-    //   // 通过 `vm` 访问组件实例
-    //   next(vm => {
-    //     var that = vm;
-    //     var token = window.localStorage.getItem('Token');
-    //     console.log(token);
-    //   })
-    // },
     created: function() {
       var that = this;
       that.Gtoken = that.global.getToken();
@@ -310,7 +301,6 @@
         that.Hrecord = JSON.parse(that.global.getHistory());
         that.Hrecord.reverse()
       }
-      // console.log(that.Hrecord,'ooooo')
       window.addEventListener('scroll', that.menu);
       if (that.global.getToken() !== null) {
         var username = that.global.getUser();
@@ -348,20 +338,10 @@
       },
       msgFromGoodInfo() {
         var that = this;
-        // if (that.msgFromGoodInfo == 'sayToLogin') {
-          // that.changeForget1 = true;
-          // that.changeForget2 = false;
-          // that.changeForget3 = false;
-          // that.showLogin2 = false;
-          // that.showLogin3 = false;
-          // that.showLogin1 = !that.showLogin1;
-          that.changeForget1 = true;
-          that.changeForget2 = false;
-          that.changeForget3 = false;
-          that.showLogin1 = true;
-          // that.msgFromGoodInfo = "";
-        // }
-        // console.log(that.msgFromGoodInfo,'2222');
+        that.changeForget1 = true;
+        that.changeForget2 = false;
+        that.changeForget3 = false;
+        that.showLogin1 = true;
       },
       //购物车
       Gtoken: function() {
@@ -385,7 +365,6 @@
       items: {
         handler: function() {
           var that = this;
-          // console.log('22');
         },
         deep: true
       },

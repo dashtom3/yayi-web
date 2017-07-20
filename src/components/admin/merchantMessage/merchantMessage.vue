@@ -647,6 +647,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data);
               that.getItemInfo();
+              that.clearWord();
               that.$message({
                 type: 'success',
                 message: '删除成功!'

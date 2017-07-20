@@ -50,6 +50,9 @@
     <!-- <el-table-column  prop="id"  width="200px"  align="center"  label="销售员编号"></el-table-column> -->
     <el-table-column prop="saleIncomeVo.saleName" align="center" label="真实姓名"></el-table-column>
     <el-table-column prop="saleIncomeVo.salePhone" align="center" label="手机号"></el-table-column>
+    <el-table-column prop="saleIncomeVo.saleName" align="center" label="销售额（元）"></el-table-column>
+    <el-table-column prop="saleIncomeVo.salePhone" align="center" label="已退款金额（元）"></el-table-column>
+    <el-table-column prop="saleIncomeVo.salePhone" align="center" label="实际销售额（元）"></el-table-column>
 <!--     <el-table-column prop="orderId" align="center" label="订单编号"></el-table-column>
     <el-table-column prop="orderState" align="center" label="订单状态">
       <template scope="scope">
@@ -86,26 +89,65 @@
     </el-table-column>
   </el-table>
 
-
-  <el-dialog custom-class="asgagewgf" title="收入详情" :visible.sync="showIncomeInfor">
+  <el-button @click="details">详情</el-button>  
+  <el-dialog custom-class="asgagewgf" title="收入详情" :visible.sync="showIncomeInfor" size="large">
     <div class="personalInfor">
       <h3>销售员信息</h3>
       <div class="">
-        <span>销售员编号：{{someOneUserDetails.saleId}}</span>
         <span>销售员姓名：{{someOneUserDetails.saleName}}</span>
         <span>销售员手机号：{{someOneUserDetails.salePhone}}</span>
       </div>
     </div>
     <div class="certification">
-      <h3>用户信息</h3>
+      <h3>业绩统计</h3>
       <div class="">
-        <span>用户编号：{{someOneUserDetails.userId}}</span>
-        <span>用户姓名：{{someOneUserDetails.userName}}</span>
-        <span>用户手机号：{{someOneUserDetails.userPhone}}</span>
+        <span>收入所属年月：{{someOneUserDetails.userId}}</span>
+        <span>收入状态：{{someOneUserDetails.userName}}</span>
       </div>
+      <el-table :data="inComeTableData" border show-summary style="width: 100%">
+        <el-table-column prop="type" label="商品类型">
+        </el-table-column>
+        <el-table-column prop="salesMoney" label="销售额（元）">
+        </el-table-column>
+        <el-table-column prop="returnMoney" label="已退款金额（元）">
+        </el-table-column>
+        <el-table-column prop="actualMoney" label="实际销售额（元">
+        </el-table-column>
+        <el-table-column prop="inCome" label="收入">
+        </el-table-column>
+      </el-table>
     </div>
-    <h3>订单信息</h3>
-    <div class="ordertable">
+    <h3>业绩明细</h3>
+    <el-table :data="inComeDetailTableData" border style="width: 100%">
+      <el-table-column prop="orderId" label="订单编号">
+      </el-table-column>
+      <el-table-column prop="name" label="客户姓名">
+      </el-table-column>
+      <el-table-column prop="phone" label="客户手机号">
+      </el-table-column>
+      <el-table-column prop="orderState" label="订单状态">
+        <template scope="scope">
+          <span v-if="scope.row.orderState == 1">待结算</span>
+          <span v-if="scope.row.orderState == 2">已结算</span>
+          <span v-if="scope.row.orderState == 3">已取消</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="totalPrice" label="商品总价（元）">
+      </el-table-column>
+      <el-table-column prop="haocai" label="耗材类（元）">
+      </el-table-column>
+      <el-table-column prop="gongju" label="工具设备类（元）">
+      </el-table-column>
+      <el-table-column prop="returnMoneyH" label="已退款金额--耗材类（元）">
+      </el-table-column>
+      <el-table-column prop="returnMoneyG" label="已退款金额--工具设备类（元）">
+      </el-table-column>
+      <el-table-column prop="actualMoney" label="实际销售额（元）">
+      </el-table-column>
+      <el-table-column prop="orderDate" label="下单时间">
+      </el-table-column>
+    </el-table>
+<!--     <div class="ordertable">
       <table class="datail_tb">
         <tr><td colspan="7"><span class="pad_l_30">下单时间：{{orderTime}}</span><span class="pad_l_30">订单状态：{{orderState}}</span></td></tr>
         <tr class="trs">
@@ -127,7 +169,7 @@
           <td :rowspan="infoList.length" v-if="index == 0">{{item.totalFee}}</td>
         </tr>
       </table>
-    </div>
+    </div> -->
     </el-dialog>
     <div class="block">
       <!-- 分页 -->
@@ -173,6 +215,40 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1000,
+        // 业绩统计
+        inComeTableData: [{
+          type: '耗材类',
+          salesMoney: '90',
+          returnMoney: '30',
+          actualMoney: '60',
+          inCome: '60'
+        }, {
+          type: '工具设备类',
+          salesMoney: '9',
+          returnMoney: '3',
+          actualMoney: '6',
+          inCome: '6'
+        }, {
+          type: '耗材类',
+          salesMoney: '100',
+          returnMoney: '310',
+          actualMoney: '66',
+          inCome: '80'
+        }],
+        // 业绩明细
+        inComeDetailTableData: [{
+          orderId: '112211221',
+          name: '小辉哥',
+          phone: '15900000000',
+          orderState: 1,
+          totalPrice: 60,
+          haocai: 30,
+          gongju: 30,
+          returnMoneyH: 0,
+          returnMoneyG: 0,
+          actualMoney: 60,
+          orderDate: '2017-6-17',
+        }],
       }
     },
     created: function() {
@@ -185,6 +261,10 @@
         var that = this
         that.currentPage = val
         that.search(val)
+      },
+      details: function() {
+        var that = this
+        that.showIncomeInfor = true
       },
       //获取收入列表
       getAllIn: function() {
@@ -359,13 +439,5 @@
     width: 100px;
     text-align: center;
     border: 1px solid #ccc;
-  }
-  .pageC {
-    text-align: center;
-    margin-top: 20px;
-/*    bottom: 50px; 
-    right: 20px; */
-/*    left: 0px; 
-    margin: 0 auto;*/
   }
 </style>
