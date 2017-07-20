@@ -140,7 +140,7 @@
         </div>
         <div class="pay_info clearfix">
           <ul class="fl" style="width:130px;">
-            <li>支付方式</li>
+            <li v-if="nowOrderDetails.payType">支付方式</li>
             <li>发票</li>
             <li>产品注册证</li>
             <li>订单留言</li>

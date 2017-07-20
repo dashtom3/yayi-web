@@ -42,8 +42,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-if="pageProps">
+      <!-- <div v-if="pageProps">
           <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler" v-show="paging"></paging>
+      </div> -->
+      <div class="block">
+        <!-- 分页 -->
+        <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+        </el-pagination>
+        <!-- 分页 -->
       </div>
     </el-col>
 
@@ -77,11 +83,17 @@
   </el-row>
 </template>
 <script>
-  import paging from '../../website/brandLib/paging0'
+  // import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
-        pageProps:null,
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
+        // pageProps:null,
         formData:{
           addGoodAttrName:null,
           addGoodAttrOneVal:null
@@ -111,18 +123,29 @@
         flag1:true,
       }
     },
-    components: {
-      paging,
-    },
+    // components: {
+    //   paging,
+    // },
     created:function(){
       var that = this;
       that.getGoodAttrList();
     },
     methods: {
-      pageHandler:function(data){
-        this.fenYeGetData(data);
+      handleCurrentChange(val) {
+        var that = this
+        that.currentPage = val
+        if (val == undefined) {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
+        this.fenYeGetData(that.currentPage);
       },
+      // pageHandler:function(data){
+      //   this.fenYeGetData(data);
+      // },
       fenYeGetData:function(data){
+        var that = this;
         this.fenyeNum = data;
         var obj = {
           currentPage:data
@@ -133,12 +156,7 @@
             console.log(res,"getGoodAttrList");
             var data = res.data.data;
             that.tableData = data;
-            var obj = {
-              totalPage:res.data.totalPage,
-              totalNumber:res.data.totalNumber,
-              numberPerPage:res.data.numberPerPage
-            };
-            that.pageProps = obj;
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -153,12 +171,7 @@
             console.log(res,"getGoodAttrList");
             var data = res.data.data;
             that.tableData = data;
-            var obj = {
-              totalPage:res.data.totalPage,
-              totalNumber:res.data.totalNumber,
-              numberPerPage:res.data.numberPerPage
-            };
-            that.pageProps = obj;
+            that.totalCount=res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

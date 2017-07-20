@@ -17,19 +17,32 @@
     <el-table-column  prop="remark"  label="描述"  width="610"  align="center"></el-table-column>
     <el-table-column  prop="qbTime"  label="时间"  align="center"></el-table-column>
   </el-table>
-  <div class="fenyeWrap" v-if="childConfig.pageNum>1">
+  <!-- <div class="fenyeWrap" v-if="childConfig.pageNum>1">
     <paging0 :childmsg="childConfig" v-on:childSay="msgFromChlid"></paging0>
+  </div> -->
+  <div class="block">
+    <!-- 分页 -->
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+    </el-pagination>
+    <!-- 分页 -->
   </div>
+
   </div>
 </template>
 
 <script>
-  import paging0 from "../../brandLib/paging0"
+  // import paging0 from "../../brandLib/paging0"
 
   export default {
     name: 'myMoney',
     data () {
       return {
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1000,
         childConfig:{
           pageNum:null
         },
@@ -42,12 +55,36 @@
         }
       }
     },
-    components:{
-      paging0,
-    },
+    // components:{
+    //   paging0,
+    // },
     methods: {
-      msgFromChlid:function(data){
-        this.currentPage = data;
+      handleCurrentChange(val) {
+        var that = this
+        that.currentPage = val
+        if (val == undefined) {
+          that.currentPage = 1
+        } else {
+          that.currentPage = val
+        }
+        this.fenYeGetData(that.currentPage);
+      },
+      fenYeGetData:function(data){
+        var that = this;
+        var obj = {};
+        obj.currentPage = data;
+        obj.numberPerpage = 10;
+        that.global.axiosGetReq('/userMyQb/query', obj)
+        .then((res) => {
+          // console.log(res)
+          if (res.data.callStatus === 'SUCCEED') {
+            this.getData = res.data.data;
+            that.totalCount=res.data.totalNumber;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       getMoneyList:function(){
         var that = this;
@@ -59,7 +96,8 @@
           // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.getData = res.data.data;
-            this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
+            that.totalCount=res.data.totalNumber;
+            // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -81,9 +119,9 @@
         },
         deep:true
       },
-      currentPage:function(){
-        this.myAllMoney.details = this.getData.slice(this.everyPageShowNum*(this.currentPage-1),this.everyPageShowNum*this.currentPage);
-      },
+      // currentPage:function(){
+      //   this.myAllMoney.details = this.getData.slice(this.everyPageShowNum*(this.currentPage-1),this.everyPageShowNum*this.currentPage);
+      // },
     },
     created:function(){
       this.getMoneyList();

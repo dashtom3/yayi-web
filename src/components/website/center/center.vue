@@ -27,7 +27,7 @@
   import publicHeader from '../index/publicHeader'
   import myOrder from './myOrder/myOrder'
   import publicFooter from '../index/publicFooter'
-  import myMoney from './myMoney/myMoney'
+  import myMoneyList from './myMoney/myMoneyDetails'
   import myCollection from './myCollection/myCollection'
   import personal from './personalData/personal'
   import myAdd from './myAdd/myAdd'
@@ -58,7 +58,7 @@
       publicFooter,
       backToTop,
       tab01: myOrder,
-      tab02: myMoney,
+      tab02: myMoneyList,
       tab03: myCollection,
       tab04: personal,
       tab05: myAdd,

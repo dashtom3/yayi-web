@@ -109,7 +109,7 @@
     <p>{{nowOrderDetails.buyerMessage}}</p>
   </div>
   <div class="">
-    <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb}}</span></p>
+    <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb?nowOrderDetails.giveQb:0}}</span></p>
   </div>
   <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
 </el-dialog>

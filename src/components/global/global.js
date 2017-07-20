@@ -30,7 +30,7 @@ export default {
   },
   extendCopy(p) {
 　　　　var c = {};
-　　　　for (var i in p) { 
+　　　　for (var i in p) {
 　　　　　　c[i] = p[i];
 　　　　}
 　　　　return c;
@@ -120,5 +120,31 @@ export default {
   },
   getQiNiuToken () {
     return this.axiosGetQiNiuReq('qiniu/getQiNiuToken')
-  }
+  },
+  // RMB兑换钱币规则
+  moneyToMoney:function(money){
+    // money--需要兑换的人民币数量
+    // 钱币兑换比率
+// (1) 1000元<=单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；
+// (2) 2000元<=单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；
+// (3) 5000元<=单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；
+// (4) 单次购买金额>10000元，兑换钱币数量=当次实际兑换金额*125%；
+    if(money){
+      var finalyMoney;
+      var rate;
+      if(money<1000){
+        rate = 100;
+      }else if(1000<=money&&money<2000){
+        rate = 110;
+      }else if(2000<=money&&money<5000){
+        rate = 115;
+      }else if(5000<=money&&money<10000){
+        rate = 120;
+      }else if(10000<=money){
+        rate = 125;
+      }
+      finalyMoney = money * rate / 100;
+      return finalyMoney;
+    }
+  },
 }
