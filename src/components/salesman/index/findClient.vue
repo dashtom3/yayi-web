@@ -115,11 +115,11 @@
         var that = this;
         if(arg==1){
           that.nowBtn = true;
-          // that.getWaitBindUserList();
+          that.getWaitBindUserList();
           that.showBindOrNoBindList = true;
         }else{
           that.nowBtn = false;
-
+          that.getNoRegistUserList();
           that.showBindOrNoBindList = false;
         }
         that.searchData = "";

@@ -98,7 +98,7 @@
         </p>
       </div>
       <div class="">
-        <p>订单信息：</p>
+        <p>订单信息</p>
         <p>订单编号：<span>{{nowOrderDetails.orderId}}</span>
         <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
         <div class="">

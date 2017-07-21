@@ -292,19 +292,19 @@
             obj.itemPparamList = arr;
             obj.itemPropertyName = that.formData.addGoodAttrName;
             console.log(obj)
-            // that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
-            // .then((res) => {
-            //   console.log(res)
-            //   if (res.data.callStatus === 'SUCCEED') {
-            //     obj.itempropertydList = arr2;
-            //     that.tableData.push(obj);
-            //     that.addGoodAttrValues = [];
-            //     that.formData.addGoodAttrName= null;
-            //     that.showAddGoodAttr  = false;
-            //   } else {
-            //     that.$message.error('网络出错，请稍后再试！');
-            //   }
-            // })
+            that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
+            .then((res) => {
+              console.log(res)
+              if (res.data.callStatus === 'SUCCEED') {
+                obj.itempropertydList = arr2;
+                // that.tableData.push(obj);
+                that.addGoodAttrValues = [];
+                that.formData.addGoodAttrName= null;
+                that.showAddGoodAttr  = false;
+              } else {
+                that.$message.error('网络出错，请稍后再试！');
+              }
+            })
           }else{
             this.$alert('请填写完整商品的属性名或属性值', {confirmButtonText: '确定',});
           }

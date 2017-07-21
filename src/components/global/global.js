@@ -161,6 +161,70 @@ export default {
           // 该商品1件，赠送钱币数量=档次购买金额*5%
           // 该商品>=2件，赠送钱币数量=档次购买金额*10%
   goodToMoney:function(goodList){
+    var daoBangArr = [],haoCaiArr = [],gongJuSheBeiArr = [];
+    var daoBangMoney = 0,haoCaiMoney = 0,gongJuSheBeiMoney = 0;
+    var daoBangRata,haoCaiRata,gongJuSheBeiRata;
+    var daoBangMoneyToMoney = 0,haoCaiMoneyToMoney = 0,gongJuSheBeiMoneyToMoney = 0;
+    for(let i in goodList){
+      if(goodList[i].goodBrandName=="上海道邦"){
+        daoBangArr.push(goodList[i]);
+      }else if(goodList[i].goodSort=="耗材类"){
+        haoCaiArr.push(goodList[i]);
+      }else if(goodList[i].goodSort=="工具设备类"){
+        gongJuSheBeiArr.push(goodList[i]);
+      }
+    }
+
+    for(let a in daoBangArr){
+      daoBangMoney += daoBangArr[a].price * 100 * daoBangArr[a].num / 100
+    }
+    if(daoBangMoney<300){
+      daoBangRata = 3;
+    }else if(300<=daoBangMoney&&daoBangMoney<600){
+      daoBangRata = 5;
+    }else if(600<=daoBangMoney&&daoBangMoney<1200){
+      daoBangRata = 8;
+    }else if(1200<=daoBangMoney&&daoBangMoney<2500){
+      daoBangRata = 12;
+    }else if(2500<=daoBangMoney){
+      daoBangRata = 15;
+    }
+    daoBangMoneyToMoney = daoBangMoney * daoBangRata / 100;
+    // console.log(daoBangMoneyToMoney,daoBangMoney,daoBangRata)
+
+    for(let b in haoCaiArr){
+      haoCaiMoney += haoCaiArr[b].price * 100 * haoCaiArr[b].num / 100
+    }
+    if(haoCaiMoney<500){
+      haoCaiRata = 3;
+    }else if(500<=haoCaiMoney&&haoCaiMoney<1000){
+      haoCaiRata = 5;
+    }else if(1000<=haoCaiMoney&&haoCaiMoney<3000){
+      haoCaiRata = 8;
+    }else if(3000<=haoCaiMoney){
+      haoCaiRata = 12;
+    }
+    haoCaiMoneyToMoney = haoCaiMoney * haoCaiRata / 100;
+    // console.log(haoCaiMoneyToMoney,haoCaiMoney,haoCaiRata)
+
+
+    var gongJuSheBeiAllNum = 0;
+    for(let c in gongJuSheBeiArr){
+      gongJuSheBeiMoney +=  gongJuSheBeiArr[c].price * 100 * gongJuSheBeiArr[c].num / 100;
+      gongJuSheBeiAllNum += gongJuSheBeiArr[c].num;
+    }
+    if(gongJuSheBeiAllNum==1){
+      gongJuSheBeiRata = 5;
+    }else if(gongJuSheBeiAllNum>=2){
+      gongJuSheBeiRata = 10;
+    }
+    gongJuSheBeiMoneyToMoney = gongJuSheBeiMoney * gongJuSheBeiRata / 100;
+    console.log(gongJuSheBeiMoneyToMoney,gongJuSheBeiMoney,gongJuSheBeiRata)
+    var finalyMoney = 0;
+    finalyMoney = gongJuSheBeiMoneyToMoney + haoCaiMoneyToMoney + daoBangMoneyToMoney;
+    return Math.round(finalyMoney);
+  },
+  goodToMoney2:function(goodList){
     // goodList 本次购买商品的；列表
     var finalyMoney = 0;//计算后返回的钱币数量
     for(let i in goodList){

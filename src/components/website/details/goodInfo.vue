@@ -134,76 +134,16 @@ import myAddress from './selectThree'
     },
     methods:{
       nowGoodSKUDefault:function(){
-            var that =this;
-            var obj = {};
-            var attrs = [];
-            var LIST = that.nowGoodDetails.itemValueList;
-            for(let i in LIST){
-              if(LIST[i].itemSKU == that.nowGoodSKU){
-                obj = LIST[i];
-                break;
-              }
-            }
-            // this.sendItemAttrs = obj;
-            // var LIST2 = that.nowGoodDetails.propertyList;
-            // for(let m in LIST2[0].propertyInfoList){
-            //   if(obj.itemPropertyInfo==LIST2[0].propertyInfoList[m]){
-            //     var aa = LIST2[0];
-            //     aa.propertyInfoList.checkWhich = m;
-            //     that.nowGoodDetails.propertyList.splice(0,1,aa);
-            //     break;
-            //   }
-            // }
-            // if(LIST2[1].propertyName){
-            //   for(let m in LIST2[1].propertyInfoList){
-            //     if(obj.itemPropertyTwoValue==LIST2[1].propertyInfoList[m]){
-            //       var aa = LIST2[1];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(1,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[2].propertyName){
-            //   for(let m in LIST2[2].propertyInfoList){
-            //     if(obj.itemPropertyThreeValue==LIST2[2].propertyInfoList[m]){
-            //       var aa = LIST2[2];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(2,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[3].propertyName){
-            //   for(let m in LIST2[3].propertyInfoList){
-            //     if(obj.itemPropertyFourValue==LIST2[3].propertyInfoList[m]){
-            //       var aa = LIST2[3];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(3,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[4].propertyName){
-            //   for(let m in LIST2[4].propertyInfoList){
-            //     if(obj.itemPropertyFiveValue==LIST2[4].propertyInfoList[m]){
-            //       var aa = LIST2[4];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(4,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[5].propertyName){
-            //   for(let m in LIST2[5].propertyInfoList){
-            //     if(obj.itemPropertySixValue==LIST2[5].propertyInfoList[m]){
-            //       var aa = LIST2[5];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(5,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
+        var that =this;
+        var obj = {};
+        var attrs = [];
+        var LIST = that.nowGoodDetails.itemValueList;
+        for(let i in LIST){
+          if(LIST[i].itemSKU == that.nowGoodSKU){
+            obj = LIST[i];
+            break;
+          }
+        }
       },
       getNowGoodDetail:function(){
         var that = this;
@@ -321,128 +261,6 @@ import myAddress from './selectThree'
             }
           }
         }
-
-
-        // var propertyList = that.nowGoodDetails.propertyList;
-        // if(that.attrVal[indexP]){
-        //   that.attrVal.splice(indexP,1)
-        // }else{
-        //   that.attrVal[indexP] = item.propertyInfoList[indexC];//当前选中的属性，
-        // }
-        // for(let i in propertyList){
-        //   if(i==indexP){
-        //     var data = propertyList[i];
-        //     // 属性选择
-        //     if(data.propertyInfoList["checkWhich"] == indexC){
-        //       data.propertyInfoList["checkWhich"] = null;
-        //     }else{
-        //       data.propertyInfoList["checkWhich"] = indexC;
-        //     }
-        //     that.nowGoodDetails.propertyList.splice(indexP,1,data)
-        //   }
-        // }
-        // var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
-        // var itemValueList = that.nowGoodDetails.itemValueList;
-        // var arr1 = [];
-        //   for(let i in itemValueList){
-        //     var arr2 = [];
-        //     if(that.attrVal.length>=1){
-        //       arr2["0"]=itemValueList[i].itemPropertyInfo;
-        //     }
-        //     if(that.attrVal.length>=2){
-        //       arr2["1"]=itemValueList[i].itemPropertyTwoValue;
-        //     }
-        //     if(that.attrVal.length>=3){
-        //       arr2["2"]=itemValueList[i].itemPropertyThreeValue;
-        //     }
-        //     if(that.attrVal.length>=4){
-        //       arr2["3"]=itemValueList[i].itemPropertyFourValue;
-        //     }
-        //     if(that.attrVal.length>=5){
-        //       arr2["4"]=itemValueList[i].itemPropertyFiveValue;
-        //     }
-        //     if(that.attrVal.length>=6){
-        //       arr2["5"]=itemValueList[i].itemPropertySixValue;
-        //     }
-        //     var flag = true;
-        //     for(let n in that.attrVal){
-        //       if(that.attrVal[n]!=arr2[n]){
-        //         flag = false;
-        //       }
-        //     }
-        //     if(flag){
-        //       arr1.push(itemValueList[i])
-        //     }
-        //   }
-        //   console.log("-----------------------")
-        //   for(let i in arr1){
-        //     for(let n in arr1[i]){
-        //       if(arr1[i].canUse==0){
-        //         console.log(arr1[i].itemPropertyInfo,arr1[i].itemPropertyTwoValue,arr1[i].itemPropertyThreeValue,arr1[i].canUse)
-        //       }
-        //     }
-        //   }
-        // var nowPrice;
-        // var nowSku;
-        // that.attrVal[indexP] = item.propertyInfoList[indexC];
-        // this.ite = indexC;
-        // this.sureGoodAttr = item.propertyInfoList[indexC];
-        // var data = that.items[indexP];
-        // data.propertyInfoList.checkWhich = indexC;
-        // that.items.splice(indexP,1,data);
-        // var LIST = that.nowGoodDetails.itemValueList;
-        //   if(that.attrVal.length==1){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else if(that.attrVal.length==2){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==3){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==4){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==5){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==6){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue&&that.attrVal[5]==LIST[i].itemPropertyFiveValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }
-        //   var data2 = that.nowGoodDetails.itemValueList;
-        //   for(let q in data2){
-        //     if(data2[q].itemSKU==nowSku&&data2[q].canUse==1){
-        //       that.nowGoodDetails.itemPrice = nowPrice;
-        //       that.nowGoodDetails.nowGoodSKU = nowSku;
-        //     }else{
-        //
-        //     }
-        //   }
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
@@ -507,20 +325,16 @@ import myAddress from './selectThree'
       },
       addGwcThisGood:function(){
         var that = this;
-        var nowSku;
-        if(that.nowGoodDetails.nowGoodSKU){
-          nowSku =that.nowGoodDetails.nowGoodSKU;
-        }else{
-          nowSku = that.nowGoodSKU;
-        }
-        console.log(nowSku)
+        var nowSku = that.jiSuanSku();
+
         if(that.global.getUser()){
-          var obj = {
-            num:that.goodDefaultNum,
-            itemSKU:nowSku,
-            token:that.global.getToken()
-          };
-          console.log(obj,"addGwcThisGoodObj")
+          if(nowSku){
+            var obj = {
+              num:that.goodDefaultNum,
+              itemSKU:nowSku,
+              token:that.global.getToken()
+            };
+            console.log(obj,"addGwcThisGoodObj")
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
               console.log(res)
@@ -530,41 +344,113 @@ import myAddress from './selectThree'
                 that.$message.error('网络出错，请稍后再试！');
               }
             });
+          }else{
+            that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});
+          }
         }else{
           var num = Math.random();
           that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
         }
       },
-      
+      jiSuanSku:function(){
+        var that = this;
+        var str = null ;
+        var havaSelectVals = [];
+        var nowGoodValLength = 0;
+        var list2 = that.nowGoodDetails.propertyList;
+        for(let a in list2){
+          if(list2[a].propertyName){
+            nowGoodValLength = parseInt(a) + 1;
+          }
+          if(list2[a].checkWhich>=0){
+            havaSelectVals.push(list2[a].propertyInfoList[list2[a].checkWhich].data);
+          }else{
+            continue;
+          }
+        }
+        var list1 = that.nowGoodDetails.itemValueList;
+        for(let i in list1){
+          var valsArr = [];
+          if(list1[i].itemPropertyInfo){
+            valsArr.push(list1[i].itemPropertyInfo);
+          }
+          if(list1[i].itemPropertyTwoValue){
+            valsArr.push(list1[i].itemPropertyTwoValue);
+          }
+          if(list1[i].itemPropertyThreeValue){
+            valsArr.push(list1[i].itemPropertyThreeValue);
+          }
+          if(list1[i].itemPropertyFourValue){
+            valsArr.push(list1[i].itemPropertyFourValue);
+          }
+          if(list1[i].itemPropertyFiveValue){
+            valsArr.push(list1[i].itemPropertyFiveValue);
+          }
+          if(list1[i].itemPropertySixValue){
+            valsArr.push(list1[i].itemPropertySixValue);
+          }
+          list1.arr = valsArr;
+          if(havaSelectVals.length==nowGoodValLength){
+            var flag = true;
+            for(let c in havaSelectVals){
+              if(havaSelectVals[c]==valsArr[c]){
+
+              }else{
+                flag = false;
+              }
+            }
+            if(flag){
+              str = list1[i].itemSKU;
+              break;
+            }else{
+              continue;
+            }
+          }else{
+            continue;
+          }
+        }
+        return str;
+      },
       nowToBuyThis:function(){
         var that = this;
         var userToken = that.global.getToken();
-        var nowSku;
+        var nowSku = that.jiSuanSku();
         if(userToken){
-          if(that.nowGoodDetails.nowGoodSKU){
-            nowSku =that.nowGoodDetails.nowGoodSKU;
+          if(nowSku){
+            if(that.global.getUser()){
+              var sendData = {};
+              sendData.details = [];
+              sendData.allMoney = that.nowGoodDetails.itemPrice;
+              var obj = {
+                itemId:that.nowGoodDetails.itemId,
+                itemName:that.nowGoodDetails.itemName,
+                picPath:that.itemDetail.itemPica,
+                num:that.goodDefaultNum,
+                itemSKU:nowSku,
+                price:that.nowGoodDetails.itemPrice,
+                goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
+                goodSort:that.nowGoodDetails.itemSort
+              };
+              var list = that.nowGoodDetails.itemValueList;
+              for(let i in list){
+                if(nowSku==list.itemSKU){
+                  obj.itemPropertyInfo = list.itemPropertyInfo;
+                  obj.itemPropertyTwoValue = list.itemPropertyTwoValue;
+                  obj.itemPropertyThreeValue = list.itemPropertyThreeValue;
+                  obj.itemPropertyFourValue = list.itemPropertyFourValue;
+                  obj.itemPropertyFiveValue = list.itemPropertyFiveValue;
+                  obj.itemPropertySixValue = list.itemPropertySixValue;
+                }else{
+                  continue;
+                }
+              }
+              sendData.haveSelectedGoodNum = that.goodDefaultNum;
+              sendData.details.push(obj)
+              window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+              that.$router.push({path: '/suborder'})
+            }
           }else{
-            nowSku = that.nowGoodSKU;
-          }
-          if(that.global.getUser()){
-            var sendData = {};
-            sendData.details = [];
-            sendData.allMoney = that.nowGoodDetails.itemPrice;
-            var obj = {
-              itemId:that.nowGoodDetails.itemId,
-              itemName:that.nowGoodDetails.itemName,
-              picPath:that.itemDetail.itemPica,
-              num:that.goodDefaultNum,
-              itemSKU:nowSku,
-              price:that.nowGoodDetails.itemPrice,
-              goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
-              goodSort:that.nowGoodDetails.itemSort
-            };
-            // console.log(obj)
-            sendData.haveSelectedGoodNum = that.goodDefaultNum;
-            sendData.details.push(obj)
-            window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-            that.$router.push({path: '/suborder'})
+            that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});
           }
         }else{
           that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
