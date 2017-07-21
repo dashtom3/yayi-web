@@ -290,10 +290,15 @@
           var saleName = that.searchSaleContent
           var salePhone = ''
         }
+        if (that.beYearMonth !== '') {
+          that.beYearMonth = util.formatDate.format(new Date(that.beYearMonth)).substring(0,7)
+        } else {
+          that.beYearMonth = ''
+        }
         var obj = {
           saleName: saleName,
           salePhone: salePhone,
-          beYearMonth: util.formatDate.format(new Date(that.beYearMonth)).substring(0,7),
+          beYearMonth: that.beYearMonth,
           startDate: startDate,
           endDate: endDate,
           currentPage: that.currentPage,
@@ -302,8 +307,8 @@
         that.global.axiosPostReq('/saleIncomeList/queryNot',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data
-            that.totalCount = res.data.totalNumber;
-            console.log(res.data,'222');
+            that.totalCount = res.data.totalNumber
+            console.log(res.data,'222')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

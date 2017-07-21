@@ -80,7 +80,28 @@ export default {
       that.finalyMoney = that.global.moneyToMoney(that.payMuch)
     },
   },
+  created: function() {
+    var that = this
+    that.getMoneyListFn()
+  },
   methods: {
+    getMoneyListFn:function(){
+      var that = this;
+      var obj = {
+        token:that.global.getToken()
+      };
+      that.global.axiosGetReq('/userMyQb/query', obj).then((res) => {
+        // console.log(res)
+        if (res.data.callStatus === 'SUCCEED') {
+          // this.getMoneyList = res.data.data;
+          console.log(res.data,'i')
+          // that.totalCount=res.data.totalNumber;
+          // this.childConfig.pageNum = parseInt(this.getMoneyList.length/this.everyPageShowNum)+1;
+        } else {
+          that.$message.error('网络出错，请稍后再试！');
+        }
+      })
+    },
     //充值乾币
     sureExchange: function() {
       var that = this;
@@ -109,7 +130,14 @@ export default {
                 if (res.data.num == 2) {
                   clearInterval(timer)
                   that.WxTableVisible = false
-                  that.$message('恭喜您，充值成功！')
+                  that.$alert('恭喜您，充值成功', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                      that.$router.go(0)
+                    }
+                  });
+                  // that.$alert("恭喜您，充值成功！", {confirmButtonText: '确定'});
+                  // that.$message('恭喜您，充值成功！')
                 } else {
                   that.kk++
                   // that.$message.error('网络出错，请稍后再试！');

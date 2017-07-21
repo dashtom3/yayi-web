@@ -301,16 +301,21 @@
           var saleName = that.searchSaleContent
           var salePhone = ''
         }
+        if (that.beYearMonth !== '') {
+          that.beYearMonth = util.formatDate.format(new Date(that.beYearMonth)).substring(0,7)
+        } else {
+          that.beYearMonth = ''
+        }
         var obj = {
           saleName: saleName,
           salePhone: salePhone,
-          beYearMonth: util.formatDate.format(new Date(that.beYearMonth)).substring(0,7),
+          beYearMonth: that.beYearMonth,
           startDate: startDate,
           endDate: endDate,
           currentPage: that.currentPage,
           numberPerPage: that.pagesize,
         }
-        console.log(obj.beYearMonth,'llllll')
+        console.log(obj,'llllll')
         that.global.axiosPostReq('/saleIncomeList/queryDone',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data
