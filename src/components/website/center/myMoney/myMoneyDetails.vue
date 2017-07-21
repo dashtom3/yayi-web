@@ -3,7 +3,7 @@
     <div class="tab_box">
       <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">乾币充值</div>
       <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">乾币明细</div>
-      <span>当前钱币：{{}}</span>
+      <span class="currentMoneyWrap">当前钱币：{{currentMoney}}</span>
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
@@ -24,6 +24,7 @@
     data () {
       return {
         getMoneyList:[],
+        currentMoney:0,
         isActive1: true,
         isActive2: false,
         tab01Text: "tab01",
@@ -36,7 +37,7 @@
       tab02: myMoney,
     },
     created:function(){
-      this.getMoneyList();
+      this.getMoneyListFn();
     },
     watch:{
       getMoneyList:{
@@ -49,7 +50,7 @@
               this.myAllMoney.currentMoney -= this.getMoneyList[i].qbRout;
             }
           }
-          this.myAllMoney.details = this.getMoneyList.slice(0,this.everyPageShowNum);
+          // this.myAllMoney.details = this.getMoneyList.slice(0,this.everyPageShowNum);
         },
         deep:true
       },
@@ -65,7 +66,7 @@
         this.isActive1 = false;
         this.isActive2 = true;
       },
-      getMoneyList:function(){
+      getMoneyListFn:function(){
         var that = this;
         var obj = {
           token:that.global.getToken()
@@ -89,6 +90,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.currentMoneyWrap{
+  position: absolute;
+    right: 0;
+    top: 10px;
+    font-size: 14px;
+}
 /*-------animation start------*/
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity .3s ease;
@@ -109,6 +116,7 @@
   width: 1069px;
   height: 40px;
   border-bottom: 1px solid #e9e9e9;
+  position: relative;
 }
 .tab_item {
   width: 139px;

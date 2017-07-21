@@ -90,7 +90,7 @@
 <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
   <div v-if="nowOrderDetails">
   <div class="" >
-    <p>收货信息：</p>
+    <p>收货信息</p>
     <p>
       <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
       <span>{{nowOrderDetails.receiver.phone}}&nbsp;</span>

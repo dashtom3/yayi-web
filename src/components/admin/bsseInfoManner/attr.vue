@@ -136,7 +136,8 @@
         } else {
           that.currentPage = val
         }
-        this.fenYeGetData(that.currentPage);
+        // this.fenYeGetData(that.currentPage);
+        this.search(that.currentPage)
       },
       fenYeGetData:function(data){
         var that = this;
@@ -226,34 +227,22 @@
         this.flag1 = false;
         this.attOperaType = 2;
       },
-      search:function(){
+      search:function(pageNum){
         var that = this;
         var obj = {
           itemPropertyName:that.searchAttrName,
-          token:"awfa"
+          currentPage:pageNum
         }
-        // if(that.searchAttrName){
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
-            // console.log(res.data.data,"search")
             if (res.data.callStatus === 'SUCCEED') {
+              console.log(res,"searchData")
               that.tableData = res.data.data;
-              var obj = {
-                totalPage:res.data.totalPage,
-                totalNumber:res.data.totalNumber,
-                numberPerPage:res.data.numberPerPage,
-                pageNum:1
-              };
-              that.pageProps = obj;
-              // console.log(that.tableData)
-              // that.searchAttrName = null;//清空收索内容
+              that.totalCount=res.data.totalNumber;
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
-        // }else{
-        //   this.$alert('请输入属性名', {confirmButtonText: '确定',});
-        // }
       },
       DELEONE:function(index,item){
         var that = this;

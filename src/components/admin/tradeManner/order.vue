@@ -278,6 +278,7 @@
         // wuliu:[
         //   {value:"申通快递",label:"申通快递"}
         // ],
+        wacthTuiKuanList:[],
         pageProps:null,
         nowOrderDetails:null,
         wuLiuBianHao:null,
@@ -365,6 +366,40 @@
     created:function(){
       var that = this;
       that.getOrderList();
+    },
+    watch:{
+      wacthTuiKuanList:{
+        handler:function(){
+          var that = this;
+          // var list = that.orderInfo.orderitemList;
+          // orderInfo.refundAmt
+          // orderInfo.untread
+          // orderInfo.outCoins
+          that.orderInfo.refundAmt = 0;
+          that.orderInfo.untread = 0;
+          that.orderInfo.outCoins = 0;
+          for(let i in that.wacthTuiKuanList){
+            if(that.wacthTuiKuanList[i].checked){
+              that.orderInfo.refundAmt += that.wacthTuiKuanList[i].num * that.wacthTuiKuanList[i].price;
+              that.wacthTuiKuanList[i].goodBrandName = that.wacthTuiKuanList[i].itemBrandName;
+              that.wacthTuiKuanList[i].goodSort = that.wacthTuiKuanList[i].itemInfo.itemSort;
+            }
+          }
+          //显示退款金额最终数据
+          if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
+            that.orderInfo.refundAmt = that.orderInfo.actualPay;
+            that.orderInfo.untread = that.orderInfo.refundAmt - that.orderInfo.actualPay;
+
+          }
+          //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
+
+          //显示退款扣除钱币数据
+          var nowOrderGiveQb = this.global.goodToMoney(that.wacthTuiKuanList);
+          that.orderInfo.outCoins = that.orderInfo.giveQb - nowOrderGiveQb;
+        },
+        deep:true
+      },
+
     },
     methods: {
       handleCurrentChange(val) {
@@ -604,18 +639,12 @@
               res.data.data.orderitemList[i].count = 1;
               res.data.data.orderitemList[i].checked= false;
             }
-            res.data.data.refundAmt = 0;
-            // totalPrice: 156,
-            // refundAmt: 78,
-            // outCoins: 2,
-            // untread: 6,
-            // freight: 68,
-            // deductible: 2,
-            // orderInfo.refundAmt}}</td>
-            // <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.untread}}</td>
-            // <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.outCoins
+            res.data.data.refundAmt = 0;//退金额
+            res.data.data.untread = 0;//返回钱币
+            res.data.data.outCoins = 0;//扣除钱币
             that.orderInfo = res.data.data;
             this.refundVisible = true;
+            this.wacthTuiKuanList = that.orderInfo.orderitemList;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

@@ -128,6 +128,7 @@
           this.allMoeny = 0;
           this.haveSelectedGoodNum = 0;
           this.sendDataList = [];
+          var flag = true;
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
@@ -135,7 +136,13 @@
               this.sendDataList.push(this.gwcGoods[a]);
             }else{
               this.selectaLL = false;
+              flag = false;
             }
+          }
+          if(flag){
+            this.selectaLL = true;
+          }else{
+            this.selectaLL = false;
           }
         },
         deep:true
@@ -189,7 +196,7 @@
                     that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
                     that.sendDataList[i].itemName = that.sendDataList[i].name;
                     that.sendDataList[i].picPath = that.sendDataList[i].pic;
-                    
+
                     that.sendDataList[i].goodBrandName = that.sendDataList[i].itemBrandName;
                     that.sendDataList[i].goodSort = that.sendDataList[i].itemSort;
                 }

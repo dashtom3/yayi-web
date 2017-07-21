@@ -4,7 +4,7 @@
       <div class="payForm">
         <div class="oneLine">
           <span>兑换金额：</span>
-          <span><input v-model="payMuch" type="text" class="payMuch"></span>
+          <span><input  v-model="payMuch" type="text" class="payMuch"></span>
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
         <div class="">
@@ -18,15 +18,15 @@
             <el-radio class="radio" v-model="payType" label="2">微信支付</el-radio>
           </span>
         </div>
-        <div @click="sureExchange()" class="sureBtn">确定</div>
+        <div @click="sureExchange()" class="sureBtn">支付</div>
       </div>
       <div class="exchangeRule">
         <p>乾币兑换标准</p>
         <ul>
-          <li>(1) 1000元<=单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；</li>
-          <li>(2) 2000元<=单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；</li>
-          <li>(3) 5000元<=单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；</li>
-          <li>(4) 单次购买金额>10000元，兑换钱币数量=当次实际兑换金额*125%；</li>
+          <li>(1) 1000元≤单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；</li>
+          <li>(2) 2000元≤单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；</li>
+          <li>(3) 5000元≤单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；</li>
+          <li>(4) 单次购买金额≥10000元，兑换钱币数量=当次实际兑换金额*125%。</li>
         </ul>
       </div>
     </div>
@@ -41,7 +41,7 @@ export default {
       payType:"1",
       payMuch:null,
       payMuchErrMsg:null,
-      finalyMoney:null
+      finalyMoney:0
     }
   },
   watch:{
@@ -111,7 +111,7 @@ export default {
   margin-bottom: 40px;
 }
 .myMoneyAddWrap .payForm div span:nth-child(1){
-  margin-right: 28px;
+  margin-right: 18px;
   width: 85px;
   text-align: right;
   display: inline-block;

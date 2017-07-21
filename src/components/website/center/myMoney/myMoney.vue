@@ -1,7 +1,7 @@
 <template>
   <div class="myMoney">
     <div class="moneyHaed">
-      <span>当前乾币：{{myAllMoney.currentMoney}}</span>
+      <!-- <span>当前乾币：{{myAllMoney.currentMoney}}</span> -->
     </div>
     <el-table  :data="myAllMoney.details"  border  style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8;">
     <el-table-column  label="收入"  width="142"  align="center">
@@ -58,6 +58,9 @@
     // components:{
     //   paging0,
     // },
+    created:function(){
+      this.getMoneyList();
+    },
     methods: {
       handleCurrentChange(val) {
         var that = this
@@ -119,12 +122,6 @@
         },
         deep:true
       },
-      // currentPage:function(){
-      //   this.myAllMoney.details = this.getData.slice(this.everyPageShowNum*(this.currentPage-1),this.everyPageShowNum*this.currentPage);
-      // },
-    },
-    created:function(){
-      this.getMoneyList();
     },
   }
 </script>
@@ -132,7 +129,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .moneyHaed{
-  border-bottom: 1px solid #eeeeee;
   line-height: 40px;
   padding-left: 38px;
   margin-bottom: 30px;

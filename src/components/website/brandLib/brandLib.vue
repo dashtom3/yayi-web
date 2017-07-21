@@ -86,20 +86,13 @@
           <h4>{{noGoods}}</h4>
         </div>
       </div>
-
       <div class="block">
         <!-- 分页 -->
         <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
         </el-pagination>
         <!-- 分页 -->
       </div>
-
-      <!-- <div v-if="pageProps" >
-          <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" class="pageC" @childSay="pageHandler" ></paging>
-      </div> -->
     </div>
-
-
     <publicFooter></publicFooter>
     <backToTop></backToTop>
   </div>
@@ -111,7 +104,6 @@
   import classify from '../index/classify'
   import publicFooter from '../index/publicFooter'
   import checkBox from './checkBox'
-  import paging from './paging0'
   export default {
     name: 'brandLib',
     data () {
@@ -167,7 +159,6 @@
       backToTop,
       publicFooter,
       checkBox,
-      paging
     },
     created: function() {
       var that = this;
@@ -209,38 +200,19 @@
     },
     methods: {
       handleCurrentChange(val) {
-        var that = this
+        var that = this;
         that.currentPage = val
         if (val == undefined) {
           that.currentPage = 1
         } else {
           that.currentPage = val
         }
-        this.fenYeGetData(that.currentPage);
+        that.fenYeGetData(that.currentPage);
       },
-      // pageHandler:function(data){
-      //   this.fenYeGetData(data);
-      // },
       fenYeGetData:function(data){
-        this.fenyeNum = data;
-        this.getNowClassfyAndBrandGoods();
-        // var that = this;
-        // var obj = {};
-        // obj.currentPage = data;
-        // obj.numberPerpage = 12;
-        // obj.token = that.global.getToken(),
-        // that.global.axiosPostReq('/OrderDetails/show',obj)
-        // .then((res) => {
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //     that.items = res.data.data;
-        //     for(let i in that.items){
-        //       that.items[i].created = util.formatDate.format(new Date(that.items[i].created));
-        //       that.items[i].btnsMarginTop = 142 * that.items[i].orderitemList.length / 2 + "px";
-        //     }
-        //   } else {
-        //     that.$message.error('网络出错，请稍后再试！');
-        //   }
-        // })
+        var that = this;
+        that.fenyeNum = data;
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
       },
       //监听publicHeader标签
       msgFromHeader: function(data) {
@@ -312,6 +284,7 @@
               that.ifHaveData = false;
             }
             that.totalCount=res.data.totalNumber;
+
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -337,7 +310,8 @@
         that.secondClassfy = null;
         that.thirdClassfy = null;
         that.haveBrand = null;
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
       },
       selectClassfy2:function(index,item){
         var that = this;
@@ -347,7 +321,8 @@
         that.classify3Index = 0;
         that.searchTwoStr = item.classifyTwoName;
         that.searchThreeStr = null;
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
         that.thirdClassfy = null;
         that.haveBrand = null;
         if(item.classifyTwoName=="不限"){
@@ -362,7 +337,8 @@
         }
         that.classify3Index = index;
         that.searchThreeStr = item.classifyThreeName;
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
       },
       selectBrand:function(index,item){
         var that = this;
@@ -373,7 +349,8 @@
         that.brandNoLimit = false;
         that.searchBrandStr = item.itemBrandName;
         that.selectThisBrand = index;
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
       },
       sureOrderStyle:function(index){
         var that = this;
@@ -382,10 +359,12 @@
           that.orderArr[i].orderSort = false;
         }
         that.orderArr[index].orderSort = true;
-
         var num = parseInt(index)+1;
-        that.getNowClassfyAndBrandGoods(num);
-
+        that.allGoodsOrderStyle = num ;
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        // if(res.data.currentPage==1){
+          that.currentPage = 1;
+        // }
       },
       listenToMyBoy: function (data){
         this.showAllGold = data;
@@ -400,7 +379,8 @@
         for(var i = 0;i<that.brands.length;i++){
           that.brands[i].selected = false;
         }
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
       },
       clearAllClassfy:function(){
         var that = this;
@@ -416,7 +396,8 @@
         that.searchThreeStr = null;
         that.searchTwoStr = null;
         that.searchOneStr = null;
-        that.getNowClassfyAndBrandGoods();
+        that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+        that.currentPage = 1;
       },
       goThisBrand:function(arg,index){
         var that = this;
@@ -476,11 +457,6 @@
             }
           }
         }
-        // if(that.searchWordFromIndex){
-        //
-        // }else{
-        //   that.getNowClassfyAndBrandGoods();
-        // }
         if(that.searchWordFromIndex){
           if(that.searchDataFromIndex.length>0){
             that.allGoods = that.searchDataFromIndex;
@@ -489,7 +465,8 @@
             that.ifHaveData = false;
           }
         }else{
-          that.getNowClassfyAndBrandGoods();
+          that.getNowClassfyAndBrandGoods(that.allGoodsOrderStyle);
+          that.currentPage = 1;
         }
       },
     }
