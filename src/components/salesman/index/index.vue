@@ -17,7 +17,7 @@
     <transition name="component-fade" mode="out-in">
       <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :toEditDraw="dataValue1" :is="currentView" keep-alive></component>
     </transition>
-    <div class="clearfix"></div>
+    <div class="clearfix" ref="contentHeight"></div>
     <salesFoot></salesFoot>
   </div>
 </template>
@@ -86,7 +86,10 @@
     //     }
     //   })
     // },
-    created: function() {
+    mounted() {
+      var kk = this.$refs.contentHeight;
+      var wh = document.body.scrollHeight;
+      kk.style.minHeight = wh - 120 - 580 + 'px';
     },
     methods: {
       getMsg:function(data){

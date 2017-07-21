@@ -236,7 +236,6 @@
       handleAvatarSuccess(file, fileList) {
         var that = this;
         that.imageUrl = global.qiniuShUrl + file.key;
-        console.log(that.imageUrl)
       },
       // 富文本上传图片至七牛云
       // imageHandler: function(image, callback) {
@@ -277,6 +276,7 @@
       // 上传图片成功之后
       uploadFile(file, fileList) {
         var that = this;
+        console.log(fileList,file)
         var img_src = '';
         img_src = global.qiniuShUrl + file.key
         that.fileList.push(img_src)
