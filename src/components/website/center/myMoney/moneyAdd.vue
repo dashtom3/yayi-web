@@ -116,20 +116,6 @@ export default {
                 }
               })
             },3000);
-          // var obj = {
-          //   money: parseInt(that.payMuch),
-          //   chargeId: that.global.uuid(),
-          //   token: that.global.getToken()
-          // };
-          // console.log(obj,'微信充值')
-          // that.global.axiosPostReq('/weixin/unifiedOrderCharge', obj).then((res) => {
-          //   console.log(res)
-          //   if (res.data.callStatus === 'SUCCEED') {
-              
-          //   } else {
-          //     that.$message.error('网络出错，请稍后再试！');
-          //   }
-          // })
         }
       } else {
         that.$alert('请输入兑换钱币数量', {confirmButtonText: '确定',});

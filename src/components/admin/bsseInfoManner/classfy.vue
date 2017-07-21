@@ -102,7 +102,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 0,
         // formLabelWidth: '120px'
         // -----------------------------------
       }
