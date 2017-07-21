@@ -3,7 +3,7 @@
     <el-col :span="24" class="warp-breadcrum1">
       <div class="grid-content bg-purple-dark">
         <span>钱包余额：<i class="i_col_red">￥{{withTotalAmt}}</i></span>
-        <button class="margin_l btn_col" @click="withDrawHandler" :disabled="withDrawState">提现</button>
+        <el-button class="margin_l withBtn" type="primary" @click="withDrawHandler" :disabled="withDrawState">提现</el-button>
         <span class="infoColor" v-show="withDrawState">正在审核中，请耐心等待...</span>
       </div>
       <div class="curOrder">钱包明细</div>
@@ -38,23 +38,23 @@
     </el-col>
     <el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;height:280px;">
       <el-table :data="tableData" align="center" border style="width: 100%">
-        <el-table-column prop="date" align="center" label="日期">
+        <el-table-column prop="created" align="center" label="日期">
           <template scope="scope">
-            <span v-if="scope.row.date">{{new Date(scope.row.date).getFullYear()+'-'+ fillZero(new Date(scope.row.date).getMonth()+1)+'-'+fillZero(new Date(scope.row.date).getDate())}}</span>
+            <span v-if="scope.row.created">{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())}}</span>
             <!-- <span v-if="scope.row.updated">{{new Date(scope.row.updated).getFullYear()+'-'+ fillZero(new Date(scope.row.updated).getMonth()+1)+'-'+fillZero(new Date(scope.row.updated).getDate())}}</span> -->
           </template>
         </el-table-column>
-        <el-table-column  prop="getMoney" align="center" label="进账">
+        <el-table-column  prop="balanceIn" align="center" label="进账">
           <template scope="scope">
-            <span class="col_blue">{{scope.row.getMoney}}</span>
+            <span class="col_blue">{{scope.row.balanceIn}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="cashMoney" align="center" label="出账">
+        <el-table-column prop="balanceOut" align="center" label="出账">
           <template scope="scope">
-            <span class="col_red">{{scope.row.cashMoney}}</span>
+            <span class="col_red">{{scope.row.balanceOut}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="anumber" align="center" label="账户余额">
+        <el-table-column prop="balance" align="center" label="账户余额">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -193,7 +193,10 @@
         }, 1000);
       };
       return {
-        dateVal: [new Date().getTime() - 3600 * 1000 * 24 * 30, new Date()],
+        //默认查询日期
+        dateVal: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 30), new Date()],
+        //默认分类
+        queryState: '',
         value: '',
         hYzm: true,
         tableData: [{
@@ -285,6 +288,7 @@
             return false;
         }
       },
+      //补0
       fillZero: function(n){
         return n<10 ? '0'+ n: n 
       },
@@ -356,7 +360,6 @@
             this.trueName = res.data.data.trueName
             this.bankName = res.data.data.bankName
             this.bankNo = res.data.data.accountNumber
-            console.log(res.data.data)
           }
         })
       },
@@ -365,17 +368,17 @@
         var that = this;
         var obj = {
           token: global.getSalesToken(),
-          state: '',
-          startTime: '',
-          endTime: ''
+          state: this.queryState,
+          startTime: util.formatDate.format(new Date(that.dateVal[0])),
+          endTime: util.formatDate.format(new Date(that.dateVal[1]))
         }
         console.log('----------------',obj)
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
-            // this.houstonJZ = res.data.data.houstonJZ
-            // this.withdrawalsTX = res.data.data.withdrawalsTX
-            // this.tableData = res.data.data
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+            this.tableData = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -384,61 +387,96 @@
       // 选择时间段
       chooseDate: function() {
         var that = this;
-        var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-        var endDate = util.formatDate.format(new Date(that.dateVal[1]));
-        // var obj = {
-        //   token: that.global.getSalesToken(),
-        //   state: 0,
-        // }
-        // that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-        //   if (res.data.callStatus === 'SUCCEED') {
-        //     console.log(res)
-        //     // that.tableData = res.data.data;
-        //     console.log(that.tableData)
-        //   } else {
-        //     that.$message.error('网络出错，请稍后再试！');
-        //   }
-        // })
+        if(that.dateVal && that.dateVal[0]){
+          var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+        }else{
+          var startDate = '';
+          var endDate = '';
+        }
+        
+        var obj = {
+          token: global.getSalesToken(),
+          state: this.queryState,
+          startTime: startDate,
+          endTime: endDate
+        }
+        console.log('----------------',obj)
+        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+            this.tableData = res.data.data
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       // 选择分类
       selClass: function(item,index){
         var that = this;
         that.classStat = index;
+        if(that.dateVal && that.dateVal[0]){
+          var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+        }else{
+          var startDate = '';
+          var endDate = '';
+        }
         if (item == '全部') {
+          this.queryState = '';
           var obj = {
-            token: that.global.getSalesToken(),
-            state: 0,
+            token: global.getSalesToken(),
+            state: this.queryState,
+            startTime: startDate,
+            endTime: endDate
           }
+          console.log('----------------',obj)
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.tableData = res.data.data;
-              console.log(that.tableData)
+              console.log(res.data.data)
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
         } else if (item == '进账') {
+          this.queryState = '进账';
           var obj = {
-            token: that.global.getSalesToken(),
-            state: 1,
+            token: global.getSalesToken(),
+            state: this.queryState,
+            startTime: startDate,
+            endTime: endDate
           }
+          console.log('----------------',obj)
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.tableData = res.data.data;
-              console.log(that.tableData)
+              console.log(res.data.data)
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
           })
-        } else if (item == '提现') {
+        } else if (item == '出账') {
+          this.queryState = '出账';
           var obj = {
-            token: that.global.getSalesToken(),
-            state: 2,
+            token: global.getSalesToken(),
+            state: this.queryState,
+            startTime: startDate,
+            endTime: endDate
           }
+          console.log('----------------',obj)
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.tableData = res.data.data;
-              console.log(that.tableData)
+              console.log(res.data.data)
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
@@ -505,7 +543,7 @@
             }
             //验证验证码
             if(!this.WithDrawForm.rg_code){
-              this.$message.error('请输入正确的验证码');
+              this.$message.error('请输入正确的验证码！');
               return false
             }
             global.axiosPostReq('/witManage/submitWit',params).then((res) => {
@@ -516,7 +554,7 @@
                 this.withDrawBank = false
                 this.withDrawState = true
               }else if(res.data.callStatus === 'FAILED'){
-                this.$message.error(res.data.msg)
+                this.$message.error('请输入正确的验证码！')
               }else{
                 this.$message.error('网络出错，请稍后再试！');
               }
@@ -611,6 +649,14 @@
     background: #5db7e8;
     border: none;
     color: #fff;
+  }
+  .withBtn{
+    width: 100px;
+    background: #5db7e8; 
+  }
+  .withBtn:hover{
+    width: 100px;
+    background: #57a5cf; 
   }
   .btn_col:hover{
     background: #57a5cf;

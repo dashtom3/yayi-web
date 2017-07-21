@@ -31,7 +31,7 @@
     <div class="mymoney">
       <span class="headName">我的钱包</span>
       <div class="userLeaveMoney">
-        账户余额：<span>￥{{accountAmt}}</span>
+        账户余额：<span>￥{{withTotalAmt}}</span>
       </div>
       <div class="btnWrap">
         <span v-on:click="cash()">提现</span>
@@ -66,9 +66,66 @@
         imgUrl: '',
         postalType: '',
         accountAmt: '',
-        orderInfo: {},
+        orderInfo: {
+          allCommission: 0,
+          dayCommission: 0,
+          dayOrderNum: 0,
+          getUpdated: 0,
+          hasCommission: 0,
+          orderNum: 0,
+          saleIncomeVoList: 0,
+          stayCommission: 0,
+          sumOrderMoney: 0,
+          myOrderVoList: [{
+            orderTime: '2017-01-01',
+            custName: '测试01',
+            custPhone: '18652599279',
+            saleAmt: '200',
+            materialAmt: '50',
+            equipAmt: '70',
+            refundAmt: '40',
+            realSaleAmt: '60'
+          },{
+            orderTime: '2017-01-01',
+            custName: '测试01',
+            custPhone: '18652599279',
+            saleAmt: '200',
+            materialAmt: '50',
+            equipAmt: '70',
+            refundAmt: '40',
+            realSaleAmt: '60'
+          },{
+            orderTime: '2017-01-01',
+            custName: '测试01',
+            custPhone: '18652599279',
+            saleAmt: '200',
+            materialAmt: '50',
+            equipAmt: '70',
+            refundAmt: '40',
+            realSaleAmt: '60'
+          },{
+            orderTime: '2017-01-01',
+            custName: '测试01',
+            custPhone: '18652599279',
+            saleAmt: '200',
+            materialAmt: '50',
+            equipAmt: '70',
+            refundAmt: '40',
+            realSaleAmt: '60'
+          },{
+            orderTime: '2017-01-01',
+            custName: '测试01',
+            custPhone: '18652599279',
+            saleAmt: '200',
+            materialAmt: '50',
+            equipAmt: '70',
+            refundAmt: '40',
+            realSaleAmt: '60'
+          }]
+        },
         personalData: null,
-        echartData: []
+        echartData: [],
+        withTotalAmt: 0
       }
     },
     components: {
@@ -80,20 +137,27 @@
       this.echartPic()
       this.queryInfo()
       this.getMyWallet()
+      this.getBalance()
     },
     methods: {
+      //查询订单数据
       init(){
         let params = {
           currentPage: this.pageProps.pageNum,
           numberPerPage: 10,
           token: global.getSalesToken()
         }
+        console.log('查询订单数据',params)
         global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            this.orderInfo = res.data.data
+            // this.replayList = res.data.data
+            // this.pageProps.totalPage = res.data.totalPage
+            console.log('查询订单数据',res.data.data)
+            //this.orderInfo = res.data.data
+            this.overYearHasCommission = res.data.data.overYearHasCommission
             this.pageProps.totalPage = res.data.totalPage
           }else{
-            this.$message.error('网络出错，请稍后再试！');
+            this.$message.error('查询订单失败！');
           }
         })
       },
@@ -124,6 +188,21 @@
             this.accountNumber = res.data.data.accountNumber
             this.postalType = res.data.data.postalType
             this.imgUrl = res.data.data.salePic
+          }
+        })
+      },
+      //获取余额
+      getBalance: function() {
+        var that = this;
+        var params = {
+          token: global.getSalesToken()
+        }
+        that.global.axiosGetReq('/PW/show',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.withTotalAmt = res.data.data;
+            console.log(res.data.data)
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

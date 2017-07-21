@@ -36,12 +36,16 @@
         <el-table-column prop="type" align="center" label="类型"></el-table-column>
         <el-table-column prop="openName" align="center" label="开户者"></el-table-column>
         <el-table-column prop="bankName" align="center" label="银行"></el-table-column>
-        <el-table-column prop="accountNumber" align="center" label="账号"></el-table-column>
-        <el-table-column prop="create" align="center" label="申请时间"></el-table-column>
+        <el-table-column prop="accountNumber" align="center" label="账号" width="200"></el-table-column>
+        <el-table-column prop="createFormate" align="center" label="申请时间" width="230">
+          <template scope="scope">
+            <span>{{new Date(scope.row.create).getFullYear()+'-'+ fillZero(new Date(scope.row.create).getMonth()+1)+'-'+fillZero(new Date(scope.row.create).getDate())+' '+fillZero(new Date(scope.row.create).getHours())+":"+fillZero(new Date(scope.row.create).getMinutes())+":"+fillZero(new Date(scope.row.create).getSeconds())}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="describey" align="center" label="提现状态">
           <template scope="scope">
-            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">提现中</span>
-            <span v-if="scope.row.describey.indexOf('提现完成') !== -1 ">提现完成</span>
+            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">申请中</span>
+            <span v-if="scope.row.describey.indexOf('提现完成') !== -1 ">提现成功</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -73,6 +77,10 @@
       that.getAllMoney();
     },
     methods: {
+      //补0
+      fillZero: function(n){
+        return n<10 ? '0'+ n: n 
+      },
       //获取提现列表
       getAllMoney: function() {
         var that = this;

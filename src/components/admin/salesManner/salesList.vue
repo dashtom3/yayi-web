@@ -95,7 +95,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="block" style="position:absolute;top:502px;right:0;" v-show="this.totalCount > this.pagesize"
+          <div class="block" style="position:absolute;top:502px;right:0;" v-show="this.totalCount > this.pagesize">
             <el-pagination
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage"
@@ -230,8 +230,13 @@
           <span v-else-if="scope.row.isBindUser===2">否</span>
         </template>
       </el-table-column>
-      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量"></el-table-column>
-      <el-table-column  prop="bindUserNum"  align="center" sortable label="累计收入（元）"></el-table-column>
+      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">
+        <template scope="scope">
+          <span v-if="scope.row.bindUserNum===null">0</span>
+          <span v-else>{{scope.row.bindUserNum}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column  prop="totalGetMoney"  align="center" sortable label="累计收入（元）"></el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
             <el-button v-if="scope.row.isBindUser===2" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
@@ -367,7 +372,7 @@
         return this.someOneUserDetails.info.sex === 2 ? '女' : '男'
       },
       regTimeFormate: function(){
-        return new Date(this.someOneUserDetails.info.created).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.created).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.birthday).getDate()) 
+        return new Date(this.someOneUserDetails.info.created).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.created).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.created).getDate()) 
       },
       birthdayFormate: function(){
         return new Date(this.someOneUserDetails.info.birthday).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.birthday).getDate()) 
