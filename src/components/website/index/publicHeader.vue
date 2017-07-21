@@ -19,7 +19,7 @@
           <div v-else class="elseLine"></div>
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
-            <div class="cargo_box" v-for="item in items" :key="item" @click="gotoDetails(item)">
+            <div class="cargo_box" v-for="item in filteredItems" :key="item" @click="gotoDetails(item)">
               <img class="cargo_sm" :src=item.pic alt="img">
               <div class="cargo_des">{{item.name}}</div>
               <div class="cargo_price">￥{{item.price}}*{{item.num}}</div>
@@ -315,6 +315,9 @@
     computed: {
       filteredHrecord: function () {
         return this.Hrecord.slice(0, 6)
+      },
+      filteredItems: function () {
+        return this.items.slice(0, 5)
       }
     },
     watch: {
@@ -1239,9 +1242,9 @@
   .shopping_car .car_hover {
     display: none;
     width: 337px;
-    max-height: 300px;
-    overflow-x: hidden;
-    overflow-y: scroll;
+/*    max-height: 500px;*/
+/*    overflow-x: hidden;*/
+/*    overflow-y: scroll;*/
     position: absolute;
     top: 27px;
     left: -1px;

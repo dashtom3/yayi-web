@@ -24,7 +24,7 @@
     data () {
       return {
         getMoneyList:[],
-        currentMoney:0,
+        currentMoney: 0,
         isActive1: true,
         isActive2: false,
         tab01Text: "tab01",

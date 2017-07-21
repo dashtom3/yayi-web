@@ -109,6 +109,10 @@
         <p class="detail_word">{{details.itemDetail.registerId}}</p>
       </div>
       <div class="detail_box">
+        <div class="detail_cargo">商品类型：</div>
+        <p class="detail_word">{{details.itemSort}}</p>
+      </div>
+      <div class="detail_box">
         <div class="detail_cargo">商品属性：</div>
       </div>
       <table class="activeTable_box" border="1">

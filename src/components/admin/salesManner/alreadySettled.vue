@@ -49,7 +49,7 @@
     </el-table-column>
   </el-table>
 
-  <el-dialog custom-class="asgagewgf" title="收入详情" :visible.sync="showIncomeInfor" size="large">
+  <el-dialog custom-class="asgagewgf" title="销售员业绩详情" :visible.sync="showIncomeInfor" size="large">
     <div class="personalInfor">
       <h3>销售员信息</h3>
       <div class="">

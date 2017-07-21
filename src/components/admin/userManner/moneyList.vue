@@ -223,7 +223,6 @@
       // 保存修改
       saveUserMoney:function() {
         var that = this;
-        that.pageProps.pageNum = 1
         if (that.nowUserMoneyNum == '') {
           that.$message.error('请输入手机号！');
           return false
@@ -241,7 +240,7 @@
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
           console.log(res);
           if (res.data.callStatus === 'SUCCEED') {
-            that.pageProps.pageNum = 1
+            that.currentPage = 1
             that.getClassify()
             that.nowUserMoneyNum = ''
             that.yayiCoin = ''

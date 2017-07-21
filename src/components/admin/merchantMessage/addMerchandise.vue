@@ -18,7 +18,7 @@
         <el-input v-model="ruleForm.itemName" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="商品分类" prop="type">
-        <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.type" change-on-select>
+        <el-cascader class="cascader" :props="{value:'label'}" :options="options" :show-all-levels="false" v-model="ruleForm.type">
         </el-cascader>
       </el-form-item>
       <el-form-item label="品牌名称" prop="itemBrandId">

@@ -30,6 +30,19 @@
         </ul>
       </div>
     </div>
+    <el-dialog :visible.sync="WxTableVisible" :before-close="handleClose" size="small">
+      <div style="margin-bottom:30px;">
+        <img class="WePayLogo" src="../../../../images/gwc/WePayLogo.png" alt="img">
+        <img class="wxR" src="../../../../images/gwc/wxR.png" alt="img">
+        <p class="wxRealPay">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{payMuch}}</span></p>
+      </div>
+      <div style="text-align:center;margin-bottom:10px;">
+        <img style="width:260px;height:260px;" :src="wxImg" alt="img">
+      </div>
+      <div style="text-align:center">
+        <img src="../../../../images/gwc/wxDes.png" alt="img">
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -38,40 +51,98 @@ export default {
   name: 'myMoneyAdd',
   data () {
     return {
-      payType:"1",
-      payMuch:null,
-      payMuchErrMsg:null,
-      finalyMoney:0
+      payType: "1",
+      payMuch: '',
+      payMuchErrMsg: null,
+      finalyMoney: 0,
+      WxTableVisible: false,
+      wxImg: '',
+      kk: 1,
     }
   },
   watch:{
-    payMuch:function(){
+    payMuch: function() {
       var that = this;
       var nowPayMuch = that.payMuch;
       var finalyPayMuch = null;
       var errMsg = null;
-      if(!isNaN(nowPayMuch)){
-        if(nowPayMuch>0){
+      if(!isNaN(nowPayMuch)) {
+        if(nowPayMuch > 0){
           finalyPayMuch = nowPayMuch;
-        }else{
+        } else {
           errMsg = "请输入合法的钱币数量";
         }
-      }else{
+      } else {
         errMsg = "请输入合法的钱币数量";
       }
       that.payMuch = finalyPayMuch;
       that.payMuchErrMsg = errMsg;
-      this.finalyMoney = that.global.moneyToMoney(that.payMuch)
+      that.finalyMoney = that.global.moneyToMoney(that.payMuch)
     },
   },
   methods: {
-    sureExchange:function(){
+    //充值乾币
+    sureExchange: function() {
       var that = this;
-      if(that.payMuch){
-        console.log(that.payMuch)
-      }else{
+      if(that.payMuch !== '') {
+        if (that.payType == '1') {
+          console.log('支付宝充值')
+        } else {
+          let chargeId = that.global.uuid()
+          let money = parseInt(that.payMuch)
+          let token = that.global.getToken()
+          console.log(chargeId,'sds')
+          that.WxTableVisible = true
+          that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderCharge' + '?money=' + money + '&chargeId=' + chargeId + '&token=' + token
+          that.kk = 1
+          var timer = setInterval(function(){
+            console.log(that.kk,'kkkkk')
+              if (that.kk == 600) {
+                clearInterval(timer)
+                return false
+              }
+              var obj = {
+                chargeId: chargeId
+              }
+              that.global.axiosGetReq('/weixin/checkChargeState',obj).then((res) => {
+                console.log(res.data,'opopopop')
+                if (res.data.num == 2) {
+                  clearInterval(timer)
+                  that.WxTableVisible = false
+                  that.$message('恭喜您，充值成功！')
+                } else {
+                  that.kk++
+                  // that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            },3000);
+          // var obj = {
+          //   money: parseInt(that.payMuch),
+          //   chargeId: that.global.uuid(),
+          //   token: that.global.getToken()
+          // };
+          // console.log(obj,'微信充值')
+          // that.global.axiosPostReq('/weixin/unifiedOrderCharge', obj).then((res) => {
+          //   console.log(res)
+          //   if (res.data.callStatus === 'SUCCEED') {
+              
+          //   } else {
+          //     that.$message.error('网络出错，请稍后再试！');
+          //   }
+          // })
+        }
+      } else {
         that.$alert('请输入兑换钱币数量', {confirmButtonText: '确定',});
       }
+    },
+    // 确认关闭
+    handleClose: function() {
+      var that = this
+      that.$confirm('确认关闭微信支付页面？').then(_ => {
+        that.kk = 600
+        that.WxTableVisible = false
+        done();
+      }).catch(_ => {});
     },
   },
 }
@@ -143,6 +214,20 @@ export default {
     margin: 30px auto;
     border-radius: 5px;
     cursor: pointer;
-
+}
+.WePayLogo {
+  width: 125px;
+  height: 34px;
+}
+.wxR {
+  width: 79px;
+  height: 34px;
+}
+.wxRealPay {
+  float: right;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
 }
 </style>
