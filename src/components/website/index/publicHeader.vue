@@ -502,7 +502,8 @@
       salesEntry: function() {
         var that = this;
         if (that.global.getToken() !== null) {
-          that.$router.push({ name: 'center', params: {currentView: 'tab04'}});
+          that.$router.push({ name: '个人资料', params: {currentView: 'tab04'}});
+          // this.$router.push({path: '/center/personalData'});
         } else {
           that.changeForget1 = true;
           that.changeForget2 = false;
@@ -673,7 +674,7 @@
       myOrder: function() {
         var that = this;
         if (that.global.getToken() !== null) {
-          that.$router.push({ path: '/center' });
+          that.$router.push({ path: '/center/myOrder' });
         } else {
           that.changeForget1 = true;
           that.changeForget2 = false;

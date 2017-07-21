@@ -23,7 +23,7 @@
     name: 'personal',
     data () {
       return {
-        currentTabs:1,
+        currentTabs: 1,
         personInfo: {}
       }
     },
@@ -32,6 +32,12 @@
       var that = this
       that.currentTabs = that.salesman;
       that.init()
+      if(that.currentTabs == 3){
+        that.changeTabs(that.currentTabs)
+      }else{
+        that.changeTabs(1)
+      }
+      
     },
     components:{
       personalData,

@@ -8,6 +8,12 @@ import Center from '@/components/website/center/center'
 // const Details = resolve => require(['@/components/website/details/details'], resolve)
 // const BrandLib = resolve => require(['@/components/website/brandLib/brandLib'], resolve)
 // const Center = resolve => require(['@/components/website/center/center'], resolve)
+const center_myOrder = resolve => require(['@/components/website/center/myOrder/myOrder'], resolve)
+const center_myMoney = resolve => require(['@/components/website/center/myMoney/myMoneyDetails'], resolve)
+const center_myCollection = resolve => require(['@/components/website/center/myCollection/myCollection'], resolve)
+const center_personalData = resolve => require(['@/components/website/center/personalData/personal'], resolve)
+const center_myAdd = resolve => require(['@/components/website/center/myAdd/myAdd'], resolve)
+
 const Gwc = resolve => require(['@/components/website/gwc/gwc'], resolve)
 const Suborder = resolve => require(['@/components/website/gwc/suborder'], resolve)
 const Pay = resolve => require(['@/components/website/gwc/pay'], resolve)
@@ -81,6 +87,18 @@ let router = new Router({
 	  name: 'center',
     component: Center
 	},
+  {
+      path: '/center',
+      component: Center,
+      name: 'center',
+      children: [
+        {path: '/center/myOrder', component: center_myOrder, name: '我的订单'},
+        {path: '/center/myMoney', component: center_myMoney, name: '我的乾币'},
+        {path: '/center/myCollection', component: center_myCollection, name: '我的收藏'},
+        {path: '/center/personalData', component: center_personalData, name: '个人资料'},
+        {path: '/center/myAdd', component: center_myAdd, name: '收货地址'}
+      ]
+    },
 	{
 		path: '/details/:goodId',
 		name: 'details',

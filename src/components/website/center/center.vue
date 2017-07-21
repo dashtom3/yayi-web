@@ -12,8 +12,11 @@
       </div>
       <div class="right_box">
         <!-- 点击导航后要切换的内容 -->
-        <transition name="component-fade" mode="out-in">
+        <!-- <transition name="component-fade" mode="out-in">
           <component :salesman="message" :is="currentView" keep-alive></component>
+        </transition> -->
+        <transition name="component-fade" mode="out-in">
+          <router-view :salesman="message"></router-view>
         </transition>
       </div>
       <div class="clearfix"></div>
@@ -25,12 +28,12 @@
 <script>
   import Vue from 'vue'
   import publicHeader from '../index/publicHeader'
-  import myOrder from './myOrder/myOrder'
+  // import myOrder from './myOrder/myOrder'
   import publicFooter from '../index/publicFooter'
-  import myMoneyList from './myMoney/myMoneyDetails'
-  import myCollection from './myCollection/myCollection'
-  import personal from './personalData/personal'
-  import myAdd from './myAdd/myAdd'
+  // import myMoneyList from './myMoney/myMoneyDetails'
+  // import myCollection from './myCollection/myCollection'
+  // import personal from './personalData/personal'
+  // import myAdd from './myAdd/myAdd'
   import backToTop from '../index/backToTop'
   // var tab02 = Vue.extend({
   //   template: '<div>this is 待评价02</div>',
@@ -49,7 +52,7 @@
         tab03Text: "tab03",
         tab04Text: "tab04",
         tab05Text: "tab05",
-        currentView: 'tab01', //默认选中的导航栏
+        // currentView: 'tab01', //默认选中的导航栏
         message: 3,
       }
     },
@@ -57,24 +60,49 @@
       publicHeader,
       publicFooter,
       backToTop,
-      tab01: myOrder,
-      tab02: myMoneyList,
-      tab03: myCollection,
-      tab04: personal,
-      tab05: myAdd,
+      // tab01: myOrder,
+      // tab02: myMoneyList,
+      // tab03: myCollection,
+      // tab04: personal,
+      // tab05: myAdd,
+    },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        if (that.$router.history.current.name == '我的乾币') {
+          that.isActive1 = false;
+          that.isActive2 = true;
+          that.isActive3 = false;
+          that.isActive4 = false;
+          that.isActive5 = false;
+        }else if(that.$router.history.current.name == '我的收藏'){
+          that.isActive1 = false;
+          that.isActive2 = false;
+          that.isActive3 = true;
+          that.isActive4 = false;
+          that.isActive5 = false;
+        }else if(that.$router.history.current.name == '个人资料'){
+          that.isActive1 = false;
+          that.isActive2 = false;
+          that.isActive3 = false;
+          that.isActive4 = true;
+          that.isActive5 = false;
+        }else if(that.$router.history.current.name == '收货地址'){
+          that.isActive1 = false;
+          that.isActive2 = false;
+          that.isActive3 = false;
+          that.isActive4 = false;
+          that.isActive5 = true;
+        }
+      })
     },
     mounted: function() {
       var that = this;
-      // console.log(that.$route.params.currentView,'oooooo')
-      // that.currentView = that.$route.params.currentView;
-      // that.isActive1 = false;
-      // that.isActive2 = false;
-      // that.isActive3 = false;
-      // that.isActive4 = true;
-      // that.isActive5 = false;
-      // console.log(that.$route.params.data,'op')
       if (that.$route.params.currentView == 'tab04'){
-        that.currentView = that.$route.params.currentView;
+        // that.currentView = that.$route.params.currentView;
+        // this.$router.push({path: '/center/personalData'});
         that.isActive1 = false;
         that.isActive2 = false;
         that.isActive3 = false;
@@ -84,7 +112,8 @@
     },
     methods: {
       changeActive1: function(tabText) {
-        this.currentView = tabText;
+        // this.currentView = tabText;
+        this.$router.push({path: '/center/myOrder'});
         this.isActive1 = true;
         this.isActive2 = false;
         this.isActive3 = false;
@@ -92,7 +121,8 @@
         this.isActive5 = false;
       },
       changeActive2: function(tabText) {
-        this.currentView = tabText;
+        // this.currentView = tabText;
+        this.$router.push({path: '/center/myMoney'});
         this.isActive1 = false;
         this.isActive2 = true;
         this.isActive3 = false;
@@ -100,7 +130,8 @@
         this.isActive5 = false;
       },
       changeActive3: function(tabText) {
-        this.currentView = tabText;
+        // this.currentView = tabText;
+        this.$router.push({path: '/center/myCollection'});
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = true;
@@ -108,7 +139,8 @@
         this.isActive5 = false;
       },
       changeActive4: function(tabText) {
-        this.currentView = tabText;
+        // this.currentView = tabText;
+        this.$router.push({path: '/center/personalData'});
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = false;
@@ -116,7 +148,8 @@
         this.isActive5 = false;
       },
       changeActive5: function(tabText) {
-        this.currentView = tabText;
+        // this.currentView = tabText;
+        this.$router.push({path: '/center/myAdd'});
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = false;

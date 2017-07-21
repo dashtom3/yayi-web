@@ -376,8 +376,8 @@
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
-            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
-            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
             this.tableData = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -405,8 +405,8 @@
         that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
-            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
-            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
             this.tableData = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -436,8 +436,8 @@
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
               this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -455,8 +455,8 @@
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
               this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
@@ -474,8 +474,8 @@
           that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze
+              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
               this.tableData = res.data.data
             } else {
               that.$message.error('网络出错，请稍后再试！');
