@@ -14,7 +14,7 @@
             <el-date-picker
               v-model="dateVal"
               type="daterange"
-              placeholder="选择日期范围" @change="chooseDate">
+              placeholder="选择日期范围" @change="getMyWallet">
             </el-date-picker>
           </div>
         </li>
@@ -27,7 +27,7 @@
         <li>
           <div class="block">
             <span class="demonstration">分类：</span>
-            <span class="nav_select margin_r_30" v-for="(item, index) in classify" :key="index" :class="{active_nav: classStat === index}"  @click="selClass(item,index)">{{item}}</span>
+            <span class="nav_select margin_r_30" v-for="(item, index) in classify" :key="index" :class="{active_nav: classStat === index}"  @click="getMyWallet(item,index)">{{item}}</span>
           </div>
         </li>
       </ul>
@@ -40,8 +40,7 @@
       <el-table :data="tableData" align="center" border style="width: 100%">
         <el-table-column prop="created" align="center" label="日期">
           <template scope="scope">
-            <span v-if="scope.row.created">{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())}}</span>
-            <!-- <span v-if="scope.row.updated">{{new Date(scope.row.updated).getFullYear()+'-'+ fillZero(new Date(scope.row.updated).getMonth()+1)+'-'+fillZero(new Date(scope.row.updated).getDate())}}</span> -->
+            <span v-if="scope.row.created">{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())+' '+fillZero(new Date(scope.row.created).getHours())+":"+fillZero(new Date(scope.row.created).getMinutes())+":"+fillZero(new Date(scope.row.created).getSeconds())}}</span>
           </template>
         </el-table-column>
         <el-table-column  prop="balanceIn" align="center" label="进账">
@@ -65,6 +64,15 @@
           </template>  
         </el-table-column>
       </el-table>
+      <div class="block" v-show="this.totalCount > this.pagesize" style="position:absolute;top:820px;right:0;">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pagesize"
+          layout="prev, pager, next, jumper"
+          :total="totalCount">
+        </el-pagination>
+      </div>
     </el-col>
     <!-- 提现设置 -->
     <el-dialog
@@ -90,8 +98,7 @@
     <el-dialog
       :visible.sync="incomeVisible"
       size="small">
-      <div class="detail_title">详情</div>
-      
+      <div class="detail_title">详情</div> 
       <div style="margin-bottom:10px;"><b>时间 2017-07-11 12:00:00</b></div>
       <el-table :data="incomeDetail" border show-summary style="width: 100%">
         <el-table-column prop="commodityType" label="商品类型" align="center">
@@ -119,9 +126,9 @@
       size="small">
       <div class="detail_title">详情</div>
       <el-table :data="outDetail" border style="width: 100%;margin-top:20px;">
-        <el-table-column prop="outTime" label="时间" align="center">
+        <el-table-column prop="created" label="时间" align="center">
         </el-table-column>
-        <el-table-column prop="outDesc" label="描述" align="center">
+        <el-table-column prop="describey" label="描述" align="center">
         </el-table-column>
       </el-table>
       <div style="text-align:center;margin-top:20px;">
@@ -196,9 +203,17 @@
         //默认查询日期
         dateVal: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 30), new Date()],
         //默认分类
+        //当前是否有提钱申请
+        withDrawState: false,
         queryState: '',
         value: '',
         hYzm: true,
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1,
         tableData: [{
           date: '2017-01-01',
           getMoney: '90',
@@ -219,7 +234,6 @@
         classStat: 0,
         withDrawSets: false,
         statTip: false,
-        withDrawState: false,
         withDrawBank: false,
         withDrawBank01:false,
         incomeVisible: false,
@@ -247,25 +261,19 @@
         withdrawalsTX: '',//提现总额
         incomeDetail: [{
           commodityType: '耗材类',
-          saleVal: 90,
-          refundAmt: 10,
-          actualAmt: 80,
-          income: 8
+          saleVal: 0,
+          refundAmt: 0,
+          actualAmt: 0,
+          income: 0
         },
         {
-          commodityType: '耗材类',
-          saleVal: 90,
-          refundAmt: 10,
-          actualAmt: 80,
-          income: 8
+          commodityType: '工具设备类',
+          saleVal: 0,
+          refundAmt: 0,
+          actualAmt: 0,
+          income: 0
         }],
-        outDetail: [{
-          outTime: '2017-03-03',
-          outDesc: 'yaya'
-        },{
-          outTime: '2017-03-03',
-          outDesc: 'yaya'
-        }]
+        outDetail: []
       }
     },
     props: ['toMySon'],
@@ -341,7 +349,9 @@
         }
         that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.withTotalAmt = res.data.data;
+            console.log(res.data.data)
+            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
+            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -363,22 +373,53 @@
           }
         })
       },
-      //获取钱包明细
-      getMyWallet: function() {
+      handleCurrentChange: function(val) {
+        this.currentPage = val 
+        this.getMyWallet(val)
+      },
+      //获取钱包列表
+      getMyWallet: function(val, item) {
         var that = this;
+        console.log('qqqqqqqqqqqqqqqqqqq',val, item)
+        that.classStat = item || 0;
+        if (val == undefined || typeof(val) == 'string') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
+        //选择分类
+        if(val == '全部') {
+          this.queryState = ''
+        }else if(val == '进账'){
+          this.queryState = '进账'
+        }else if(val == '出账'){
+          this.queryState = '出账'
+        }
+        //时间查询条件
+        if(that.dateVal && that.dateVal[0]){
+          var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+        }else{
+          var startDate = '';
+          var endDate = '';
+        }
+
         var obj = {
-          token: global.getSalesToken(),
+          token: that.global.getSalesToken(),
           state: this.queryState,
-          startTime: util.formatDate.format(new Date(that.dateVal[0])),
-          endTime: util.formatDate.format(new Date(that.dateVal[1]))
+          starTime: startDate,
+          endTime: endDate,
+          currentPage: this.currentPage,
+          numberPerpage: this.pagesize
         }
         console.log('----------------',obj)
-        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+        that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
+            console.log(res.data.data,'pp')
             this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
             this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
             this.tableData = res.data.data
+            this.totalCount = res.data.totalNumber
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -398,7 +439,7 @@
         var obj = {
           token: global.getSalesToken(),
           state: this.queryState,
-          startTime: startDate,
+          starTime: startDate,
           endTime: endDate
         }
         console.log('----------------',obj)
@@ -429,7 +470,7 @@
           var obj = {
             token: global.getSalesToken(),
             state: this.queryState,
-            startTime: startDate,
+            starTime: startDate,
             endTime: endDate
           }
           console.log('----------------',obj)
@@ -448,7 +489,7 @@
           var obj = {
             token: global.getSalesToken(),
             state: this.queryState,
-            startTime: startDate,
+            starTime: startDate,
             endTime: endDate
           }
           console.log('----------------',obj)
@@ -467,7 +508,7 @@
           var obj = {
             token: global.getSalesToken(),
             state: this.queryState,
-            startTime: startDate,
+            starTime: startDate,
             endTime: endDate
           }
           console.log('----------------',obj)
@@ -484,43 +525,45 @@
         }
       },
       queryDetail(index, row){
-        // if(row.cashId){
-        //   //查看钱包详情
-        //   let params = {
-        //     cashId: row.cashId,
-        //     token: global.getSalesToken()
-        //   }
-        //   console.log('钱包详情',params)
-        //   global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
-        //     if (res.data.callStatus === 'SUCCEED') {
-        //       // this.orderDetail = res.data.data
-        //       // console.log(res.data.data)
-        //     } else {
-        //       that.$message.error('网络出错，请稍后再试！');
-        //     }
-        //   })
-        // }else if(row.orderId){
-        //   //查看钱包详情
-        //   let params = {
-        //     orderId: row.orderId,
-        //     token: global.getSalesToken()
-        //   }
-        //   console.log('钱包详情',params)
-        //   global.axiosPostReq('/myWallet/queryOrder',params).then((res) => {
-        //     if (res.data.callStatus === 'SUCCEED') {
-
-        //       console.log(res.data.data)
-        //     } else {
-        //       that.$message.error('网络出错，请稍后再试！');
-        //     }
-        //   })
-        // }
-        if(row.getMoney){
+        console.log(row)
+        //判断是进账还是出账
+        if(!row.balanceOut){
           this.incomeVisible = true
         }else{
           this.outVisible = true
         }
+        var that = this;
+        var obj = {
+          balanceId: row.balanceId
+        }
+        console.log('----------------',obj)
+        that.global.axiosPostReq('/myWallet/details',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
+            this.outDetail[0] = {
+              created: new Date(res.data.data.created).getFullYear()+'-'+ this.fillZero(new Date(res.data.data.created).getMonth()+1)+'-'+this.fillZero(new Date(res.data.data.created).getDate())+' '+this.fillZero(new Date(res.data.data.created).getHours())+":"+this.fillZero(new Date(res.data.data.created).getMinutes())+":"+this.fillZero(new Date(res.data.data.created).getSeconds()),
+              describey: res.data.data.describey
+            }
+            this.incomeDetail[0] = {
+              commodityType: '耗材类',
+              saleVal: res.data.data.haocaiMoney || 0,
+              refundAmt: res.data.data.haocaiRefund || 0,
+              actualAmt: res.data.data.haocaiMoney - res.data.data.haocaiRefund,
+              income: (res.data.data.haocaiMoney - res.data.data.haocaiRefund)/10
+            }
+            this.incomeDetail[1] = {
+              commodityType: '工具设备类',
+              saleVal: res.data.data.gongjuMoney || 0,
+              refundAmt: res.data.data.gongjuRefund || 0,
+              actualAmt: res.data.data.gongjuMoney - res.data.data.gongjuRefund,
+              income: (res.data.data.gongjuMoney - res.data.data.gongjuRefund)/10
+            }
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        }) 
         
+    
       },
       withDrawHandler(){
         if(this.postalType ==='银行卡'){
@@ -568,9 +611,10 @@
   }
 </script>
 
-<style scope="scope">
+<style scoped>
   .brandWarp{
     width: 1200px;
+    height: 900px;
     margin: auto;
   }
   .fl{

@@ -5,9 +5,9 @@
     </el-col>
     <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
       <div class="grid-content bg-purple-dark fl">
-        <span>销售总额：<i class="i_col_red">￥<span>{{tableData.allCommission}}</span></i></span>
-        <span class="margin_l">耗材类销售总额：<i class="i_col_red">￥{{tableData.stayCommission}}</i></span>
-        <span class="margin_l">工具设备类销售总额：<i class="i_col_red">￥{{tableData.hasCommission}}</i></span>
+        <span>销售总额：<i class="i_col_red">￥<span>{{tableData.saleAllMoney}}</span></i></span>
+        <span class="margin_l">耗材类销售总额：<i class="i_col_red">￥{{tableData.haocaiAllMoney}}</i></span>
+        <span class="margin_l">工具设备类销售总额：<i class="i_col_red">￥{{tableData.gongjuAllMoney}}</i></span>
       </div>
       <div class="grid-content bg-purple-dark fr">
         <span class="margin_l">共：<i class="i_col_red">{{tableData.orderNum}}</i>单</span>

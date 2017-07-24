@@ -7,11 +7,12 @@
           v-model="monthVal"
           type="month"
           placeholder="选择日期"
+          :clearable="false"
           @change="selHandler">
         </el-date-picker>
       </div>
       <div class="fr total_box">
-        累计收入：<i class="i_col">￥<span>{{overYearHasCommission}}</span></i>
+        累计收入：<i class="i_col">￥<span>{{allCommission}}</span></i>
       </div>
     </el-col>
     <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
@@ -29,7 +30,7 @@ export default {
     return {
       monthVal: '',
       monthX: '',
-      overYearHasCommission: 0,
+      allCommission: 0,
       echartsTitle: '',
       pageProps: {
         pageNum: 1,
@@ -40,15 +41,10 @@ export default {
         month: new Date().getMonth()+1
       },
       orderInfo: {
-        allCommission: 0,
-        dayCommission: 0,
-        dayOrderNum: 0,
-        getUpdated: 0,
-        hasCommission: 0,
+        saleAllMoney: 0,
+        haocaiAllMoney: 0,
+        gongjuAllMoney: 0,
         orderNum: 0,
-        saleIncomeVoList: 0,
-        stayCommission: 0,
-        sumOrderMoney: 0,
         myOrderVoList: [{
           orderTime: '2017-01-01',
           custName: '测试01',
@@ -126,13 +122,13 @@ export default {
         token: global.getSalesToken()
       }
       console.log('查询订单数据',params)
-      global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
+      global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           // this.replayList = res.data.data
           // this.pageProps.totalPage = res.data.totalPage
           console.log('查询订单数据',res.data.data)
           // this.orderInfo = res.data.data
-          this.overYearHasCommission = res.data.data.overYearHasCommission
+          this.allCommission = res.data.data.allCommission
           this.pageProps.totalPage = res.data.totalPage
         }else{
           this.$message.error('查询订单失败！');

@@ -106,7 +106,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
         userTypes: [
           {value: '',label: '全部'},
           {value: 1,label: '个人'},

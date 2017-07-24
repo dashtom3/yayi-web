@@ -107,7 +107,6 @@
           message: that.searchUserContent,
         }
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
-          console.log(res,'23')
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data;
           } else {

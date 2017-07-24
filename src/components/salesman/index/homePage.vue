@@ -23,7 +23,7 @@
           <span>{{accountNumber}}</span>
         </div>
         <div class="btnWrap">
-          <span v-on:click="immediateDoIt()">立即完善</span>
+          <el-button class="cashBtn" type="primary" v-on:click="immediateDoIt()">立即完善</el-button>
         </div>
       </div>
       <div class="clearFloat"></div>
@@ -33,9 +33,9 @@
       <div class="userLeaveMoney">
         账户余额：<span>￥{{withTotalAmt}}</span>
       </div>
-      <div class="btnWrap">
-        <span v-on:click="cash()">提现</span>
-        <span v-on:click="lookDetais()">查看明细</span>
+      <div class="btnWrap" style="text-align:center;">
+        <el-button class="withBtn" type="primary" :disabled="withDrawState" v-on:click="cash()">提现</el-button>
+        <el-button class="cashBtn" type="primary" v-on:click="lookDetais()">查看明细</el-button>
       </div>
     </div>
     <div class="clearFloat"></div>
@@ -60,6 +60,7 @@
           year: new Date().getFullYear(),
           month: new Date().getMonth()+1
         },
+        withDrawState: false,
         phone: '',
         trueName: '',
         accountNumber: '',
@@ -199,8 +200,8 @@
         }
         that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.withTotalAmt = res.data.data;
-            console.log(res.data.data)
+            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
+            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -329,7 +330,7 @@
   font-weight: 600;
 
 }
-.btnWrap span{
+/*.btnWrap span{
   line-height: 40px;
   width: 100px;
   text-align: center;
@@ -338,10 +339,22 @@
   display: inline-block;
   border-radius: 3px;
   cursor: pointer;
-  }
-  .btnWrap span:hover{
-    background: #57a5cf;
-  }
+}*/
+.withBtn{
+  width: 100px;
+  height: 40px;
+}
+.cashBtn{
+  width: 100px;
+  height: 40px;
+  background: #5db7e8;
+  color: #fff;
+}
+.cashBtn:hover{
+  width: 100px;
+  background: #57a5cf; 
+  color: #fff;
+}
 .index_personal_mymoney .headName{
   line-height: 40px;
   width: 160px;

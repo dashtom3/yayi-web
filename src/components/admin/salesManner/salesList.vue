@@ -117,19 +117,19 @@
               <span class="amt_color">{{walletform.balance}}</span>
             </el-form-item>
             <el-form-item label="修改类型：">
-              <el-radio-group v-model="walletform.type">
+              <el-radio-group v-model="walletform.type" @change="changeRadioHandler">
                 <el-radio label="1">增加余额</el-radio>
                 <el-radio label="2">减少余额</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="数量：">
-              <el-input v-model="walletform.num" class="wallet_w"></el-input>
+              <el-input v-model="walletform.num" class="wallet_w" @change="changeNumHandler"></el-input>
             </el-form-item>
             <el-form-item label="修改后的余额：">
               <span class="amt_color">{{walletform.remainder}}</span>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">保存</el-button>
+              <el-button type="primary" @click="saveBalance">保存</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -296,6 +296,7 @@
         activeName: 'first',
         bindedUserList:[],
         noBindUserList:[],
+        saleId: '',
         someOneUserDetails:{
           info:{},
           getMoneyStyle:{},
@@ -313,10 +314,10 @@
           {value: '2',label: '否'}       
         ],
         walletform: {
-          balance: '100',
+          balance: 0,
           type: '1',
-          num: '10',
-          remainder: '110'
+          num: 0,
+          remainder: 0
         },
         tableData: [{
           income: '2016-05-02',
@@ -382,15 +383,67 @@
       this.queryHandler()
     },
     methods: {
-      onSubmit() {
-        console.log('submit!');
+      //改变类型
+      changeRadioHandler(){
+        this.changeNumHandler()
+      },
+      //改变金额
+      changeNumHandler(){
+        if(this.walletform.type === "1"){
+          if(this.walletform.num !== ""){
+            this.walletform.remainder = this.walletform.balance + parseFloat(this.walletform.num)
+          }else{
+            this.walletform.remainder = this.walletform.balance
+          }
+          
+        }else if(this.walletform.type === "2"){
+          if(this.walletform.num !== ""){
+            this.walletform.remainder = this.walletform.balance - this.walletform.num
+          }else{
+            this.walletform.remainder = this.walletform.balance
+          }
+          
+        }
+      },
+      //增加减少余额
+      saveBalance() {
+        var obj = {
+          saleId: this.saleId,
+          sign: parseFloat(this.walletform.type),
+          money: parseFloat(this.walletform.num)
+        }
+        global.axiosPostReq('/PW/addOrDelMoney',obj).then((res) => {
+          if(res.data.callStatus === 'SUCCEED'){
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
+          }
+        })
       },
       handleClick(tab, event) {
         console.log(tab, event);
       },
+      //获取余额
+      getBalance() {
+        var that = this;
+        var params = {
+          saleId: this.saleId
+        }
+        that.global.axiosGetReq('/PW/shows',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.walletform.balance = res.data.data
+            that.walletform.remainder = that.walletform.balance
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       walletHandler(index, row){
-        this.walletVisible = true
         console.log(row)
+        this.walletVisible = true
+        this.saleId = row.saleId
+        this.getBalance()
       },
       handleCurrentChangeDetail(val){
         this.currentPageDetail = val 
