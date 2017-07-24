@@ -3617,19 +3617,24 @@ export default {
               {value: 342, label: '五家渠市', children: []}
           ]},
           {value: 32, label: '香港', children: [
-              {value: 343, label: '香港', children: []}
+              {value: 343, label: '香港', children: [
+                {value: 2863, label: '香港'}
+              ]}
           ]},
           {value: 33, label: '澳门', children: [
-              {value: 344, label: '澳门', children: []}
+              {value: 344, label: '澳门', children: [
+                {value: 2864, label: '澳门'}
+              ]}
           ]},
           {value: 34, label: '台湾', children: [
-              {value: 345, label: '台湾', children: []}
+              {value: 345, label: '台湾', children: [
+                {value: 2864, label: '台湾'}
+              ]}
           ]}
       ],
     }
   },
   created(){
-   
     if (this.selected !== undefined) {
       this.selectedOptions3 = this.selected
       return false

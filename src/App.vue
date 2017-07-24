@@ -104,4 +104,13 @@
     text-align: right;
     margin-top: 20px;
   }
+  .publicHover {
+
+  }
+  .publicHover:hover {
+    cursor: pointer;
+    color: #5DB7E7;
+    transition: all ease 0.5s;
+  }
+/*牙医ABC蓝色#5DB7E7;#5ed6dc;#04D8DD;红色#D81E06;*/
 </style>

@@ -191,7 +191,7 @@
 <!--                   <p class="rg_alrHave" @click="rg_alrHave">已有账号</p> -->
                   <div class="rg_confirm_btn" @click="rg_register">注册</div>
                   <div class="rg_choose_box">
-                    <input type="checkbox" v-model="agree" class="checkYa" /><span class="rg_choose_word">我已阅读并同意牙医ABC服务条款</span>
+                    <input type="checkbox" v-model="agree" class="checkYa" /><span class="rg_choose_word">我已阅读并同意<span class="publicHover" @click="serviceClause">牙医ABC服务条款</span></span>
                   </div>
                   <transition name="shake">
                     <p class="rg_choose_error" v-show="rgAgree_alert">请先同意牙医ABC服务条款!</p>
@@ -468,6 +468,10 @@
       },
     },
     methods: {
+      // 牙医ABC服务条款
+      serviceClause: function() {
+        var that = this;
+      },
       //获取注册登录banner
       init: function() {
         var that = this;

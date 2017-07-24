@@ -2,8 +2,8 @@
   <div class="publicFooter">
     <p class="footerDes">
       <span @click="aboutUs">关于我们</span>
-      <span>联系我们</span>
-      <span>联系客服</span>
+      <span @click="contactUs">联系我们</span>
+      <span @click="contactService">联系客服</span>
       <span style="margin-right:0px; border:none;" @click="question">意见反馈</span>
     </p> 
     <p class="copyright">Copyright © 2017 yayiABC.com 版权所有 <span @click="beian">沪ICP 备14038156</span></p>
@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   export default {
     name: 'publicFooter',
     data () {
@@ -21,6 +20,22 @@
     created: function() { 
     },
     methods: {
+      // 关于我们
+      aboutUs: function() {
+        // var that = this;
+        // axios.defaults.headers['token'] = that.global.getToken()
+        // that.global.axiosPostReq('/test').then((res) => {
+        //   console.log(res,'opop')
+        // })
+      },
+      // 联系我们
+      contactUs: function() {
+        var that = this
+      },
+      // 联系客服
+      contactService: function() {
+        var that = this
+      },
       //意见反馈
       question: function() {
         var that = this
@@ -30,13 +45,6 @@
         var that = this
         window.open('http://www.miibeian.gov.cn')
       },
-      aboutUs: function() {
-        // var that = this;
-        // axios.defaults.headers['token'] = that.global.getToken()
-        // that.global.axiosPostReq('/test').then((res) => {
-        //   console.log(res,'opop')
-        // })
-      }
     }
   }
 </script>

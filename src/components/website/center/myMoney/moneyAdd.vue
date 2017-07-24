@@ -109,12 +109,12 @@ export default {
         if (that.payType == '1') {
           console.log('支付宝充值')
         } else {
-          let chargeId = that.global.uuid()
+          // let chargeId = that.global.uuid()
           let money = parseInt(that.payMuch)
           let token = that.global.getToken()
           console.log(chargeId,'sds')
           that.WxTableVisible = true
-          that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderCharge' + '?money=' + money + '&chargeId=' + chargeId + '&token=' + token
+          that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderCharge' + '?money=' + money + '&token=' + token
           that.kk = 1
           var timer = setInterval(function(){
             console.log(that.kk,'kkkkk')
@@ -123,7 +123,7 @@ export default {
                 return false
               }
               var obj = {
-                chargeId: chargeId
+                token: that.global.getToken()
               }
               that.global.axiosGetReq('/weixin/checkChargeState',obj).then((res) => {
                 console.log(res.data,'opopopop')

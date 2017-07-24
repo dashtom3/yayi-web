@@ -366,8 +366,8 @@
     methods: {
       // 返回电商网站
       returnAcb: function() {
-        var that = this;
-        that.$router.push({path: '/'});
+        // var that = this;
+        // that.$router.push({path: '/'});
       },
       // 登录成功后
       alreadyLog: function() {
@@ -849,6 +849,7 @@
     margin-right: 20px;
   }
   .speBottom {
+    color: #5DB7E7;
     border-bottom: 3px solid #5DB7E7;
   }
   .pwdLog {
