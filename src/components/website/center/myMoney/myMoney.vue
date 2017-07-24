@@ -32,7 +32,7 @@
 
 <script>
   // import paging0 from "../../brandLib/paging0"
-
+import util from '../../../../common/util'
   export default {
     name: 'myMoney',
     data () {
@@ -81,6 +81,12 @@
         .then((res) => {
           // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
+            if(res.data.data.length>0){
+              // that.currentMoney = res.data.data[0].user.qbBalance;
+              for(let i in res.data.data){
+                res.data.data[i].qbTime = util.formatDate.format(new Date(res.data.data[i].qbTime),'yyyy-MM-dd hh:mm:ss' );
+              }
+            }
             this.getData = res.data.data;
             that.totalCount=res.data.totalNumber;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
@@ -98,6 +104,12 @@
         .then((res) => {
           // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
+            if(res.data.data.length>0){
+              // that.currentMoney = res.data.data[0].user.qbBalance;
+              for(let i in res.data.data){
+                res.data.data[i].qbTime = util.formatDate.format(new Date(res.data.data[i].qbTime),'yyyy-MM-dd hh:mm:ss' );
+              }
+            }
             this.getData = res.data.data;
             that.totalCount=res.data.totalNumber;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;

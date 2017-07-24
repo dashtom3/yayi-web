@@ -188,9 +188,11 @@ export default {
       daoBangRata = 12;
     }else if(2500<=daoBangMoney){
       daoBangRata = 15;
+    }else{
+      daoBangRata = 0;
     }
     daoBangMoneyToMoney = daoBangMoney * daoBangRata / 100;
-    // console.log(daoBangMoneyToMoney,daoBangMoney,daoBangRata)
+    // console.log(daoBangMoneyToMoney,daoBangMoney,daoBangRata,"111111")
 
     for(let b in haoCaiArr){
       haoCaiMoney += haoCaiArr[b].price * 100 * haoCaiArr[b].num / 100
@@ -203,9 +205,11 @@ export default {
       haoCaiRata = 8;
     }else if(3000<=haoCaiMoney){
       haoCaiRata = 12;
+    }else{
+      haoCaiRata = 0;
     }
     haoCaiMoneyToMoney = haoCaiMoney * haoCaiRata / 100;
-    // console.log(haoCaiMoneyToMoney,haoCaiMoney,haoCaiRata)
+    // console.log(haoCaiMoneyToMoney,haoCaiMoney,haoCaiRata,"22222222222222")
 
 
     var gongJuSheBeiAllNum = 0;
@@ -217,62 +221,23 @@ export default {
       gongJuSheBeiRata = 5;
     }else if(gongJuSheBeiAllNum>=2){
       gongJuSheBeiRata = 10;
+    }else{
+      gongJuSheBeiRata = 0;
     }
     gongJuSheBeiMoneyToMoney = gongJuSheBeiMoney * gongJuSheBeiRata / 100;
-    console.log(gongJuSheBeiMoneyToMoney,gongJuSheBeiMoney,gongJuSheBeiRata)
+    // console.log(gongJuSheBeiMoneyToMoney,gongJuSheBeiMoney,gongJuSheBeiRata,"333")
     var finalyMoney = 0;
     finalyMoney = gongJuSheBeiMoneyToMoney + haoCaiMoneyToMoney + daoBangMoneyToMoney;
-    return Math.round(finalyMoney);
-  },
-  goodToMoney2:function(goodList){
-    // goodList 本次购买商品的；列表
-    var finalyMoney = 0;//计算后返回的钱币数量
-    for(let i in goodList){
-      var thisGoodAllMoney = goodList[i].price * 100 * goodList[i].num / 100;
-      var rate;
-      if(goodList[i].goodBrandName=="上海道邦"){
-        if(thisGoodAllMoney<300){
-          rate = 3;
-        }else if(300<=thisGoodAllMoney<600){
-          rate = 5;
-        }else if(600<=thisGoodAllMoney<1200){
-          rate = 8;
-        }else if(1200<=thisGoodAllMoney<2500){
-          rate = 12;
-        }else if(2500<=thisGoodAllMoney){
-          rate = 15;
-        }
-      }else{
-        if(goodList[i].goodSort=="耗材类"){
-          if(thisGoodAllMoney<500){
-            rate = 3;
-          }else if(500<=thisGoodAllMoney<1000){
-            rate = 5;
-          }else if(1000<=thisGoodAllMoney<3000){
-            rate = 8;
-          }else if(3000<=thisGoodAllMoney){
-            rate = 12;
-          }
-        }else if(goodList[i].goodSort=="工具设备类"){
-          if(goodList[i].num==1){
-            rate = 5;
-          }else if(goodList[i].num>=2){
-            rate = 10;
-          }
-        }
-      }
-      finalyMoney += thisGoodAllMoney * 100 * rate / 10000;
-    }
     return Math.round(finalyMoney);
   },
   // RMB兑换钱币规则
   moneyToMoney:function(money){
     // money--需要兑换的人民币数量
     // 钱币兑换比率
-// (1) 1000元<=单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；
-// (2) 2000元<=单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；
-// (3) 5000元<=单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；
-// (4) 单次购买金额>10000元，兑换钱币数量=当次实际兑换金额*125%；
+    // (1) 1000元<=单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；
+    // (2) 2000元<=单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；
+    // (3) 5000元<=单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；
+    // (4) 单次购买金额>10000元，兑换钱币数量=当次实际兑换金额*125%；
     if(money){
       var finalyMoney;
       var rate;

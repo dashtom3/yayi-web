@@ -82,7 +82,7 @@ export default {
   },
   created: function() {
     var that = this
-    that.getMoneyListFn()
+    // that.getMoneyListFn()
   },
   methods: {
     getMoneyListFn:function(){

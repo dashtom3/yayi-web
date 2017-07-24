@@ -16,6 +16,7 @@
   import Vue from 'vue'
   import myMoneyAdd from './moneyAdd'
   import myMoney from './myMoney'
+  import util from '../../../../common/util'
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
   });
@@ -39,22 +40,6 @@
     created:function(){
       this.getMoneyListFn();
     },
-    watch:{
-      getMoneyList:{
-        handler:function(){ // 计算当前乾币
-          for(var i in this.getMoneyList){
-            if(this.getMoneyList[i].qbRget!=0){
-              this.myAllMoney.currentMoney += this.getMoneyList[i].qbRget;
-            }
-            if(this.getMoneyList[i].qbRout!=0){
-              this.myAllMoney.currentMoney -= this.getMoneyList[i].qbRout;
-            }
-          }
-          // this.myAllMoney.details = this.getMoneyList.slice(0,this.everyPageShowNum);
-        },
-        deep:true
-      },
-    },
     methods: {
       changeActive1: function(tabText) {
         this.currentView = tabText;
@@ -75,10 +60,9 @@
         .then((res) => {
           // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            this.getMoneyList = res.data.data;
-            console.log(res)
-            // that.totalCount=res.data.totalNumber;
-            // this.childConfig.pageNum = parseInt(this.getMoneyList.length/this.everyPageShowNum)+1;
+            if(res.data.data.length>0){
+              that.currentMoney = res.data.data[0].user.qbBalance;
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -94,6 +78,7 @@
   position: absolute;
     right: 0;
     top: 10px;
+    color: #5DB7E7;
     font-size: 14px;
 }
 /*-------animation start------*/

@@ -32,11 +32,11 @@
           <span>{{good.name}}</span>
           <p>
             <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
-            <span v-if="good.itemPropertyTwoValue">&nbsp;{{good.itemPropertyTwoValue}}</span>
-            <span v-if="good.itemPropertyThreeValue">&nbsp;{{good.itemPropertyThreeValue}}</span>
-            <span v-if="good.itemPropertyFourValue">&nbsp;{{good.itemPropertyFourValue}}</span>
-            <span v-if="good.itemPropertyFiveValue">&nbsp;{{good.itemPropertyFiveValue}}</span>
-            <span v-if="good.itemPropertySixValue">&nbsp;{{good.itemPropertySixValue}}</span>
+            <span v-if="good.itemPropertyTwoValue">;{{good.itemPropertyTwoValue}}</span>
+            <span v-if="good.itemPropertyThreeValue">;{{good.itemPropertyThreeValue}}</span>
+            <span v-if="good.itemPropertyFourValue">;{{good.itemPropertyFourValue}}</span>
+            <span v-if="good.itemPropertyFiveValue">;{{good.itemPropertyFiveValue}}</span>
+            <span v-if="good.itemPropertySixValue">;{{good.itemPropertySixValue}}</span>
           </p>
         </div>
         <div class="onePrice">
@@ -113,15 +113,15 @@
     },
     watch:{
       selectaLL:function(){
-        if(this.selectaLL){
-          for(let a= 0;a<this.gwcGoods.length;a++){
-              this.gwcGoods[a].checked=true;;
-          }
-        }else{
-          for(let a= 0;a<this.gwcGoods.length;a++){
-              this.gwcGoods[a].checked=false;;
-          }
-        }
+        // if(this.selectaLL){
+        //   for(let a= 0;a<this.gwcGoods.length;a++){
+        //       this.gwcGoods[a].checked=true;;
+        //   }
+        // }else{
+        //   for(let a= 0;a<this.gwcGoods.length;a++){
+        //       this.gwcGoods[a].checked=false;;
+        //   }
+        // }
       },
       gwcGoods:{
         handler:function(){
@@ -273,11 +273,16 @@
       checkAll:function () {
         if(this.selectaLL){
           for(var i=0;i<this.gwcGoods.length;i++){
-            this.gwcGoods[i].checked = true;
-          }
+            var data = this.gwcGoods[i];
+            data.checked = true;
+            this.gwcGoods.splice(i,1,data);
+             }
         }else{
           for(var i=0;i<this.gwcGoods.length;i++){
-            this.gwcGoods[i].checked = false;
+            var data = this.gwcGoods[i];
+            data.checked = false;
+            this.gwcGoods.splice(i,1,data);
+            // this.gwcGoods[i].checked = false;
           }
         }
         this.selectaLL = !this.selectaLL;

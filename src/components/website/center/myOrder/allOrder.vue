@@ -52,7 +52,7 @@
         </div>
         <div class="left des_p">
           <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
-          <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
+          <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -87,7 +87,7 @@
 
     <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
       <div class="" v-if="nowOrderDetails.receiver">
-        <p >收货信息</p>
+        <p>收货信息</p>
         <p>
           <span>{{nowOrderDetails.receiver.receiverName}}&nbsp;</span>
           <span>{{nowOrderDetails.receiver.phone}}&nbsp;</span>
@@ -117,7 +117,7 @@
               </div>
               <div style="width:220px;" class="left des_p">
                 <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
-                <p>{{cargo.itemPropertyNamea}}&nbsp;{{cargo.itemPropertyNameb}}&nbsp;{{cargo.itemPropertyNamec}}</p>
+                <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
               </div>
               <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
               <div class="left des_num">{{cargo.num}}</div>
@@ -443,17 +443,14 @@
           token:that.global.getToken(),
           orderId:that.cancleOrderItemId
         };
-        console.log(obj)
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
            console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
               if(that.cancleOrderItemId==that.items[i].orderId){
                 var data = that.items[i];
-                data.state = 1;
-                that.items[i].splice(i,1,data);
-              }else{
-                continue;
+                data.state = 0;
+                that.items.splice(i,1,data);
               }
             }
             that.dialogVisible = false;

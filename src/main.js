@@ -7,11 +7,11 @@ import App from './App'
 import router from './router'
 // import axios from 'axios'
 import Global from './components/global/global'
-import Promise from 'promise-polyfill';   
+import Promise from 'promise-polyfill';
 
-// To add to window  
-if (!window.Promise) {  
-  window.Promise = Promise;  
+// To add to window
+if (!window.Promise) {
+  window.Promise = Promise;
 }
 Vue.use(ElementUI)
 // Vue.component(Button.name, Button)
@@ -40,11 +40,11 @@ Vue.filter('frisco', function (value) {
     	return hh
     }
     if (value == 1) {
-    	var aa = '待付款'
+    	var aa = '等待买家付款'
     	return aa
     }
     if (value == 2) {
-    	var ee = '待发货'
+    	var ee = '买家已付款'
     	return ee
     }
     if (value == 3) {
@@ -56,7 +56,7 @@ Vue.filter('frisco', function (value) {
     	return ee
     }
     if (value == 5) {
-    	var ee = '待发货'
+    	var ee = '买家已付款'
     	return ee
     }
     if (value == 6) {

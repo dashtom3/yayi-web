@@ -28,7 +28,7 @@
         </div>
         <div class="left des_p">
           <p style="margin-bottom: 20px;">{{cargo.itemInfo.itemName}}</p>
-          <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+          <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -68,7 +68,7 @@
     </p>
   </div>
   <div class="">
-    <p>订单信息：</p>
+    <p>订单信息</p>
     <p style="margin-bottom:30px;">订单编号：<span>{{nowOrderDetails.orderId}}</span>
     <span style="float:right">下单时间：{{nowOrderDetails.created}}</span></p>
     <div class="">
@@ -87,7 +87,7 @@
           </div>
           <div style="width:220px;" class="left des_p">
             <p style="margin-top:0 ;">{{cargo.itemInfo.itemName}}</p>
-            <p>{{cargo.itemPropertyNamea}}{{cargo.itemPropertyNameb}}{{cargo.itemPropertyNamec}}</p>
+            <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
           <div class="left des_num">{{cargo.num}}</div>

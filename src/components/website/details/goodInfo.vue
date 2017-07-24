@@ -433,15 +433,14 @@ import myAddress from './selectThree'
               };
               var list = that.nowGoodDetails.itemValueList;
               for(let i in list){
-                if(nowSku==list.itemSKU){
-                  obj.itemPropertyInfo = list.itemPropertyInfo;
-                  obj.itemPropertyTwoValue = list.itemPropertyTwoValue;
-                  obj.itemPropertyThreeValue = list.itemPropertyThreeValue;
-                  obj.itemPropertyFourValue = list.itemPropertyFourValue;
-                  obj.itemPropertyFiveValue = list.itemPropertyFiveValue;
-                  obj.itemPropertySixValue = list.itemPropertySixValue;
-                }else{
-                  continue;
+                if(nowSku==list[i].itemSKU){
+                  obj.itemPropertyInfo = list[i].itemPropertyInfo;
+                  obj.itemPropertyTwoValue = list[i].itemPropertyTwoValue;
+                  obj.itemPropertyThreeValue = list[i].itemPropertyThreeValue;
+                  obj.itemPropertyFourValue = list[i].itemPropertyFourValue;
+                  obj.itemPropertyFiveValue = list[i].itemPropertyFiveValue;
+                  obj.itemPropertySixValue = list[i].itemPropertySixValue;
+                  break;
                 }
               }
               sendData.haveSelectedGoodNum = that.goodDefaultNum;
