@@ -45,7 +45,7 @@
       <div class="preventive_container">
         <div class="preventive_item" v-if="index<8" v-for="(item,index) in classifyItem.items" :key="item" @click="toDetail(item)">
           <div class="item_img_box">
-            <img class="item_img" :src=item.itemDetail.itemPica alt="img">
+            <img class="item_img" :src="item.itemDetail.itemPica+'?imageView2/1/w/200/h/200'" alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
           </div>
           <p class="item_des">{{item.itemName}}</p>

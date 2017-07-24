@@ -33,17 +33,17 @@
         </div>
         <div class="list_des" v-for="cargo in cargos">
           <div class="left des_img_img">
-            <img style="width:60px;height:60px;" :src=cargo.picPath alt="img">
+            <img style="width:60px;height:60px;" :src="cargo.picPath+'?imageView2/1/w/60/h/60'" alt="img">
           </div>
           <div class="left des_p">
             <p style="margin-bottom: 25px;">{{cargo.itemName}}</p>
             <p>
               <span v-if="cargo.itemPropertyInfo">{{cargo.itemPropertyInfo}}</span>
-              <span v-if="cargo.itemPropertyTwoValue">{{';'+cargo.itemPropertyTwoValue}}</span>
-              <span v-if="cargo.itemPropertyThreeValue">{{';'+cargo.itemPropertyThreeValue}}</span>
-              <span v-if="cargo.itemPropertyFourValue">{{';'+cargo.itemPropertyFourValue}}</span>
-              <span v-if="cargo.itemPropertyFiveValue">{{';'+cargo.itemPropertyFiveValue}}</span>
-              <span v-if="cargo.itemPropertySixValue">{{';'+cargo.itemPropertySixValue}}</span>
+              <span v-if="cargo.itemPropertyTwoValue">{{'；'+cargo.itemPropertyTwoValue}}</span>
+              <span v-if="cargo.itemPropertyThreeValue">{{'；'+cargo.itemPropertyThreeValue}}</span>
+              <span v-if="cargo.itemPropertyFourValue">{{'；'+cargo.itemPropertyFourValue}}</span>
+              <span v-if="cargo.itemPropertyFiveValue">{{'；'+cargo.itemPropertyFiveValue}}</span>
+              <span v-if="cargo.itemPropertySixValue">{{'；'+cargo.itemPropertySixValue}}</span>
             </p>
           </div>
           <div class="left des_price">¥{{cargo.price}}</div>

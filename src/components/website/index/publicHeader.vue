@@ -25,11 +25,11 @@
               <div class="cargo_price">￥{{item.price}}*{{item.num}}</div>
               <div class="cargo_num">
                 <span v-if="item.itemPropertyInfo">{{item.itemPropertyInfo}}</span>
-                <span v-if="item.itemPropertyTwoValue">{{';'+item.itemPropertyTwoValue}}</span>
-                <span v-if="item.itemPropertyThreeValue">{{';'+item.itemPropertyThreeValue}}</span>
-                <span v-if="item.itemPropertyFourValue">{{';'+item.itemPropertyFourValue}}</span>
-                <span v-if="item.itemPropertyFiveValue">{{';'+item.itemPropertyFiveValue}}</span>
-                <span v-if="item.itemPropertySixValue">{{';'+item.itemPropertySixValue}}</span>
+                <span v-if="item.itemPropertyTwoValue">{{'；'+item.itemPropertyTwoValue}}</span>
+                <span v-if="item.itemPropertyThreeValue">{{'；'+item.itemPropertyThreeValue}}</span>
+                <span v-if="item.itemPropertyFourValue">{{'；'+item.itemPropertyFourValue}}</span>
+                <span v-if="item.itemPropertyFiveValue">{{'；'+item.itemPropertyFiveValue}}</span>
+                <span v-if="item.itemPropertySixValue">{{'；'+item.itemPropertySixValue}}</span>
               </div>
               <div class="cargo_rm" @click.stop="delete_cargo(item)">删除</div>
             </div>
