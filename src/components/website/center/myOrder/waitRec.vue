@@ -24,11 +24,15 @@
       <!--  订单详情item 开始 -->
       <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
         <div class="left des_img" style="width:81px;height:85px;" @click="goToThisDetails(cargo)">
-          <img :src="cargo.picPath" alt="img">
+          <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
         </div>
         <div class="left des_p">
           <p style="margin-top:0;margin-bottom:20px;">{{cargo.itemInfo.itemName}}</p>
-          <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
+          <p>
+            {{cargo.itemPropertyNamea}}<span v-if="cargo.itemPropertyNameb">；</span>
+            {{cargo.itemPropertyNameb}}<span v-if="cargo.itemPropertyNamec">；</span>
+            {{cargo.itemPropertyNamec}}
+          </p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
         <div class="left des_num">{{cargo.num}}</div>
@@ -84,11 +88,15 @@
         <!--  订单详情item 开始 -->
         <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
           <div class="left des_img" style="width:81px;height:85px;">
-            <img :src="cargo.picPath" alt="img">
+            <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
           </div>
           <div style="width:220px;" class="left des_p">
             <p class="orderDetail_title">{{cargo.itemInfo.itemName}}</p>
-            <p>{{cargo.itemPropertyNamea}};{{cargo.itemPropertyNameb}};{{cargo.itemPropertyNamec}}</p>
+            <p>
+              {{cargo.itemPropertyNamea}}<span v-if="cargo.itemPropertyNameb">；</span>
+              {{cargo.itemPropertyNameb}}<span v-if="cargo.itemPropertyNamec">；</span>
+              {{cargo.itemPropertyNamec}}
+            </p>
           </div>
           <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
           <div class="left des_num">{{cargo.num}}</div>

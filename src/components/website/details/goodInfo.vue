@@ -56,7 +56,6 @@
         <div class="" v-for="(item, index1) in items" v-if="item.propertyName" >
           <span style="float:left">{{item.propertyName}}：</span>
           <div class="shuxing">
-            <!-- canUseEqulOneClass -->
             <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList"  :disabled = "!oneAttrVal.enabled">
               {{oneAttrVal.data}}
             </button>
@@ -71,15 +70,23 @@
           <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
           <span>{{goodDefaultNum}}</span>
           <span v-on:click="addGoodNum()">+</span>
+          <span v-if="!kuCunBuZu" class="kucunbuzu">缺货</span>
           <div class="clearFloat"></div>
+
         </div>
+
         <div style="clear:both">
 
         </div>
+
       </div>
-      <div class="goodBtn">
+      <div v-if="kuCunBuZu" class="goodBtn">
         <span @click="addGwcThisGood()">加入购物车</span>
         <span @click="nowToBuyThis()">立即购买</span>
+      </div>
+      <div v-else class="goodBtn kucunbuzu">
+        <span >加入购物车</span>
+        <span >立即购买</span>
       </div>
     </div>
     <div class="clearFloat"></div>
@@ -109,6 +116,7 @@ import myAddress from './selectThree'
     data () {
       return {
         currentView:"goodIntroduce",
+        kuCunBuZu:true,
         attrLength:0,
         nowGoodSKU:null,
         attrVal:[],
@@ -193,11 +201,13 @@ import myAddress from './selectThree'
       },
       addGoodNum:function () {
           this.goodDefaultNum += 1;
+          this.jiSuanKuCun();
       },
       reduceGoodNum:function () {
         if(this.goodDefaultNum != 1){
           this.goodDefaultNum -= 1;
         }
+        this.jiSuanKuCun();
       },
       changeGoodInforWord:function(arg,view){
         this.goodInforWord = arg;
@@ -205,6 +215,19 @@ import myAddress from './selectThree'
       },
       checkDisabled: function(){
 
+      },
+      jiSuanKuCun:function(){
+        var that = this;
+        var jiSuanSkuObj = that.jiSuanSku();
+        if(jiSuanSkuObj.sku){
+          that.nowGoodDetails.itemPrice = jiSuanSkuObj.obj.itemSkuPrice;
+          var kuCun = jiSuanSkuObj.obj.stockNum;
+          if(that.goodDefaultNum>kuCun){
+            that.kuCunBuZu = false;
+          }else{
+            that.kuCunBuZu = true;
+          }
+        }
       },
       //indexC 子数组第几位 item 数组第几行的数据  indexP  当前数组第几行
       changeAttSty:function(indexC,item,indexP){
@@ -261,6 +284,7 @@ import myAddress from './selectThree'
             }
           }
         }
+        this.jiSuanKuCun();
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
@@ -354,7 +378,7 @@ import myAddress from './selectThree'
       },
       jiSuanSku:function(){
         var that = this;
-        var str = null ;
+        var returnObj = {};
         var havaSelectVals = [];
         var nowGoodValLength = 0;
         var list2 = that.nowGoodDetails.propertyList;
@@ -362,7 +386,7 @@ import myAddress from './selectThree'
           if(list2[a].propertyName){
             nowGoodValLength = parseInt(a) + 1;
           }
-          if(list2[a].checkWhich>=0){
+          if(list2[a].checkWhich>=0 && list2[a].checkWhich!=null){
             havaSelectVals.push(list2[a].propertyInfoList[list2[a].checkWhich].data);
           }else{
             continue;
@@ -400,7 +424,8 @@ import myAddress from './selectThree'
               }
             }
             if(flag){
-              str = list1[i].itemSKU;
+              returnObj.sku = list1[i].itemSKU;
+              returnObj.obj= list1[i];
               break;
             }else{
               continue;
@@ -409,12 +434,12 @@ import myAddress from './selectThree'
             continue;
           }
         }
-        return str;
+        return returnObj;
       },
       nowToBuyThis:function(){
         var that = this;
         var userToken = that.global.getToken();
-        var nowSku = that.jiSuanSku();
+        var nowSku = that.jiSuanSku().sku;
         if(userToken){
           if(nowSku){
             if(that.global.getUser()){
@@ -619,6 +644,11 @@ import myAddress from './selectThree'
     width:92px;
     border:1px solid #e5e5e5;
     height:30px;
+    position: relative;
+  }
+  .calculator .kucunbuzu{
+    position: absolute;
+    right: -50px;
   }
   .calculator span{
     width:30px;
@@ -637,6 +667,10 @@ import myAddress from './selectThree'
 
   .goodBtn{
     padding-left: 102px;
+  }
+  .kucunbuzu span{
+    color: #333 !important;
+    background: #ececec !important;
   }
   .goodBtn span{
       display: inline-block;

@@ -25,18 +25,18 @@
         <div class="">
           <el-checkbox style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>
           <div class="imgWrap" @click="goToThisDetail(good)">
-              <img :src="good.pic" alt="">
+              <img :src="good.pic+'?imageView2/1/w/80/h/80'" alt="">
           </div>
         </div>
         <div class="goodInfo">
           <span>{{good.name}}</span>
           <p>
             <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
-            <span v-if="good.itemPropertyTwoValue">;{{good.itemPropertyTwoValue}}</span>
-            <span v-if="good.itemPropertyThreeValue">;{{good.itemPropertyThreeValue}}</span>
-            <span v-if="good.itemPropertyFourValue">;{{good.itemPropertyFourValue}}</span>
-            <span v-if="good.itemPropertyFiveValue">;{{good.itemPropertyFiveValue}}</span>
-            <span v-if="good.itemPropertySixValue">;{{good.itemPropertySixValue}}</span>
+            <span v-if="good.itemPropertyTwoValue">；{{good.itemPropertyTwoValue}}</span>
+            <span v-if="good.itemPropertyThreeValue">；{{good.itemPropertyThreeValue}}</span>
+            <span v-if="good.itemPropertyFourValue">；{{good.itemPropertyFourValue}}</span>
+            <span v-if="good.itemPropertyFiveValue">；{{good.itemPropertyFiveValue}}</span>
+            <span v-if="good.itemPropertySixValue">；{{good.itemPropertySixValue}}</span>
           </p>
         </div>
         <div class="onePrice">
