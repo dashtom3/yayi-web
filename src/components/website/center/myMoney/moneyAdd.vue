@@ -109,10 +109,10 @@ export default {
         if (that.payType == '1') {
           console.log('支付宝充值')
         } else {
-          // let chargeId = that.global.uuid()
+          // let chargeId = that.global.uuid() 
           let money = parseInt(that.payMuch)
           let token = that.global.getToken()
-          console.log(chargeId,'sds')
+          // console.log(chargeId,'sds')
           that.WxTableVisible = true
           that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderCharge' + '?money=' + money + '&token=' + token
           that.kk = 1

@@ -98,6 +98,7 @@
         that.$confirm('确认关闭微信支付页面？').then(_ => {
           that.kk = 600
           that.WxTableVisible = false
+          that.$router.go(0)
           done();
         }).catch(_ => {});
       },

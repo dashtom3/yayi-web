@@ -258,8 +258,8 @@ let router = new Router({
       iconCls: 'iconfont icon-books1', // 图标样式class
       children: [
         {path: '/admin/dataStatis/goodsStatis', component: DataStatis_goodsStatis, name: '商品统计', menuShow: true},
-        {path: '/admin/dataStatis/elecSuppStatis', component: DataStatis_elecSuppStatis, name: '电商用户统计', menuShow: true},
-        {path: '/admin/dataStatis/salesStatis', component: DataStatis_salesStatis, name: '销售员统计', menuShow: true}
+        // {path: '/admin/dataStatis/elecSuppStatis', component: DataStatis_elecSuppStatis, name: '电商用户统计', menuShow: true},
+        // {path: '/admin/dataStatis/salesStatis', component: DataStatis_salesStatis, name: '销售员统计', menuShow: true}
       ]
     },
     {

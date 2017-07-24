@@ -692,7 +692,7 @@
       // 登录成功后
       alreadyLog: function() {
         var that = this;
-        that.$router.push({ name: 'center', params: { current: false}});
+        that.$router.push({ name: '个人资料', params: {currentView: 'tab01'}});
       },
       // 登出
       logOut: function() {

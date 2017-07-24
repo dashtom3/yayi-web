@@ -37,7 +37,13 @@
       }else{
         that.changeTabs(1)
       }
-      
+    },
+    mounted: function() {
+      var that = this;
+      // 用户手机号跳转
+      if (that.$route.params.currentView == 'tab01'){
+        that.changeTabs(1)
+      }
     },
     components:{
       personalData,
