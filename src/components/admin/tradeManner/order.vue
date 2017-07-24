@@ -168,7 +168,7 @@
           <div>退款信息</div>
           <table class="refund_tb">
             <tr class="bgc">
-            <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">实付款：{{'￥'+orderInfo.totalPrice.toFixed(2)}}</span><span style="padding-left:100px;">运费：包邮</span><span style="padding-left:100px;">乾币抵扣：{{'￥'+orderInfo.deductible.toFixed(2)}}</span></td>
+            <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">实付款：{{'￥'+orderInfo.totalPrice}}</span><span style="padding-left:100px;">运费：包邮</span><span style="padding-left:100px;">乾币抵扣：{{'￥'+orderInfo.deductible}}</span></td>
             </tr>
             <tr class="bgc">
               <td>sku代码</td>
@@ -241,7 +241,7 @@
                   <el-checkbox v-model="item.checked" size="small"></el-checkbox>
                 </template>
               </td>
-              <td>{{item.itemInfo.itemName}}</td>
+              <td>{{item.itemName}}</td>
               <td>{{item.price + '*' + item.num}}</td>
               <td style="width:200px;position:relative;">
                 <div id="inputCenter" v-show="item.num" style="position:absolute;top:4px;">
@@ -371,30 +371,35 @@
       wacthTuiKuanList:{
         handler:function(){
           var that = this;
-          // var list = that.orderInfo.orderitemList;
-          // orderInfo.refundAmt
-          // orderInfo.untread
-          // orderInfo.outCoins
           that.orderInfo.refundAmt = 0;
           that.orderInfo.untread = 0;
           that.orderInfo.outCoins = 0;
+          var jiSuanArr = [];
           for(let i in that.wacthTuiKuanList){
             if(that.wacthTuiKuanList[i].checked){
-              that.orderInfo.refundAmt += that.wacthTuiKuanList[i].num * that.wacthTuiKuanList[i].price;
-              that.wacthTuiKuanList[i].goodBrandName = that.wacthTuiKuanList[i].itemBrandName;
-              that.wacthTuiKuanList[i].goodSort = that.wacthTuiKuanList[i].itemInfo.itemSort;
+              that.orderInfo.refundAmt += that.wacthTuiKuanList[i].count * that.wacthTuiKuanList[i].price;
+              // that.wacthTuiKuanList[i].goodBrandName = that.wacthTuiKuanList[i].itemBrandName;
+              // that.wacthTuiKuanList[i].goodSort = that.wacthTuiKuanList[i].itemSort;
+              var obj = {
+                goodBrandName:that.wacthTuiKuanList[i].itemBrandName,
+                goodSort:that.wacthTuiKuanList[i].itemSort,
+                num:that.wacthTuiKuanList[i].count,
+                price:that.wacthTuiKuanList[i].price
+              };
+              jiSuanArr.push(obj);
             }
           }
           //显示退款金额最终数据
           if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
             that.orderInfo.refundAmt = that.orderInfo.actualPay;
             that.orderInfo.untread = that.orderInfo.refundAmt - that.orderInfo.actualPay;
-
           }
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
 
           //显示退款扣除钱币数据
-          var nowOrderGiveQb = this.global.goodToMoney(that.wacthTuiKuanList);
+          var nowOrderGiveQb = this.global.goodToMoney(jiSuanArr);
+          console.log(that.orderInfo.giveQb , nowOrderGiveQb)
+          console.log(that.orderInfo.giveQb - nowOrderGiveQb)
           that.orderInfo.outCoins = that.orderInfo.giveQb - nowOrderGiveQb;
         },
         deep:true
@@ -631,7 +636,7 @@
         var obj = {
           orderId:row.orderId
         };
-        that.global.axiosPostReq('/showUserOrderManage/queryOrderDetails',obj)
+        that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
         .then((res) => {
           console.log(res,"getOneOrderDetailsById")
           if (res.data.callStatus === 'SUCCEED') {
@@ -659,12 +664,18 @@
       },
       reduceCount(index, item){
         if(item.checked && this.orderInfo.orderitemList[index].count !== 1){
-          this.orderInfo.orderitemList[index].count -= 1;
+          var data = this.orderInfo.orderitemList[index];
+          data.count -=1;
+          this.orderInfo.orderitemList.splice(index,1,data);
+          // this.orderInfo.orderitemList[index].count -= 1;
         }
       },
       addCount(index, item){
-        if(item.checked && this.orderInfo.orderitemList[index].count < this.orderInfo.orderitemList[index].goodsNum){
-          this.orderInfo.orderitemList[index].count += 1;
+        if(item.checked && this.orderInfo.orderitemList[index].count < this.orderInfo.orderitemList[index].num){
+          var data = this.orderInfo.orderitemList[index];
+          data.count +=1;
+          this.orderInfo.orderitemList.splice(index,1,data);
+          // this.orderInfo.orderitemList[index].count += 1;
         }
       },
       goToBackMoney:function(){

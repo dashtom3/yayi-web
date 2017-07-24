@@ -349,7 +349,7 @@ import myAddress from './selectThree'
       },
       addGwcThisGood:function(){
         var that = this;
-        var nowSku = that.jiSuanSku();
+        var nowSku = that.jiSuanSku().sku;
 
         if(that.global.getUser()){
           if(nowSku){

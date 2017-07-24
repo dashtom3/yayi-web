@@ -4,14 +4,14 @@
       <!-- <span>当前乾币：{{myAllMoney.currentMoney}}</span> -->
     </div>
     <el-table  :data="myAllMoney.details"  border  style="width: 100%;text-align:center;border-color:#dddddd;background-color:#f8f8f8;">
-    <el-table-column  label="收入"  width="142"  align="center">
+    <el-table-column  label="收入"  width="100"  align="center">
       <template scope="scope">
-        <span class="colorRed">{{scope.row.qbRget}}</span>
+        <span class="colorBlue">{{scope.row.qbRget}}</span>
       </template>
     </el-table-column>
-    <el-table-column  label="支出"  width="143"  align="center">
+    <el-table-column  label="支出"  width="100"  align="center">
       <template scope="scope">
-        <span class="colorBlue">{{scope.row.qbRout}}</span>
+        <span class="colorRed">{{scope.row.qbRout}}</span>
       </template>
     </el-table-column>
     <el-table-column  prop="remark"  label="描述"  width="610"  align="center"></el-table-column>
