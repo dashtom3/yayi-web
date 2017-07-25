@@ -144,12 +144,12 @@ export default {
       //console.log('查询订单数据',params)
       global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          //console.log('查询订单数据',res.data.data)
-          this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney || 0
-          this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney || 0
-          this.orderInfo.saleAllMoney = res.data.data.saleAllMoney || 0
+          // console.log('查询订单数据',res.data.data)
+          this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney.toFixed(2) || '0.00'
+          this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney.toFixed(2) || '0.00'
+          this.orderInfo.saleAllMoney = res.data.data.saleAllMoney.toFixed(2) || '0.00'
           this.orderInfo.orderNum = res.data.data.orderNum || 0
-          this.allCommission = res.data.data.allCommission || 0
+          this.allCommission = res.data.data.allCommission.toFixed(2) || '0.00'
           // this.totalCount = res.data.totalNumber
         }else{
           this.$message.error('网络出错，请稍后再试！');
@@ -173,7 +173,7 @@ export default {
       //console.log('查询订单列表',params)
       global.axiosGetReq('/saleMyOrder/myOrderList',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          //console.log(res.data.data)
+          console.log(res.data.data)
           this.orderInfo.myOrderVoList = res.data.data
           this.totalCount = res.data.totalNumber
         }else{
@@ -189,11 +189,13 @@ export default {
         token: global.getSalesToken()
       }
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
+        console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') { 
           for(var i=0;i<res.data.data.length;i++){
-            this.echartData.push(res.data.data[i].dayCommission)
+            this.echartData.push(res.data.data[i].dayCommission * res.data.data[i].dayOrderNum)
           }
           this.echartData.unshift(0)
+          console.log('cccccccc',this.echartData)
         }else{
           this.$message.error('网络出错，请稍后再试！');
         }

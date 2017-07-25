@@ -351,7 +351,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
             this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
-            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || 0
+            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -414,8 +414,8 @@
         that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data,'pp')
-            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2) || 0
-            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2) || 0
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2) || '0.00'
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2) || '0.00'
             this.tableData = res.data.data
             this.totalCount = res.data.totalNumber
           } else {

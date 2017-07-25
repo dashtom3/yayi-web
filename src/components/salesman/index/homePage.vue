@@ -149,7 +149,6 @@
       this.echartPic()
       this.queryOrderList()
       this.queryInfo()
-      this.getMyWallet()
       this.getBalance()
     },
     methods: {
@@ -171,16 +170,15 @@
           numberPerPage: this.pagesize,
           token: global.getSalesToken()
         }
-        console.log('查询订单数据',params)
         global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            console.log('查询订单数据',res.data.data)
-            this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney || 0
-            this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney || 0
-            this.orderInfo.saleAllMoney = res.data.data.saleAllMoney || 0
+            
+            this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney.toFixed(2) || '0.00'
+            this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney.toFixed(2) || '0.00'
+            this.orderInfo.saleAllMoney = res.data.data.saleAllMoney.toFixed(2) || '0.00'
             this.orderInfo.orderNum = res.data.data.orderNum || 0
-            this.allCommission = res.data.data.allCommission || 0
-            // this.totalCount = res.data.totalNumber
+            this.allCommission = res.data.data.allCommission.toFixed(2) || '0.00'
+            
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }
@@ -200,29 +198,14 @@
           numberPerPage: this.pagesize,
           token: global.getSalesToken()
         }
-        console.log('查询订单列表',params)
+        
         global.axiosGetReq('/saleMyOrder/myOrderList',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            console.log(res.data.data)
+            
             this.orderInfo.myOrderVoList = res.data.data
             this.totalCount = res.data.totalNumber
           }else{
             this.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      //获取钱包明细
-      getMyWallet(){
-        var that = this;
-        var obj = {
-          token: that.global.getSalesToken(),
-          state: 0,
-        }
-        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            this.accountAmt = res.data.data.withdrawalsTX;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -250,7 +233,7 @@
         that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
-            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2)
+            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -274,10 +257,6 @@
             this.$message.error('网络出错，请稍后再试！');
           }
         })
-      },
-      pageHandler(data){
-        this.pageProps.pageNum = data
-        this.init();
       },
       immediateDoIt:function(){
         var that = this;

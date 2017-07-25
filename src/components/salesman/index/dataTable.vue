@@ -187,7 +187,7 @@ export default {
               left: 'center'
           },
           tooltip: {
-              trigger: 'axis'
+              trigger: 'axis',
           },
           legend: {
               data:['当日销售额（元）']
