@@ -8,7 +8,7 @@
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
         <div class="">
-          <span>兑换钱币数：</span>
+          <span>兑换乾币数：</span>
           <span class="showPayMuch">{{finalyMoney}}</span>
         </div>
         <div class="">
@@ -23,10 +23,10 @@
       <div class="exchangeRule">
         <p>乾币兑换标准</p>
         <ul>
-          <li>(1) 1000元≤单次购买金额<2000元，兑换钱币数量=当次实际兑换金额*110%；</li>
-          <li>(2) 2000元≤单次购买金额<5000元，兑换钱币数量=当次实际兑换金额*115%；</li>
-          <li>(3) 5000元≤单次购买金额<10000元，兑换钱币数量=当次实际兑换金额*120%；</li>
-          <li>(4) 单次购买金额≥10000元，兑换钱币数量=当次实际兑换金额*125%。</li>
+          <li>(1) 1000元≤单次购买金额<2000元，兑换乾币数量=当次实际兑换金额*110%；</li>
+          <li>(2) 2000元≤单次购买金额<5000元，兑换乾币数量=当次实际兑换金额*115%；</li>
+          <li>(3) 5000元≤单次购买金额<10000元，兑换乾币数量=当次实际兑换金额*120%；</li>
+          <li>(4) 单次购买金额≥10000元，兑换乾币数量=当次实际兑换金额*125%。</li>
         </ul>
       </div>
     </div>
@@ -70,10 +70,10 @@ export default {
         if(nowPayMuch > 0){
           finalyPayMuch = nowPayMuch;
         } else {
-          errMsg = "请输入合法的钱币数量";
+          errMsg = "请输入合法的乾币数量";
         }
       } else {
-        errMsg = "请输入合法的钱币数量";
+        errMsg = "请输入合法的乾币数量";
       }
       that.payMuch = finalyPayMuch;
       that.payMuchErrMsg = errMsg;
@@ -109,7 +109,7 @@ export default {
         if (that.payType == '1') {
           console.log('支付宝充值')
         } else {
-          // let chargeId = that.global.uuid() 
+          // let chargeId = that.global.uuid()
           let money = parseInt(that.payMuch)
           let token = that.global.getToken()
           // console.log(chargeId,'sds')
@@ -146,7 +146,7 @@ export default {
             },3000);
         }
       } else {
-        that.$alert('请输入兑换钱币数量', {confirmButtonText: '确定',});
+        that.$alert('请输入兑换乾币数量', {confirmButtonText: '确定',});
       }
     },
     // 确认关闭

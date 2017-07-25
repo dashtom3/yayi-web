@@ -77,6 +77,7 @@ import util from '../../../../common/util'
         var obj = {};
         obj.currentPage = data;
         obj.numberPerpage = 10;
+        obj.token = this.global.getToken()
         that.global.axiosGetReq('/userMyQb/query', obj)
         .then((res) => {
           // console.log(res)

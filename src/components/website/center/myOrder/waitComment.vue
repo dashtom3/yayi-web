@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div class="block">
+    <div class="block" v-if="items.length!=0">
       <!-- 分页 -->
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
       </el-pagination>
@@ -110,7 +110,7 @@
         <div class="left now_pay">实付款（元）</div>
         <div class="left deal_state">交易状态</div>
       </div>
-      <div style="width:100%" class="order_item" v-if="nowOrderDetails.orderitemList">
+      <div style="width:100%;border-color:#eeeeee;" class="order_item" v-if="nowOrderDetails.orderitemList">
         <!--  订单详情item 开始 -->
         <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
           <div class="left des_img">

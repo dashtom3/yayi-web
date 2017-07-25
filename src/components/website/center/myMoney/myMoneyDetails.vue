@@ -3,7 +3,7 @@
     <div class="tab_box">
       <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">乾币充值</div>
       <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">乾币明细</div>
-      <span class="currentMoneyWrap">当前钱币：{{currentMoney}}</span>
+      <span class="currentMoneyWrap">当前乾币：{{currentMoney}}</span>
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">

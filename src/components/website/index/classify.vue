@@ -1,7 +1,8 @@
 <template>
   <div class="classify">
     <div class="cargo" v-on:mouseenter="cargo" v-on:mouseleave="hideCargo">
-      商品分类
+      <span style="font-size:16px">商品分类</span>
+
       <img v-if="change1" src="../../../images/index/down.png" alt="img">
       <img v-else src="../../../images/index/up.png" alt="img">
       <div v-show="!change1"  class="classfyDetail" v-if="allClassfy.length>0"  >
@@ -23,7 +24,8 @@
       </div>
     </div>
     <div class="brand" v-on:mouseenter="brand" v-on:mouseleave="hideBrand">
-      品牌库
+      <span style="font-size:16px">品牌库</span>
+
       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
       <img v-else src="../../../images/index/down.png" alt="img">
       <div class="brandLib"  v-if="!change2">
