@@ -72,13 +72,8 @@
           <span v-on:click="addGoodNum()">+</span>
           <span v-if="!kuCunBuZu" class="kucunbuzu">缺货</span>
           <div class="clearFloat"></div>
-
         </div>
-
-        <div style="clear:both">
-
-        </div>
-
+        <div style="clear:both"></div>
       </div>
       <div v-if="kuCunBuZu" class="goodBtn">
         <span @click="addGwcThisGood()">加入购物车</span>
@@ -192,6 +187,9 @@ import myAddress from './selectThree'
               for(var j=0;j<that.nowGoodDetails.propertyList[i].propertyInfoList.length;j++){
                 that.nowGoodDetails.propertyList[i].propertyInfoList[j] = {data:that.nowGoodDetails.propertyList[i].propertyInfoList[j],enabled:true}
               }
+            }
+            if(that.nowGoodDetails.itemValueList[0].stockNum==0){
+              that.kuCunBuZu = false;
             }
             that.nowGoodSKUDefault();
           } else {
@@ -445,7 +443,7 @@ import myAddress from './selectThree'
             if(that.global.getUser()){
               var sendData = {};
               sendData.details = [];
-              sendData.allMoney = that.nowGoodDetails.itemPrice;
+
               var obj = {
                 itemId:that.nowGoodDetails.itemId,
                 itemName:that.nowGoodDetails.itemName,
@@ -456,6 +454,7 @@ import myAddress from './selectThree'
                 goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
                 goodSort:that.nowGoodDetails.itemSort
               };
+              sendData.allMoney = that.nowGoodDetails.itemPrice * 100 * that.goodDefaultNum / 100;
               var list = that.nowGoodDetails.itemValueList;
               for(let i in list){
                 if(nowSku==list[i].itemSKU){

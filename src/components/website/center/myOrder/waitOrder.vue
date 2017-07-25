@@ -22,7 +22,7 @@
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
-      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
+      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo" @click="goToThisDetails(cargo)">
         <div class="left des_img" style="width:81px;height:85px;">
           <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
         </div>

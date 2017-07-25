@@ -33,6 +33,9 @@
           <el-form-item label="销售员名称：">
             <el-input v-model="searchSaleName"></el-input>
           </el-form-item>
+          <el-form-item label="销售员手机号：">
+            <el-input v-model="searchSalePhone"></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" v-on:click="search()">查询</el-button>
           </el-form-item>
@@ -55,7 +58,8 @@
             <span v-else>否</span>
           </template>
         </el-table-column>
-        <el-table-column  prop="saleName" align="center"  label="销售员姓名">  </el-table-column>
+        <el-table-column  prop="salePhone" align="center"  label="销售员手机号">  </el-table-column>
+        <el-table-column  prop="saleName" align="center"  label="销售员名称">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
             <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index,scope.row)">取消绑定</el-button>
@@ -185,6 +189,7 @@
         searchtype:'全部',
         searchisBindSale:"全部",
         searchSaleName:null,
+        searchSalePhone:null,
         bindSaleSearchType:'手机号',
         bindSaleSearchCont:null,
         options: [{
@@ -319,6 +324,11 @@
         if(!that.searchSaleName){
           that.searchSaleName = "";
         }
+        if(that.searchSalePhone){
+          obj.salePhone = that.searchSalePhone;
+        }else{
+          obj.salePhone = "";
+        }
         obj.currentPage = data;
         that.global.axiosGetReq('/userManageList/userlist',obj)
         .then((res) => {
@@ -409,13 +419,10 @@
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var data = that.userList[that.needBindSaleUserIndex];
-            console.log(data)
             data.isBindSale = 1;
             data.saleName = that.salesList[index].trueName;
+            data.salePhone = that.salesList[index].phone;
             that.userList.splice(that.needBindSaleUserIndex,1,data);
-            console.log(that.userList[that.needBindSaleUserIndex])
-            // that.userList[that.needBindSaleUserIndex].isBindSale = "是";
-            // that.userList[that.needBindSaleUserIndex].saleName = that.salesList[index].name;
             that.showBindSalAlert = false;
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -520,13 +527,13 @@
             salePhone:one.salePhone,
             userPhone:one.phone
           };
-          console.log(one)
           that.global.axiosPostReq('/userManageList/disBind',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               var data = that.userList[index];
               data.isBindSale = 2;
               data.saleName = "";
+              data.salePhone = "";
               that.userList.splice(index,1,data)
               that.$message({type: 'success',message: '解除成功!'});
             } else {

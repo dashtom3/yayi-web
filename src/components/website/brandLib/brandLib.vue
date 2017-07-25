@@ -69,7 +69,7 @@
         <ul v-if="ifHaveData">
           <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
             <div class="imgWrap">
-              <img class="goodImg" :src="item.itemDetail.itemPica" alt="">
+              <img class="goodImg" :src="item.itemDetail.itemPica+'?imageView2/1/w/255/h/255'" alt="">
               <span></span>
             </div>
             <p class="goodTitle">{{item.itemName}}</p>

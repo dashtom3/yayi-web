@@ -251,10 +251,11 @@
           orderId:that.nowToOperateItem.orderId
         };
         that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
-           console.log(res,"sureGetGood");
+           console.log(res,"sureGetGoodConsole");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
-              if(that.items.orderId==that.nowToOperateItem.orderId){
+              if(that.items[i].orderId==that.nowToOperateItem.orderId){
+                console.log(that.items[i].orderId,that.nowToOperateItem.orderId,that.items.length)
                 that.items.splice(i,1);
                 that.dialogVisibleGetGood = false;
                 break;

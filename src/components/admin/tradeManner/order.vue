@@ -256,7 +256,7 @@
             </tr>
           </table>
           <div class="btn_box">
-            <el-button class="_btn" type="primary" @goToBackMoney()>保存</el-button>
+            <el-button class="_btn" type="primary" @click="goToBackMoney()">保存</el-button>
             <el-button class="_btn" @click="refundVisible = false">取消</el-button>
           </div>
       </el-dialog>
@@ -378,11 +378,9 @@
           for(let i in that.wacthTuiKuanList){
             if(that.wacthTuiKuanList[i].checked){
               that.orderInfo.refundAmt += that.wacthTuiKuanList[i].count * that.wacthTuiKuanList[i].price;
-              // that.wacthTuiKuanList[i].goodBrandName = that.wacthTuiKuanList[i].itemBrandName;
-              // that.wacthTuiKuanList[i].goodSort = that.wacthTuiKuanList[i].itemSort;
               var obj = {
                 goodBrandName:that.wacthTuiKuanList[i].itemBrandName,
-                goodSort:that.wacthTuiKuanList[i].itemSort,
+                goodSort:that.wacthTuiKuanList[i].itemType,
                 num:that.wacthTuiKuanList[i].count,
                 price:that.wacthTuiKuanList[i].price
               };
@@ -391,16 +389,13 @@
           }
           //显示退款金额最终数据
           if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
-            that.orderInfo.refundAmt = that.orderInfo.actualPay;
+            that.orderInfo.refundAmt = that.orderInfo.actualPay;//退还的钱
             that.orderInfo.untread = that.orderInfo.refundAmt - that.orderInfo.actualPay;
           }
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
 
           //显示退款扣除钱币数据
-          var nowOrderGiveQb = this.global.goodToMoney(jiSuanArr);
-          console.log(that.orderInfo.giveQb , nowOrderGiveQb)
-          console.log(that.orderInfo.giveQb - nowOrderGiveQb)
-          that.orderInfo.outCoins = that.orderInfo.giveQb - nowOrderGiveQb;
+          that.orderInfo.outCoins = this.global.goodToMoney(jiSuanArr); //扣除乾币数
         },
         deep:true
       },
@@ -636,6 +631,7 @@
         var obj = {
           orderId:row.orderId
         };
+        that.tuiKuanIndex = index;
         that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
         .then((res) => {
           console.log(res,"getOneOrderDetailsById")
@@ -679,7 +675,38 @@
         }
       },
       goToBackMoney:function(){
+        var that = this;
+        var data = that.wacthTuiKuanList;
+        var sendObj = {
+          token:"111",
+          orderItem:[]
+        };
+        for(let i in data){
+          if(data[i].checked){
+            var obj = {
+              orderId:that.orderInfo.orderId,
+              refunNum:data[i].count,
+              itemSKU:data[i].itemSKU
+            };
+            sendObj.orderItem.push(obj);
+          }
+        }
+        if(sendObj.orderItem.length==0){
+          that.$alert('请至少选择一件退款的商品',  {confirmButtonText: '确定',});
+        }else{
+          sendObj.orderItem = JSON.stringify(sendObj.orderItem);
 
+          that.global.axiosPostReq('/showUserOrderManage/makeRefundData',sendObj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              var data = that.orderList[that.tuiKuanIndex];
+              data.state = 10;
+              that.orderList.splice(that.tuiKuanIndex,1,data);
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
       },
     }
   }

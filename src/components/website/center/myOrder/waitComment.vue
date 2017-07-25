@@ -52,18 +52,12 @@
         </div>
       </div>
     </div>
-<!-- <div v-if="pageProps>1">
-  <paging v-if="pageProps.totalPage>1" :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging>
-</div> -->
-
     <div class="block">
       <!-- 分页 -->
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
       </el-pagination>
       <!-- 分页 -->
     </div>
-
-
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
   <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
     <div class="commentImgWrap">
@@ -301,11 +295,12 @@
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
            console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
-            var data = that.items[that.nowToOperateItemIndex];
-            data.state = 9;
-            that.items.splice(that.nowToOperateItemIndex,1,data);
+            //
+            // var data = that.items[that.nowToOperateItemIndex];
+            // data.state = 9;
+            that.items.splice(that.nowToOperateItemIndex,1);
             that.dialogVisibleComment = false;
-            that.$alert('评论成功！',  {confirmButtonText: '确定',});
+            // that.$alert('评论成功！',  {confirmButtonText: '确定',});
           } else {
             that.$message.error('网络错误！');
           }
@@ -345,8 +340,9 @@
           }
         })
       },
-      operate: function(item) {
+      operate: function(item,index) {
         var that = this;
+        that.nowToOperateItemIndex = index;
         that.nowToOperateItem = item;
         var obj = {
           token:that.global.getToken(),

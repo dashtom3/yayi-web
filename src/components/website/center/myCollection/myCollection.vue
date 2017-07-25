@@ -17,7 +17,7 @@
             <i class="el-icon-delete2 myDele" v-on:click.stop="deleOneCollect(index,good)"></i>
             <img class="gold" v-if="good.ifGold" src="../../../../images/center/glod.png" alt="">
             <div class="imgwrap">
-              <img :src="good.item_pica" >
+              <img :src="good.item_pica+'?imageView2/1/w/140/h/140'" >
               <span></span>
             </div>
             <div class="title">
