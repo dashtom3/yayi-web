@@ -32,9 +32,7 @@ import global from '../../global/global'
     data () {
       return {
         thisscore:null,
-        allComments:[
-
-        ]
+        allComments:[]
       }
     },
     components:{
@@ -43,7 +41,6 @@ import global from '../../global/global'
     filters:{
       matUserPhone:function(val){
         var arr = val.split("");
-        console.log(arr)
         for(let i in arr){
           if(i>2 && i<7){
             arr[i]="*";
@@ -54,6 +51,9 @@ import global from '../../global/global'
     },
     props:["comments"],
     created:function(){
+      // for(let i in ){
+      //
+      // }
       console.log(this.comments,111111111111)
     }
   }

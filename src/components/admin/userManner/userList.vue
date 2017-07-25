@@ -504,6 +504,11 @@
         if(!that.searchSaleName){
           that.searchSaleName = "";
         }
+        if(that.searchSalePhone){
+          obj.salePhone = that.searchSalePhone;
+        }else{
+          obj.salePhone = "";
+        }
         // console.log(obj,"headSearchObj")
           that.global.axiosGetReq('/userManageList/userlist',obj)
           .then((res) => {

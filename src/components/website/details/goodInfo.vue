@@ -106,6 +106,7 @@ import goodIntroduce from './goodIntroduce'
 import goodComment from './goodComment'
 import instructions from './instructions'
 import myAddress from './selectThree'
+import util from '../../../common/util'
   export default {
     name: 'goodInfo',
     data () {

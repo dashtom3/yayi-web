@@ -62,7 +62,8 @@ export default {
   name: 'medical',
   data () {
     return {
-      backgroundImgs:["http://orl5769dk.bkt.clouddn.com/yaYiBack_1.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_3_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_4.jpg"],
+
+      backgroundImgs:["http://oqhy88nu6.bkt.clouddn.com/WechatIMG235.jpeg","http://orl5769dk.bkt.clouddn.com/yaYiBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_3_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_4.jpg"],
       img_change: true,
       yayi: null,
       isActive: false,
