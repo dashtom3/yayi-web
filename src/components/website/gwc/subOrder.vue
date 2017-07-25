@@ -92,6 +92,15 @@
       <div class="clearfix"></div>
       <div class="submit_btn" @click="submit_order">提交订单</div>
       <div class="clearfix"></div>
+      <!-- 选择发票类型 开始-->
+      <el-dialog title="选择发票" :visible.sync="taxDialogVisible" size="tiny" :before-close="handleClose">
+        <span>选择发票</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="taxDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="taxDialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- 选择发票类型 结束-->
       <!-- 新增／修改地址弹出框开始 -->
       <el-dialog :title="diaTitle" v-model="editAddVisible">
         <el-form :model="form">
@@ -328,6 +337,7 @@
         checked3: false,
         addNewVisible: false,
         editAddVisible: false,
+        taxDialogVisible: false,
         removeVisible: false,
         realAlert: false,
         addAlert: false,
@@ -429,6 +439,7 @@
       checked2: function() {
         var that = this;
         if (that.checked2 == true) {
+          that.taxDialogVisible = true
           that.tax_word = true
         } else {
           that.tax_word = false
@@ -465,10 +476,15 @@
       that.canHasCoin = that.global.goodToMoney(that.fromGwc.details)
       that.nowQb = that.global.getUser().qbBalance;
       if (that.nowQb >= that.gwcTotal) {
-        that.nowQb = that.gwcTotal
+        that.nowQb = that.gwcTotal - 1
       }
     },
     methods: {
+      handleClose: function() {
+        var that = this;
+        that.taxDialogVisible = false;
+        that.checked2 = false
+      },
       //失去焦点时
       qbDed: function() {
         var that = this;

@@ -42,7 +42,7 @@
     methods: {
       see: function() {
         var that = this;
-        that.$router.push({path: '/center'});
+        that.$router.push({path: '/center/myOrder'});
       },
       keep: function() {
         var that = this;
