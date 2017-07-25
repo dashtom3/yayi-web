@@ -418,11 +418,19 @@
               type: 'success',
               message: '修改成功!'
             });
+            this.getBalance()
+            this.walletform.num = 0
+            this.walletform.remainder = this.walletform.balance
           }
         })
       },
       handleClick(tab, event) {
-        console.log(tab, event);
+        if(tab.name === 'second'){
+          this.queryWallet()
+        }
+      },
+      queryWallet(){
+
       },
       //获取余额
       getBalance() {

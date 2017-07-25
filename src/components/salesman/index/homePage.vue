@@ -40,26 +40,37 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable :orderInfo="orderInfo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
-    <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" v-if="orderInfo.myOrderVoList"></dataTable>
+    <div class="clearfix"></div>
+    <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pagesize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
   import dataTable from './dataTable'
   import global from '../../global/global'
-  import paging from '../../website/brandLib/paging0'
   export default {
     data () {
       return {
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1,
         dateInfo: {
           year: new Date().getFullYear(),
           month: new Date().getMonth()+1
         },
+        monthX: '',
         withDrawState: false,
         phone: '',
         trueName: '',
@@ -130,35 +141,73 @@
       }
     },
     components: {
-      dataTable,
-      paging
+      dataTable
     },
     created: function() {
+      this.monthX = new Date().getMonth()+1
       this.init()
       this.echartPic()
+      this.queryOrderList()
       this.queryInfo()
       this.getMyWallet()
       this.getBalance()
     },
     methods: {
-      //查询订单数据
-      init(){
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.init(val)
+        this.queryOrderList(val)
+      },
+       //查询订单数据
+      init(val){
+
+        if(val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         let params = {
-          currentPage: this.pageProps.pageNum,
-          numberPerPage: 10,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize,
           token: global.getSalesToken()
         }
         console.log('查询订单数据',params)
-        global.axiosGetReq('/saleMyOrder/myOrder',params).then((res) => {
+        global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            // this.replayList = res.data.data
-            // this.pageProps.totalPage = res.data.totalPage
             console.log('查询订单数据',res.data.data)
-            //this.orderInfo = res.data.data
-            this.overYearHasCommission = res.data.data.overYearHasCommission
-            this.pageProps.totalPage = res.data.totalPage
+            this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney || 0
+            this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney || 0
+            this.orderInfo.saleAllMoney = res.data.data.saleAllMoney || 0
+            this.orderInfo.orderNum = res.data.data.orderNum || 0
+            this.allCommission = res.data.data.allCommission || 0
+            // this.totalCount = res.data.totalNumber
           }else{
-            this.$message.error('查询订单失败！');
+            this.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
+      //查询订单列表
+      queryOrderList(val){
+
+        if(val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
+
+        let params = {
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize,
+          token: global.getSalesToken()
+        }
+        console.log('查询订单列表',params)
+        global.axiosGetReq('/saleMyOrder/myOrderList',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            console.log(res.data.data)
+            this.orderInfo.myOrderVoList = res.data.data
+            this.totalCount = res.data.totalNumber
+          }else{
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -193,7 +242,7 @@
         })
       },
       //获取余额
-      getBalance: function() {
+      getBalance() {
         var that = this;
         var params = {
           token: global.getSalesToken()
@@ -207,16 +256,20 @@
           }
         })
       },
+      //查询收入
       echartPic(){
         let params = {
           year: this.dateInfo.year,
           month: this.dateInfo.month,
           token: global.getSalesToken()
         }
+        console.log('echart数据',params)
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            console.log(res.data.data)
-            this.echartData = res.data.data
+            for(var i=0;i<res.data.data.length;i++){
+              this.echartData.push(res.data.data[i].dayCommission)
+            }
+            console.log('youle ',this.echartData)
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }

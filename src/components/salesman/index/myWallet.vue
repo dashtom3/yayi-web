@@ -416,8 +416,8 @@
         that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data,'pp')
-            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
+            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2) || 0
+            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2) || 0
             this.tableData = res.data.data
             this.totalCount = res.data.totalNumber
           } else {

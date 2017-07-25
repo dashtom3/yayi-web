@@ -15,23 +15,23 @@
     </el-col>
 		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
-        <el-table-column type="index" align="center" label="序号">
+        <el-table-column type="index" align="center" label="序号" width="70">
         </el-table-column>
-        <el-table-column prop="orderTime" align="center" label="下单时间">
+        <el-table-column prop="orderCreated" align="center" label="下单时间" width="210">
         </el-table-column>
-        <el-table-column prop="custName" align="center" label="客户姓名">
+        <el-table-column prop="userName" align="center" label="客户姓名">
         </el-table-column>
-        <el-table-column prop="custPhone" align="center" label="客户手机号">
+        <el-table-column prop="userPhone" align="center" label="客户手机号" width="150">
         </el-table-column>
-        <el-table-column prop="saleAmt" align="center" label="销售额（元）">
+        <el-table-column prop="allMoney" align="center" label="销售额（元）">
         </el-table-column>
-        <el-table-column prop="materialAmt"  align="center"label="耗材类（元）">
+        <el-table-column prop="haocaiMoney"  align="center"label="耗材类（元）">
         </el-table-column>
-        <el-table-column prop="equipAmt" align="center" label="工具设备类（元）">
+        <el-table-column prop="gongjuMoney" align="center" label="工具设备类（元）">
         </el-table-column>
-        <el-table-column prop="refundAmt" align="center" label="已退款金额（元）">
+        <el-table-column prop="refundMoney" align="center" label="已退款金额（元）">
         </el-table-column>
-        <el-table-column prop="realSaleAmt" align="center" label="实际销售额（元）">
+        <el-table-column prop="actualMoney" align="center" label="实际销售额（元）">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -50,10 +50,10 @@
       size="small">
       <div class="detail_title">业绩详情</div>
       <div class="custInfo">客户信息</div>
-      <div class="custContent"><b>客户姓名：</b><span>李志芳</span><b style="margin-left:80px;">客户手机号：</b><span>13861637946</span></div>
+      <div class="custContent"><b>客户姓名：</b><span>{{this.detailObj.userName}}</span><b style="margin-left:80px;">客户手机号：</b><span>{{this.detailObj.userPhone}}</span></div>
       <div class="custInfo">订单信息</div>
       <table class="datail_tb">
-        <tr><td colspan="7"><span class="pad_l_30">下单时间：2017-06-08</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
+        <tr><td colspan="7"><span class="pad_l_30">下单时间：{{this.detailObj.orderCreated}}</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
         <tr class="trs tr_title">
           <th>商品名称+属性</th>
           <th>价格（元）</th>
@@ -72,16 +72,26 @@
         </tr>
       </table>
       <div class="custInfo" style="margin-top:20px;">订单详细</div>
-      <el-table class="datail_tb" :data="orderDetailList" border show-summary     style="width: 100%">
-        <el-table-column prop="itemName" label="商品类型" align="center">
-        </el-table-column>
-        <el-table-column prop="salesAmt" label="销售额（元）" align="center">
-        </el-table-column>
-        <el-table-column prop="refundAmt" label="已退款金额（元）" align="center">
-        </el-table-column>
-        <el-table-column prop="realSaleAmt" label="实际销售额（元）" align="center">
-        </el-table-column>
-      </el-table>
+       <table class="datail_tb">
+        <tr class="trs tr_title">
+          <th>商品类型</th>
+          <th>销售额（元）</th>
+          <th>已退款金额（元）</th>
+          <th>实际销售额（元）</th>
+        </tr>
+        <tr class="trs">
+          <td>{{this.orderDetailList[0].itemName}}</td>
+          <td>{{this.orderDetailList[0].orderMoneyHaocai}}</td>
+          <td>{{this.orderDetailList[0].refundMoneyHaocai}}</td>
+          <td>{{this.orderDetailList[0].actualMoneyHaocai}}</td>
+        </tr>
+        <tr class="trs">
+          <td>{{this.orderDetailList[1].itemName}}</td>
+          <td>{{this.orderDetailList[1].orderMoneyGongju}}</td>
+          <td>{{this.orderDetailList[1].refundMoneyGongju}}</td>
+          <td>{{this.orderDetailList[1].actualMoneyGongju}}</td>
+        </tr>
+      </table>
       <div style="text-align:center;margin-top:20px;">
         <el-button @click="detailVisible = false">关 闭</el-button>
       </div>
@@ -106,6 +116,8 @@ export default {
       tableData: null,
       monthxVal: 30,
       monthList: [],
+      echartsList: [],
+      maxechartsList: 0,
       infoList: [{
         goodsName: '商品名称1',
         price: 30,
@@ -133,16 +145,26 @@ export default {
         salesAmt: 4000,
         refundAmt: 100,
         realSaleAmt: 3900
-      }]
+      }],
+      detailObj: {}
     }
   },
   created(){
     this.tableData = this.orderInfo
+    this.maxechartsList = Math.max.apply({},this.echartsList)
+
     for(var i=0;i<this.monthxVal+1;i++){
       this.monthList.push(i)
     }
+
   },
   watch: {
+    maxechartsList: function(){
+      this.drawLine();
+    },
+    echartData: function(){
+      this.drawLine();
+    },
     echartsTitle: function(){
       this.drawLine();
     },
@@ -150,15 +172,14 @@ export default {
       this.drawLine();
     }
   },
-  mounted() {
-    this.drawLine();
-  },
 	methods: {
 		drawLine(){
-			// 基于准备好的dom，初始化echarts实例
-      let myChart=document.getElementById('myChart')
 
-      let mainChart = echarts.init(myChart)// 基于准备好的dom，初始化echarts实例
+      // 基于准备好的dom，初始化echarts实例
+      var mainChart = echarts.getInstanceByDom(document.getElementById('myChart'));
+      if (mainChart === undefined) {  
+        mainChart = echarts.init(document.getElementById('myChart'));
+      }
       // 绘制图表
       mainChart.setOption({
           title: {
@@ -195,7 +216,7 @@ export default {
           yAxis: {
               type: 'value',
               name: '当日销售额（元）',
-              max: 4000,
+              max: 2000,
               min: 0,
               splitNumber: 10,
           },  
@@ -204,7 +225,7 @@ export default {
                   name:'当日销售额（元）',
                   type:'line',
                   stack: '当日销售额（元）',
-                  data: [1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1, 3, 9, 27, 81, 247, 741,1,3800,2000]
+                  data: this.echartData
               }
           ]
       });
@@ -212,15 +233,27 @@ export default {
 		},
     queryDetail(index, row){
       let params = {
-        userPhone: row.userPhone,
-        orderId: row.saleId,
+        orderId: row.orderId,
         token: global.getSalesToken()
       }
       console.log('查看详情',params)
       global.axiosGetReq('/saleMyOrder/detail',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
           console.log('查看详情',res.data.data)
-          
+          this.detailObj = res.data.data
+          // this.infoList = res.data.data.orderInfoVoList
+          this.orderDetailList[0] = {
+            itemName: '耗材类',
+            orderMoneyHaocai: res.data.data.orderMoneyHaocai,
+            refundMoneyHaocai: res.data.data.refundMoneyHaocai,
+            actualMoneyHaocai: res.data.data.actualMoneyHaocai,
+          }
+          this.orderDetailList[1] = {
+            itemName: '工具设备类',
+            orderMoneyGongju: res.data.data.orderMoneyGongju,
+            refundMoneyGongju: res.data.data.refundMoneyGongju,
+            actualMoneyGongju: res.data.data.actualMoneyGongju,
+          }
         }else{
           this.$message.error('查询订单失败！');
         }

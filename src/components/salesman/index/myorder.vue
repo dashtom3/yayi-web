@@ -17,14 +17,21 @@
     </el-col>
     <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
-    <paging :childmsg="pageProps" style="text-align:center;margin-bottom:20px;" v-show="this.orderInfo.length" @childSay="pageHandler"></paging>
+    <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pagesize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
+    </div>
 	</el-row> 
 </template>
 
 <script>
 import dataTable from './dataTable'
 import global from '../../global/global'
-import paging from '../../website/brandLib/paging0'
 export default {
   data() {
     return {
@@ -32,10 +39,12 @@ export default {
       monthX: '',
       allCommission: 0,
       echartsTitle: '',
-      pageProps: {
-        pageNum: 1,
-        totalPage: 1
-      },
+      //默认每页数据量
+      pagesize: 10,
+      //当前页码
+      currentPage: 1,
+      //默认数据总数
+      totalCount: 1,
       dateInfo: {
         year: new Date().getFullYear(),
         month: new Date().getMonth()+1
@@ -98,6 +107,7 @@ export default {
   created(){
     this.init()
     this.echartPic()
+    this.queryOrderList()
     //初始化为当前月份
     this.monthVal = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
     //默认echarts标题
@@ -106,32 +116,68 @@ export default {
     this.monthX = new Date().getMonth() + 1
   },
   components:{
-    dataTable,
-    paging
+    dataTable
   },
   methods: {
+    handleCurrentChange(val) {
+      this.currentPage = val 
+      this.init(val)
+      this.queryOrderList(val)
+    },
     //月份补0
     fillZero(n){
       return n<10 ? '0'+ n: n 
     },
     //查询订单数据
-    init(){
+    init(val){
+
+      if(val == undefined || typeof(val) == 'object') {
+        this.currentPage = 1
+      } else {
+        this.currentPage = val
+      }
       let params = {
-        currentPage: this.pageProps.pageNum,
-        numberPerPage: 10,
+        currentPage: this.currentPage,
+        numberPerPage: this.pagesize,
         token: global.getSalesToken()
       }
-      console.log('查询订单数据',params)
+      //console.log('查询订单数据',params)
       global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          // this.replayList = res.data.data
-          // this.pageProps.totalPage = res.data.totalPage
-          console.log('查询订单数据',res.data.data)
-          // this.orderInfo = res.data.data
-          this.allCommission = res.data.data.allCommission
-          this.pageProps.totalPage = res.data.totalPage
+          //console.log('查询订单数据',res.data.data)
+          this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney || 0
+          this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney || 0
+          this.orderInfo.saleAllMoney = res.data.data.saleAllMoney || 0
+          this.orderInfo.orderNum = res.data.data.orderNum || 0
+          this.allCommission = res.data.data.allCommission || 0
+          // this.totalCount = res.data.totalNumber
         }else{
-          this.$message.error('查询订单失败！');
+          this.$message.error('网络出错，请稍后再试！');
+        }
+      })
+    },
+    //查询订单列表
+    queryOrderList(val){
+
+      if(val == undefined || typeof(val) == 'object') {
+        this.currentPage = 1
+      } else {
+        this.currentPage = val
+      }
+
+      let params = {
+        currentPage: this.currentPage,
+        numberPerPage: this.pagesize,
+        token: global.getSalesToken()
+      }
+      //console.log('查询订单列表',params)
+      global.axiosGetReq('/saleMyOrder/myOrderList',params).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') { 
+          //console.log(res.data.data)
+          this.orderInfo.myOrderVoList = res.data.data
+          this.totalCount = res.data.totalNumber
+        }else{
+          this.$message.error('网络出错，请稍后再试！');
         }
       })
     },
@@ -142,26 +188,23 @@ export default {
         month: this.dateInfo.month,
         token: global.getSalesToken()
       }
-      console.log('echart数据',params)
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          // this.replayList = res.data.data
-          console.log('echart数据',res.data.data)
-          this.echartData = res.data.data
+          for(var i=0;i<res.data.data.length;i++){
+            this.echartData.push(res.data.data[i].dayCommission)
+          }
+          this.echartData.unshift(0)
         }else{
-          this.$message.error('查询收入失败！');
+          this.$message.error('网络出错，请稍后再试！');
         }
       })
-    },
-    pageHandler(data){
-      this.pageProps.pageNum = data
-      this.init();
     },
     selHandler(val){
       this.dateInfo.year = val.split("-")[0]
       this.dateInfo.month = val.split("-")[1]
       this.echartsTitle = this.dateInfo.year + '年'+ parseInt(this.dateInfo.month) +'月份业绩记录'
       this.monthX = parseInt(this.dateInfo.month)
+      this.echartData = []
       this.echartPic()
     } 
   }
