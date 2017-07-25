@@ -85,7 +85,7 @@
         <p class="second_p">运费：¥{{freight}}</p>
         <p class="third_p">乾币抵扣：¥{{qbdk}}</p>
         <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}</span></p>
-        <p class="fifth_p">本次可获得乾币：¥{{canHasCoin}}</p>
+        <p class="fifth_p">本次可获得乾币：{{canHasCoin}}</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
       </div>
@@ -455,7 +455,6 @@
     created: function () {
       var that = this;
       that.getMyAdd();
-      that.nowQb = that.global.getUser().qbBalance;
       var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
       that.fromGwc = arr;
       that.orderItem = arr.details;
@@ -464,6 +463,10 @@
       that.gwcTotal = arr.allMoney;
       that.haveSelectedGoodNum = arr.haveSelectedGoodNum
       that.canHasCoin = that.global.goodToMoney(that.fromGwc.details)
+      that.nowQb = that.global.getUser().qbBalance;
+      if (that.nowQb >= that.gwcTotal) {
+        that.nowQb = that.gwcTotal
+      }
     },
     methods: {
       //失去焦点时
@@ -494,6 +497,9 @@
               that.$message.error('网络出错，请稍后再试！');
             }
           })
+        } else {
+          that.qianbi_des = 0;
+          that.qbdk = that.qianbi_des;
         }
       },
       // 新增收货地址按钮

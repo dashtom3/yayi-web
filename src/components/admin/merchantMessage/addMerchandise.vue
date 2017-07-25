@@ -51,11 +51,9 @@
       <div class="active_box" v-for="(item,index) in items" :key="item">
         <span class="choose_title">{{item.itemPropertyName}}</span>
         <el-button type="primary" @click="removeDes(index)">删除</el-button>
-<!--         <el-checkbox-group v-model="item.checkItem" class="choose_des"> -->
         <div style="margin-top: 15px;">
           <el-checkbox v-for="sitem in item.itempropertydList" :label="sitem" :key="item" v-model="sitem.checked" @change="checkAllActive()">{{sitem.itemPparam}}</el-checkbox>
         </div>
-<!--         </el-checkbox-group> -->
       </div>
       <!--  添加属性变换表格 开始 -->
       <table class="activeTable_box" v-show="no_active">
@@ -252,7 +250,6 @@
             that.ruleForm.threeClassify = that.ruleForm.type[2];
             return false
           }
-          // console.log(that.ruleForm)
         },
         deep: true
       },
@@ -315,7 +312,6 @@
           for (var i = 0; i < that.items.length; i++) {
             that.items[i].itemPropertyName = that.items[i].propertyName
             that.items[i].hasItem = true 
-
             //b[i].itempropertydList = b[i].propertyInfoList
             var obj = {
               itemPropertyName: that.items[i].propertyName,
@@ -331,8 +327,7 @@
                 }
             })
           }
-          console.log(that.activeItems,'bbbbbb')
-          //console.log(that.input_percent,that.input_coin,'koko')
+          // console.log(that.activeItems,'bbbbbb')
         } else { // 添加商品进入时
           that.getItemId()
           that.getAllClassify()
@@ -422,7 +417,6 @@
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {
                 that.tableData2[i].itempropertydList[k].checked = false;
-                // that.tableData2[i].itempropertydList[k].canUse = false;
               }
             }
           } else {
@@ -440,7 +434,6 @@
         var that = this
         that.secondStep = data
         that.firstStep = true
-        //console.log(data);
       },
       //选择属性
       chooseType: function() {
@@ -451,7 +444,7 @@
       handleSelectionChange(val) {
         var that = this
         that.multipleSelection = val
-        console.log(that.multipleSelection,'222');
+        // console.log(that.multipleSelection,'222');
       },
       //确定商品属性
       confirm_type: function() {
@@ -535,7 +528,7 @@
               subitem.push(obj)
               // var subitem = JSON.stringify(obj)
               that.ruleForm.itemValueList = subitem
-              that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
+              // that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
               that.ruleForm.shopType = that.shopType
               console.log(that.ruleForm,'223355')
               that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm, editCargo:that.editCargo}})
@@ -638,7 +631,6 @@
                   that.newArr[i] = Object.assign(subitem[i],that.newArr[i])
                 }
                 that.ruleForm.itemValueList = that.newArr
-                that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
                 that.ruleForm.shopType = that.shopType //是否有商品属性
                 that.ruleForm.items = that.items //选择商品的属性
                 console.log(that.ruleForm, that.newArr,'223355');

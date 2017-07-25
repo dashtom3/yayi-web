@@ -83,6 +83,7 @@
       that.editCargo = JSON.parse(window.sessionStorage.getItem('editCargo'))
       if (that.editCargo !== null) {
         that.ruleForm = that.$route.params.ruleForm
+        that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
         that.secondForm.storeItemId = that.editCargo.itemDetail.storeItemId
         that.secondForm.apparatusType = that.editCargo.itemDetail.apparatusType
         that.secondForm.unit = that.editCargo.itemDetail.unit
@@ -96,6 +97,7 @@
         console.log(that.registerDate,'o',that.editCargo)
       } else {
         that.ruleForm = that.$route.params.ruleForm
+        that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
       }
       console.log(that.ruleForm,that.secondForm,'opo');
     },
