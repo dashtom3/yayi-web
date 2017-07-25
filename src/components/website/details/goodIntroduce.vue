@@ -4,7 +4,7 @@
       <div class="left">
         <ul>
           <li>品名：{{instruction.addName}}</li>
-          <li>注册证有效期\注册证号：{{instruction.registerId}}</li>
+          <li>注册证号：{{instruction.registerId}}</li>
           <li>其他：{{instruction.remark}}</li>
           <li>使用范围：{{instruction.itemRange}}</li>
         </ul>
@@ -13,7 +13,7 @@
         <ul>
           <li>单位：{{instruction.unit}}</li>
           <li>产品包装：{{instruction.itemPacking}}</li>
-          <li>备案日期：{{instruction.registerDate}}</li>
+          <li>注册证有效期 / 备案日期：{{instruction.registerDate}}</li>
           <li>生产企业名称：{{instruction.producePompany}}</li>
         </ul>
       </div>
@@ -102,10 +102,10 @@
 }
 .goodIntroduce div:nth-child(1){
   width:47%;
-  padding-right: 50px;
+  padding-right: 20px;
 }
 .goodIntroduce div:nth-child(2){
-  width:30%;
+  width:33%;
 }
 .goodIntroduce div:nth-child(3){
   width:18%;

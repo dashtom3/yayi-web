@@ -2,12 +2,12 @@
   <div class="goodInfo">
   	<div class="infoLeft">
       <div class="infoLeft_1">
-        <img :src="bigImgUrl" />
+        <img :src="bigImgUrl+'?imageView2/1/w/400/h/400'" />
       </div>
       <div class="infoLeft_2">
         <ul>
           <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg">
-            <img  :src="goodAllImgs[index]" />
+            <img  :src="goodAllImgs[index]+'?imageView2/1/w/60/h/60'" />
           </li>
           <div class="clearFloat"></div>
         </ul>
@@ -648,6 +648,7 @@ import myAddress from './selectThree'
   .calculator .kucunbuzu{
     position: absolute;
     right: -50px;
+    cursor: auto;
   }
   .calculator span{
     width:30px;
