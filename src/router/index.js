@@ -131,10 +131,12 @@ let router = new Router({
   {
     path: '/paySuccess',
     component: PaySuccess,
+    name: 'paySuccess'
   },
   {
     path: '/payFail',
     component: PayFail,
+    name: 'payFail'
   },
 	//后台管理router
     {

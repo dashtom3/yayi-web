@@ -23,7 +23,8 @@
     name: 'paySuccess',
     data () {
       return {
-        timer: 6
+        timer: 6,
+        t: null
       }
     },
     components: {
@@ -35,12 +36,12 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
-        // if (JSON.parse(window.sessionStorage.getItem('order')) == null) {
-        //   that.$router.push({path:'/'})
-        // }else {
-        //   console.log('uiuiuiu')
-        // }
-        // console.log(that.$router.history.path,'222')
+        if (that.global.getToken() == null || that.$route.params.payData !== 'success') {
+          that.$router.push({path:'/'})
+        }else {
+          console.log('uiuiuiu')
+        }
+        //console.log(that.$router.history,'222')
         // that.$router.history.current.name == 'eastshui'
       })
     },
@@ -48,7 +49,7 @@
       var that = this;
       window.sessionStorage.removeItem('order');
       for(let i=0; i<=6; i++) {
-        window.setTimeout(function(){
+        that.t = window.setTimeout(function(){
           if (that.timer !== 0) {
             that.timer--
           } else {
@@ -65,10 +66,12 @@
     methods: {
       see: function() {
         var that = this;
-        that.$router.push({path: '/center'});
+        window.clearTimeout(that.t);
+        that.$router.push({path: '/center/myOrder'});
       },
       keep: function() {
         var that = this;
+        window.clearTimeout(that.t);
         that.$router.push({path: '/index'});
       }
     }

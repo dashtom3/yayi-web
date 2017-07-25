@@ -132,7 +132,7 @@
                 console.log(res.data,'opopopop')
                 if (res.data.num == 2) {
                   clearInterval(timer)
-                  that.$router.push({path:'/paySuccess'})
+                  that.$router.push({name:'paySuccess', params: { payData: 'success' }})
                 } else {
                   that.kk++
                   // that.$message.error('网络出错，请稍后再试！');

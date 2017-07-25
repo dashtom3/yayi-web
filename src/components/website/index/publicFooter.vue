@@ -31,6 +31,7 @@
       // 联系我们
       contactUs: function() {
         var that = this
+        // that.$router.push({name:'paySuccess', params: { payData: 'success' }})
       },
       // 联系客服
       contactService: function() {
