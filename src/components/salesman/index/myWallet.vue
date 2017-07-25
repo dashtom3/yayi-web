@@ -99,7 +99,7 @@
       :visible.sync="incomeVisible"
       size="small">
       <div class="detail_title">详情</div> 
-      <div style="margin-bottom:10px;"><b>时间 2017-07-11 12:00:00</b></div>
+      <div style="margin-bottom:10px;"><b>时间： {{this.incomeDetail[0].created}}</b></div>
       <el-table :data="incomeDetail" border show-summary style="width: 100%">
         <el-table-column prop="commodityType" label="商品类型" align="center">
         </el-table-column>
@@ -351,7 +351,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data)
             this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
-            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2)
+            that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || 0
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -380,7 +380,6 @@
       //获取钱包列表
       getMyWallet: function(val, item) {
         var that = this;
-        console.log('qqqqqqqqqqqqqqqqqqq',val, item)
         that.classStat = item || 0;
         if (val == undefined || typeof(val) == 'string') {
           this.currentPage = 1
@@ -412,7 +411,6 @@
           currentPage: this.currentPage,
           numberPerpage: this.pagesize
         }
-        console.log('----------------',obj)
         that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data.data,'pp')
@@ -426,144 +424,143 @@
         })
       },
       // 选择时间段
-      chooseDate: function() {
-        var that = this;
-        if(that.dateVal && that.dateVal[0]){
-          var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
-        }else{
-          var startDate = '';
-          var endDate = '';
-        }
+      // chooseDate: function() {
+      //   var that = this;
+      //   if(that.dateVal && that.dateVal[0]){
+      //     var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+      //     var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+      //   }else{
+      //     var startDate = '';
+      //     var endDate = '';
+      //   }
         
-        var obj = {
-          token: global.getSalesToken(),
-          state: this.queryState,
-          starTime: startDate,
-          endTime: endDate
-        }
-        console.log('----------------',obj)
-        that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
-            this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-            this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-            this.tableData = res.data.data
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      // 选择分类
-      selClass: function(item,index){
-        var that = this;
-        that.classStat = index;
-        if(that.dateVal && that.dateVal[0]){
-          var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
-        }else{
-          var startDate = '';
-          var endDate = '';
-        }
-        if (item == '全部') {
-          this.queryState = '';
-          var obj = {
-            token: global.getSalesToken(),
-            state: this.queryState,
-            starTime: startDate,
-            endTime: endDate
-          }
-          console.log('----------------',obj)
-          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-              this.tableData = res.data.data
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        } else if (item == '进账') {
-          this.queryState = '进账';
-          var obj = {
-            token: global.getSalesToken(),
-            state: this.queryState,
-            starTime: startDate,
-            endTime: endDate
-          }
-          console.log('----------------',obj)
-          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-              this.tableData = res.data.data
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        } else if (item == '出账') {
-          this.queryState = '出账';
-          var obj = {
-            token: global.getSalesToken(),
-            state: this.queryState,
-            starTime: startDate,
-            endTime: endDate
-          }
-          console.log('----------------',obj)
-          that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data.data)
-              this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-              this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-              this.tableData = res.data.data
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }
-      },
+      //   var obj = {
+      //     token: global.getSalesToken(),
+      //     state: this.queryState,
+      //     starTime: startDate,
+      //     endTime: endDate
+      //   }
+      //   console.log('----------------',obj)
+      //   that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+      //     if (res.data.callStatus === 'SUCCEED') {
+      //       console.log(res.data.data)
+      //       this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+      //       this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
+      //       this.tableData = res.data.data
+      //     } else {
+      //       that.$message.error('网络出错，请稍后再试！');
+      //     }
+      //   })
+      // },
+      // // 选择分类
+      // selClass: function(item,index){
+      //   var that = this;
+      //   that.classStat = index;
+      //   if(that.dateVal && that.dateVal[0]){
+      //     var startDate = util.formatDate.format(new Date(that.dateVal[0]));
+      //     var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+      //   }else{
+      //     var startDate = '';
+      //     var endDate = '';
+      //   }
+      //   if (item == '全部') {
+      //     this.queryState = '';
+      //     var obj = {
+      //       token: global.getSalesToken(),
+      //       state: this.queryState,
+      //       starTime: startDate,
+      //       endTime: endDate
+      //     }
+      //     console.log('----------------',obj)
+      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+      //       if (res.data.callStatus === 'SUCCEED') {
+      //         console.log(res.data.data)
+      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
+      //         this.tableData = res.data.data
+      //       } else {
+      //         that.$message.error('网络出错，请稍后再试！');
+      //       }
+      //     })
+      //   } else if (item == '进账') {
+      //     this.queryState = '进账';
+      //     var obj = {
+      //       token: global.getSalesToken(),
+      //       state: this.queryState,
+      //       starTime: startDate,
+      //       endTime: endDate
+      //     }
+      //     console.log('----------------',obj)
+      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+      //       if (res.data.callStatus === 'SUCCEED') {
+      //         console.log(res.data.data)
+      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
+      //         this.tableData = res.data.data
+      //       } else {
+      //         that.$message.error('网络出错，请稍后再试！');
+      //       }
+      //     })
+      //   } else if (item == '出账') {
+      //     this.queryState = '出账';
+      //     var obj = {
+      //       token: global.getSalesToken(),
+      //       state: this.queryState,
+      //       starTime: startDate,
+      //       endTime: endDate
+      //     }
+      //     console.log('----------------',obj)
+      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
+      //       if (res.data.callStatus === 'SUCCEED') {
+      //         console.log(res.data.data)
+      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
+      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
+      //         this.tableData = res.data.data
+      //       } else {
+      //         that.$message.error('网络出错，请稍后再试！');
+      //       }
+      //     })
+      //   }
+      // },
       queryDetail(index, row){
-        console.log(row)
-        //判断是进账还是出账
-        if(!row.balanceOut){
-          this.incomeVisible = true
-        }else{
-          this.outVisible = true
-        }
+        //判断是进账还是出账  
         var that = this;
         var obj = {
           balanceId: row.balanceId
         }
-        console.log('----------------',obj)
+       
         that.global.axiosPostReq('/myWallet/details',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
+            //出账数据
             this.outDetail[0] = {
               created: new Date(res.data.data.created).getFullYear()+'-'+ this.fillZero(new Date(res.data.data.created).getMonth()+1)+'-'+this.fillZero(new Date(res.data.data.created).getDate())+' '+this.fillZero(new Date(res.data.data.created).getHours())+":"+this.fillZero(new Date(res.data.data.created).getMinutes())+":"+this.fillZero(new Date(res.data.data.created).getSeconds()),
               describey: res.data.data.describey
             }
+            //入账数据
             this.incomeDetail[0] = {
+              created: new Date(res.data.data.created).getFullYear()+'-'+ this.fillZero(new Date(res.data.data.created).getMonth()+1)+'-'+this.fillZero(new Date(res.data.data.created).getDate())+' '+this.fillZero(new Date(res.data.data.created).getHours())+":"+this.fillZero(new Date(res.data.data.created).getMinutes())+":"+this.fillZero(new Date(res.data.data.created).getSeconds()),
               commodityType: '耗材类',
               saleVal: res.data.data.haocaiMoney || 0,
               refundAmt: res.data.data.haocaiRefund || 0,
               actualAmt: res.data.data.haocaiMoney - res.data.data.haocaiRefund,
-              income: (res.data.data.haocaiMoney - res.data.data.haocaiRefund)/10
+              income: res.data.data.haoCaiIncome || 0
             }
             this.incomeDetail[1] = {
               commodityType: '工具设备类',
               saleVal: res.data.data.gongjuMoney || 0,
               refundAmt: res.data.data.gongjuRefund || 0,
               actualAmt: res.data.data.gongjuMoney - res.data.data.gongjuRefund,
-              income: (res.data.data.gongjuMoney - res.data.data.gongjuRefund)/10
+              income: res.data.data.gongJuIncome || 0
+            }
+            if(!row.balanceOut){
+              this.incomeVisible = true
+            }else{
+              this.outVisible = true
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         }) 
-        
-    
       },
       withDrawHandler(){
         if(this.postalType ==='银行卡'){
@@ -612,6 +609,23 @@
 </script>
 
 <style scoped>
+  .el-button--primary {
+    color: #fff;
+    background-color: #5db7e8!important;
+    border-color: #5db7e8!important;
+  }
+  .el-button--primary:hover {
+    color: #fff;
+    background-color: #57a5cf!important;
+    border-color: #57a5cf!important;
+  }
+  .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
+    color: #bfcbd9;
+    cursor: not-allowed;
+    background-image: none;
+    background-color: #eef1f6!important;
+    border-color: #d1dbe5!important;
+  }
   .brandWarp{
     width: 1200px;
     height: 900px;
@@ -696,11 +710,11 @@
   }
   .withBtn{
     width: 100px;
-    background: #5db7e8; 
   }
-  .withBtn:hover{
-    width: 100px;
-    background: #57a5cf; 
+  .el-button--primary {
+    color: #fff;
+    background-color: #5db7e8!important;
+    border-color: #5db7e8!important;
   }
   .btn_col:hover{
     background: #57a5cf;

@@ -304,6 +304,23 @@
 </script>
 
 <style scoped>
+.el-button--primary {
+  color: #fff;
+  background-color: #5db7e8!important;
+  border-color: #5db7e8!important;
+}
+.el-button--primary:hover {
+  color: #fff;
+  background-color: #57a5cf!important;
+  border-color: #57a5cf!important;
+}
+.el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
+  color: #bfcbd9;
+  cursor: not-allowed;
+  background-image: none;
+  background-color: #eef1f6!important;
+  border-color: #d1dbe5!important;
+}
 .index_personal_mymoney{
   width: 1200px;
   margin: auto;

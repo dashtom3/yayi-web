@@ -766,6 +766,11 @@
 </script>
 
 <style>
+  .el-button--primary:focus {
+    color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+  }
   .saleListWarp .el-select .el-input{
     width: 120px;
   }
