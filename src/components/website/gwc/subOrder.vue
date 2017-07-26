@@ -98,27 +98,88 @@
       <el-dialog title="发票信息" :visible.sync="taxDialogVisible" size="small" :before-close="handleClose">
         <div class="nTax_btn" :class="{ active_btn: isActive1 }" @click="nTaxBtn">普通发票</div>
         <div class="zTax_btn" :class="{ active_btn: isActive2 }" @click="zTaxBtn">增值税发票</div>
-        <div class="tax_detail_box">
-          <p>选择发票性质为"个人"时，发票抬头为"个人"两字与姓名，如需开具诊所名，请选择发票性质为"公司"</p>
-          <p>发票信息相关问题</p>
+        <!--  普通发票选择 开始 -->
+        <div class="normalTaxBox" v-if="normal_tax">
+          <div class="tax_detail_box">
+            <p>选择发票性质为"个人"时，发票抬头为"个人"两字与姓名，如需开具诊所名，请选择发票性质为"公司"</p>
+            <p>发票信息相关问题</p>
+          </div>
+          <div>
+            <el-radio class="radio" v-model="taxRadio" label="1">公司</el-radio>
+            <el-radio class="radio" v-model="taxRadio" label="2">个人</el-radio>
+          </div>
+          <!-- 公司发票开票 开始-->
+          <el-form v-show="taxActive1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="margin-top: 20px;">
+            <el-form-item label="公司抬头" prop="taitou">
+              <el-input v-model="ruleForm.taitou" style="width: 300px !important;" placeholder="请填写营业执照上的公司全称"></el-input>
+            </el-form-item>
+            <el-form-item label="纳税人识别号" prop="nashui">
+              <el-input v-model="ruleForm.nashui" style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
+            </el-form-item>
+            <el-form-item label="发票内容">
+              <div class="mingxi">发票明细</div>
+            </el-form-item>
+            <el-button type="primary" @click="saveComTax('ruleForm')">保存</el-button>
+            <el-button @click="cancelTax">取消</el-button>
+          </el-form>
+          <!-- 公司发票开票 结束-->
+          <!-- 个人发票开票 开始-->
+          <el-form v-show="taxActive2" :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="100px" style="margin-top: 20px;">
+            <el-form-item label="发票抬头" prop="personal">
+              <el-input v-model="ruleForm1.personal" style="width: 300px !important;" placeholder="请填写个人姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="发票内容">
+              <div class="mingxi">发票明细</div>
+            </el-form-item>
+            <el-button type="primary" @click="savePerTax('ruleForm1')">保存</el-button>
+            <el-button @click="cancelTax">取消</el-button>
+          </el-form>
+          <!-- 个人发票开票 结束-->
         </div>
-        <div>
-          <el-radio class="radio" v-model="taxRadio" label="1">公司</el-radio>
-          <el-radio class="radio" v-model="taxRadio" label="2">个人</el-radio>
+        <!--  普通发票选择 结束 -->
+        <!--  增值税发票选择 开始 -->
+        <div class="addTaxBox" v-else>
+          <!-- 公司发票开票 开始-->
+          <div class="tax_detail_box">
+            <p>必须提供一般纳税人资格证明或相关资料能证明贵司是一般纳税人17个点的，否则不能开具专票</p>
+            <p>发票信息相关问题</p>
+          </div>
+          <span style="font-size:13px; margin-right: 43px;">发票内容</span>
+          <div class="mingxi">发票明细</div>
+          <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" style="margin-top: 20px;">
+            <el-form-item label="单位名称" prop="companyName">
+              <el-input v-model="ruleForm2.companyName" style="width: 300px !important;" placeholder="请填写营业执照上的公司全称"></el-input>
+            </el-form-item>
+            <el-form-item label="纳税人识别号" prop="payTax">
+              <el-input v-model="ruleForm2.payTax" style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
+            </el-form-item>
+            <el-form-item label="注册地址" prop="registerAdd">
+              <el-input v-model="ruleForm2.registerAdd" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="注册电话" prop="registerPhone">
+              <el-input v-model="ruleForm2.registerPhone" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="开户银行" prop="bank">
+              <el-input v-model="ruleForm2.bank" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="银行账号" prop="bankAccount">
+              <el-input v-model="ruleForm2.bankAccount" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="收票人姓名" prop="receiverName">
+              <el-input v-model="ruleForm2.receiverName" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="收票人手机号" prop="receiverPhone">
+              <el-input v-model="ruleForm2.receiverPhone" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-form-item label="收票人地址" prop="receiverAdd">
+              <el-input v-model="ruleForm2.receiverAdd" style="width: 300px !important;"></el-input>
+            </el-form-item>
+            <el-button type="primary" @click="saveAddTax('ruleForm2')">保存</el-button>
+            <el-button @click="cancelTax">取消</el-button>
+          </el-form>
+          <!-- 公司发票开票 结束-->
         </div>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="margin-top: 20px;">
-          <el-form-item label="公司抬头" prop="taitou">
-            <el-input v-model="ruleForm.taitou" style="width: 300px !important;" placeholder="请填写营业执照上的公司全称"></el-input>
-          </el-form-item>
-          <el-form-item label="纳税人识别号" prop="nashui">
-            <el-input v-model="ruleForm.nashui" style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
-          </el-form-item>
-          <el-form-item label="发票内容">
-            <div class="mingxi">发票明细</div>
-          </el-form-item>
-        </el-form>
-        <el-button type="primary" @click="saveTax('ruleForm')">保存</el-button>
-        <el-button @click="taxDialogVisible = false">取消</el-button>
+        <!--  增值税发票选择 结束 -->
       </el-dialog>
       <!-- 选择发票类型 结束-->
       <!-- 新增／修改地址弹出框开始 -->
@@ -358,7 +419,10 @@
         checked3: false,
         addNewVisible: false,
         editAddVisible: false,
-        taxDialogVisible: true,
+        taxDialogVisible: false,
+        taxActive1: true,
+        taxActive2: false,
+        normal_tax: true,
         removeVisible: false,
         realAlert: false,
         addAlert: false,
@@ -409,6 +473,20 @@
           taitou: '',
           nashui: '',
         },
+        ruleForm1: {
+          personal: '',
+        },
+        ruleForm2: {
+          companyName: '',
+          payTax: '',
+          registerAdd: '',
+          registerPhone: '',
+          bank: '',
+          bankAccount: '',
+          receiverName: '',
+          receiverPhone: '',
+          receiverAdd: '',
+        },
         rules: {
           taitou: [
             { required: true, message: '请填写营业执照上的公司全称', trigger: 'blur' }
@@ -416,25 +494,41 @@
           nashui: [
             { required: true, message: '请填写纳税人识别号或统一社会信用代码', trigger: 'blur' }
           ],
-          // type: [
-          //   { type: 'array', required: true, message: '请选择商品分类', trigger: 'change' }
-          // ],
-          // itemBrandId: [
-          //   { type: 'number', required: true, message: '请选择品牌名称', trigger: 'change' }
-          // ],
-          // itemSort: [
-          //   { required: true, message: '请选择商品类型', trigger: 'change' }
-          // ],
-          // registerId: [
-          //   { required: true, message: '请填写注册证号', trigger: 'blur' }
-          // ],
-          // isThrow: [
-          //   { required: true, message: '请选择是否推荐', trigger: 'change' }
-          // ],
-          // shopType: [
-          //   { required: true, message: '请选择是否添加商品属性', trigger: 'change' }
-          // ]
-        }, //验证规则
+        },
+        rules1: {
+          personal: [
+            { required: true, message: '请填写个人姓名', trigger: 'blur' }
+          ]
+        }, 
+        rules2: {
+          companyName: [
+            { required: true, message: '请填写单位名称', trigger: 'blur' }
+          ],
+          payTax: [
+            { required: true, message: '请填写纳税人识别号或统一社会信用代码', trigger: 'blur' }
+          ],
+          registerAdd: [
+            { required: true, message: '请填写注册地址', trigger: 'blur' }
+          ],
+          registerPhone: [
+            { required: true, message: '请填写注册电话', trigger: 'blur' }
+          ],
+          bank: [
+            { required: true, message: '请填写开户银行', trigger: 'blur' }
+          ],
+          bankAccount: [
+            { required: true, message: '请填写银行账号', trigger: 'blur' }
+          ],
+          receiverName: [
+            { required: true, message: '请填写收票人姓名', trigger: 'blur' }
+          ],
+          receiverPhone: [
+            { required: true, message: '请填写收票人手机号', trigger: 'blur' }
+          ],
+          receiverAdd: [
+            { required: true, message: '请填写收票人地址', trigger: 'blur' }
+          ]
+        }, 
       }
     },
     //*******导航钩子*********//
@@ -518,6 +612,17 @@
         } else if (that.qianbi_des == '') {
           that.hasCount = false
         }
+      },
+      //发票信息
+      taxRadio: function() {
+        var that = this
+        if (that.taxRadio == '1') {
+          that.taxActive1 = true
+          that.taxActive2 = false
+        } else {
+          that.taxActive1 = false
+          that.taxActive2 = true
+        }
       }
     },
     components: {
@@ -560,14 +665,16 @@
         var that = this
         that.isActive1 = true;
         that.isActive2 = false;
+        that.normal_tax = true;
       },
       // 选择增值说发票时
       zTaxBtn: function() {
         var that = this
         that.isActive1 = false;
         that.isActive2 = true;
+        that.normal_tax = false;
       },
-      saveTax: function(formName) {
+      saveComTax: function(formName) {
         var that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
@@ -576,6 +683,31 @@
             return false;
           }
         })
+      },
+      savePerTax: function(formName) {
+        var that = this
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+          } else {
+            console.log('error submit!!')
+            return false;
+          }
+        })
+      },
+      saveAddTax: function(formName) {
+        var that = this
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+          } else {
+            console.log('error submit!!')
+            return false;
+          }
+        })
+      },
+      cancelTax: function() {
+        var that = this
+        that.taxDialogVisible = false
+        that.checked2 = false
       },
       handleClose: function() {
         var that = this;

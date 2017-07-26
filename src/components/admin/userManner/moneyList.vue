@@ -125,7 +125,7 @@
             that.moneyList = res.data.data;
             that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.moneyList.length; i++) {
-              that.moneyList[i].time = util.formatDate.format(new Date(that.moneyList[i].qbTime));
+              that.moneyList[i].time = that.moneyList[i].qbTime
             }
             that.startDate = ''
             that.endDate = ''

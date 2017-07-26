@@ -487,7 +487,7 @@
       menu: function() {
         var that = this;
         var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(scroll >= 30) {
+        if(scroll >= 60) {
           that.isActive = true;
         } else {
           that.isActive = false;

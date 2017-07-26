@@ -31,7 +31,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-/*  background-color: #eaeaea;  */
+  background-color: #fff;  
+  opacity: 0.8;
 } 
 
 /*page {  

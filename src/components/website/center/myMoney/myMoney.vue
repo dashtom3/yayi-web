@@ -167,7 +167,7 @@ import util from '../../../../common/util'
 }
 .myMoney {
   font-size: 14px;
-  min-height: 672px;
+  min-height: 569px;
 }
 .myMoney .el-table th{
   background-color: #F2F2F2
