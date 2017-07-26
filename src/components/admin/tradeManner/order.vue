@@ -475,6 +475,7 @@
         obj.logisticsName = that.wuliu;
         obj.orderId = that.faHuoOrder.orderId;
         obj.logisticsCode = that.wuLiuBianHao;
+        console.log(obj)
         if(that.wuLiuBianHao){
           that.global.axiosPostReq('/showUserOrderManage/warehouseDelivery',obj)
           .then((res) => {
@@ -538,6 +539,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
             that.totalCount=res.data.totalNumber;
+            that.currentPage = 1;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

@@ -45,7 +45,8 @@
         <div class="jisuanqi">
           <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
             <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index,good)">-</span>
-            <span>{{good.num}}</span>
+            <!-- <span >{{good.num}}</span> -->
+            <input @change="oneGoodNumChange(index,good)" type="text" v-model="good.num">
             <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index,good)">+</span>
           </div>
           <div class=""  v-show="good.num>=good.goodLeaveNum">
@@ -132,7 +133,7 @@
           for(let a= 0;a<this.gwcGoods.length;a++){
             if(this.gwcGoods[a].checked){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
-              this.haveSelectedGoodNum+= this.gwcGoods[a].num;
+              this.haveSelectedGoodNum+= parseInt(this.gwcGoods[a].num);
               this.sendDataList.push(this.gwcGoods[a]);
             }else{
               this.selectaLL = false;
@@ -155,6 +156,10 @@
 
     },
     methods: {
+      oneGoodNumChange:function(index,good){
+        var that = this;
+        that.updataNum(this.gwcGoods[index].num,good);
+      },
       getGwcList:function(){
         var that = this;
         var obj = {
@@ -202,8 +207,9 @@
                 }
                 sendData.details = that.sendDataList;
                 sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
-                window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-                that.$router.push({path: '/suborder'})
+                console.log(sendData)
+                // window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+                // that.$router.push({path: '/suborder'})
               }else{
                 that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
               }
@@ -538,6 +544,14 @@ top: 5px;
     display: inline-block;
     cursor: pointer;
     line-height: 18px;
+  }
+  .gwcWrap .oneGood .jisuanqi input{
+    width: 42px;
+    border:none;
+    text-align: center;
+    border-left: 1px solid #c8c8c8;
+    border-right: 1px solid #c8c8c8;
+
   }
     .gwcWrap .oneGood .jisuanqi span:nth-child(2){
       width: 42px;

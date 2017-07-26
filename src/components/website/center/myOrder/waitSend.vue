@@ -35,7 +35,7 @@
           </p>
         </div>
         <div class="left des_price">￥{{cargo.price}}</div>
-        <div class="left des_num">{{cargo.num}}</div>
+        <div  class="left des_num">{{cargo.num}}</div>
         <div class="left des_state">￥{{cargo.price*cargo.num}}</div>
       </div>
       <!--  订单详情item 结束 -->
@@ -89,7 +89,7 @@
           <div class="left des_img" style="width:81px;height:85px;">
             <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
           </div>
-          <div style="width:220px;" class="left des_p">
+          <div style="width:200px;" class="left des_p">
             <p style="margin-top:0 ;">{{cargo.itemInfo.itemName}}</p>
             <p>
               {{cargo.itemPropertyNamea}}<span v-if="cargo.itemPropertyNameb">；</span>
@@ -97,8 +97,8 @@
               {{cargo.itemPropertyNamec}}
             </p>
           </div>
-          <div style="width:83px;" class="left des_price">￥{{cargo.price}}</div>
-          <div class="left des_num">{{cargo.num}}</div>
+          <div style="width:98px;margin-left:0;text-align:center;" class="left des_price">￥{{cargo.price}}</div>
+          <div style="text-align:center" class="left des_num">{{cargo.num}}</div>
         </div>
         <!--  订单详情item 结束 -->
         <div class="order_des_right" style="width:auto;right:25px;top:0" :style="{marginTop:nowOrderDetails.btnsMarginTop}">

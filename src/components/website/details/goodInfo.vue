@@ -68,9 +68,10 @@
         数量：
         <div class="calculator">
           <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
-          <span>{{goodDefaultNum}}</span>
+          <!-- <span>{{goodDefaultNum}}</span> -->
+          <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
           <span v-on:click="addGoodNum()">+</span>
-          <span v-if="!kuCunBuZu" class="kucunbuzu">缺货</span>
+          <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
           <div class="clearFloat"></div>
         </div>
         <div style="clear:both"></div>
@@ -198,13 +199,17 @@ import util from '../../../common/util'
           }
         })
       },
+      oneGoodNumChange:function(){
+        console.log(".....")
+          this.jiSuanKuCun();
+      },
       addGoodNum:function () {
-          this.goodDefaultNum += 1;
+          this.goodDefaultNum = parseInt(this.goodDefaultNum)+1;
           this.jiSuanKuCun();
       },
       reduceGoodNum:function () {
         if(this.goodDefaultNum != 1){
-          this.goodDefaultNum -= 1;
+          this.goodDefaultNum = parseInt(this.goodDefaultNum)-1;
         }
         this.jiSuanKuCun();
       },
@@ -648,8 +653,9 @@ import util from '../../../common/util'
   }
   .calculator .kucunbuzu{
     position: absolute;
-    right: -50px;
+    right: -90px;
     cursor: auto;
+    width: 100px;
   }
   .calculator span{
     width:30px;
@@ -665,10 +671,21 @@ import util from '../../../common/util'
     border-left:1px solid #e5e5e5;
     border-right:1px solid #e5e5e5;
   }
+  .calculator input{
+    float:left;
+    width: 30px;
+    display:inline-block;
+    height: 30px;
+    border:none;
+    text-align: center;
+    border-left: 1px solid #c8c8c8;
+    border-right: 1px solid #c8c8c8;
 
+  }
   .goodBtn{
     padding-left: 102px;
   }
+
   .kucunbuzu span{
     color: #333 !important;
     background: #ececec !important;
