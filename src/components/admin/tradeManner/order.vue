@@ -67,8 +67,8 @@
         <!-- <result property="shippingCode" column="shipping_code" />物流编号 -->
         <el-table-column prop="refund" label="是否退款" min-width="100" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.state != '10'">否</span>
-            <span v-if="scope.row.state == '10'">是</span>
+            <span v-if="scope.row.refundInfo=='是'">是</span>
+            <span v-else>否</span>
           </template>
         </el-table-column>
         <el-table-column prop="handle" label="操作" min-width="180" align="center" >
@@ -77,7 +77,7 @@
             <el-button  size="mini"  v-show='scope.row.state!=0&&scope.row.state!=4'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
             <el-button  size="mini"  type="success"  v-show='scope.row.state === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
             <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
-            <el-button  size="mini"  v-show='scope.row.state==10'  @click="lookAtTuiKuanOrder(scope.$index, scope.row)">查看退款</el-button>
+            <el-button  size="mini"  v-show='scope.row.refundInfo=="是"'  @click="lookAtTuiKuanOrder(scope.$index, scope.row)">查看退款</el-button>
             <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
         </el-table-column>

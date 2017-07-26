@@ -207,9 +207,8 @@
                 }
                 sendData.details = that.sendDataList;
                 sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
-                console.log(sendData)
-                // window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-                // that.$router.push({path: '/suborder'})
+                window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+                that.$router.push({path: '/suborder'})
               }else{
                 that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
               }

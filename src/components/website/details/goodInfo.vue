@@ -178,6 +178,9 @@ import util from '../../../common/util'
             that.goodAllImgs[4] = that.nowGoodDetails.itemDetail.itemPice;
             that.bigImgUrl = that.goodAllImgs[0];
             that.items = that.nowGoodDetails.propertyList;
+            for(let i in that.nowGoodDetails.commentList){
+              that.nowGoodDetails.commentList[i].created = util.formatDate.format(new Date( that.nowGoodDetails.commentList[i].created),'yyyy-MM-dd hh:mm:ss' );
+            }
             that.commentList = that.nowGoodDetails.commentList;
             that.instructions = that.nowGoodDetails.itemDetail;
             that.instructions.addName = that.nowGoodDetails.itemName;
