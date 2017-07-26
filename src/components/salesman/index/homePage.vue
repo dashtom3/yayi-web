@@ -79,61 +79,12 @@
         postalType: '',
         accountAmt: '',
         orderInfo: {
-          allCommission: 0,
-          dayCommission: 0,
-          dayOrderNum: 0,
-          getUpdated: 0,
-          hasCommission: 0,
+          allCommission: '0.00',
+          gongjuAllMoney: '0.00',
+          haocaiAllMoney: '0.00',
+          saleAllMoney: '0.00',
           orderNum: 0,
-          saleIncomeVoList: 0,
-          stayCommission: 0,
-          sumOrderMoney: 0,
-          myOrderVoList: [{
-            orderTime: '2017-01-01',
-            custName: '测试01',
-            custPhone: '18652599279',
-            saleAmt: '200',
-            materialAmt: '50',
-            equipAmt: '70',
-            refundAmt: '40',
-            realSaleAmt: '60'
-          },{
-            orderTime: '2017-01-01',
-            custName: '测试01',
-            custPhone: '18652599279',
-            saleAmt: '200',
-            materialAmt: '50',
-            equipAmt: '70',
-            refundAmt: '40',
-            realSaleAmt: '60'
-          },{
-            orderTime: '2017-01-01',
-            custName: '测试01',
-            custPhone: '18652599279',
-            saleAmt: '200',
-            materialAmt: '50',
-            equipAmt: '70',
-            refundAmt: '40',
-            realSaleAmt: '60'
-          },{
-            orderTime: '2017-01-01',
-            custName: '测试01',
-            custPhone: '18652599279',
-            saleAmt: '200',
-            materialAmt: '50',
-            equipAmt: '70',
-            refundAmt: '40',
-            realSaleAmt: '60'
-          },{
-            orderTime: '2017-01-01',
-            custName: '测试01',
-            custPhone: '18652599279',
-            saleAmt: '200',
-            materialAmt: '50',
-            equipAmt: '70',
-            refundAmt: '40',
-            realSaleAmt: '60'
-          }]
+          myOrderVoList: []
         },
         personalData: null,
         echartData: [],

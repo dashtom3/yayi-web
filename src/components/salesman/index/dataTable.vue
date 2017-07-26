@@ -216,7 +216,7 @@ export default {
           yAxis: {
               type: 'value',
               name: '当日销售额（元）',
-              max: 2000,
+              max: 4000,
               min: 0,
               splitNumber: 10,
           },  

@@ -122,7 +122,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
 				replayStat: [{
           value: '',
           label: '全部'
@@ -161,7 +161,7 @@
           phone: this.userCode,
           recoveryState: this.value,
           currentPage: this.currentPage,
-          numberPerPage: this.pagesize
+          numberPerpage: this.pagesize
         }
         console.log(params)
         global.axiosPostReq('/commentManage/show',params).then((res) => {
@@ -176,14 +176,10 @@
       },
 			handleReplay(index, row){
         console.log(index, row)
-        this.orderId = row.OrderId;
+        this.orderId = row.orderId;
         this.itemId = row.sku;
 				this.replayBtn = true;
 			},
-      pageHandler(data){
-        this.pageProps.pageNum = data
-        this.queryHandler();
-      },
 			replayOkHandler(){
         let params = {
           orderId: this.orderId,

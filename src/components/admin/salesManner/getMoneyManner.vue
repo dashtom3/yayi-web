@@ -33,7 +33,7 @@
         <el-table-column prop="trueName" align="center" label="真实姓名"></el-table-column>
         <el-table-column prop="phone" align="center" label="手机号"></el-table-column>
         <el-table-column prop="balanceOut" align="center" label="提现金额"></el-table-column>
-        <el-table-column prop="type" align="center" label="类型"></el-table-column>
+        <el-table-column prop="postalType" align="center" label="类型"></el-table-column>
         <el-table-column prop="openName" align="center" label="开户者"></el-table-column>
         <el-table-column prop="bankName" align="center" label="银行"></el-table-column>
         <el-table-column prop="accountNumber" align="center" label="账号" width="200"></el-table-column>
@@ -44,19 +44,27 @@
         </el-table-column>
         <el-table-column prop="describey" align="center" label="提现状态">
           <template scope="scope">
-            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">申请中</span>
-            <span v-if="scope.row.describey.indexOf('提现完成') !== -1 ">提现成功</span>
+            <span v-if="scope.row.describey.indexOf('申请中') !== -1 ">申请中</span>
+            <span v-if="scope.row.describey.indexOf('提现成功') !== -1 ">提现成功</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template scope="scope">
-            <span v-if="scope.row.describey.indexOf('提现中') !== -1 ">
+            <span v-if="scope.row.describey.indexOf('申请中') !== -1 ">
               <el-button type="text" v-on:click="passThisGet(scope.row)">通过</el-button>
-              <!-- <el-button type="text"   v-on:click="dotPassThisGet(scope.$index)">不通过</el-button> -->
             </span>
           </template>
         </el-table-column>
       </el-table>
+      <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pagesize"
+          layout="prev, pager, next, jumper"
+          :total="totalCount">
+        </el-pagination>
+      </div>
     </el-col>
 
 
@@ -70,6 +78,12 @@
         searchType: '',
         state: '',
         getMoneyList: [],
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1,
       }
     },
     created: function() {
@@ -77,6 +91,10 @@
       that.getAllMoney();
     },
     methods: {
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.search(val)
+      },
       //补0
       fillZero: function(n){
         return n<10 ? '0'+ n: n 
@@ -93,22 +111,33 @@
         })
       },
       //查询
-      search:function(){
+      search:function(val){
         var that = this;
+
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
+
         if (that.searchType == '') {
           that.state = '';
         }else if (that.searchType == 1) {
-          that.state = 1
+          that.state = '成功'
         }else if (that.searchType == 0) {
-          that.state = 0
+          that.state = '申请中'
         }
         var obj = {
           state: that.state,
           message: that.searchUserContent,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize
         }
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
             that.getMoneyList = res.data.data;
+            this.totalCount = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

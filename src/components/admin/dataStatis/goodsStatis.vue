@@ -8,7 +8,7 @@
     <el-col :span="24" class="warp-main">
       <el-form :inline="true" class="clearfix">
         <el-form-item class="fl">
-          <el-input v-model="sel_input" class="t_input_w" @change="pageInitHandler">
+          <el-input v-model="sel_input" class="t_input_w">
             <el-select v-model="sel_value" slot="prepend" class="t_select_width" @change="selectOpt">
               <el-option
                 v-for="item in goodsName"
@@ -20,7 +20,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="品牌名称" class="fl">
-          <el-select v-model="brandName" @change="pageInitHandler">
+          <el-select v-model="brandName">
             <el-option
               v-for="item in brands"
               :key="item.value1"
@@ -54,16 +54,29 @@
       <el-table-column prop="refundNum" label="累计退款次数" align="center" >
       </el-table-column>
     </el-table>
-    <paging :childmsg="pageProps" style="position:absolute;top:650px;right:0;" @childSay="pageHandler" v-show="this.goodsList.length"></paging>
+    <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pagesize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
+    </div>
   </el-row>
 </template>
 
 <script>
   import global from '../../global/global'
-  import paging from '../../website/brandLib/paging0'
   export default {
     data() {
       return {
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1,
         goodsName: [{
           value: '1',
           label: '商品名称'
@@ -80,10 +93,6 @@
           value1: '',
           label1: '全部'
         }],
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
         sel_input: '',
         goodsList: []
       }
@@ -92,15 +101,17 @@
       this.queryHandler()
       this.queryBrand()//查询所有品牌
     },
-    components: {
-      paging
-    },
     methods: {
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.queryHandler(val)
+      },
       queryBrand(){
         var params = {
           itemBrandName: '',
           itemBrandHome: ''
         }
+        
         global.axiosPostReq('/item/queryItemBrand',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             var result = res.data.data;
@@ -111,24 +122,25 @@
               })
             }
           }else{
-            this.$message.error('查询商品品牌失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
-      //查询条件改变时初始化pageNum为1
-      pageInitHandler(){
-        this.pageProps.pageNum = 1;
-      },
-      queryHandler(){
+      queryHandler(val){
         var params;
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         if(this.sel_value == '1'){
           params = {
             itemName: this.sel_input,
             itemId: '',
             itemSKU: '',
             itemBrandName: this.brandName,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize,
             token: global.getToken()
           }
         }else if(this.sel_value == '2'){
@@ -137,8 +149,8 @@
             itemId: this.sel_input,
             itemSKU: '',
             itemBrandName: this.brandName,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize,
             token: global.getToken()
           }
         }else if(this.sel_value == '3'){
@@ -147,26 +159,21 @@
             itemId: '',
             itemSKU: this.sel_input,
             itemBrandName: this.brandName,
-            currentPage: this.pageProps.pageNum,
-            numberPerPage: 10,
+            currentPage: this.currentPage,
+            numberPerPage: this.pagesize,
             token: global.getToken()
           }
         }
         global.axiosGetReq('/itemStatistics/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.goodsList = res.data.data
-            this.pageProps.totalPage = res.data.totalPage
+            this.totalCount = res.data.totalNumber
           }
         })
       },
       selectOpt(key){
         this.sel_value = key;
         this.sel_input = '';
-        this.pageProps.pageNum = 1;
-      },
-      pageHandler(data){
-        this.pageProps.pageNum = data
-        this.queryHandler();
       }
     }
   }

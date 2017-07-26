@@ -54,52 +54,7 @@ export default {
         haocaiAllMoney: 0,
         gongjuAllMoney: 0,
         orderNum: 0,
-        myOrderVoList: [{
-          orderTime: '2017-01-01',
-          custName: '测试01',
-          custPhone: '18652599279',
-          saleAmt: '200',
-          materialAmt: '50',
-          equipAmt: '70',
-          refundAmt: '40',
-          realSaleAmt: '60'
-        },{
-          orderTime: '2017-01-01',
-          custName: '测试01',
-          custPhone: '18652599279',
-          saleAmt: '200',
-          materialAmt: '50',
-          equipAmt: '70',
-          refundAmt: '40',
-          realSaleAmt: '60'
-        },{
-          orderTime: '2017-01-01',
-          custName: '测试01',
-          custPhone: '18652599279',
-          saleAmt: '200',
-          materialAmt: '50',
-          equipAmt: '70',
-          refundAmt: '40',
-          realSaleAmt: '60'
-        },{
-          orderTime: '2017-01-01',
-          custName: '测试01',
-          custPhone: '18652599279',
-          saleAmt: '200',
-          materialAmt: '50',
-          equipAmt: '70',
-          refundAmt: '40',
-          realSaleAmt: '60'
-        },{
-          orderTime: '2017-01-01',
-          custName: '测试01',
-          custPhone: '18652599279',
-          saleAmt: '200',
-          materialAmt: '50',
-          equipAmt: '70',
-          refundAmt: '40',
-          realSaleAmt: '60'
-        }]
+        myOrderVoList: []
       },
       echartData: []
     }

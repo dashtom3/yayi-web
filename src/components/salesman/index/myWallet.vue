@@ -202,7 +202,6 @@
       return {
         //默认查询日期
         dateVal: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 30), new Date()],
-        //默认分类
         //当前是否有提钱申请
         withDrawState: false,
         queryState: '',
@@ -214,22 +213,7 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1,
-        tableData: [{
-          date: '2017-01-01',
-          getMoney: '90',
-          cashMoney: '',
-          anumber: '999'
-        },{
-          date: '2017-01-01',
-          getMoney: '',
-          cashMoney: '30',
-          anumber: '999'
-        },{
-          date: '2017-01-01',
-          getMoney: '90',
-          cashMoney: '',
-          anumber: '999'
-        }],
+        tableData: [],
         classify: ['全部','进账','出账'],
         classStat: 0,
         withDrawSets: false,
@@ -257,8 +241,8 @@
         bankName: '',
         bankNo: '',
         infoList: [],
-        houstonJZ: '',//进账总额
-        withdrawalsTX: '',//提现总额
+        houstonJZ: '0.00',//进账总额
+        withdrawalsTX: '0.00',//提现总额
         incomeDetail: [{
           commodityType: '耗材类',
           saleVal: 0,
@@ -423,112 +407,13 @@
           }
         })
       },
-      // 选择时间段
-      // chooseDate: function() {
-      //   var that = this;
-      //   if(that.dateVal && that.dateVal[0]){
-      //     var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-      //     var endDate = util.formatDate.format(new Date(that.dateVal[1]));
-      //   }else{
-      //     var startDate = '';
-      //     var endDate = '';
-      //   }
-        
-      //   var obj = {
-      //     token: global.getSalesToken(),
-      //     state: this.queryState,
-      //     starTime: startDate,
-      //     endTime: endDate
-      //   }
-      //   console.log('----------------',obj)
-      //   that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-      //     if (res.data.callStatus === 'SUCCEED') {
-      //       console.log(res.data.data)
-      //       this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-      //       this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-      //       this.tableData = res.data.data
-      //     } else {
-      //       that.$message.error('网络出错，请稍后再试！');
-      //     }
-      //   })
-      // },
-      // // 选择分类
-      // selClass: function(item,index){
-      //   var that = this;
-      //   that.classStat = index;
-      //   if(that.dateVal && that.dateVal[0]){
-      //     var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-      //     var endDate = util.formatDate.format(new Date(that.dateVal[1]));
-      //   }else{
-      //     var startDate = '';
-      //     var endDate = '';
-      //   }
-      //   if (item == '全部') {
-      //     this.queryState = '';
-      //     var obj = {
-      //       token: global.getSalesToken(),
-      //       state: this.queryState,
-      //       starTime: startDate,
-      //       endTime: endDate
-      //     }
-      //     console.log('----------------',obj)
-      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-      //       if (res.data.callStatus === 'SUCCEED') {
-      //         console.log(res.data.data)
-      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-      //         this.tableData = res.data.data
-      //       } else {
-      //         that.$message.error('网络出错，请稍后再试！');
-      //       }
-      //     })
-      //   } else if (item == '进账') {
-      //     this.queryState = '进账';
-      //     var obj = {
-      //       token: global.getSalesToken(),
-      //       state: this.queryState,
-      //       starTime: startDate,
-      //       endTime: endDate
-      //     }
-      //     console.log('----------------',obj)
-      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-      //       if (res.data.callStatus === 'SUCCEED') {
-      //         console.log(res.data.data)
-      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-      //         this.tableData = res.data.data
-      //       } else {
-      //         that.$message.error('网络出错，请稍后再试！');
-      //       }
-      //     })
-      //   } else if (item == '出账') {
-      //     this.queryState = '出账';
-      //     var obj = {
-      //       token: global.getSalesToken(),
-      //       state: this.queryState,
-      //       starTime: startDate,
-      //       endTime: endDate
-      //     }
-      //     console.log('----------------',obj)
-      //     that.global.axiosPostReq('/myWallet/detail',obj).then((res) => {
-      //       if (res.data.callStatus === 'SUCCEED') {
-      //         console.log(res.data.data)
-      //         this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2)
-      //         this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2)
-      //         this.tableData = res.data.data
-      //       } else {
-      //         that.$message.error('网络出错，请稍后再试！');
-      //       }
-      //     })
-      //   }
-      // },
-      queryDetail(index, row){
-        //判断是进账还是出账  
+      //查看详情
+      queryDetail(index, row){ 
         var that = this;
         var obj = {
           balanceId: row.balanceId
         }
-       
+        console.log(obj)
         that.global.axiosPostReq('/myWallet/details',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             //出账数据
@@ -552,6 +437,7 @@
               actualAmt: res.data.data.gongjuMoney - res.data.data.gongjuRefund,
               income: res.data.data.gongJuIncome || 0
             }
+            //判断是进账还是出账 
             if(!row.balanceOut){
               this.incomeVisible = true
             }else{
@@ -574,6 +460,7 @@
       //申请提现
       applyHandler(formName){
         this.$refs[formName].validate((valid) => {
+          var that = this
           if (valid) {
             let params = {
               token: global.getSalesToken(),
@@ -593,6 +480,10 @@
                 this.WithDrawForm.rg_code = ''
                 this.withDrawBank = false
                 this.withDrawState = true
+                //提示框3s后自动消隐藏
+                setTimeout(function(){
+                  that.statTip = false
+                },3000)
               }else if(res.data.callStatus === 'FAILED'){
                 this.$message.error('请输入正确的验证码！')
               }else{
