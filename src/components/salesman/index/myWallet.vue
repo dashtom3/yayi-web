@@ -381,7 +381,8 @@
         //时间查询条件
         if(that.dateVal && that.dateVal[0]){
           var startDate = util.formatDate.format(new Date(that.dateVal[0]));
-          var endDate = util.formatDate.format(new Date(that.dateVal[1]));
+          //结束时间默认为当日0点，往后推迟24小时
+          var endDate = util.formatDate.format(new Date(that.dateVal[1].getTime() + 3600 * 1000 * 24));
         }else{
           var startDate = '';
           var endDate = '';
@@ -397,7 +398,6 @@
         }
         that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,'pp')
             this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2) || '0.00'
             this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2) || '0.00'
             this.tableData = res.data.data
@@ -413,13 +413,25 @@
         var obj = {
           balanceId: row.balanceId
         }
-        console.log(obj)
+        
+        var describeyStr = "";
         that.global.axiosPostReq('/myWallet/details',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            describeyStr = res.data.data.describey
+            
+            //改变展示描述
+            if(describeyStr.indexOf("进账奖励") !== -1){
+              describeyStr = "管理员增加￥" + (res.data.data.balanceIn || 0)
+            }else if(describeyStr.indexOf("出账惩罚") !== -1){
+              describeyStr = "管理员扣除￥" + (res.data.data.balanceOut || 0)
+            }else if(describeyStr.indexOf("出账提现成功") !== -1){
+              describeyStr = "提现￥" + (res.data.data.balanceOut || 0)
+            }
+
             //出账数据
             this.outDetail[0] = {
               created: new Date(res.data.data.created).getFullYear()+'-'+ this.fillZero(new Date(res.data.data.created).getMonth()+1)+'-'+this.fillZero(new Date(res.data.data.created).getDate())+' '+this.fillZero(new Date(res.data.data.created).getHours())+":"+this.fillZero(new Date(res.data.data.created).getMinutes())+":"+this.fillZero(new Date(res.data.data.created).getSeconds()),
-              describey: res.data.data.describey
+              describey: describeyStr
             }
             //入账数据
             this.incomeDetail[0] = {
@@ -437,11 +449,11 @@
               actualAmt: res.data.data.gongjuMoney - res.data.data.gongjuRefund,
               income: res.data.data.gongJuIncome || 0
             }
-            //判断是进账还是出账 
-            if(!row.balanceOut){
-              this.incomeVisible = true
-            }else{
+            //判断是管理员操作，出账，还是收入 
+            if(row.describey.indexOf("进账奖励") !== -1 || row.describey.indexOf("出账惩罚") !== -1 || row.describey.indexOf("出账提现成功") !== -1){
               this.outVisible = true
+            }else{
+               this.incomeVisible = true
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');

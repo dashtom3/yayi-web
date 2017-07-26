@@ -30,57 +30,57 @@
 	    </el-form>
 
 	    <!--回复列表-->
-      <el-table :data="replayList" border>
-        <el-table-column prop="sku" label="sku代码" :span="3" align="center">
-          <template scope="scope">
-            <span>{{scope.row.orderitemList[0].itemSKU}}</span>
+      <el-table :data="replayLists" border>
+        <el-table-column label="sku代码" :span="3" align="center">
+          <template scope="scope" >
+            <span>{{scope.row.itemSKU}}</span>
           </template> 
         </el-table-column>
-        <el-table-column prop="nameAddAttribute" label="商品名称+属性" width="170" align="center" >
+        <el-table-column label="商品名称+属性" width="170" align="center" >
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].itemName}}</span>
-            <span>{{scope.row.orderitemList[0].itemPropertyNamea}}</span>
-            <span>{{scope.row.orderitemList[0].itemPropertyNameb}}</span>
-            <span>{{scope.row.orderitemList[0].itemPropertyNamec}}</span>
+            <span>{{scope.row.itemName}}</span>
+            <span>{{scope.row.itemPropertyNamea}}</span>
+            <span>{{scope.row.itemPropertyNameb}}</span>
+            <span>{{scope.row.itemPropertyNamec}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="commentContent" label="评论内容" :span="3" align="center">
+        <el-table-column label="评论内容" :span="3" align="center">
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].commentList[0].commentContent}}</span>
+            <span>{{scope.row.commentContent}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="score" label="评分" width="70" align="center">
+        <el-table-column label="评分" width="70" align="center">
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].commentList[0].commentGrade}}</span>
+            <span>{{scope.row.commentGrade}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="OrderId" label="订单编号" width="170" align="center" >
+        <el-table-column label="订单编号" width="170" align="center" >
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].commentList[0].orderId}}</span>
+            <span>{{scope.row.orderId}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="userId" label="用户名" width="170" align="center" >
+        <el-table-column label="用户名" width="170" align="center" >
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].commentList[0].userName}}</span>
+            <span>{{scope.row.userName}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="recoveryState" label="回复状态" :span="3" align="center" >
+        <el-table-column label="回复状态" :span="3" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.orderitemList[0].commentList[0].recoveryState == null">未回复</span>
-            <span v-if="scope.row.orderitemList[0].commentList[0].recoveryState == '1'">已回复</span>
+            <span v-if="scope.row.recoveryState == '0'">未回复</span>
+            <span v-if="scope.row.recoveryState == '1'">已回复</span>
           </template>  
         </el-table-column>
-        <el-table-column prop="replayInfo" label="回复内容" :span="3" align="center" >
+        <el-table-column label="回复内容" :span="3" align="center" >
           <template scope="scope">
-            <span>{{scope.row.orderitemList[0].commentList[0].replyContent}}</span>
+            <span>{{scope.row.replyContent}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="handle" label="操作" :span="3" align="center" >
+        <el-table-column label="操作" :span="3" align="center" >
           <template scope="scope">
             <el-button
               size="small"
               type="info"
-              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.orderitemList[0].commentList[0].recoveryState == null">回复</el-button>
+              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.recoveryState == '0'">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -139,7 +139,8 @@
         replayBtn: false,
         replayText: '',
         orderId: '',
-        itemId: ''
+        itemId: '',
+        replayLists: []
 			}
 		},
     created(){
@@ -169,6 +170,25 @@
             this.replayList = res.data.data
             this.totalCount = res.data.totalNumber
             console.log(res.data.data)
+            for(var i=0;i<res.data.data.length;i++){
+              for(var j=0;j<res.data.data[i].orderitemList.length;j++){
+                this.replayLists.push({
+                  itemSKU: res.data.data[i].orderitemList[j].itemSKU,
+                  itemName: res.data.data[i].orderitemList[j].itemName,
+                  itemPropertyNamea: res.data.data[i].orderitemList[j].itemPropertyNamea,
+                  itemPropertyNameb: res.data.data[i].orderitemList[j].itemPropertyNameb,
+                  itemPropertyNamec: res.data.data[i].orderitemList[j].itemPropertyNamec,
+                  commentContent: res.data.data[i].orderitemList[j].commentList.commentContent,
+                  commentGrade: res.data.data[i].orderitemList[j].commentList.commentGrade,
+                  orderId: res.data.data[i].orderId,
+                  itemId: res.data.data[i].orderitemList[j].commentList.itemId,
+                  userName: res.data.data[i].orderitemList[j].commentList.userName,
+                  recoveryState: res.data.data[i].orderitemList[j].commentList.recoveryState,
+                  replyContent: res.data.data[i].orderitemList[j].commentList.replyContent,
+                })
+              }
+            }
+            console.log(this.replayLists)
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }

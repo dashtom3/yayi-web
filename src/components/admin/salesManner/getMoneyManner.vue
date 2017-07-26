@@ -131,7 +131,7 @@
           state: that.state,
           message: that.searchUserContent,
           currentPage: this.currentPage,
-          numberPerPage: this.pagesize
+          numberPerpage: this.pagesize
         }
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {

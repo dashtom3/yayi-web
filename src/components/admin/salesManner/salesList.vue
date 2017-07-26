@@ -146,6 +146,15 @@
             <el-table-column prop="desc" align="center" label="描述">
             </el-table-column>
           </el-table>
+          <div class="block" style="position:absolute;top:502px;right:0;" v-show="this.totalCountWallet > this.pagesizeWallet">
+            <el-pagination
+              @current-change="handleCurrentWalletChange"
+              :current-page.sync="currentPageWallet"
+              :page-size="pagesizeWallet"
+              layout="prev, pager, next, jumper"
+              :total="totalCountWallet">
+            </el-pagination>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -221,7 +230,7 @@
       <el-table-column  prop="phone"  align="center"  label="手机号"></el-table-column>
       <el-table-column  prop="created"  align="center"  label="注册时间"> 
         <template scope="scope">
-          <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())}}</span>
+          <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())+' '+fillZero(new Date(scope.row.created).getHours())+":"+fillZero(new Date(scope.row.created).getMinutes())+":"+fillZero(new Date(scope.row.created).getSeconds())}}</span>
         </template>
       </el-table-column>
       <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
@@ -271,6 +280,9 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1000,
+        pagesizeWallet: 10,
+        currentPageWallet: 1,
+        totalCountWallet: 1000,
         pagesizeList: 10,
         currentPageList: 1,
         totalCountList: 1000,
@@ -373,7 +385,7 @@
         return this.someOneUserDetails.info.sex === 2 ? '女' : '男'
       },
       regTimeFormate: function(){
-        return new Date(this.someOneUserDetails.info.created).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.created).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.created).getDate()) 
+        return new Date(this.someOneUserDetails.info.created).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.created).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.created).getDate())+' '+this.fillZero(new Date(this.someOneUserDetails.info.created).getHours())+":"+this.fillZero(new Date(this.someOneUserDetails.info.created).getMinutes())+":"+this.fillZero(new Date(this.someOneUserDetails.info.created).getSeconds()) 
       },
       birthdayFormate: function(){
         return new Date(this.someOneUserDetails.info.birthday).getFullYear() + '-' + this.fillZero((new Date(this.someOneUserDetails.info.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.someOneUserDetails.info.birthday).getDate()) 
@@ -405,12 +417,28 @@
           
         }
       },
+      // 检查提现金额是否合法
+      isAmt(str) {
+        var reg = /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/;
+        if (reg.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
+      },
       //增加减少余额
       saveBalance() {
         var obj = {
           saleId: this.saleId,
           sign: parseFloat(this.walletform.type),
           money: parseFloat(this.walletform.num)
+        }
+        if (!this.isAmt(this.walletform.num)) {
+          this.$message.error("金额只能是有两位小数的正数");
+          return false;
+        }else if(this.walletform.type === "2" && this.walletform.num > this.walletform.balance){
+          this.$message.error("余额不足");
+          return false;
         }
         global.axiosPostReq('/PW/addOrDelMoney',obj).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
@@ -430,7 +458,20 @@
         }
       },
       queryWallet(){
-
+        var obj = {
+          saleId: this.saleId,
+          currentPage: this.currentPageWallet,
+          numberPerpage: this.pagesizeWallet
+        }
+        global.axiosGetReq('/myWallet/detail',obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data)
+            this.tableData = res.data.data
+            this.totalCountWallet = res.data.totalNumber
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       //获取余额
       getBalance() {
@@ -448,10 +489,13 @@
         })
       },
       walletHandler(index, row){
-        console.log(row)
         this.walletVisible = true
         this.saleId = row.saleId
         this.getBalance()
+      },
+      handleCurrentWalletChange(val){
+        this.currentPageWallet = val 
+        this.queryWallet()
       },
       handleCurrentChangeDetail(val){
         this.currentPageDetail = val 
