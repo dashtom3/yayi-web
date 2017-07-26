@@ -41,7 +41,11 @@
     mounted: function() {
       var that = this;
       // 用户手机号跳转
-      if (that.$route.params.currentView == 'tab01'){
+      if (that.$route.params.currentView == 'tab04'){
+        that.changeTabs(3)
+        that.$emit('listenToChildEvent','tab0401')
+      } else if(that.$route.params.currentView == 'tab0401') {
+        that.$emit('listenToChildEvent','tab0401')
         that.changeTabs(1)
       }
     },

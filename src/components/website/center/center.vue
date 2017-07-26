@@ -16,7 +16,7 @@
           <component :salesman="message" :is="currentView" keep-alive></component>
         </transition> -->
         <transition name="component-fade" mode="out-in">
-          <router-view :salesman="message"></router-view>
+          <router-view :salesman="message" v-on:listenToChildEvent="MsgFromChild"></router-view>
         </transition>
       </div>
       <div class="clearfix"></div>
@@ -71,6 +71,7 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
+        console.log('3333333')
         if (that.$router.history.current.name == '我的乾币') {
           that.isActive1 = false;
           that.isActive2 = true;
@@ -95,14 +96,18 @@
           that.isActive3 = false;
           that.isActive4 = false;
           that.isActive5 = true;
+        }else if(that.$router.history.current.name == '我的订单'){
+          that.isActive1 = true;
+          that.isActive2 = false;
+          that.isActive3 = false;
+          that.isActive4 = false;
+          that.isActive5 = false;
         }
       })
     },
     mounted: function() {
       var that = this;
       if (that.$route.params.currentView == 'tab04'){
-        // that.currentView = that.$route.params.currentView;
-        // this.$router.push({path: '/center/personalData'});
         that.isActive1 = false;
         that.isActive2 = false;
         that.isActive3 = false;
@@ -111,6 +116,22 @@
       }
     },
     methods: {
+      MsgFromChild: function(data) {
+        var that = this;
+        if (data == 'tab01') {
+          that.isActive1 = true;
+          that.isActive2 = false;
+          that.isActive3 = false;
+          that.isActive4 = false;
+          that.isActive5 = false;
+        } else if(data == 'tab0401') {
+          that.isActive1 = false;
+          that.isActive2 = false;
+          that.isActive3 = false;
+          that.isActive4 = true;
+          that.isActive5 = false;
+        }
+      },
       changeActive1: function(tabText) {
         // this.currentView = tabText;
         this.$router.push({path: '/center/myOrder'});

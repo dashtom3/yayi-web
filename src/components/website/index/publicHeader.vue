@@ -226,7 +226,7 @@
     data () {
       return {
         bindBanner: '',
-        car_num: 0,
+        car_num: '',
         arrowChange: true,
         hasLogin: true,
         username: '',
@@ -681,7 +681,7 @@
       myOrder: function() {
         var that = this;
         if (that.global.getToken() !== null) {
-          that.$router.push({ path: '/center/myOrder' });
+          that.$router.push({ name: '我的订单', params: {currentView: 'tab01'}});
         } else {
           that.changeForget1 = true;
           that.changeForget2 = false;
@@ -692,7 +692,7 @@
       // 登录成功后
       alreadyLog: function() {
         var that = this;
-        that.$router.push({ name: '个人资料', params: {currentView: 'tab01'}});
+        that.$router.push({ name: '个人资料', params: {currentView: 'tab0401'}});
       },
       // 登出
       logOut: function() {

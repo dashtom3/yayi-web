@@ -5,8 +5,9 @@
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
-        <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
+        <div class="tab_item" :class="{spe: isActive7}" @click="changeActive7(tab07Text);">销售排行榜</div>
         <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
+        <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
         <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
         <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">我的钱包</div>
         <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">个人信息</div>
@@ -32,17 +33,8 @@
   import homePage from "./homePage"
   import myOrder from "./myorder"
   import myWallet from "./myWallet"
-  var tab03 = Vue.extend({
-    template: '<div>this is 待评价03</div>',
-  });
-  var tab04 = Vue.extend({
-    template: '<div>this is 待评价04</div>',
-  });
-  var tab05 = Vue.extend({
-    template: '<div>this is 待评价05</div>',
-  });
-  var tab06 = Vue.extend({
-    template: '<div>this is 待评价06</div>',
+  var tab07 = Vue.extend({
+    template: '<div>this is 07</div>',
   });
   export default {
     name: 'salesIndex',
@@ -54,12 +46,14 @@
         isActive4: false,
         isActive5: false,
         isActive6: false,
+        isActive7: false,
         tab01Text: "tab01",
         tab02Text: "tab02",
         tab03Text: "tab03",
         tab04Text: "tab04",
         tab05Text: "tab05",
         tab06Text: "tab06",
+        tab07Text: "tab07",
         currentView: 'tab01', //默认选中的导航栏
         dataValue: null,
         dataValue1: null
@@ -121,6 +115,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.isActive7 = false;
         this.dataValue = '';
       },
       changeActive2: function(tabText) {
@@ -131,6 +126,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.isActive7 = false;
         this.dataValue = '';
       },
       changeActive3: function(tabText) {
@@ -141,6 +137,7 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.isActive7 = false;
         this.dataValue = '';
       },
       changeActive4: function(tabText) {
@@ -151,6 +148,7 @@
         this.isActive4 = true;
         this.isActive5 = false;
         this.isActive6 = false;
+        this.isActive7 = false;
         this.dataValue = '';
       },
       changeActive5: function(tabText) {
@@ -161,6 +159,7 @@
         this.isActive4 = false;
         this.isActive5 = true;
         this.isActive6 = false;
+        this.isActive7 = false;
         this.dataValue = '';
       },
       changeActive6: function(tabText) {
@@ -171,6 +170,18 @@
         this.isActive4 = false;
         this.isActive5 = false;
         this.isActive6 = true;
+        this.isActive7 = false;
+        this.dataValue = '';
+      },
+      changeActive7: function(tabText) {
+        this.currentView = tabText;
+        this.isActive1 = false;
+        this.isActive2 = false;
+        this.isActive3 = false;
+        this.isActive4 = false;
+        this.isActive5 = false;
+        this.isActive6 = false;
+        this.isActive7 = true;
         this.dataValue = '';
       },
       // logo: function() {
@@ -200,7 +211,7 @@
 }
 .tab_item {
   float: left;
-  width: 152px;
+  width: 130px;
   height: 90px;
   line-height: 90px;
   color: #000;

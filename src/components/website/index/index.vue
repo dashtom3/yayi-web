@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+<!--     <loading></loading> -->
     <backToTop></backToTop>
     <publicHeader></publicHeader>
     <classify :brandListData="brandList"></classify>
@@ -16,6 +17,7 @@
   import carousel from './carousel'
   import preventive from './preventive'
   import backToTop from './backToTop'
+  // import loading from '../loading'
   export default {
     name: 'index',
     data () {
@@ -30,6 +32,7 @@
       preventive,
       publicFooter,
       backToTop,
+      // loading,
     },
     created: function() {
     },

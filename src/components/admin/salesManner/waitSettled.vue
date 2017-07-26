@@ -10,13 +10,13 @@
             </el-select>
           </el-input>
         </el-form-item>
-        <el-form-item label="收入所属年月">
+<!--         <el-form-item label="收入所属年月">
           <el-date-picker
             v-model="beYearMonth"
             type="month"
             placeholder="选择月">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" v-on:click="search">查询</el-button>
         </el-form-item>

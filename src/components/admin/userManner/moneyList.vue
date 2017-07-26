@@ -94,7 +94,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
       }
     },
     created: function() {
@@ -121,6 +121,7 @@
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res,'popop')
             that.moneyList = res.data.data;
             that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.moneyList.length; i++) {
@@ -128,7 +129,6 @@
             }
             that.startDate = ''
             that.endDate = ''
-            console.log(res,'popop')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

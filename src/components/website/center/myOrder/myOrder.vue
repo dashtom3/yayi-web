@@ -53,6 +53,12 @@
       tab05: waitComment,
       tab06: returnSales,
     },
+    mounted: function() {
+      var that = this;
+      if(that.$route.params.currentView == 'tab01') {
+        that.$emit('listenToChildEvent','tab01')
+      }
+    },
     methods: {
       changeActive1: function(tabText) {
         this.currentView = tabText;

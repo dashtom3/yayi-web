@@ -82,11 +82,6 @@ let router = new Router({
 		name: 'index',
 		component: Index,
 	},
-	{
-		path: '/center',
-	  name: 'center',
-    component: Center
-	},
   {
       path: '/center',
       component: Center,

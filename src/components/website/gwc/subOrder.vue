@@ -1,5 +1,6 @@
 <template>
   <div class="subOrder">
+    <loading v-if="isLoading"></loading>
     <publicHeader></publicHeader>
     <div class="confirmAdd_box">
       <div class="title_box">
@@ -52,12 +53,13 @@
         </div>
       </div>
       <div class="qianbi_box">
-        <div class="qianbi_title">钱币抵扣</div>
+        <div class="qianbi_title">乾币抵扣</div>
         <div class="qianbi_des">
-          <el-checkbox v-model="checked1">使用钱币（1钱币=1元）</el-checkbox>
-          <span style="margin-left: 50px;font-size:14px;">最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币</span>
+          <el-checkbox v-model="checked1">使用乾币（1乾币=1元）</el-checkbox>
+          <span style="margin-left: 10px;font-size:14px;">（您有<span style="color:#D81E06;">{{allQb}}</span>个乾币,</span>
+          <span style="margin-left: 0px;font-size:14px;">本单最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币）</span>
           <div style="margin-left:24px;">
-            <input type="text" class="qianbi_word" v-show="qianbi_word" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
+            <input type="text" class="qianbi_word" v-show="qianbi_word" @input="changeQb" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
           </div>
         </div>
       </div>
@@ -93,12 +95,30 @@
       <div class="submit_btn" @click="submit_order">提交订单</div>
       <div class="clearfix"></div>
       <!-- 选择发票类型 开始-->
-      <el-dialog title="选择发票" :visible.sync="taxDialogVisible" size="tiny" :before-close="handleClose">
-        <span>选择发票</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="taxDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="taxDialogVisible = false">确 定</el-button>
-        </span>
+      <el-dialog title="发票信息" :visible.sync="taxDialogVisible" size="small" :before-close="handleClose">
+        <div class="nTax_btn" :class="{ active_btn: isActive1 }" @click="nTaxBtn">普通发票</div>
+        <div class="zTax_btn" :class="{ active_btn: isActive2 }" @click="zTaxBtn">增值税发票</div>
+        <div class="tax_detail_box">
+          <p>选择发票性质为"个人"时，发票抬头为"个人"两字与姓名，如需开具诊所名，请选择发票性质为"公司"</p>
+          <p>发票信息相关问题</p>
+        </div>
+        <div>
+          <el-radio class="radio" v-model="taxRadio" label="1">公司</el-radio>
+          <el-radio class="radio" v-model="taxRadio" label="2">个人</el-radio>
+        </div>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" style="margin-top: 20px;">
+          <el-form-item label="公司抬头" prop="taitou">
+            <el-input v-model="ruleForm.taitou" style="width: 300px !important;" placeholder="请填写营业执照上的公司全称"></el-input>
+          </el-form-item>
+          <el-form-item label="纳税人识别号" prop="nashui">
+            <el-input v-model="ruleForm.nashui" style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
+          </el-form-item>
+          <el-form-item label="发票内容">
+            <div class="mingxi">发票明细</div>
+          </el-form-item>
+        </el-form>
+        <el-button type="primary" @click="saveTax('ruleForm')">保存</el-button>
+        <el-button @click="taxDialogVisible = false">取消</el-button>
       </el-dialog>
       <!-- 选择发票类型 结束-->
       <!-- 新增／修改地址弹出框开始 -->
@@ -153,6 +173,7 @@
   import publicHeader from '../index/publicHeader'
   import publicFooter from '../index/publicFooter'
   import myAddress from '../details/selectThree'
+  import loading from '../loading'
   export default {
     name: 'subOrder',
     data () {
@@ -337,7 +358,7 @@
         checked3: false,
         addNewVisible: false,
         editAddVisible: false,
-        taxDialogVisible: false,
+        taxDialogVisible: true,
         removeVisible: false,
         realAlert: false,
         addAlert: false,
@@ -364,6 +385,7 @@
         xRegion: [],
         editAdd: {},
         nowQb: '',
+        allQb: '',
         hasCount: false,
         leave_word: 0,
         gwcTotal:'',
@@ -379,6 +401,40 @@
         fromGwc: '',
         orderItem: '',
         canHasCoin: 0,
+        isLoading: false,
+        isActive1: true,
+        isActive2: false,
+        taxRadio: '1',
+        ruleForm: {
+          taitou: '',
+          nashui: '',
+        },
+        rules: {
+          taitou: [
+            { required: true, message: '请填写营业执照上的公司全称', trigger: 'blur' }
+          ],
+          nashui: [
+            { required: true, message: '请填写纳税人识别号或统一社会信用代码', trigger: 'blur' }
+          ],
+          // type: [
+          //   { type: 'array', required: true, message: '请选择商品分类', trigger: 'change' }
+          // ],
+          // itemBrandId: [
+          //   { type: 'number', required: true, message: '请选择品牌名称', trigger: 'change' }
+          // ],
+          // itemSort: [
+          //   { required: true, message: '请选择商品类型', trigger: 'change' }
+          // ],
+          // registerId: [
+          //   { required: true, message: '请填写注册证号', trigger: 'blur' }
+          // ],
+          // isThrow: [
+          //   { required: true, message: '请选择是否推荐', trigger: 'change' }
+          // ],
+          // shopType: [
+          //   { required: true, message: '请选择是否添加商品属性', trigger: 'change' }
+          // ]
+        }, //验证规则
       }
     },
     //*******导航钩子*********//
@@ -456,12 +512,19 @@
       },
       qianbi_des: function() {
         var that = this;
+        if (that.qianbi_des > that.nowQb) {
+          that.$message.error('本单最多只可使用' + that.nowQb + '乾币！');
+          that.qianbi_des = that.nowQb
+        } else if (that.qianbi_des == '') {
+          that.hasCount = false
+        }
       }
     },
     components: {
       publicHeader,
       publicFooter,
       myAddress,
+      loading,
     },
     created: function () {
       var that = this;
@@ -474,25 +537,66 @@
       that.gwcTotal = arr.allMoney;
       that.haveSelectedGoodNum = arr.haveSelectedGoodNum
       that.canHasCoin = that.global.goodToMoney(that.fromGwc.details)
-      that.nowQb = that.global.getUser().qbBalance;
+      var obj = {
+        token:that.global.getToken()
+      };
+      that.global.axiosGetReq('/userMyQb/query', obj).then((res) => {
+        if (res.data.callStatus === 'SUCCEED') {
+          if(res.data.data.length>0){
+            that.nowQb = res.data.data[0].user.qbBalance;
+            that.allQb = res.data.data[0].user.qbBalance;
+          }
+        } else {
+          that.$message.error('网络出错，请稍后再试！');
+        }
+      })
       if (that.nowQb >= that.gwcTotal) {
-        that.nowQb = that.gwcTotal - 1
+        that.nowQb = that.gwcTotal
       }
     },
     methods: {
+      // 选择普通发票时
+      nTaxBtn: function() {
+        var that = this
+        that.isActive1 = true;
+        that.isActive2 = false;
+      },
+      // 选择增值说发票时
+      zTaxBtn: function() {
+        var that = this
+        that.isActive1 = false;
+        that.isActive2 = true;
+      },
+      saveTax: function(formName) {
+        var that = this
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+          } else {
+            console.log('error submit!!')
+            return false;
+          }
+        })
+      },
       handleClose: function() {
         var that = this;
         that.taxDialogVisible = false;
         that.checked2 = false
       },
+      changeQb: function() {
+        var that = this;
+        that.hasCount = false;
+      },
       //失去焦点时
       qbDed: function() {
         var that = this;
+        that.isLoading = true;
+        window.setTimeout(function(){
         if (that.qianbi_des !== '') {
           if (that.qianbi_des > that.gwcTotal) {
-            that.$message.error('乾币数量大于商品总额！');
+            that.$message.error('本单最多只可使用' + that.nowQb + '乾币！');
             that.hasCount = false;
-            that.qbdk = '0';
+            that.qbdk = 0;
+            that.qianbi_des = that.nowQb
             return false
           }
           var obj = {
@@ -505,18 +609,26 @@
               if (res.data.msg == '余额充足') {
                 that.hasCount = true;
                 that.qbdk = that.qianbi_des;
+                that.isLoading = false;
               } else {
-                that.$message.error(res.data.msg);
+                // that.$message.error(res.data.msg);
+                that.$message.error('乾币余额不足！');
                 that.hasCount = false;
+                that.isLoading = false;
               }
             } else {
               that.$message.error('网络出错，请稍后再试！');
+              that.isLoading = false;
             }
           })
         } else {
-          that.qianbi_des = 0;
-          that.qbdk = that.qianbi_des;
+          that.checked2 = false;
+          that.hasCount = false;
+          that.isLoading = false;
+          that.qbdk = 0;
+          that.$message.error('请输入乾币数！');
         }
+        },2000)
       },
       // 新增收货地址按钮
       addNew: function() {
@@ -815,7 +927,13 @@
     }
   }
 </script>
-
+<style>
+.el-form-item__label {
+  text-align: left !important;
+  font-size: 13px !important;
+/*  width: 110px !important;*/
+}
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 input {
@@ -1031,6 +1149,10 @@ input:focus {
    height: 30px;
    margin-right: 13px;
 }
+.qianbi_word:focus,.tax_word:focus,.leave_word:focus {
+   border: 1px solid #5DB7E7;
+   transition: all ease 0.5s;
+}
 .leave_message {
   width: 1200px;
   height: 80px;
@@ -1115,5 +1237,56 @@ input:focus {
   color: #5DB7E7;
   transition: all ease 0.5s;
   cursor: pointer;
+}
+.nTax_btn {
+  width: 100px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 7px;
+  display: inline-block;
+  margin-right: 10px;
+}
+.zTax_btn {
+  width: 100px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 7px;
+  display: inline-block;
+}
+.active_btn {
+  cursor: pointer;
+  border: 1px solid #5DB7E7;
+  background-color: #5DB7E7;
+  color: #fff;
+}
+.zTax_btn:hover,.nTax_btn:hover {
+  cursor: pointer;
+  border: 1px solid #5DB7E7;
+  background-color: #5DB7E7;
+  color: #fff;
+  transition: all ease 0.5s;
+}
+.tax_detail_box {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: #FFFDED;
+  font-size: 12px;
+}
+.mingxi {
+  width: 80px;
+  height: 37px;
+  line-height: 37px;
+  text-align: center;
+  border: 1px solid #5DB7E7;
+  background-color: #5DB7E7;
+  color: #fff;
+  border-radius: 7px;
+  display: inline-block;
 }
 </style>
