@@ -684,7 +684,7 @@
           // this.orderInfo.orderitemList[index].count += 1;
         }
       },
-      goToBackMoney:function(){
+      goToBackMoney:function(){ 
         var that = this;
         var data = that.wacthTuiKuanList;
         var sendObj = {

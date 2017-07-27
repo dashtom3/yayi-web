@@ -205,7 +205,7 @@ export default {
       haoCaiRata = 5;
     }else if(1000<=haoCaiMoney&&haoCaiMoney<3000){
       haoCaiRata = 8;
-    }else if(3000<=haoCaiMoney){
+    }else if(3000<=haoCaiMoney){  
       haoCaiRata = 12;
     }else{
       haoCaiRata = 0;
