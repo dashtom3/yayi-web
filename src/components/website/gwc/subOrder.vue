@@ -67,9 +67,15 @@
         <div class="qianbi_title">发票</div>
         <div class="qianbi_des">
           <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox>
-          <div style="margin-left:24px;">
-            <input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称">
+          <div class="tax_word_des" v-show="tax_word_des">
+            <span style="margin-right: 10px;">{{taxType}}</span>
+            <span style="margin-right: 10px;">{{company_name}}</span>
+            <span style="margin-right: 10px;">发票明细</span> 
+            <span style="color:#5DB7E7; cursor: pointer;" @click="editTax">修改</span>
           </div>
+<!--           <div style="margin-left:24px;">
+            <input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称">
+          </div> -->
         </div>
       </div>
       <div class="qianbi_box">
@@ -120,7 +126,7 @@
               <div class="mingxi">发票明细</div>
             </el-form-item>
             <el-button type="primary" @click="saveComTax('ruleForm')">保存</el-button>
-            <el-button @click="cancelTax">取消</el-button>
+            <el-button @click="cancelTax">不开发票</el-button>
           </el-form>
           <!-- 公司发票开票 结束-->
           <!-- 个人发票开票 开始-->
@@ -132,7 +138,7 @@
               <div class="mingxi">发票明细</div>
             </el-form-item>
             <el-button type="primary" @click="savePerTax('ruleForm1')">保存</el-button>
-            <el-button @click="cancelTax">取消</el-button>
+            <el-button @click="cancelTax">不开发票</el-button>
           </el-form>
           <!-- 个人发票开票 结束-->
         </div>
@@ -165,17 +171,17 @@
             <el-form-item label="银行账号" prop="bankAccount">
               <el-input v-model="ruleForm2.bankAccount" style="width: 300px !important;"></el-input>
             </el-form-item>
-            <el-form-item label="收票人姓名" prop="receiverName">
-              <el-input v-model="ruleForm2.receiverName" style="width: 300px !important;"></el-input>
+            <el-form-item label="收票人姓名" prop="stickName">
+              <el-input v-model="ruleForm2.stickName" style="width: 300px !important;"></el-input>
             </el-form-item>
-            <el-form-item label="收票人手机号" prop="receiverPhone">
-              <el-input v-model="ruleForm2.receiverPhone" style="width: 300px !important;"></el-input>
+            <el-form-item label="收票人手机号" prop="stickPhone">
+              <el-input v-model="ruleForm2.stickPhone" style="width: 300px !important;"></el-input>
             </el-form-item>
-            <el-form-item label="收票人地址" prop="receiverAdd">
-              <el-input v-model="ruleForm2.receiverAdd" style="width: 300px !important;"></el-input>
+            <el-form-item label="收票人地址" prop="stickAdd">
+              <el-input v-model="ruleForm2.stickAdd" style="width: 300px !important;"></el-input>
             </el-form-item>
             <el-button type="primary" @click="saveAddTax('ruleForm2')">保存</el-button>
-            <el-button @click="cancelTax">取消</el-button>
+            <el-button @click="cancelTax">不开发票</el-button>
           </el-form>
           <!-- 公司发票开票 结束-->
         </div>
@@ -483,9 +489,9 @@
           registerPhone: '',
           bank: '',
           bankAccount: '',
-          receiverName: '',
-          receiverPhone: '',
-          receiverAdd: '',
+          stickName: '',
+          stickPhone: '',
+          stickAdd: '',
         },
         rules: {
           taitou: [
@@ -519,16 +525,28 @@
           bankAccount: [
             { required: true, message: '请填写银行账号', trigger: 'blur' }
           ],
-          receiverName: [
+          stickName: [
             { required: true, message: '请填写收票人姓名', trigger: 'blur' }
           ],
-          receiverPhone: [
+          stickPhone: [
             { required: true, message: '请填写收票人手机号', trigger: 'blur' }
           ],
-          receiverAdd: [
+          stickAdd: [
             { required: true, message: '请填写收票人地址', trigger: 'blur' }
           ]
         }, 
+        tax_word_des: false,
+        invoiceHand: 0, //发票抬头
+        company_name: '',
+        taxpayer_num: '',
+        registered_address: '',
+        registered_phone: '',
+        open_bank: '',
+        bank_number: '',
+        stick_name: '',
+        stick_phone: '',
+        stick_address: '',
+        taxType: '',
       }
     },
     //*******导航钩子*********//
@@ -588,12 +606,28 @@
       },
       checked2: function() {
         var that = this;
-        if (that.checked2 == true) {
+        if (that.checked2 == true && that.taxType == '') {
           that.taxDialogVisible = true
           that.tax_word = true
+          that.invoiceHand = 1
         } else {
           that.tax_word = false
           that.tax_des = ''
+          that.invoiceHand = 0
+          that.tax_word_des = false
+          that.ruleForm.taitou = ''
+          that.ruleForm.nashui = ''
+          that.ruleForm1.personal = ''
+          that.ruleForm2.companyName = ''
+          that.ruleForm2.payTax = ''
+          that.ruleForm2.registerAdd = ''
+          that.ruleForm2.registerPhone = ''
+          that.ruleForm2.bank = ''
+          that.ruleForm2.bankAccount = ''
+          that.ruleForm2.stickName = ''
+          that.ruleForm2.stickPhone = ''
+          that.ruleForm2.stickAdd = ''
+          that.taxType = ''
         }
       },
       checked3: function() {
@@ -648,18 +682,35 @@
       that.global.axiosGetReq('/userMyQb/query', obj).then((res) => {
         if (res.data.callStatus === 'SUCCEED') {
           if(res.data.data.length>0){
-            that.nowQb = res.data.data[0].user.qbBalance;
             that.allQb = res.data.data[0].user.qbBalance;
+            that.nowQb = res.data.data[0].user.qbBalance;
+            if (that.nowQb >= that.gwcTotal) {
+              that.nowQb = that.gwcTotal
+            }
+          } else {
+            that.nowQb = 0
+            that.allQb = 0
           }
         } else {
           that.$message.error('网络出错，请稍后再试！');
         }
       })
-      if (that.nowQb >= that.gwcTotal) {
-        that.nowQb = that.gwcTotal
-      }
     },
     methods: {
+      // 修改发票信息
+      editTax: function() {
+        var that = this
+        that.taxDialogVisible = true
+        if (that.taxType == '普通发票') {
+          that.isActive1 = true;
+          that.isActive2 = false;
+          that.normal_tax = true;
+        } else {
+          that.isActive1 = false;
+          that.isActive2 = true;
+          that.normal_tax = false;
+        }
+      },
       // 选择普通发票时
       nTaxBtn: function() {
         var that = this
@@ -674,30 +725,69 @@
         that.isActive2 = true;
         that.normal_tax = false;
       },
+      // 普通发票公司
       saveComTax: function(formName) {
         var that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
+            that.taxType = '普通发票'
+            that.company_name = that.ruleForm.taitou
+            that.taxpayer_num = that.ruleForm.nashui
+            that.registered_address = ''
+            that.registered_phone = ''
+            that.open_bank = ''
+            that.bank_number = ''
+            that.stick_name = ''
+            that.stick_phone = ''
+            that.stick_address = ''
+            that.tax_word_des = true
+            that.taxDialogVisible = false
           } else {
             console.log('error submit!!')
             return false;
           }
         })
       },
+      // 普通发票个人
       savePerTax: function(formName) {
         var that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
+            that.taxType = '普通发票'
+            that.company_name = that.ruleForm1.personal
+            that.taxpayer_num = ''
+            that.registered_address = ''
+            that.registered_phone = ''
+            that.open_bank = ''
+            that.bank_number = ''
+            that.stick_name = ''
+            that.stick_phone = ''
+            that.stick_address = ''
+            that.tax_word_des = true
+            that.taxDialogVisible = false
           } else {
             console.log('error submit!!')
             return false;
           }
         })
       },
+      // 增值税发票
       saveAddTax: function(formName) {
         var that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
+            that.taxType = '增值税发票'
+            that.company_name = that.ruleForm2.companyName
+            that.taxpayer_num = that.ruleForm2.payTax
+            that.registered_address = that.ruleForm2.registerAdd
+            that.registered_phone = that.ruleForm2.registerPhone
+            that.open_bank = that.ruleForm2.bank
+            that.bank_number = that.ruleForm2.bankAccount
+            that.stick_name = that.ruleForm2.stickName
+            that.stick_phone = that.ruleForm2.stickPhone
+            that.stick_address = that.ruleForm2.stickAdd
+            that.tax_word_des = true
+            that.taxDialogVisible = false
           } else {
             console.log('error submit!!')
             return false;
@@ -708,11 +798,31 @@
         var that = this
         that.taxDialogVisible = false
         that.checked2 = false
+        if (that.taxType !== '') {
+          console.log('修改')
+        }else {
+          that.ruleForm.taitou = ''
+          that.ruleForm.nashui = ''
+          that.ruleForm1.personal = ''
+          that.ruleForm2.companyName = ''
+          that.ruleForm2.payTax = ''
+          that.ruleForm2.registerAdd = ''
+          that.ruleForm2.registerPhone = ''
+          that.ruleForm2.bank = ''
+          that.ruleForm2.bankAccount = ''
+          that.ruleForm2.stickName = ''
+          that.ruleForm2.stickPhone = ''
+          that.ruleForm2.stickAdd = ''
+          that.taxType = ''
+        }
       },
       handleClose: function() {
         var that = this;
-        that.taxDialogVisible = false;
-        that.checked2 = false
+        that.$confirm('关闭将视为不开发票？').then(_ => {
+          that.taxDialogVisible = false;
+          that.checked2 = false
+          done();
+        }).catch(_ => {});
       },
       changeQb: function() {
         var that = this;
@@ -720,7 +830,15 @@
       },
       //失去焦点时
       qbDed: function() {
-        var that = this;
+        var that = this; 
+        if (isNaN(that.qianbi_des)) {
+          that.$message.error('请输入正确数字格式！');
+          return false
+        }
+        if (that.qianbi_des > 0 && that.qianbi_des < 1) {
+          that.$message.error('乾币只能是整数！');
+          return false
+        }
         that.isLoading = true;
         window.setTimeout(function(){
         if (that.qianbi_des !== '') {
@@ -822,6 +940,8 @@
             for (var i = 0; i < that.items.length; i++) {
               if(that.items[i].isDefault == true) {
                 that.radio = i;
+              } else {
+                that.radio = 0;
               }
             }
             if (res.data.data.length == 0) {
@@ -1026,17 +1146,27 @@
         // console.log(that.orderItem,'ll')
         var orderItem = JSON.stringify(that.orderItem)
         var obj = {
+          // totalFee: that.gwcTotal, //总价
+          // actualPay: that.gwcTotal-that.qianbi_des, //实际付款
           token:that.global.getToken(),
           receiverId: parseInt(that.receiverId), //收货地址id
           postFee: that.freight,
-          invoiceHand: that.tax_des, //发票抬头
+          // invoiceHand: that.tax_des, //发票抬头
           isRegister: that.leave_word, //是否需要产品注册证
           qbDed: that.qianbi_des, //钱币抵扣
           buyerMessage: that.leave_des, //买家留言
-          // totalFee: that.gwcTotal, //总价
-          // actualPay: that.gwcTotal-that.qianbi_des, //实际付款
           giveQb: '',  //获得乾币
           orderItem: orderItem, //JSON数组
+          invoiceHand: that.invoiceHand, //发票抬头
+          company_name: that.company_name,
+          taxpayer_num: that.taxpayer_num,
+          registered_address: that.registered_address,
+          registered_phone: that.registered_phone,
+          open_bank: that.open_bank,
+          bank_number: that.bank_number,
+          stick_name: that.stick_name,
+          stick_phone: that.stick_phone,
+          stick_address: that.stick_address,
         }
         console.log(obj,'opopopp');
         // axios.defaults.headers['token'] = that.global.getToken()
@@ -1045,11 +1175,15 @@
             if (res.data.data == null) {
               that.$message.error('提交订单失败！');
             } else{
-              console.log(res, 'kkkkk')
-              let orderD = res.data.data
-              window.sessionStorage.setItem('order', JSON.stringify(orderD))
-              window.sessionStorage.removeItem('suborderData')
-              that.$router.push({ path:'/pay' });
+              console.log(res.data.data.actualPay, 'kkkkk')
+              if (res.data.data.actualPay == 0) {
+                that.$router.push({name:'paySuccess', params: { payData: 'success' }})
+              } else {
+                let orderD = res.data.data
+                window.sessionStorage.setItem('order', JSON.stringify(orderD))
+                window.sessionStorage.removeItem('suborderData')
+                that.$router.push({ path:'/pay' });
+              }
             }
           } else {
             that.$message.error('提交订单失败！');
@@ -1245,9 +1379,9 @@ input:focus {
   margin-right: 200px;
 }
 .des_num {
-  width: 32px;
+  width: 68px;
   margin-top: 26px;
-  margin-right: 170px;
+  margin-right: 138px;
   text-align: center;
 }
 .des_stotal {
@@ -1420,5 +1554,9 @@ input:focus {
   color: #fff;
   border-radius: 7px;
   display: inline-block;
+}
+.tax_word_des {
+  font-size: 14px; 
+  margin-top: 10px;
 }
 </style>

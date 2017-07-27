@@ -36,11 +36,12 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
-        if (that.global.getToken() == null || that.$route.params.payData !== 'success') {
+        if (that.global.getToken() == null) {
           that.$router.push({path:'/'})
         }else {
           console.log('uiuiuiu')
         }
+        //  that.$route.params.payData !== 'success'
         //console.log(that.$router.history,'222')
         // that.$router.history.current.name == 'eastshui'
       })

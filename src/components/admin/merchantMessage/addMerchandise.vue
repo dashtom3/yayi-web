@@ -33,7 +33,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="注册证号" prop="registerId">
+      <el-form-item label="注册证号">
         <el-input v-model="ruleForm.registerId" style="width: 300px !important;"></el-input>
       </el-form-item>
       <el-form-item label="推荐" prop="isThrow">

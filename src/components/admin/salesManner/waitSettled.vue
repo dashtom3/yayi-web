@@ -73,11 +73,11 @@
       </el-table-column>
       <el-table-column prop="userPhone" label="客户手机号">
       </el-table-column>
-      <el-table-column prop="state" label="订单状态">
+      <el-table-column prop="orderState" label="订单状态">
         <template scope="scope">
-          <span v-if="scope.row.state == 1">待结算</span>
-          <span v-if="scope.row.state == 2">已结算</span>
-          <span v-if="scope.row.state == 3">已取消</span>
+          <span v-if="scope.row.orderState == 1">待结算</span>
+          <span v-if="scope.row.orderState == 2">已结算</span>
+          <span v-if="scope.row.orderState == 3">已取消</span>
         </template>
       </el-table-column>
       <el-table-column prop="itemSumMoney" label="商品总价（元）">
@@ -201,28 +201,28 @@
         }
         that.global.axiosGetReq('/saleIncomeList/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data,'详情接口')
+            console.log(res.data.data,'详情接口')
             that.someOneUserDetails.saleName = res.data.data.saleName
             that.someOneUserDetails.salePhone = res.data.data.salePhone
             that.someOneUserDetails.date = scope.row.beYearMonth
             that.someOneUserDetails.state = scope.row.getState
-            var objData = res.data.data.saleDataStatistics
+            var objData = res.data.data.orderVoList
             that.inComeTableData = []
-            var obj1 = {
-              type: '耗材类',
-              salesMoney: objData.haocaiMoney,
-              returnMoney: objData.haocaiRefund,
-              actualMoney: objData.haocaiActual,
-              inCome: '60'
-            }
-            var obj2 = {
-              type: '工具设备类',
-              salesMoney: objData.gongjuMoney,
-              returnMoney: objData.gongjuRefund,
-              actualMoney: objData.gongjuActual,
-              inCome: '60'
-            }
-            that.inComeTableData.push(obj1,obj2)
+            // var obj1 = {
+            //   type: '耗材类',
+            //   salesMoney: res.data.data.haocaiMoney,
+            //   returnMoney: res.data.data.haocaiRefund,
+            //   actualMoney: res.data.data.haocaiActual,
+            //   inCome: parseInt(res.data.data.haocaiGetMoney),
+            // }
+            // var obj2 = {
+            //   type: '工具设备类',
+            //   salesMoney: res.data.data.gongjuMoney,
+            //   returnMoney: res.data.data.gongjuRefund,
+            //   actualMoney: res.data.data.gongjuActual,
+            //   inCome: parseInt(res.data.data.gongjuGetMoney),
+            // }
+            // that.inComeTableData.push(obj1,obj2)
             // that.getMoneyList = res.data.data
             that.inComeDetailTableData = res.data.data.orderVoList
             that.totalCount = res.data.totalNumber;
