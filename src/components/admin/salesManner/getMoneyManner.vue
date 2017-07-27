@@ -66,8 +66,6 @@
         </el-pagination>
       </div>
     </el-col>
-
-
   </el-row>
 </template>
 <script>
@@ -87,8 +85,7 @@
       }
     },
     created: function() {
-      var that = this;
-      that.getAllMoney();
+      this.search()
     },
     methods: {
       handleCurrentChange(val) {
@@ -100,17 +97,6 @@
         return n<10 ? '0'+ n: n 
       },
       //获取提现列表
-      getAllMoney: function() {
-        var that = this;
-        that.global.axiosGetReq('/witManage/query').then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            that.getMoneyList = res.data.data;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      //查询
       search:function(val){
         var that = this;
 

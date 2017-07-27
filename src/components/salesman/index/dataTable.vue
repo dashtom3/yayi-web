@@ -180,6 +180,7 @@ export default {
       if (mainChart === undefined) {  
         mainChart = echarts.init(document.getElementById('myChart'));
       }
+      mainChart.clear();
       // 绘制图表
       mainChart.setOption({
           title: {
@@ -188,14 +189,16 @@ export default {
           },
           tooltip: {
               trigger: 'axis',
-              formatter: function (params, ticket, callback) {  
+              formatter: function (params, ticket, callback) { 
+              //图表title名称  
+              var seriesName = params[0].seriesName   
               //x轴名称  
               var name = params[0].name  
-              //图表title名称  
-              var seriesName = params[0].seriesName  
               //值  
               var value = params[0].value  
-              return seriesName + '<br />' + '第'+ name + '天' + '<br />' + value
+              //描述
+              var desc = params[0].desc
+              return seriesName + '<br />' + '第'+ name + '天' + '<br />' + '￥' + value
         }  
           },
           legend: {
@@ -232,6 +235,7 @@ export default {
           series: [
               {
                   name:'当日销售额（元）',
+                  desc: new Date(),
                   type:'line',
                   stack: '当日销售额（元）',
                   data: this.echartData
@@ -263,11 +267,12 @@ export default {
             refundMoneyGongju: res.data.data.refundMoneyGongju,
             actualMoneyGongju: res.data.data.actualMoneyGongju,
           }
+          this.detailVisible = true
         }else{
-          this.$message.error('查询订单失败！');
+          this.$message.error('网络出错，请稍后再试！');
         }
       })
-      this.detailVisible = true
+      
     }
 	}
 }

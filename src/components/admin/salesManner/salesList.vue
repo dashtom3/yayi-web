@@ -382,14 +382,14 @@
       changeNumHandler(){
         if(this.walletform.type === "1"){
           if(this.walletform.num !== ""){
-            this.walletform.remainder = this.walletform.balance + parseFloat(this.walletform.num)
+            this.walletform.remainder = (this.walletform.balance + Number(this.walletform.num)).toFixed(2)
           }else{
             this.walletform.remainder = this.walletform.balance
           }
           
         }else if(this.walletform.type === "2"){
           if(this.walletform.num !== ""){
-            this.walletform.remainder = this.walletform.balance - this.walletform.num
+            this.walletform.remainder = (this.walletform.balance - this.walletform.num).toFixed(2)
           }else{
             this.walletform.remainder = this.walletform.balance
           }
