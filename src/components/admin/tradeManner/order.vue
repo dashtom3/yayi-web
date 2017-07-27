@@ -31,7 +31,7 @@
       </el-form>
 
       <!--列表-->
-      <el-table :data="orderList" border>
+       <el-table :data="orderList" border>
         <el-table-column prop="orderId" label="订单编号" width="180" align="center" ></el-table-column>
         <el-table-column prop="totalFee" label="总价（元）" width="120" align="center" ></el-table-column>
         <el-table-column prop="qbDed" label="乾币抵扣（元）" width="140" align="center" ></el-table-column>
@@ -42,11 +42,11 @@
             <span>{{scope.row.reName}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="created" label="下单时间" min-width="120" align="center" >
+         <el-table-column prop="created" label="下单时间" min-width="120" align="center" >
           <template scope="scope">
             <span>{{scope.row.created}}</span>
-          </template >
-        </el-table-column>
+          </template>
+        </el-table-column> 
         <el-table-column prop="state" label="订单状态" min-width="120" align="center" >
           <template scope="scope">
             <span v-if="scope.row.state == '1'">等待买家付款</span>
@@ -64,7 +64,6 @@
             <span>{{scope.row.shippingCode}}</span>
           </template>
         </el-table-column>
-        <!-- <result property="shippingCode" column="shipping_code" />物流编号 -->
         <el-table-column prop="refund" label="是否退款" min-width="100" align="center" >
           <template scope="scope">
             <span v-if="scope.row.refundInfo=='是'">是</span>
@@ -81,7 +80,7 @@
             <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> 
 
       <div class="block">
         <!-- 分页 -->
@@ -128,7 +127,7 @@
           <el-col :span="7"><div class="grid-content bg-purple"></div></el-col>
         </div>
         <div class="order_box clearfix">
-          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList">
+          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item"> 
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
             <el-col :span="5" align="center">{{item.itemInfo.itemName}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
@@ -136,7 +135,7 @@
             <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
           </div>
           <div class="order_sum fl">
-            <div class="order_h">{{'￥'+nowOrderDetails.totalFee}}</div>
+            <div class="order_h">{{'￥'+nowOrderDetails.actualPay}}</div>
             <div class="order_h">{{'（含运费: '+nowOrderDetails.postFee+ '）'}}</div>
             <div class="order_h">{{'（乾币已抵扣: '+nowOrderDetails.qbDed+ '）'}}</div>
           </div>
@@ -268,7 +267,6 @@
 </template>
 
 <script>
-  // import paging from '../../website/brandLib/paging0'
   export default {
     data() {
       return {
@@ -285,7 +283,7 @@
         pageProps:null,
         nowOrderDetails:null,
         wuLiuBianHao:null,
-        wuliu:"申通快递",
+        wuliu:"STO",
         //订单状态
         state: [
             {value: '',label: '全部'},
@@ -866,7 +864,6 @@
   cursor: default;
 }
 
-/* 仓库发货 */
 .btn_{
   margin-left: 154px;
 }

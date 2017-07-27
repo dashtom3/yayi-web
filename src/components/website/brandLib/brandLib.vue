@@ -16,18 +16,18 @@
       <div class="classifyLine" >
         分类：
         <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy()">不限</span>
-          <span class="fenlei1" v-bind:class="{fenlieselect: classify1Index===index}" v-on:click="selectClassfy1(index,item)"  v-for="(item,index) in brandClassfy">
+          <span class="fenlei1" v-bind:class="{fenlieselect: classify1Index===index}" v-on:click="selectClassfy1(index,item)"  v-for="(item,index) in brandClassfy" :key="item">
             {{item.oneClassify}}
           </span>
           <div class="classfyDetail" v-show="fenlie2.length>0">
             <div class="towClassfy" >
               <ul>
-                <li :class="{asdff:classify2Index==index}" v-on:click="selectClassfy2(index,item)" v-for="(item,index) in fenlie2">{{item.classifyTwoName}}</li>
+                <li :class="{asdff:classify2Index==index}" v-on:click="selectClassfy2(index,item)" v-for="(item,index) in fenlie2" :key="item">{{item.classifyTwoName}}</li>
               </ul>
             </div>
             <div class="threeClassfy" v-show="fenlie3.length>0">
               <ul>
-                <li :class="{asdff:classify3Index==index}" v-on:click="selectClassfy3(index,item)" v-for="(item,index) in fenlie3">{{item.classifyThreeName}}</li>
+                <li :class="{asdff:classify3Index==index}" v-on:click="selectClassfy3(index,item)" v-for="(item,index) in fenlie3" :key="item">{{item.classifyThreeName}}</li>
               </ul>
             </div>
           </div>
@@ -36,7 +36,7 @@
         <span style="margin-top:11px">品牌：</span>
         <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn()">不限</span>
         <ul>
-          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands">
+          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands" :key="item">
             {{item.itemBrandName}}
             <img v-show="item.selected" src="../../../images/brandLib/1.png" alt="">
             <img v-show="!item.selected" src="../../../images/brandLib/2.png" alt="">
@@ -51,7 +51,7 @@
       </div> -->
       <div class="orderSelect">
         <ul>
-          <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}">
+          <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}" :key="item">
             {{item.orderName}}
             <span></span>
             <img v-if="!item.orderSort&&index>0&&index<3"  src="../../../images/brandLib/7.png" alt="">
@@ -67,7 +67,7 @@
 
       <div class="allGoods">
         <ul v-if="ifHaveData">
-          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)">
+          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)" :key="item">
             <div class="imgWrap">
               <img class="goodImg" :src="item.itemDetail.itemPica+'?imageView2/1/w/255/h/255'" alt="">
               <span></span>
@@ -79,7 +79,7 @@
             </div>
           </li>
           <div class="clearfix">
-
+          
           </div>
         </ul>
         <div v-else style="text-align:center;margin-top:100px;">
@@ -545,6 +545,7 @@ border-radius: 3px;
   border-top: 1px solid #bcbcbc;
 }
 .threeClassfy li {
+  
   display: inline-block;
   cursor: pointer;
     border-radius: 5px;
@@ -726,10 +727,10 @@ overflow: hidden;
   transition: all 0.5s ease;
   border-color:white;
 }
-.goodImg:hover{
+/* .goodImg:hover{ */
   /*box-shadow: 7px 7px 28px #bcbcbc;
 transition: all 0.5s ease;*/
-}
+/* } */
 .allGoods .blueBgc{
   color: white;
   background: #5db7e8;

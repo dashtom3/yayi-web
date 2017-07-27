@@ -59,7 +59,7 @@
       <!-- 分页 -->
     </div>
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-  <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList">
+  <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList" :key="item">
     <div class="commentImgWrap">
       <img class="comment_img" :src="item.picPath+'?imageView2/1/w/80/h/80'" alt="img">
     </div>
@@ -152,12 +152,12 @@
 <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
   <div class="wlxxWrap" v-if="wuliuxinxi">
     <div class="wlxxLeft">
-      <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
+      <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces" :key="one"><span class="circle"></span></span>
       <span class="lastCircle"></span>
     </div>
     <div class="wlxxRight">
       <ul>
-        <li v-for="one in wuliuxinxi.Traces">
+        <li v-for="one in wuliuxinxi.Traces" :key="one">
           <span class="data">{{one.AcceptTime.split(" ")[0]}}</span>
           <div class="placeWrap">
             <span class="place">{{one.AcceptStation}}</span>
@@ -288,6 +288,7 @@
             itemId:that.nowToOperateItem.orderitemList[i].itemId,
             score:that.commentScores[i].score,
             data:that.commentScores[i].commentContent,
+            itemSKU:that.nowToOperateItem.orderitemList[i].itemSKU
           };
           obj.itemIdList.push(obj2);
         }
