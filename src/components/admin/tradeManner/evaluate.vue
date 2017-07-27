@@ -11,9 +11,6 @@
 	    	<el-form-item label="订单编号" class="fl t_input_width">
           <el-input v-model="orderCode"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" class="fl t_input_width">
-          <el-input v-model="userCode"></el-input>
-        </el-form-item>
         <el-form-item label="回复状态" class="fl">
           <el-select v-model="value" placeholder="全部" class="t_select_width">
 				    <el-option
@@ -33,15 +30,12 @@
       <el-table :data="replayLists" border>
         <el-table-column label="sku代码" :span="3" align="center">
           <template scope="scope" >
-            <span>{{scope.row.itemSKU}}</span>
+            <span>{{scope.row.sku}}</span>
           </template> 
         </el-table-column>
         <el-table-column label="商品名称+属性" width="170" align="center" >
           <template scope="scope">
-            <span>{{scope.row.itemName}}</span>
-            <span>{{scope.row.itemPropertyNamea}}</span>
-            <span>{{scope.row.itemPropertyNameb}}</span>
-            <span>{{scope.row.itemPropertyNamec}}</span>
+            <span>{{scope.row.describey}}</span>
           </template>
         </el-table-column>
         <el-table-column label="评论内容" :span="3" align="center">
@@ -59,15 +53,10 @@
             <span>{{scope.row.orderId}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用户名" width="170" align="center" >
-          <template scope="scope">
-            <span>{{scope.row.userName}}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="回复状态" :span="3" align="center" >
           <template scope="scope">
-            <span v-if="scope.row.recoveryState == '0'">未回复</span>
-            <span v-if="scope.row.recoveryState == '1'">已回复</span>
+            <span v-if="scope.row.state == 1">未回复</span>
+            <span v-if="scope.row.state == 2">已回复</span>
           </template>  
         </el-table-column>
         <el-table-column label="回复内容" :span="3" align="center" >
@@ -80,7 +69,7 @@
             <el-button
               size="small"
               type="info"
-              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.recoveryState == '0'">回复</el-button>
+              @click="handleReplay(scope.$index, scope.row)" v-show="scope.row.state == 1">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -116,7 +105,6 @@
 		data(){
 			return {
 				orderCode: "",
-				userCode: "",
         //默认每页数据量
         pagesize: 10,
         //当前页码
@@ -124,23 +112,22 @@
         //默认数据总数
         totalCount: 1,
 				replayStat: [{
-          value: '',
+          value: '1',
           label: '全部'
         },{
-          value: '0',
+          value: '2',
           label: '未回复'
         },{
-          value: '1',
+          value: '3',
           label: '已回复'
         }],
-        value: '',
+        value: '1',
         //回复列表
-        replayList: [],
+        replayLists: [],
         replayBtn: false,
         replayText: '',
         orderId: '',
-        itemId: '',
-        replayLists: []
+        commentId: ''
 			}
 		},
     created(){
@@ -159,65 +146,36 @@
         }
         let params = {
           orderId: this.orderCode,
-          phone: this.userCode,
-          recoveryState: this.value,
+          recoveryState: Number(this.value),
           currentPage: this.currentPage,
           numberPerpage: this.pagesize
         }
-        console.log(params)
         global.axiosPostReq('/commentManage/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
-            this.replayList = res.data.data
             this.totalCount = res.data.totalNumber
-            console.log(res.data.data)
-            for(var i=0;i<res.data.data.length;i++){
-              for(var j=0;j<res.data.data[i].orderitemList.length;j++){
-                this.replayLists.push({
-                  itemSKU: res.data.data[i].orderitemList[j].itemSKU,
-                  itemName: res.data.data[i].orderitemList[j].itemName,
-                  itemPropertyNamea: res.data.data[i].orderitemList[j].itemPropertyNamea,
-                  itemPropertyNameb: res.data.data[i].orderitemList[j].itemPropertyNameb,
-                  itemPropertyNamec: res.data.data[i].orderitemList[j].itemPropertyNamec,
-                  commentContent: res.data.data[i].orderitemList[j].commentList.commentContent,
-                  commentGrade: res.data.data[i].orderitemList[j].commentList.commentGrade,
-                  orderId: res.data.data[i].orderId,
-                  itemId: res.data.data[i].orderitemList[j].commentList.itemId,
-                  userName: res.data.data[i].orderitemList[j].commentList.userName,
-                  recoveryState: res.data.data[i].orderitemList[j].commentList.recoveryState,
-                  replyContent: res.data.data[i].orderitemList[j].commentList.replyContent,
-                })
-              }
-            }
-            console.log(this.replayLists)
+            this.replayLists = res.data.data
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
 			handleReplay(index, row){
-        console.log(index, row)
-        this.orderId = row.orderId;
-        this.itemId = row.sku;
+        this.commentId = row.commentId;
 				this.replayBtn = true;
 			},
 			replayOkHandler(){
         let params = {
-          orderId: this.orderId,
-          itemId: this.itemId,
-          data: this.replayText,
-          recoveryState: '1'
+          commentId: this.commentId,
+          data: this.replayText
         }
-        console.log(params)
         global.axiosPostReq('/commentManage/reply',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.replayBtn = false;
             this.queryHandler()
           }else{
-            this.$message.error('回复评论失败！');
+            this.$message.error('网络出错，请稍后再试！');
           }
         })
-
-				this.replayBtn = false;
 			}
 		}
 	}

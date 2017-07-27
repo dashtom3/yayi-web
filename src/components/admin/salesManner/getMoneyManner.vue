@@ -135,7 +135,6 @@
         }
         that.global.axiosPostReq('/witManage/query',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
             that.getMoneyList = res.data.data;
             this.totalCount = res.data.totalNumber;
           } else {

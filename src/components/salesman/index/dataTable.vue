@@ -188,6 +188,15 @@ export default {
           },
           tooltip: {
               trigger: 'axis',
+              formatter: function (params, ticket, callback) {  
+              //x轴名称  
+              var name = params[0].name  
+              //图表title名称  
+              var seriesName = params[0].seriesName  
+              //值  
+              var value = params[0].value  
+              return seriesName + '<br />' + '第'+ name + '天' + '<br />' + value
+        }  
           },
           legend: {
               data:['当日销售额（元）']

@@ -87,7 +87,7 @@
           myOrderVoList: []
         },
         personalData: null,
-        echartData: [],
+        echartData: [0, 30,70,20,1003,30],
         withTotalAmt: 0
       }
     },
@@ -183,7 +183,7 @@
         }
         that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
+            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("申请中") !== -1 ? true : false
             that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -201,7 +201,7 @@
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             for(var i=0;i<res.data.data.length;i++){
-              this.echartData.push(res.data.data[i].dayCommission)
+              this.echartData.push(res.data.data[i].dayCommission * res.data.data[i].dayOrderNum)
             }
             console.log('youle ',this.echartData)
           }else{

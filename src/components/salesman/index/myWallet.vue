@@ -333,8 +333,7 @@
         }
         that.global.axiosGetReq('/PW/show',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
-            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("提现中") !== -1 ? true : false
+            this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("申请中") !== -1 ? true : false
             that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -420,9 +419,9 @@
             describeyStr = res.data.data.describey
             
             //改变展示描述
-            if(describeyStr.indexOf("进账奖励") !== -1){
+            if(describeyStr.indexOf("管理员增加") !== -1){
               describeyStr = "管理员增加￥" + (res.data.data.balanceIn || 0)
-            }else if(describeyStr.indexOf("出账惩罚") !== -1){
+            }else if(describeyStr.indexOf("管理员减少") !== -1){
               describeyStr = "管理员扣除￥" + (res.data.data.balanceOut || 0)
             }else if(describeyStr.indexOf("出账提现成功") !== -1){
               describeyStr = "提现￥" + (res.data.data.balanceOut || 0)
@@ -450,7 +449,7 @@
               income: res.data.data.gongJuIncome || 0
             }
             //判断是管理员操作，出账，还是收入 
-            if(row.describey.indexOf("进账奖励") !== -1 || row.describey.indexOf("出账惩罚") !== -1 || row.describey.indexOf("出账提现成功") !== -1){
+            if(row.describey.indexOf("出账提现成功") !== -1 || describeyStr.indexOf("管理员增加") !== -1 || describeyStr.indexOf("管理员扣除") !== -1){
               this.outVisible = true
             }else{
                this.incomeVisible = true

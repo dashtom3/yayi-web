@@ -112,7 +112,7 @@
     <el-dialog title="钱包" :visible.sync="walletVisible" size="small">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="修改余额" name="first">
-          <el-form ref="form" :model="walletform" label-width="120px" class="tab01">
+          <el-form ref="form" :model="walletform" label-width="120px" class="tab01" style="height:368px;">
             <el-form-item label="当前余额：">
               <span class="amt_color">{{walletform.balance}}</span>
             </el-form-item>
@@ -134,19 +134,27 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="钱包明细" name="second">
-          <el-table :data="tableData" border style="width: 100%">
-            <el-table-column prop="income" align="center" label="进账（元）" width="180">
+          <el-table :data="tableData" border style="width: 100%;margin: 34px auto;height:500px;">
+            <el-table-column prop="balanceIn" align="center" label="进账（元）" width="180">
             </el-table-column>
-            <el-table-column prop="outAccount" align="center" label="出账（元）" width="180">
+            <el-table-column prop="balanceOut" align="center" label="出账（元）" width="180">
             </el-table-column>
-            <el-table-column prop="wallet" align="center" label="钱包余额（元）">
+            <el-table-column prop="balance" align="center" label="钱包余额（元）">
             </el-table-column>
-            <el-table-column prop="updateTime" align="center" label="更新时间">
+            <el-table-column prop="created" align="center" label="更新时间">
+              <template scope="scope">
+                <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())+' '+fillZero(new Date(scope.row.created).getHours())+":"+fillZero(new Date(scope.row.created).getMinutes())+":"+fillZero(new Date(scope.row.created).getSeconds())}}</span>
+              </template>  
             </el-table-column>
-            <el-table-column prop="desc" align="center" label="描述">
+            <el-table-column prop="describey" align="center" label="描述">
+            <template scope="scope">
+              <span v-if="scope.row.describey.indexOf('管理员增加') !== -1">{{"管理员增加￥"+ scope.row.balanceIn}}</span>
+              <span v-else-if="scope.row.describey.indexOf('管理员减少') !== -1">{{"管理员扣除￥"+ scope.row.balanceOut}}</span>
+              <span v-else="scope.row.describey.indexOf('出账提现成功') !== -1">{{"提现￥"+ scope.row.balanceOut}}</span>
+            </template>
             </el-table-column>
           </el-table>
-          <div class="block" style="position:absolute;top:502px;right:0;" v-show="this.totalCountWallet > this.pagesizeWallet">
+          <div class="block" style="position:absolute;top:458px;right:0;" v-show="this.totalCountWallet > this.pagesizeWallet">
             <el-pagination
               @current-change="handleCurrentWalletChange"
               :current-page.sync="currentPageWallet"
@@ -331,49 +339,20 @@
           num: 0,
           remainder: 0
         },
-        tableData: [{
-          income: '2016-05-02',
-          outAccount: '王小虎',
-          wallet: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '2017-01-01',
-          desc: 'yayayayayay'
-        }, {
-          income: '2016-05-02',
-          outAccount: '王小虎',
-          wallet: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '2017-01-01',
-          desc: 'yayayayayay'
-        },{
-          income: '2016-05-02',
-          outAccount: '王小虎',
-          wallet: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '2017-01-01',
-          desc: 'yayayayayay'
-        },{
-          income: '2016-05-02',
-          outAccount: '王小虎',
-          wallet: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '2017-01-01',
-          desc: 'yayayayayay'
-        },{
-          income: '2016-05-02',
-          outAccount: '王小虎',
-          wallet: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '2017-01-01',
-          desc: 'yayayayayay'
-        }]
+        tableData: []
       }
     },
     watch:{
-      multipleSelection1:{
-        handler:function(){
-          
-        },
-        deep:true
-      },
       bindSalseAlert: function(){
         if(!this.bindSalseAlert){
           this.queryHandler()
+        }
+      },
+      walletVisible: function(){
+        if(!this.walletVisible){
+          this.walletform.num = 0
+          this.walletform.type = '1'
+          this.walletform.remainder = this.walletform.balance
         }
       }
     },
@@ -457,15 +436,15 @@
           this.queryWallet()
         }
       },
+      //钱包详情
       queryWallet(){
         var obj = {
           saleId: this.saleId,
           currentPage: this.currentPageWallet,
           numberPerpage: this.pagesizeWallet
         }
-        global.axiosGetReq('/myWallet/detail',obj).then((res) => {
+        global.axiosGetReq('/myWallet/detailss',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data)
             this.tableData = res.data.data
             this.totalCountWallet = res.data.totalNumber
           } else {
