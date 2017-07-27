@@ -375,28 +375,31 @@
           that.orderInfo.refundAmt = 0;
           that.orderInfo.untread = 0;
           that.orderInfo.outCoins = 0;
+          var money = 0;
           var jiSuanArr = [];
           for(let i in that.wacthTuiKuanList){
+            var obj = {
+              goodBrandName:that.wacthTuiKuanList[i].itemBrandName,
+              goodSort:that.wacthTuiKuanList[i].itemType,
+              price:that.wacthTuiKuanList[i].price
+            };
             if(that.wacthTuiKuanList[i].checked){
               that.orderInfo.refundAmt += that.wacthTuiKuanList[i].count * that.wacthTuiKuanList[i].price;
-              var obj = {
-                goodBrandName:that.wacthTuiKuanList[i].itemBrandName,
-                goodSort:that.wacthTuiKuanList[i].itemType,
-                num:that.wacthTuiKuanList[i].count,
-                price:that.wacthTuiKuanList[i].price
-              };
-              jiSuanArr.push(obj);
+              money += that.orderInfo.refundAmt;
+              obj.num = parseInt(that.wacthTuiKuanList[i].num) - parseInt(that.wacthTuiKuanList[i].count);
+            }else{
+              obj.num = that.wacthTuiKuanList[i].num;
             }
+            jiSuanArr.push(obj);
           }
           //显示退款金额最终数据
           if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
             that.orderInfo.refundAmt = that.orderInfo.actualPay;//退还的钱
-            that.orderInfo.untread = that.orderInfo.refundAmt - that.orderInfo.actualPay;
           }
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
-
+          that.orderInfo.untread = money - that.orderInfo.refundAmt;
           //显示退款扣除钱币数据
-          that.orderInfo.outCoins = this.global.goodToMoney(jiSuanArr); //扣除乾币数
+          that.orderInfo.outCoins = that.orderInfo.giveQb - this.global.goodToMoney(jiSuanArr); //扣除乾币数
         },
         deep:true
       },
@@ -709,6 +712,7 @@
               var data = that.orderList[that.tuiKuanIndex];
               data.state = 10;
               that.orderList.splice(that.tuiKuanIndex,1,data);
+              that.refundVisible = false;
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

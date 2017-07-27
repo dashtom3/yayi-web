@@ -175,6 +175,7 @@ export default {
       }
     }
 
+    // 道邦
     for(let a in daoBangArr){
       daoBangMoney += daoBangArr[a].price * 100 * daoBangArr[a].num / 100
     }
@@ -194,6 +195,7 @@ export default {
     daoBangMoneyToMoney = daoBangMoney * daoBangRata / 100;
     // console.log(daoBangMoneyToMoney,daoBangMoney,daoBangRata,"111111")
 
+    // 耗材
     for(let b in haoCaiArr){
       haoCaiMoney += haoCaiArr[b].price * 100 * haoCaiArr[b].num / 100
     }
