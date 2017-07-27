@@ -382,9 +382,18 @@
           var startDate = util.formatDate.format(new Date(that.dateVal[0]));
           //结束时间默认为当日0点，往后推迟24小时
           var endDate = util.formatDate.format(new Date(that.dateVal[1].getTime() + 3600 * 1000 * 24));
+          //切换至全部分类
+          // if(val) {
+          //   this.queryState = ''
+          // }
         }else{
           var startDate = '';
           var endDate = '';
+          //切换至全部分类
+          // if(!val) {
+          //   this.queryState = ''
+          // }
+          
         }
 
         var obj = {
@@ -395,6 +404,7 @@
           currentPage: this.currentPage,
           numberPerpage: this.pagesize
         }
+        console.log('aaaaaaaaaaa',obj)
         that.global.axiosGetReq('/myWallet/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.houstonJZ = res.data.data[0] && res.data.data[0].jzze.toFixed(2) || '0.00'

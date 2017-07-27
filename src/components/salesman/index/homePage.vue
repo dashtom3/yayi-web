@@ -87,7 +87,7 @@
           myOrderVoList: []
         },
         personalData: null,
-        echartData: [0, 30,70,20,1003,30],
+        echartData: [],
         withTotalAmt: 0
       }
     },
@@ -201,9 +201,15 @@
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             for(var i=0;i<res.data.data.length;i++){
-              this.echartData.push(res.data.data[i].dayCommission * res.data.data[i].dayOrderNum)
+              this.echartData.push({
+                name: '(￥' + res.data.data[i].dayCommission * res.data.data[i].dayOrderNum + ', ' +  res.data.data[i].dayOrderNum + '单)',
+                value:  res.data.data[i].dayCommission * res.data.data[i].dayOrderNum
+              })     
             }
-            console.log('youle ',this.echartData)
+            this.echartData.unshift({
+              name: '(￥' + 0 + ', ' + 0 + '单)',
+              value:  0
+            })
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }

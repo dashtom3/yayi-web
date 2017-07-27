@@ -468,6 +468,7 @@
         })
       },
       walletHandler(index, row){
+        
         this.walletVisible = true
         this.saleId = row.saleId
         this.getBalance()

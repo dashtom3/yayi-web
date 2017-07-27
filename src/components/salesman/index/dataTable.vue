@@ -53,7 +53,19 @@
       <div class="custContent"><b>客户姓名：</b><span>{{this.detailObj.userName}}</span><b style="margin-left:80px;">客户手机号：</b><span>{{this.detailObj.userPhone}}</span></div>
       <div class="custInfo">订单信息</div>
       <table class="datail_tb">
-        <tr><td colspan="7"><span class="pad_l_30">下单时间：{{this.detailObj.orderCreated}}</span><span class="pad_l_30">订单状态：卖家已发货</span></td></tr>
+        <tr>
+          <td colspan="7">
+            <span class="pad_l_30">下单时间：{{this.detailObj.orderCreated}}</span>
+            <span class="pad_l_30">订单状态：
+              <span v-if="this.detailObj.orderState == 0">交易关闭</span>
+              <span v-if="this.detailObj.orderState == 1">等待买家付款</span>
+              <span v-if="this.detailObj.orderState == 2">买家已付款</span>
+              <span v-if="this.detailObj.orderState == 3">卖家已发货</span>
+              <span v-if="this.detailObj.orderState == 4">交易成功</span>
+              <span v-if="this.detailObj.orderState == 5">订单已确认</span>
+            </span>
+          </td>
+        </tr>
         <tr class="trs tr_title">
           <th>商品名称+属性</th>
           <th>价格（元）</th>
@@ -61,14 +73,14 @@
           <th>小计</th>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
-          <td>{{item.goodsName}}</td>
+          <td>{{item.itemName}}{{item.itemNameitemPropertyNamea}}{{item.itemNameitemPropertyNameb}}{{item.itemNameitemPropertyNamec}}</td>
           <td>{{item.price}}</td>
           <td>{{item.num}}</td>
-          <td>{{item.totalPrice}}</td>
+          <td>{{item.total}}</td>
         </tr>
         <tr class="trs tr_title">
           <td colspan="3">商品总价（元）</td>
-          <td>180</td>
+          <td>{{sumAmt}}</td>
         </tr>
       </table>
       <div class="custInfo" style="margin-top:20px;">订单详细</div>
@@ -112,28 +124,14 @@ export default {
   props: ['orderInfo','echartData','echartsTitle','monthX'],
   data() {
     return {
+      sumAmt: 0,
       detailVisible: false,
       tableData: null,
       monthxVal: 30,
       monthList: [],
       echartsList: [],
       maxechartsList: 0,
-      infoList: [{
-        goodsName: '商品名称1',
-        price: 30,
-        num: 2,
-        totalPrice: 60
-      },{
-        goodsName: '商品名称2',
-        price: 30,
-        num: 2,
-        totalPrice: 60
-      },{
-        goodsName: '商品名称3',
-        price: 30,
-        num: 2,
-        totalPrice: 60
-      }],
+      infoList: [],
       orderDetailList: [{
         itemName: '耗材类',
         salesAmt: 3000,
@@ -173,8 +171,9 @@ export default {
     }
   },
 	methods: {
-		drawLine(){
 
+		drawLine(){
+      var that = this;
       // 基于准备好的dom，初始化echarts实例
       var mainChart = echarts.getInstanceByDom(document.getElementById('myChart'));
       if (mainChart === undefined) {  
@@ -195,10 +194,9 @@ export default {
               //x轴名称  
               var name = params[0].name  
               //值  
-              var value = params[0].value  
-              //描述
-              var desc = params[0].desc
-              return seriesName + '<br />' + '第'+ name + '天' + '<br />' + '￥' + value
+              var desc = params[0].data.name  
+
+              return seriesName + '<br />' + that.monthX + '月'+ name + '日' + '<br />' + desc
         }  
           },
           legend: {
@@ -235,9 +233,7 @@ export default {
           series: [
               {
                   name:'当日销售额（元）',
-                  desc: new Date(),
                   type:'line',
-                  stack: '当日销售额（元）',
                   data: this.echartData
               }
           ]
@@ -245,27 +241,30 @@ export default {
 
 		},
     queryDetail(index, row){
+      var that = this;
       let params = {
         orderId: row.orderId,
         token: global.getSalesToken()
       }
-      console.log('查看详情',params)
       global.axiosGetReq('/saleMyOrder/detail',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          console.log('查看详情',res.data.data)
           this.detailObj = res.data.data
-          // this.infoList = res.data.data.orderInfoVoList
+          this.infoList = res.data.data.orderInfoVoList
+          //计算商品总价
+          for(var i=0;i<this.infoList.length;i++){
+            that.sumAmt += this.infoList[i].total
+          }
           this.orderDetailList[0] = {
             itemName: '耗材类',
             orderMoneyHaocai: res.data.data.orderMoneyHaocai,
             refundMoneyHaocai: res.data.data.refundMoneyHaocai,
-            actualMoneyHaocai: res.data.data.actualMoneyHaocai,
+            actualMoneyHaocai: res.data.data.actualMoneyHaocai
           }
           this.orderDetailList[1] = {
             itemName: '工具设备类',
             orderMoneyGongju: res.data.data.orderMoneyGongju,
             refundMoneyGongju: res.data.data.refundMoneyGongju,
-            actualMoneyGongju: res.data.data.actualMoneyGongju,
+            actualMoneyGongju: res.data.data.actualMoneyGongju
           }
           this.detailVisible = true
         }else{

@@ -107,7 +107,7 @@
         }
 
         if (that.searchType == '') {
-          that.state = '';
+          that.state = ''
         }else if (that.searchType == 1) {
           that.state = '成功'
         }else if (that.searchType == 0) {
@@ -141,11 +141,11 @@
           }
           that.global.axiosGetReq('/witManage/oper',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.getAllMoney();
               that.$message({
                 type: 'success',
                 message: '提现成功!'
               });
+              that.search();
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

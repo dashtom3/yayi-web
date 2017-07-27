@@ -96,16 +96,13 @@ export default {
         numberPerPage: this.pagesize,
         token: global.getSalesToken()
       }
-      //console.log('查询订单数据',params)
       global.axiosGetReq('/saleMyOrder/myOrderData',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          // console.log('查询订单数据',res.data.data)
           this.orderInfo.gongjuAllMoney = res.data.data.gongjuAllMoney.toFixed(2) || '0.00'
           this.orderInfo.haocaiAllMoney = res.data.data.haocaiAllMoney.toFixed(2) || '0.00'
           this.orderInfo.saleAllMoney = res.data.data.saleAllMoney.toFixed(2) || '0.00'
           this.orderInfo.orderNum = res.data.data.orderNum || 0
           this.allCommission = res.data.data.allCommission.toFixed(2) || '0.00'
-          // this.totalCount = res.data.totalNumber
         }else{
           this.$message.error('网络出错，请稍后再试！');
         }
@@ -125,10 +122,8 @@ export default {
         numberPerPage: this.pagesize,
         token: global.getSalesToken()
       }
-      //console.log('查询订单列表',params)
       global.axiosGetReq('/saleMyOrder/myOrderList',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          console.log(res.data.data)
           this.orderInfo.myOrderVoList = res.data.data
           this.totalCount = res.data.totalNumber
         }else{
@@ -147,10 +142,15 @@ export default {
         console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') { 
           for(var i=0;i<res.data.data.length;i++){
-            this.echartData.push(res.data.data[i].dayCommission * res.data.data[i].dayOrderNum)
+            this.echartData.push({
+              name: '(￥' + res.data.data[i].dayCommission * res.data.data[i].dayOrderNum + ', ' +  res.data.data[i].dayOrderNum + '单)',
+              value:  res.data.data[i].dayCommission * res.data.data[i].dayOrderNum
+            })
           }
-          this.echartData.unshift(0)
-          console.log('cccccccc',this.echartData)
+          this.echartData.unshift({
+            name: '(￥' + 0 + ', ' + 0 + '单)',
+            value:  0
+          })
         }else{
           this.$message.error('网络出错，请稍后再试！');
         }
