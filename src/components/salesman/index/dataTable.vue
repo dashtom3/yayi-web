@@ -129,7 +129,7 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-  props: ['orderInfo','echartData','echartsTitle','monthX'],
+  props: ['orderInfo','echartData','echartsTitle','monthX','monthNo'],
   data() {
     return {
       sumAmt: 0,
@@ -159,8 +159,10 @@ export default {
     }
   },
   created(){
+    console.log(this.monthNo)
     this.tableData = this.orderInfo
     this.maxechartsList = Math.max.apply({},this.echartsList)
+    this.monthxVal = this.monthNo
 
     for(var i=0;i<this.monthxVal+1;i++){
       this.monthList.push(i)

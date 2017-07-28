@@ -369,8 +369,10 @@
         } else {
           this.currentPage = val
         }
+        console.log(val)
+
         //选择分类
-        if(val == '全部' || !val || val.indexOf('-') !== -1) {
+        if(val == '全部' || !val || (typeof(val) !== 'number' && val.indexOf('-') !== -1)) {
           this.queryState = ''
         }else if(val == '进账'){
           this.queryState = '进账'
