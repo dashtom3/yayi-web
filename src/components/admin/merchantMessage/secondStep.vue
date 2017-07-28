@@ -14,11 +14,11 @@
         <el-input v-model="secondForm.producePompany"></el-input>
       </el-form-item>
       <el-form-item label="注册证有效期" prop="registerDate">
-        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date1" type="date" placeholder="选择日期">
+        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date1" type="date" placeholder="选择日期" :clearable="false">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="备案日期" prop="registerDate">
-        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date2" type="date" placeholder="选择日期">
+        <el-date-picker format="yyyy-MM-dd" v-model="registerDate.date2" type="date" placeholder="选择日期" :clearable="false">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="产品包装">
@@ -92,14 +92,19 @@
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
         that.secondForm.remark = that.editCargo.itemDetail.remark
-        that.registerDate.date1 = that.editCargo.itemDetail.registerDate.substring(0,10)
-        that.registerDate.date2 = that.editCargo.itemDetail.registerDate.substring(11,22)
-        console.log(that.registerDate,'o',that.editCargo)
+        var k = that.editCargo.itemDetail.registerDate.split('/')
+        that.registerDate.date1 = k[0]
+        that.registerDate.date2 = k[1]
+        if (that.registerDate.date1 == '暂无') {
+          that.registerDate.date1 = ''
+        } else if(that.registerDate.date2 == '暂无') {
+          that.registerDate.date2 = ''
+        }
+        // console.log(that.registerDate,'o9999')
       } else {
         that.ruleForm = that.$route.params.ruleForm
         that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
       }
-      console.log(that.ruleForm,that.secondForm,'opo');
     },
     methods: {
       nextToThird: function(formName) {
@@ -107,21 +112,21 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if (that.editCargo !== null) {
-              if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
-                // that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
-                // that.registerDate.date2 = util.formatDate.format(that.registerDate.date2)
-                that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
+              if (that.registerDate.date1 == '') {
+                that.registerDate.date1 = '暂无'
+              } 
+              if(that.registerDate.date2 == '') {
+                that.registerDate.date2 = '暂无'
               }
+              that.secondForm.date1 = that.registerDate.date1
+              that.secondForm.date2 = that.registerDate.date2
               Object.assign(that.newForm,that.secondForm,that.ruleForm)
+              console.log(that.registerDate.date1,that.registerDate.date2,'kkkkk')
               that.secondStep = false
               that.thirdStep = true
             } else {
-              if (that.registerDate.date1 !== '' && that.registerDate.date2 !== '') {
-                that.registerDate.date1 = util.formatDate.format(that.registerDate.date1)
-                that.registerDate.date2 = util.formatDate.format(that.registerDate.date2)
-                that.secondForm.registerDate = that.registerDate.date1 + '／' + that.registerDate.date2
-                console.log(that.secondForm.registerDate,'223')
-              }
+              that.secondForm.date1 = that.registerDate.date1
+              that.secondForm.date2 = that.registerDate.date2
               Object.assign(that.newForm,that.secondForm,that.ruleForm)
               that.secondStep = false
               that.thirdStep = true

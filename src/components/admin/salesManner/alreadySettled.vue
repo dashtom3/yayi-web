@@ -86,9 +86,15 @@
       </el-table-column>
       <el-table-column prop="orderState" label="订单状态">
         <template scope="scope">
-          <span v-if="scope.row.orderState == 1">待结算</span>
-          <span v-if="scope.row.orderState == 2">已结算</span>
-          <span v-if="scope.row.orderState == 3">已取消</span>
+          <span v-if="scope.row.orderState == 0">交易关闭</span>
+          <span v-if="scope.row.orderState == 1">等待买家付款</span>
+          <span v-if="scope.row.orderState == 2">买家已付款</span>
+          <span v-if="scope.row.orderState == 3">待收获</span>
+          <span v-if="scope.row.orderState == 4">交易成功</span>
+          <span v-if="scope.row.orderState == 5">买家已付款</span>
+          <span v-if="scope.row.orderState == 6">退货中</span>
+          <span v-if="scope.row.orderState == 9">交易成功</span>
+          <span v-if="scope.row.orderState == 10">退款成功</span>
         </template>
       </el-table-column>
       <el-table-column prop="itemSumMoney" label="商品总价（元）">

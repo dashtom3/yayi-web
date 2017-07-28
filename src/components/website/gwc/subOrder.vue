@@ -111,6 +111,7 @@
             <p>发票信息相关问题</p>
           </div>
           <div>
+            <div style="display:inline-block;font-size:13px;margin-right:45px;">发票性质</div>
             <el-radio class="radio" v-model="taxRadio" label="1">公司</el-radio>
             <el-radio class="radio" v-model="taxRadio" label="2">个人</el-radio>
           </div>
@@ -564,6 +565,9 @@
       })
     },
     watch: {
+      // radio: function() {
+
+      // },
       xRegion: function() {
         var that = this
         if (that.xRegion !== []) {
@@ -916,27 +920,52 @@
             var a = that.items.filter(function(ele,index,arr) {
                 return ele.isDefault == true;
             })
-            that.name = a[0].receiverName
-            that.phone = a[0].phone
-            that.province = a[0].province
-            that.city = a[0].city
-            that.county = a[0].county
-            that.receiverDetail = a[0].receiverDetail
-            that.receiverId = a[0].receiverId
-            var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
-            var freight = {
-              receiverId: a[0].receiverId,
-              sumPrice: arr.allMoney,
-              itemSum: arr.haveSelectedGoodNum,
-            }
-            that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
-              if (res.data.callStatus === 'SUCCEED') {
-                that.freight = res.data.data.postFee
-                console.log(that.freight,'yunfei')
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
+            if (a.length == 0) {
+              that.radio = 0
+              that.name = that.items[0].receiverName
+              that.phone = that.items[0].phone
+              that.province = that.items[0].province
+              that.city = that.items[0].city
+              that.county = that.items[0].county
+              that.receiverDetail = that.items[0].receiverDetail
+              that.receiverId = that.items[0].receiverId
+              var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+              var freight = {
+                receiverId: that.items[0].receiverId,
+                sumPrice: arr.allMoney,
+                itemSum: arr.haveSelectedGoodNum,
               }
-            })
+              that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.freight = res.data.data.postFee
+                  console.log(that.freight,'无默认地址运费')
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            } else {
+              that.name = a[0].receiverName
+              that.phone = a[0].phone
+              that.province = a[0].province
+              that.city = a[0].city
+              that.county = a[0].county
+              that.receiverDetail = a[0].receiverDetail
+              that.receiverId = a[0].receiverId
+              var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
+              var freight = {
+                receiverId: a[0].receiverId,
+                sumPrice: arr.allMoney,
+                itemSum: arr.haveSelectedGoodNum,
+              }
+              that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') {
+                  that.freight = res.data.data.postFee
+                  console.log(that.freight,'运费')
+                } else {
+                  that.$message.error('网络出错，请稍后再试！');
+                }
+              })
+            }
             for (var i = 0; i < that.items.length; i++) {
               if(that.items[i].isDefault == true) {
                 that.radio = i;
@@ -1101,12 +1130,11 @@
         that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.freight = res.data.data.postFee
-            console.log(that.freight,'yunfei')
+            console.log(that.freight,'选择地址时运费')
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
         })
-        // console.log(that.radio)
       },
       // 提交订单按钮
       submit_order: function() {

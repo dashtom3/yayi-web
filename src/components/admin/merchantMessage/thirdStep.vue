@@ -1,6 +1,6 @@
 <template>
   <div class="thirdStep" v-show="thirdStep">
-    <div class="firstTitle">商品图片：(最多5个)</div>
+    <div class="firstTitle">商品图片：(最多5个，至少添加一张图片)</div>
     <el-upload class="upload-demo" :on-remove="handleRemove" :on-success="uploadFile" :data="qiNiuToken" :action="qiNiuUrl" :file-list="fileList2" list-type="picture" :disabled="enoughImg">
       <el-button size="small" type="primary" :disabled="enoughImg">添加图片</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -68,8 +68,9 @@
   </div>
 </template>
 <script>
-  import global from '../../global/global' 
+  import global from '../../global/global'
   import axios from 'axios'
+  import util from '../../../common/util'
   export default{
     name: 'thirdStep',
     props: ['message'],
@@ -328,6 +329,24 @@
           delete that.thirdForm.type
           delete that.thirdForm.shopType
           delete that.thirdForm.items
+          if (that.thirdForm.date1 !== '' && that.thirdForm.date2 !== '') {
+            that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
+            that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
+          } else if (that.thirdForm.date1 == '' && that.thirdForm.date2 == '') {
+            that.thirdForm.registerDate = '暂无' + '/' + '暂无'
+          } else if (that.thirdForm.date1 !== '' && that.thirdForm.date2 == '') {
+            that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
+            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + '暂无'
+          } else if (that.thirdForm.registerDate == '' && that.thirdForm.date2 !== '') {
+            that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
+            that.thirdForm.registerDate = '暂无' + '/' + that.thirdForm.date2
+          }
+          for (var i = 0; i < that.thirdForm.itemValueList.length; i++) {
+            that.thirdForm.itemValueList[i].tiChen = parseInt(that.thirdForm.itemValueList[i].tiChen)
+            that.thirdForm.itemValueList[i].itemQb = parseInt(that.thirdForm.itemValueList[i].itemQb)
+            that.thirdForm.itemValueList[i].stockNum = parseInt(that.thirdForm.itemValueList[i].stockNum)
+          }
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "http://47.93.48.111:8080/api/item/insertItemValue")
@@ -357,10 +376,8 @@
           }
         } else {
           console.log('进入修改商品')
-          // that.quill1.insertText(1, 'Hello', 'bold', true);
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
-          console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
           that.thirdForm.itemPica = that.fileList[0];
           that.thirdForm.itemPicb = that.fileList[1];
           that.thirdForm.itemPicc = that.fileList[2];
@@ -371,15 +388,30 @@
           delete that.thirdForm.type
           delete that.thirdForm.shopType
           delete that.thirdForm.items
+          if (typeof(that.thirdForm.date1) == 'object' && typeof(that.thirdForm.date2) == 'object') {
+            that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
+            that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
+          } else if (typeof(that.thirdForm.date1) == 'string' && typeof(that.thirdForm.date2) == 'string') {
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
+          } else if (typeof(that.thirdForm.date1) == 'object' && typeof(that.thirdForm.date2) == 'string') {
+            that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
+            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + that.thirdForm.date2
+          } else if (typeof(that.thirdForm.date1) == 'string' && typeof(that.thirdForm.date2) == 'object') {
+            that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
+            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + that.thirdForm.date2
+          }
+          for (var i = 0; i < that.thirdForm.itemValueList.length; i++) {
+            that.thirdForm.itemValueList[i].tiChen = parseInt(that.thirdForm.itemValueList[i].tiChen)
+            that.thirdForm.itemValueList[i].itemQb = parseInt(that.thirdForm.itemValueList[i].itemQb)
+            that.thirdForm.itemValueList[i].stockNum = parseInt(that.thirdForm.itemValueList[i].stockNum)
+          }
           var itemValueList = JSON.stringify(that.thirdForm.itemValueList)
-          console.log(that.thirdForm,'sdsdji')
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "http://47.93.48.111:8080/api/item/updateItemValue")
           xhr.setRequestHeader("Content-Type", "application/json")
           xhr.send(itemValueList)
           xhr.onreadystatechange = function(){
-            // var succeed = JSON.parse(xhr.response.callStatus)
-            // console.log(succeed)
             var succeed = JSON.parse(xhr.response)
             if(succeed.callStatus == 'SUCCEED') {
               delete that.thirdForm.itemValueList

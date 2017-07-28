@@ -208,10 +208,10 @@
         active: false,
         no_active: false,
         input_sku: '',
-        input_price: null,
+        input_price: '',
         input_percent: '',
         input_coin: '',
-        input_stock: null,
+        input_stock: '',
         input_enable: false,
         canUse: 0,
         activeTable: [],
@@ -281,11 +281,11 @@
           that.ruleForm.isThrow = String(that.editCargo.isThrow);
           that.ruleForm.itemSort = that.editCargo.itemSort;
           that.shopType = that.editCargo.shopType;
-          that.input_price = that.editCargo.itemValueList[0].itemSkuPrice
+          that.input_price = String(that.editCargo.itemValueList[0].itemSkuPrice)
           that.input_sku = that.editCargo.itemValueList[0].itemSKU
           that.input_percent = that.editCargo.itemValueList[0].tiChen
           that.input_coin = that.editCargo.itemValueList[0].itemQb
-          that.input_stock = that.editCargo.itemValueList[0].stockNum
+          that.input_stock = String(that.editCargo.itemValueList[0].stockNum)
           if (that.editCargo.itemValueList[0].canUse == 1) {
             that.input_enable = true
           } else {
@@ -499,17 +499,17 @@
           }
           if (valid) {
             if (that.shopType !== '1') {
-              // if (that.input_price == '' || that.input_percent == '' || that.input_coin == '' || that.input_stock == '' || that.input_percent == null || that.input_coin == null) {
-              //   that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
-              //   return false
-              // }
+              if (isNaN(that.input_price) || isNaN(that.input_stock) || that.input_price == '' || that.input_stock == '') {
+                that.$message.error('请填写完整商品资料！价格，库存不能为空');
+                return false
+              }
               var obj = {
                 itemId: that.ruleForm.itemId,
                 itemSKU: that.ruleForm.itemId + '1',
                 itemSkuPrice: that.input_price,
-                tiChen: parseInt(that.input_percent),
-                itemQb: parseInt(that.input_coin),
-                stockNum: parseInt(that.input_stock),
+                tiChen: that.input_percent,
+                itemQb: that.input_coin,
+                stockNum: that.input_stock,
                 canUse: parseInt(that.canUse),
                 itemPropertyName: '',
                 itemPropertyInfo: '',
@@ -536,21 +536,21 @@
               window.sessionStorage.setItem('editChange', JSON.stringify(that.activeItems))
               var subitem = that.activeItems
               for (var i = 0; i < that.activeItems.length; i++) {
+                subitem[i].itemSkuPrice = String(that.activeItems[i].itemSkuPrice)
+                subitem[i].stockNum = String(that.activeItems[i].stockNum)
+                if (isNaN(subitem[i].itemSkuPrice) || isNaN(subitem[i].stockNum) || subitem[i].itemSkuPrice == '' || subitem[i].stockNum == '') {
+                  that.$message.error('请填写完整商品资料！价格，库存不能为空');
+                  return false
+                }
                 subitem[i].itemSKU = that.ruleForm.itemId + (i+1)
                 subitem[i].itemId = that.ruleForm.itemId
-                subitem[i].itemSkuPrice = that.activeItems[i].itemSkuPrice
-                subitem[i].tiChen = parseInt(that.activeItems[i].tiChen)
-                subitem[i].itemQb = parseInt(that.activeItems[i].itemQb)
-                subitem[i].stockNum = parseInt(that.activeItems[i].stockNum)
+                subitem[i].tiChen = that.activeItems[i].tiChen
+                subitem[i].itemQb = that.activeItems[i].itemQb
                 if (subitem[i].canUse == true) {
                   subitem[i].canUse = 1
                 } else {
                   subitem[i].canUse = 0
                 }
-                // if (subitem[i].itemSkuPrice == '' || subitem[i].tiChen == '' || subitem[i].itemQb == '' || subitem[i].stockNum == '' || that.input_percent == null || that.input_coin == null) {
-                //   that.$message.error('请填写完整商品资料！价格，提成，乾币，库存不能为空');
-                //   return false
-                // }
               }
               console.log(subitem,'tttt')
               window.sessionStorage.setItem('property', JSON.stringify(subitem))
