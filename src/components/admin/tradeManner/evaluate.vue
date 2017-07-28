@@ -170,6 +170,10 @@
         }
         global.axiosPostReq('/commentManage/reply',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
+            this.$message({
+              type: 'success',
+              message: '回复成功!'
+            });
             this.replayBtn = false;
             this.queryHandler()
           }else{

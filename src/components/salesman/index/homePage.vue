@@ -40,7 +40,7 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" :monthNo="monthNo" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -191,8 +191,9 @@
           }
         })
       },
+      //根据当前月份计算当月总天数
       getDaysInMonth(year,month){ 
-        month = parseInt(month,10); //parseInt(number,type)这个函数后面如果不跟第2个参数来表示进制的话，默认是10进制。 
+        month = parseInt(month,10);  
         var temp = new Date(year,month,0); 
         return temp.getDate(); 
       },
@@ -205,7 +206,7 @@
         }
         //根据当前月份计算有多少天
         this.monthNo = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month)
-        console.log(this.monthNo)
+        
         var day = 0
         this.echartData = []
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {

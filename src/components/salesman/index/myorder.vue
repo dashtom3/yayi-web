@@ -15,7 +15,7 @@
         累计收入：<i class="i_col">￥<span>{{allCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :monthNo="monthNo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -37,6 +37,7 @@ export default {
     return {
       monthVal: '',
       monthX: '',
+      monthNo: 31,
       allCommission: 0,
       echartsTitle: '',
       //默认每页数据量
@@ -131,6 +132,12 @@ export default {
         }
       })
     },
+    //根据当前月份计算当月总天数
+    getDaysInMonth(year,month){ 
+      month = parseInt(month,10);  
+      var temp = new Date(year,month,0); 
+      return temp.getDate(); 
+    },
     //查询收入
     echartPic(){
       let params = {
@@ -138,6 +145,9 @@ export default {
         month: this.dateInfo.month,
         token: global.getSalesToken()
       }
+      //根据当前月份计算有多少天
+      this.monthNo = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month)
+
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
         console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') { 
