@@ -90,7 +90,7 @@
       </div>
 
       <!--详情界面-->
-      <el-dialog v-if="nowOrderDetails" title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true">
+      <el-dialog v-if="nowOrderDetails" title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true" :before-close="handleCloseDetails">
         <h3 class="detail_h3">订单状态:<span style="padding-left:20px;">{{nowOrderDetails.state | frisco}}</span></h3>
         <h4 class="detail_h4">收货信息</span></h4>
         <template>
@@ -129,7 +129,7 @@
         <div class="order_box clearfix">
           <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item"> 
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
-            <el-col :span="5" align="center">{{item.itemInfo.itemName}}&nbsp;{{item.itemPropertyNamea}}&nbsp;{{item.itemPropertyNameb}}&nbsp;{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.itemInfo.itemName}}<br/>{{item.itemPropertyNamea}}<br/>{{item.itemPropertyNameb}}<br/>{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
@@ -166,8 +166,7 @@
             </li>
           </ul>
         </div>
-        <div class="refund_info" >
-          <!-- v-if="nowOrderDetails.refund=='是'" -->
+        <div class="refund_info" v-if="nowOrderDetails.refundInfo=='是'">
           <div>退款信息</div>
           <table class="refund_tb">
             <tr class="bgc">
@@ -183,13 +182,13 @@
               <td>扣除的乾币数</td>
             </tr>
             <tr v-for="(item, index) in nowOrderDetails.orderitemList" :key="item" v-show="item.refunNum>0">
-              <td></td>
+              <td>{{item.itemSKU}}</td>
               <td>{{item.itemInfo.itemName}}</td>
               <td>{{item.price + '*' + item.num}}</td>
               <td>{{item.refunNum}}</td>
-              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.refundAmt}}</td>
-              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.untread}}</td>
-              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.outCoins}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0" >{{nowOrderDetails.refundAmt}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0"  >{{nowOrderDetails.untread}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0"  >{{nowOrderDetails.outCoins}}</td>
             </tr>
           </table>
         </div>
@@ -452,12 +451,14 @@
 
     },
     methods: {
+      handleCloseDetails:function(){
+        this.nowOrderDetails = null;
+      },
       jisuanbuzhidao:function(list){
         var that = this;
           var refundAmt = 0;
           var untread = 0;
           var outCoins = 0;
-          var money = 0;
           var jiSuanArr = [];
           for(let i in list){
             var obj = {
@@ -466,9 +467,9 @@
               price:list[i].price
             };
             if(list[i].checked){
-              refundAmt += list.count * list.price;
-              money += list.count * list.price;
-              obj.num = parseInt(list[i].num) - parseInt(list.count);
+              refundAmt += list.refunNum * list.price;
+              // money += list.refunNum * list.price;
+              obj.num = parseInt(list[i].num) - parseInt(list.refunNum);
             }else{
               obj.num = list[i].num;
             }
@@ -477,9 +478,10 @@
           //显示退款金额最终数据
           
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
-          untread = money - refundAmt;
+          // untread = money - refundAmt;
           //显示退款扣除钱币数据
-          outCoins =  this.global.goodToMoney(jiSuanArr); //扣除乾币数
+          outCoins =  this.global.goodToMoney(jiSuanArr); //计算剩余数量的东西赠送的铅笔
+          console.log(outCoins,"1")
           var returnObj = {
             refundAmt:refundAmt,
             untread:untread,
@@ -492,8 +494,9 @@
         var obj = {
           orderId:row.orderId
         };
+        console.log(obj)
         that.lookTuiKun = true;
-        that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
+        that.global.axiosPostReq('/showUserOrderManage/showRefundOrderMessage',obj)
         .then((res) => {
           console.log(res,"lookAtTuiKuanOrder")
           if (res.data.callStatus === 'SUCCEED') {
@@ -648,7 +651,6 @@
         var obj = {
           orderId:oneOrder.orderId
         };
-        console.log(oneOrder)
         that.global.axiosPostReq('/showUserOrderManage/queryOrderDetails',obj)
         .then((res) => {
           console.log(res,"getOneOrderDetailsById")
@@ -656,23 +658,29 @@
             this.detailVisible = true;
             this.nowOrderDetails = res.data.data;
             var num = 0;
+            var allMoney = 0;
             for(let i in this.nowOrderDetails.orderitemList){
               if(this.nowOrderDetails.orderitemList[i].refunNum>0){
                 num += 1;
+                allMoney += this.nowOrderDetails.orderitemList[i].refunNum * this.nowOrderDetails.orderitemList[i].price;
               }
             }
-            var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList)
             this.nowOrderDetails.tuikuanzhonglei = num;
+            // 计算
+            var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList)
+            console.log(returndata,"sadfasf")
             this.nowOrderDetails.outCoins = 0;
             this.nowOrderDetails.refundAmt = 0;
             this.nowOrderDetails.untread = 0;
-            if(this.nowOrderDetails.actualPay<=returndata.refundAmt){
-              this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
-              this.nowOrderDetails.untread = returndata.refundAmt - this.nowOrderDetails.actualPay;
+            if(this.nowOrderDetails.actualPay<=allMoney){
+              this.nowOrderDetails.refundAmt = allMoney -  this.nowOrderDetails.actualPay;
             }else{
-              this.nowOrderDetails.refundAmt = returndata.refundAmt;
+              this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
+              this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
             }
+            console.log( this.nowOrderDetails.giveQb , returndata.outCoins,"33")
             this.nowOrderDetails.outCoins = this.nowOrderDetails.giveQb - returndata.outCoins;
+
             this.receivingInfo = [];
             res.data.data.receiver.userPhone = oneOrder.phone;
             this.receivingInfo.push(res.data.data.receiver);
