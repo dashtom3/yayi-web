@@ -361,7 +361,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.car_num = res.data.data.length;
             } else {
-              that.$message.error('网络出错，请稍后再试5！');
+              that.$message.error('登陆过期，请重新登陆！');
             }
           })
         }
@@ -602,6 +602,9 @@
         that.global.axiosGetReq('/cart/list', obj).then((res) => {
           if(res.data.errorCode === 'RE_LOGIN'){
             that.global.removeMsg();
+            that.hasLogin = true;
+            that.car_num = 0;
+            that.activeInColor = '#333333'
             that.$router.push({path:'/'})
             that.$message({
               showClose: true,
