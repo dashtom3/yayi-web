@@ -73,6 +73,7 @@
         monthX: '',
         withDrawState: false,
         phone: '',
+        monthNo: 30,
         trueName: '',
         accountNumber: '',
         imgUrl: '',
@@ -190,6 +191,11 @@
           }
         })
       },
+      getDaysInMonth(year,month){ 
+        month = parseInt(month,10); //parseInt(number,type)这个函数后面如果不跟第2个参数来表示进制的话，默认是10进制。 
+        var temp = new Date(year,month,0); 
+        return temp.getDate(); 
+      },
       //查询收入
       echartPic(){
         let params = {
@@ -197,19 +203,28 @@
           month: this.dateInfo.month,
           token: global.getSalesToken()
         }
-        console.log('echart数据',params)
+        //根据当前月份计算有多少天
+        this.monthNo = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month)
+        console.log(this.monthNo)
+        var day = 0
+        this.echartData = []
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
+            day = 27
+            for(var j=0;j<day;j++){
+              this.echartData.push({
+                name: '(￥' + 0 + '， ' + 0 + '单)',
+                value:  0
+              })
+            }
             for(var i=0;i<res.data.data.length;i++){
               this.echartData.push({
-                name: '(￥' + res.data.data[i].dayCommission * res.data.data[i].dayOrderNum + ', ' +  res.data.data[i].dayOrderNum + '单)',
-                value:  res.data.data[i].dayCommission * res.data.data[i].dayOrderNum
+                name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
+                value:  res.data.data[i].dayCommission
               })     
             }
-            this.echartData.unshift({
-              name: '(￥' + 0 + ', ' + 0 + '单)',
-              value:  0
-            })
+            
+            console.log(this.echartData)
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }

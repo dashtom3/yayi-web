@@ -57,12 +57,14 @@
           <td colspan="7">
             <span class="pad_l_30">下单时间：{{this.detailObj.orderCreated}}</span>
             <span class="pad_l_30">订单状态：
-              <span v-if="this.detailObj.orderState == 0">交易关闭</span>
               <span v-if="this.detailObj.orderState == 1">等待买家付款</span>
               <span v-if="this.detailObj.orderState == 2">买家已付款</span>
               <span v-if="this.detailObj.orderState == 3">卖家已发货</span>
               <span v-if="this.detailObj.orderState == 4">交易成功</span>
-              <span v-if="this.detailObj.orderState == 5">订单已确认</span>
+              <span v-if="this.detailObj.orderState == 5">买家已付款</span>
+              <span v-if="this.detailObj.orderState == 6">退货中</span>
+              <span v-if="this.detailObj.orderState == 9">交易成功</span>
+              <span v-if="this.detailObj.orderState == 0">交易关闭</span>
             </span>
           </td>
         </tr>
@@ -103,6 +105,12 @@
           <td>{{this.orderDetailList[1].refundMoneyGongju}}</td>
           <td>{{this.orderDetailList[1].actualMoneyGongju}}</td>
         </tr>
+        <tr class="trs tr_title">
+          <td>合计</td>
+          <td>{{sumOrderMoney}}</td>
+          <td>{{sumRefundMoney}}</td>
+          <td>{{sumActualMoney}}</td>
+        </tr>
       </table>
       <div style="text-align:center;margin-top:20px;">
         <el-button @click="detailVisible = false">关 闭</el-button>
@@ -134,17 +142,20 @@ export default {
       infoList: [],
       orderDetailList: [{
         itemName: '耗材类',
-        salesAmt: 3000,
-        refundAmt: 200,
-        realSaleAmt: 2800
+        salesAmt: 0,
+        refundAmt: 0,
+        realSaleAmt: 0
       },
       {
         itemName: '工具设备类',
-        salesAmt: 4000,
-        refundAmt: 100,
-        realSaleAmt: 3900
+        salesAmt: 0,
+        refundAmt: 0,
+        realSaleAmt: 0
       }],
-      detailObj: {}
+      detailObj: {},
+      sumOrderMoney: 0,
+      sumRefundMoney: 0,
+      sumActualMoney: 0
     }
   },
   created(){
@@ -250,10 +261,15 @@ export default {
         if (res.data.callStatus === 'SUCCEED') { 
           this.detailObj = res.data.data
           this.infoList = res.data.data.orderInfoVoList
+          that.sumAmt = 0
+          that.sumOrderMoney = 0
+          that.sumRefundMoney = 0
+          that.sumActualMoney = 0
           //计算商品总价
           for(var i=0;i<this.infoList.length;i++){
             that.sumAmt += this.infoList[i].total
           }
+          
           this.orderDetailList[0] = {
             itemName: '耗材类',
             orderMoneyHaocai: res.data.data.orderMoneyHaocai,
@@ -266,6 +282,11 @@ export default {
             refundMoneyGongju: res.data.data.refundMoneyGongju,
             actualMoneyGongju: res.data.data.actualMoneyGongju
           }
+          //合计
+          that.sumOrderMoney = this.orderDetailList[0].orderMoneyHaocai + this.orderDetailList[1].orderMoneyGongju
+          that.sumRefundMoney = this.orderDetailList[0].refundMoneyHaocai + this.orderDetailList[1].refundMoneyGongju
+          that.sumActualMoney = this.orderDetailList[0].actualMoneyHaocai + this.orderDetailList[1].actualMoneyGongju
+          
           this.detailVisible = true
         }else{
           this.$message.error('网络出错，请稍后再试！');

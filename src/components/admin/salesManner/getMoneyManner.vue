@@ -73,7 +73,7 @@
     data(){
       return {
         searchUserContent: '',
-        searchType: '',
+        searchType: '0',
         state: '',
         getMoneyList: [],
         //默认每页数据量

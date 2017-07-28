@@ -143,12 +143,12 @@ export default {
         if (res.data.callStatus === 'SUCCEED') { 
           for(var i=0;i<res.data.data.length;i++){
             this.echartData.push({
-              name: '(￥' + res.data.data[i].dayCommission * res.data.data[i].dayOrderNum + ', ' +  res.data.data[i].dayOrderNum + '单)',
-              value:  res.data.data[i].dayCommission * res.data.data[i].dayOrderNum
+              name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
+              value:  res.data.data[i].dayCommission
             })
           }
           this.echartData.unshift({
-            name: '(￥' + 0 + ', ' + 0 + '单)',
+            name: '(￥' + 0 + '， ' + 0 + '单)',
             value:  0
           })
         }else{

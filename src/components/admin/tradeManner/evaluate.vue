@@ -121,7 +121,7 @@
           value: '3',
           label: '已回复'
         }],
-        value: '1',
+        value: '2',
         //回复列表
         replayLists: [],
         replayBtn: false,

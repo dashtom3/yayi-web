@@ -428,6 +428,7 @@
             this.getBalance()
             this.walletform.num = 0
             this.walletform.remainder = this.walletform.balance
+            this.walletVisible = false
           }
         })
       },
@@ -460,7 +461,7 @@
         }
         that.global.axiosGetReq('/PW/shows',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.walletform.balance = res.data.data
+            that.walletform.balance = Number(res.data.data.toFixed(2))
             that.walletform.remainder = that.walletform.balance
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -468,7 +469,7 @@
         })
       },
       walletHandler(index, row){
-        
+
         this.walletVisible = true
         this.saleId = row.saleId
         this.getBalance()
