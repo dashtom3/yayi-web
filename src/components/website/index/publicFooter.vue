@@ -6,7 +6,7 @@
       <span @click="contactService">联系客服</span>
       <span style="margin-right:0px; border:none;" @click="question">意见反馈</span>
     </p> 
-    <p class="copyright">Copyright © 2017 yayiABC.com 版权所有 <span @click="beian">沪ICP 备14038156</span></p>
+    <p class="copyright">Copyright © 2017 yayiABC.com 版权所有 <span @click="beian">沪ICP 备14038156-2</span></p>
   </div>
 </template>
 

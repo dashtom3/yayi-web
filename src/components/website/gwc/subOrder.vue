@@ -126,8 +126,10 @@
             <el-form-item label="发票内容">
               <div class="mingxi">发票明细</div>
             </el-form-item>
-            <el-button type="primary" @click="saveComTax('ruleForm')">保存</el-button>
-            <el-button @click="cancelTax">不开发票</el-button>
+            <div style="margin-left:100px;">
+              <el-button type="primary" @click="saveComTax('ruleForm')">保存</el-button>
+              <el-button @click="cancelTax">不开发票</el-button>
+            </div>
           </el-form>
           <!-- 公司发票开票 结束-->
           <!-- 个人发票开票 开始-->
@@ -138,8 +140,10 @@
             <el-form-item label="发票内容">
               <div class="mingxi">发票明细</div>
             </el-form-item>
-            <el-button type="primary" @click="savePerTax('ruleForm1')">保存</el-button>
-            <el-button @click="cancelTax">不开发票</el-button>
+            <div style="margin-left:100px;">
+              <el-button type="primary" @click="savePerTax('ruleForm1')">保存</el-button>
+              <el-button @click="cancelTax">不开发票</el-button>
+            </div>
           </el-form>
           <!-- 个人发票开票 结束-->
         </div>
@@ -156,6 +160,9 @@
           <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" style="margin-top: 20px;">
             <el-form-item label="单位名称" prop="companyName">
               <el-input v-model="ruleForm2.companyName" style="width: 300px !important;" placeholder="请填写营业执照上的公司全称"></el-input>
+            </el-form-item>
+            <el-form-item label="纳税人识别号" style="display:none;">
+              <el-input style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
             </el-form-item>
             <el-form-item label="纳税人识别号" prop="payTax">
               <el-input v-model="ruleForm2.payTax" style="width: 300px !important;" placeholder="请填写纳税人识别号或统一社会信用代码"></el-input>
@@ -181,8 +188,10 @@
             <el-form-item label="收票人地址" prop="stickAdd">
               <el-input v-model="ruleForm2.stickAdd" style="width: 300px !important;"></el-input>
             </el-form-item>
-            <el-button type="primary" @click="saveAddTax('ruleForm2')">保存</el-button>
-            <el-button @click="cancelTax">不开发票</el-button>
+            <div style="margin-left:100px;">
+              <el-button type="primary" @click="saveAddTax('ruleForm2')">保存</el-button>
+              <el-button @click="cancelTax">不开发票</el-button>
+            </div>
           </el-form>
           <!-- 公司发票开票 结束-->
         </div>
@@ -688,9 +697,6 @@
           if(res.data.data.length>0){
             that.allQb = res.data.data[0].user.qbBalance;
             that.nowQb = res.data.data[0].user.qbBalance;
-            if (that.nowQb >= that.gwcTotal) {
-              that.nowQb = that.gwcTotal
-            }
           } else {
             that.nowQb = 0
             that.allQb = 0
@@ -699,6 +705,9 @@
           that.$message.error('网络出错，请稍后再试！');
         }
       })
+    },
+    mounted: function() {
+      var that = this;
     },
     methods: {
       // 修改发票信息
@@ -846,7 +855,7 @@
         that.isLoading = true;
         window.setTimeout(function(){
         if (that.qianbi_des !== '') {
-          if (that.qianbi_des > that.gwcTotal) {
+          if (that.qianbi_des > that.nowQb) {
             that.$message.error('本单最多只可使用' + that.nowQb + '乾币！');
             that.hasCount = false;
             that.qbdk = 0;
@@ -938,6 +947,10 @@
               that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
                   that.freight = res.data.data.postFee
+                  let total = that.gwcTotal + that.freight
+                  if (that.nowQb >= total) {
+                    that.nowQb = total
+                  }
                   console.log(that.freight,'无默认地址运费')
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
@@ -960,6 +973,10 @@
               that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
                   that.freight = res.data.data.postFee
+                  let total = that.gwcTotal + that.freight
+                  if (that.nowQb >= total) {
+                    that.nowQb = total
+                  }
                   console.log(that.freight,'运费')
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
@@ -1186,15 +1203,15 @@
           giveQb: '',  //获得乾币
           orderItem: orderItem, //JSON数组
           invoiceHand: that.invoiceHand, //发票抬头
-          company_name: that.company_name,
-          taxpayer_num: that.taxpayer_num,
-          registered_address: that.registered_address,
-          registered_phone: that.registered_phone,
-          open_bank: that.open_bank,
-          bank_number: that.bank_number,
-          stick_name: that.stick_name,
-          stick_phone: that.stick_phone,
-          stick_address: that.stick_address,
+          companyName: that.company_name,
+          taxpayerNum: that.taxpayer_num,
+          registeredAddress: that.registered_address,
+          registeredPhone: that.registered_phone,
+          openBank: that.open_bank,
+          bankNumber: that.bank_number,
+          stickName: that.stick_name,
+          stickPhone: that.stick_phone,
+          stickAddress: that.stick_address,
         }
         console.log(obj,'opopopp');
         // axios.defaults.headers['token'] = that.global.getToken()

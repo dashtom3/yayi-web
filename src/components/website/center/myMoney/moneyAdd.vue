@@ -107,7 +107,14 @@ export default {
       var that = this;
       if(that.payMuch !== '') {
         if (that.payType == '1') {
-          console.log('支付宝充值')
+          var obj = {
+            token: that.global.getToken(),
+            money: parseInt(that.payMuch)
+          }
+          that.global.axiosGetReq('/pay/recharge',obj).then((res) => {
+            //console.log(res.request.responseURL,'pay')
+            window.location.href=res.request.responseURL
+          })
         } else {
           // let chargeId = that.global.uuid()
           let money = parseInt(that.payMuch)

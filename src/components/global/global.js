@@ -117,8 +117,6 @@ export default {
   axiosPostReq (url, data) {
     var myurl = window.location.href;
     var adminFlag = myurl.indexOf("admin")!=-1;
-    // 电商
-    axios.defaults.headers['token'] = this.getToken()
     // 后台
     if(adminFlag){
       axios.defaults.headers['adminToken'] = this.getAdminToken()
@@ -128,6 +126,10 @@ export default {
     var salesLogin = myurl.indexOf("salesLog")!=-1;
     if(salesFlag || salesLogin){
       axios.defaults.headers['saleToken'] = this.getSalesToken()
+    }
+    if (!adminFlag&&!salesFlag&&!salesLogin) {
+      // 电商
+      axios.defaults.headers['token'] = this.getToken()
     }
     //axios.defaults.headers['token'] = this.getToken()
     return axios.post(this.baseUrl + url, this.postHttpData(data))
@@ -135,8 +137,6 @@ export default {
   axiosGetReq (url, getParamsObj) {
     var myurl = window.location.href;
     var adminFlag = myurl.indexOf("admin")!=-1;
-    // 电商
-    axios.defaults.headers['token'] = this.getToken()
     // 后台
     if(adminFlag){
       axios.defaults.headers['adminToken'] = this.getAdminToken()
@@ -146,6 +146,10 @@ export default {
     var salesLogin = myurl.indexOf("salesLog")!=-1;
     if(salesFlag || salesLogin){
       axios.defaults.headers['saleToken'] = this.getSalesToken()
+    }
+    if (!adminFlag&&!salesFlag&&!salesLogin) {
+      // 电商
+      axios.defaults.headers['token'] = this.getToken()
     }
     return axios.get(this.baseUrl + url ,{params:getParamsObj})
   },

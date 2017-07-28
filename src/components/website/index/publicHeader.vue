@@ -713,9 +713,10 @@
         }
         that.global.axiosPostReq('/user/reLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
-              that.$router.push({ path: '/'})
-            }
+            // if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
+            //   that.$router.push({ path: '/'})
+            // }
+            that.$router.push({ path: '/'})
             // console.log(res);
             that.global.removeMsg()
             that.$message({
