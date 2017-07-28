@@ -29,7 +29,7 @@
         <el-table-column  prop="itemPropertyName"  align="center"  label="属性名"></el-table-column>
         <el-table-column  prop="itempropertydList" align="center"  label="属性值">
           <template scope="scope">
-            <span v-for="(one,index) in scope.row.itempropertydList">
+            <span v-for="(one,index) in scope.row.itempropertydList" :key="one">
               {{one.itemPparam}}
               <span v-if="index!=scope.row.itempropertydList.length-1">/</span>
             </span>

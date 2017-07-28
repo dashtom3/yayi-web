@@ -355,6 +355,7 @@
           numberPerPage: that.pagesize,
         }
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
+          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res,'op')
             that.tableData = res.data.data;
@@ -363,7 +364,7 @@
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            that.$message.error('网络出错，请稍后再试！1');
           }
         })
       },
@@ -386,7 +387,7 @@
               }
             }
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            that.$message.error('网络出错，请稍后再试！2');
           }
         })
       },
@@ -560,8 +561,7 @@
       detail: function(scope) {
         var that = this;
         var obj = {
-          itemId: scope.row.itemId,
-          token: null,
+          itemId: scope.row.itemId
         }
         that.global.axiosPostReq('/item/itemDetailDes',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {

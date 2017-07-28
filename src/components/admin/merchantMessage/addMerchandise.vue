@@ -314,8 +314,7 @@
             that.items[i].hasItem = true 
             //b[i].itempropertydList = b[i].propertyInfoList
             var obj = {
-              itemPropertyName: that.items[i].propertyName,
-              token: '',
+              itemPropertyName: that.items[i].propertyName
             }
             that.global.axiosPostReq('/item/queryProperty',obj).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {

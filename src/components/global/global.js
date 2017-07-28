@@ -61,38 +61,38 @@ export default {
     return formData
   },
   setToken (token) {
-    localStorage.setItem('adverToken', token)
+    sessionStorage.setItem('adverToken', token)
   },
   setSalesToken (token) {
-    localStorage.setItem('salesToken', token)
+    sessionStorage.setItem('salesToken', token)
   },
   // yayiAbcToken
   removeMsg () {
-    localStorage.removeItem('adverToken')
-    localStorage.removeItem('adverUser')
+    sessionStorage.removeItem('adverToken')
+    sessionStorage.removeItem('adverUser')
   },
   getToken () {
-    return localStorage.getItem('adverToken')
+    return sessionStorage.getItem('adverToken')
   },
   setUser (data) {
-    localStorage.setItem('adverUser', JSON.stringify(data))
+    sessionStorage.setItem('adverUser', JSON.stringify(data))
   },
   getUser () {
-    return JSON.parse(localStorage.getItem('adverUser'))
+    return JSON.parse(sessionStorage.getItem('adverUser'))
   },
   // 创客系统token
   getSalesToken () {
-    return localStorage.getItem('salesToken')
+    return sessionStorage.getItem('salesToken')
   },
   removeSalesMsg () {
-    localStorage.removeItem('salesToken')
-    localStorage.removeItem('salesUser')
+    sessionStorage.removeItem('salesToken')
+    sessionStorage.removeItem('salesUser')
   },
   setSalesUser (data) {
-    localStorage.setItem('salesUser', JSON.stringify(data))
+    sessionStorage.setItem('salesUser', JSON.stringify(data))
   },
   getSalesUser () {
-    return JSON.parse(localStorage.getItem('salesUser'))
+    return JSON.parse(sessionStorage.getItem('salesUser'))
   },
   // 后台系统token
   getAdminToken () {
@@ -115,17 +115,42 @@ export default {
     localStorage.removeItem('userHistory')
   },
   axiosPostReq (url, data) {
-    //axios.defaults.headers['token'] = this.getToken()
-    return axios.post(this.baseUrl + url, this.postHttpData(data))
-  },
-  axiosPostReq2 (url, data) {
+    var myurl = window.location.href;
+    var adminFlag = myurl.indexOf("admin")!=-1;
+    // 电商
+    axios.defaults.headers['token'] = this.getToken()
+    // 后台
+    if(adminFlag){
+      axios.defaults.headers['adminToken'] = this.getAdminToken()
+    }
+    // 创客
+    var salesFlag = myurl.indexOf("salesIndex")!=-1;
+    var salesLogin = myurl.indexOf("salesLog")!=-1;
+    if(salesFlag || salesLogin){
+      axios.defaults.headers['saleToken'] = this.getSalesToken()
+    }
     //axios.defaults.headers['token'] = this.getToken()
     return axios.post(this.baseUrl + url, this.postHttpData(data))
   },
   axiosGetReq (url, getParamsObj) {
+    var myurl = window.location.href;
+    var adminFlag = myurl.indexOf("admin")!=-1;
+    // 电商
+    axios.defaults.headers['token'] = this.getToken()
+    // 后台
+    if(adminFlag){
+      axios.defaults.headers['adminToken'] = this.getAdminToken()
+    }
+    // 创客
+    var salesFlag = myurl.indexOf("salesIndex")!=-1;
+    var salesLogin = myurl.indexOf("salesLog")!=-1;
+    if(salesFlag || salesLogin){
+      axios.defaults.headers['saleToken'] = this.getSalesToken()
+    }
     return axios.get(this.baseUrl + url ,{params:getParamsObj})
   },
   axiosGetQiNiuReq (url, getParamsObj) {
+
     return axios.get(this.qiniuShUrl + url ,{params:getParamsObj})
   },
   getQiNiuToken () {

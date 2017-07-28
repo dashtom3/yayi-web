@@ -490,7 +490,6 @@
       lookAtTuiKuanOrder:function(index,row){
         var that = this;
         var obj = {
-          token:"111",
           orderId:row.orderId
         };
         that.lookTuiKun = true;

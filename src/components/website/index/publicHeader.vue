@@ -310,6 +310,7 @@
         that.hasLogin = true;
       }
       that.init();
+      that.showCargo();
       // console.log(that.global.getToken());
     },
     computed: {
@@ -599,6 +600,16 @@
           token:that.global.getToken()
         };
         that.global.axiosGetReq('/cart/list', obj).then((res) => {
+          if(res.data.errorCode === 'RE_LOGIN'){
+            that.global.removeMsg();
+            that.$router.push({path:'/'})
+            that.$message({
+              showClose: true,
+              message: '登陆过期，请重新登陆！',
+              type: 'error'
+            });
+            return false;
+          }
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data.length == 0) {
               that.cargo_show = false;

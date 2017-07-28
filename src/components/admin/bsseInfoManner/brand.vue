@@ -273,7 +273,6 @@
             this.$message.error('请上传品牌LOGO');
             return false;
           }
-
           global.axiosPostReq('/item/addItemBrand',params).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               this.$message({
