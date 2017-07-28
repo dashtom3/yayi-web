@@ -111,9 +111,9 @@ export default {
             token: that.global.getToken(),
             money: parseInt(that.payMuch)
           }
-          that.global.axiosGetReq('/pay/recharge',obj).then((res) => {
-            //console.log(res.request.responseURL,'pay')
-            window.location.href=res.request.responseURL
+          that.global.axiosPostReq('/pay/recharge',obj).then((res) => {
+            console.log(res,'pay')
+            // window.location.href=res.request.responseURL
           })
         } else {
           // let chargeId = that.global.uuid()

@@ -670,6 +670,10 @@
           that.taxActive1 = false
           that.taxActive2 = true
         }
+      },
+      freight: function() {
+        var that = this
+        that.nowQb = that.gwcTotal + that.freight
       }
     },
     components: {
@@ -1216,6 +1220,7 @@
         console.log(obj,'opopopp');
         // axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
+          console.log(res,'huihui')
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {
               that.$message.error('提交订单失败！');
