@@ -75,7 +75,7 @@
             <el-button  size="mini"  type="info"  @click="getOneOrderDetailsById(scope.$index, scope.row)">详情</el-button>
             <el-button  size="mini"  v-show='scope.row.state!=0&&scope.row.state!=4'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
             <el-button  size="mini"  type="success"  v-show='scope.row.state === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
-            <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
+            <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5&&scope.row.refundInfo!="是"'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
             <el-button  size="mini"  v-show='scope.row.refundInfo=="是"'  @click="lookAtTuiKuanOrder(scope.$index, scope.row)">查看退款</el-button>
             <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
@@ -129,7 +129,7 @@
         <div class="order_box clearfix">
           <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item"> 
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
-            <el-col :span="5" align="center">{{item.itemInfo.itemName}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.itemInfo.itemName}}&nbsp;{{item.itemPropertyNamea}}&nbsp;{{item.itemPropertyNameb}}&nbsp;{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
@@ -166,11 +166,12 @@
             </li>
           </ul>
         </div>
-        <div class="refund_info">
+        <div class="refund_info" >
+          <!-- v-if="nowOrderDetails.refund=='是'" -->
           <div>退款信息</div>
           <table class="refund_tb">
             <tr class="bgc">
-            <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">实付款：{{'￥'+orderInfo.totalPrice}}</span><span style="padding-left:100px;">运费：包邮</span><span style="padding-left:100px;">乾币抵扣：{{'￥'+orderInfo.deductible}}</span></td>
+            <td colspan="7" style="text-align:left;"><span style="padding-left:20px;">实付款：{{'￥'+nowOrderDetails.actualPay}}</span><span style="padding-left:100px;">运费：{{nowOrderDetails.actualPay}}</span><span style="padding-left:100px;">乾币抵扣：{{'￥'+nowOrderDetails.qbDed}}</span></td>
             </tr>
             <tr class="bgc">
               <td>sku代码</td>
@@ -181,11 +182,11 @@
               <td>退回的乾币数</td>
               <td>扣除的乾币数</td>
             </tr>
-            <tr v-for="(item, index) in orderInfo.goodsInfo" :key="index">
+            <tr v-for="(item, index) in nowOrderDetails.orderitemList" :key="item" v-show="item.refunNum>0">
               <td></td>
-              <td>{{item.goodsName}}</td>
-              <td>{{item.price + '*' + item.goodsNum}}</td>
-              <td>{{item.backNo>item.goodsNum ? "" : item.count}}</td>
+              <td>{{item.itemInfo.itemName}}</td>
+              <td>{{item.price + '*' + item.num}}</td>
+              <td>{{item.refunNum}}</td>
               <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
               <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.untread}}</td>
               <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
@@ -262,6 +263,50 @@
             <el-button class="_btn" @click="refundVisible = false">取消</el-button>
           </div>
       </el-dialog>
+
+      <!-- 查看退款 -->
+      <el-dialog title="退款详情" v-model="lookTuiKun" :close-on-click-modal="true">
+        <table class="refund_tb">
+            <tr class="bgc">
+              <td colspan="7" style="text-align:left;">
+                <span style="padding-left:20px;">订单编号：{{orderInfo.orderId}}</span>
+                <span style="padding-left:100px;">乾币抵扣：{{orderInfo.qbDed}}</span>
+              </td>
+            </tr>
+            <tr class="bgc">
+              <td>是否退款</td>
+              <td>商品名称+属性</td>
+              <td>价格*数量</td>
+              <td>退货数量</td>
+              <td>退款金额</td>
+              <td>退回乾币数</td>
+              <td>扣除乾币数</td>
+            </tr>
+            <tr v-for="(item, index) in orderInfo.orderitemList" :key="index" style="height:46px;">
+              <td>
+                <template>
+                  <el-checkbox v-model="item.checked" size="small"></el-checkbox>
+                </template>
+              </td>
+              <td>{{item.itemName}}</td>
+              <td>{{item.price + '*' + item.num}}</td>
+              <td style="width:200px;position:relative;">
+                <div id="inputCenter" v-show="item.num" style="position:absolute;top:4px;">
+                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" :class="{i_disabled: !item.checked}" @click="reduceCount(index, item)">-</i>
+                  <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
+                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" :class="{i_disabled: !item.checked}" @click="addCount(index, item)">+</i>
+                </div>
+              </td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.untread}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
+            </tr>
+          </table>
+          <div class="btn_box">
+            <el-button class="_btn" type="primary" @click="goToBackMoney()">保存</el-button>
+            <el-button class="_btn" @click="refundVisible = false">取消</el-button>
+          </div>
+      </el-dialog>
     </el-col>
 	</el-row>
 </template>
@@ -270,6 +315,7 @@
   export default {
     data() {
       return {
+        lookTuiKun:false,
         //默认每页数据量
         pagesize: 10,
         //当前页码
@@ -385,7 +431,7 @@
             };
             if(that.wacthTuiKuanList[i].checked){
               that.orderInfo.refundAmt += that.wacthTuiKuanList[i].count * that.wacthTuiKuanList[i].price;
-              money += that.orderInfo.refundAmt;
+              money += that.wacthTuiKuanList[i].count * that.wacthTuiKuanList[i].price;
               obj.num = parseInt(that.wacthTuiKuanList[i].num) - parseInt(that.wacthTuiKuanList[i].count);
             }else{
               obj.num = that.wacthTuiKuanList[i].num;
@@ -396,6 +442,7 @@
           if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
             that.orderInfo.refundAmt = that.orderInfo.actualPay;//退还的钱
           }
+          console.log(money)
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
           that.orderInfo.untread = money - that.orderInfo.refundAmt;
           //显示退款扣除钱币数据
@@ -406,6 +453,19 @@
 
     },
     methods: {
+      lookAtTuiKuanOrder:function(index,row){
+        var that = this;
+        that.lookTuiKun = true;
+        that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
+        .then((res) => {
+          console.log(res,"lookAtTuiKuanOrder")
+          if (res.data.callStatus === 'SUCCEED') {
+            
+          } else {
+            that.$message.error('错误，请刷新页面！');
+          }
+        })
+      },
       handleCurrentChange(val) {
         var that = this
         that.currentPage = val

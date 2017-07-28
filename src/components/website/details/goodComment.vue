@@ -4,20 +4,24 @@
       <img src="../../../images/details/noComment.png" alt="">
     </div>
     <ul v-else>
-      <li v-for="comment in comments">
+      <li v-for="comment in comments" :key="comment">
         <div >
-          <span class="name">{{comment.userName}}</span>
+          <!-- <span class="name">{{comment.userName}}</span> -->
           <span class="phone">{{comment.userPhone | matUserPhone}}</span>
           <score :thisscore="comment.commentGrade"></score>
           <span class="time">{{comment.created}}</span>
         </div>
         <div class="commentContents">{{comment.commentContent}}</div>
         <div class="commentReplay" v-if="comment.replyContent">
-          <span class="sjhf">商家回复</span>
-          <span class="sjhfnr">
+          <span class="sjhf">商家回复：</span>
+          <div class="sjhfnr">
             {{comment.replyContent}}
-          </span>
+            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
+            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
+            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
+            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
           </div>
+        </div>
       </li>
     </ul>
   </div>
@@ -64,18 +68,20 @@ import global from '../../global/global'
 .commentReplay{
   background:#ececec;
   border-radius:5px;
-  padding:20px;
+  padding:10px 20px;
   width:1200px;
   word-break: break-all;
+  margin-top: 10px;
 }
 .commentReplay .sjhf{
   display: block;
   float: left;
-  margin-right: 20px;
+  margin-right: 18px;
+  font-size: 14px;
 }
 .commentReplay .sjhfnr{
   display: inline-block;
-      margin-left: 70px;
+       margin-left: 80px; 
       margin-top: -30px;
       margin-right: 0;
 }

@@ -22,8 +22,8 @@
         <el-table-column align="center"  prop="phone" label="客户手机号"  ></el-table-column>
         <el-table-column align="center"  prop="companyName" label="单位名称"  ></el-table-column>
         <el-table-column align="center"  prop="workAddress" label="单位地址"  ></el-table-column>
-        <el-table-column align="center"  prop="orderaCount" label="积累订单数"  ></el-table-column>
-        <el-table-column align="center"  prop="orderaMoneyCount" width="140" label="积累消费（元）"  ></el-table-column>
+        <el-table-column align="center"  prop="orderaCount" label="累计订单数"  ></el-table-column>
+        <el-table-column align="center"  prop="orderaMoneyCount" width="140" label="累计消费（元）"  ></el-table-column>
         <el-table-column align="center"  prop="latelyOrderDate" label="最近一次下单时间" sortable width="200"  ></el-table-column>
         <el-table-column align="center"  prop="bindSaleTime" label="绑定时间" sortable  width="200"></el-table-column>
       </el-table>

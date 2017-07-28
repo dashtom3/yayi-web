@@ -73,7 +73,7 @@
         <div  class="left operate_des" v-if="item.state!==0">
           <p class="payBtn" v-if="item.state!=2&&item.state!=5&&item.state!=9" @click="operate(item,index)">{{item.state | operate}}</p>
           <p class="cancelBtn" v-if="item.state==3" @click="haveALookAtWuLiu(item)">查看物流</p>
-          <p class="cancelBtn" v-if="item.state==9" >评价成功！</p>
+          <p  class="cancelBtn pjcgbtn"  v-if="item.state==9" >评价成功！</p>
           <p class="cancelBtn" style="margin-top:0;font-size:12px;" v-if="item.state==1" @click="cancel_order(item)">取消订单</p>
         </div>
       </div>
@@ -721,7 +721,10 @@
     margin-top: 30px;
     border: 1px solid #D7D7D7;
   }
-
+  .pjcgbtn{
+    cursor:auto !important;
+    color: #999999 !important;
+  }
 </style>
 
 <style >
