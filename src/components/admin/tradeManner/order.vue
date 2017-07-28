@@ -187,9 +187,9 @@
               <td>{{item.itemInfo.itemName}}</td>
               <td>{{item.price + '*' + item.num}}</td>
               <td>{{item.refunNum}}</td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.untread}}</td>
-              <td :rowspan="orderInfo.goodsInfo.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.refundAmt}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.untread}}</td>
+              <td :rowspan="nowOrderDetails.tuikuanzhonglei" >{{orderInfo.outCoins}}</td>
             </tr>
           </table>
         </div>
@@ -304,7 +304,7 @@
           </table>
           <div class="btn_box">
             <el-button class="_btn" type="primary" @click="goToBackMoney()">保存</el-button>
-            <el-button class="_btn" @click="refundVisible = false">取消</el-button>
+            <el-button class="_btn" @click="lookTuiKun = false">取消</el-button>
           </div>
       </el-dialog>
     </el-col>
@@ -442,7 +442,6 @@
           if(that.orderInfo.actualPay<=that.orderInfo.refundAmt){
             that.orderInfo.refundAmt = that.orderInfo.actualPay;//退还的钱
           }
-          console.log(money)
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
           that.orderInfo.untread = money - that.orderInfo.refundAmt;
           //显示退款扣除钱币数据
@@ -453,8 +452,47 @@
 
     },
     methods: {
+      jisuanbuzhidao:function(list){
+        var that = this;
+          var refundAmt = 0;
+          var untread = 0;
+          var outCoins = 0;
+          var money = 0;
+          var jiSuanArr = [];
+          for(let i in list){
+            var obj = {
+              goodBrandName:list[i].itemBrandName,
+              goodSort:list.itemType,
+              price:list[i].price
+            };
+            if(list[i].checked){
+              refundAmt += list.count * list.price;
+              money += list.count * list.price;
+              obj.num = parseInt(list[i].num) - parseInt(list.count);
+            }else{
+              obj.num = list[i].num;
+            }
+            jiSuanArr.push(obj);
+          }
+          //显示退款金额最终数据
+          
+          //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
+          untread = money - refundAmt;
+          //显示退款扣除钱币数据
+          outCoins =  this.global.goodToMoney(jiSuanArr); //扣除乾币数
+          var returnObj = {
+            refundAmt:refundAmt,
+            untread:untread,
+            outCoins:outCoins,
+          };
+          return returnObj;
+      },
       lookAtTuiKuanOrder:function(index,row){
         var that = this;
+        var obj = {
+          token:"111",
+          orderId:row.orderId
+        };
         that.lookTuiKun = true;
         that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
         .then((res) => {
@@ -618,6 +656,24 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.detailVisible = true;
             this.nowOrderDetails = res.data.data;
+            var num = 0;
+            for(let i in this.nowOrderDetails.orderitemList){
+              if(this.nowOrderDetails.orderitemList[i].refunNum>0){
+                num += 1;
+              }
+            }
+            var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList)
+            this.nowOrderDetails.tuikuanzhonglei = num;
+            this.nowOrderDetails.outCoins = 0;
+            this.nowOrderDetails.refundAmt = 0;
+            this.nowOrderDetails.untread = 0;
+            if(this.nowOrderDetails.actualPay<=returndata.refundAmt){
+              this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
+              this.nowOrderDetails.untread = returndata.refundAmt - this.nowOrderDetails.actualPay;
+            }else{
+              this.nowOrderDetails.refundAmt = returndata.refundAmt;
+            }
+            this.nowOrderDetails.outCoins = this.nowOrderDetails.giveQb - returndata.outCoins;
             this.receivingInfo = [];
             res.data.data.receiver.userPhone = oneOrder.phone;
             this.receivingInfo.push(res.data.data.receiver);

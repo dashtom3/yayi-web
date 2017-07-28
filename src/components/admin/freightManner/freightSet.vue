@@ -322,7 +322,8 @@
         if(one.postCity[0]=="未添加地区 "){
           str = "请填写包邮地区！";
         }else{
-          obj.postCity = one.postCity.join(",");
+          console.log(one.postCity)
+          obj.postCity = one.postCity;
         }
         if(str){
           that.$alert(str, {confirmButtonText: '确定'});

@@ -16,10 +16,6 @@
           <span class="sjhf">商家回复：</span>
           <div class="sjhfnr">
             {{comment.replyContent}}
-            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
-            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
-            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
-            啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda啊手动阀fda
           </div>
         </div>
       </li>

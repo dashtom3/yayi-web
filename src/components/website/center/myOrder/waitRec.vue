@@ -4,7 +4,7 @@
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
       <div class="left num">数量</div>
-      <div class="left cargo_operate">商品操作</div>
+      <div class="left cargo_operate">小计（元）</div>
       <div class="left now_pay">实付款（元）</div>
       <div class="left deal_state">交易状态</div>
       <div class="left deal_operate">交易操作</div>
