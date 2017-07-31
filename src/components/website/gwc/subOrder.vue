@@ -547,6 +547,8 @@
         }, 
         tax_word_des: false,
         invoiceHand: 0, //发票抬头
+        invoice_style: '',
+        invoice_state: '',
         company_name: '',
         taxpayer_num: '',
         registered_address: '',
@@ -641,6 +643,8 @@
           that.ruleForm2.stickPhone = ''
           that.ruleForm2.stickAdd = ''
           that.taxType = ''
+          that.invoice_style = ''
+          that.invoice_state = ''
         }
       },
       checked3: function() {
@@ -748,6 +752,8 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             that.taxType = '普通发票'
+            that.invoice_style = 0
+            that.invoice_state = 1
             that.company_name = that.ruleForm.taitou
             that.taxpayer_num = that.ruleForm.nashui
             that.registered_address = ''
@@ -771,6 +777,8 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             that.taxType = '普通发票'
+            that.invoice_style = 0
+            that.invoice_state = 0
             that.company_name = that.ruleForm1.personal
             that.taxpayer_num = ''
             that.registered_address = ''
@@ -794,6 +802,7 @@
         that.$refs[formName].validate((valid) => {
           if (valid) {
             that.taxType = '增值税发票'
+            that.invoice_style = 1
             that.company_name = that.ruleForm2.companyName
             that.taxpayer_num = that.ruleForm2.payTax
             that.registered_address = that.ruleForm2.registerAdd
@@ -1207,6 +1216,8 @@
           buyerMessage: that.leave_des, //买家留言
           giveQb: '',  //获得乾币
           orderItem: orderItem, //JSON数组
+          invoiceStyle: that.invoice_style, // 发票类型
+          invoiceState: that.invoice_state, // 发票性质
           invoiceHand: that.invoiceHand, //发票抬头
           companyName: that.company_name,
           taxpayerNum: that.taxpayer_num,
@@ -1219,7 +1230,7 @@
           stickAddress: that.stick_address,
         }
         console.log(obj,'opopopp');
-        // axios.defaults.headers['token'] = that.global.getToken()
+        axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           console.log(res,'huihui')
           if (res.data.callStatus === 'SUCCEED') {
