@@ -167,6 +167,8 @@
       // 初始化搜索框值
       that.searchDataFromIndex = that.$route.params.data;
       that.searchWordFromIndex = that.$route.params.word;
+      // that.totalCount = that.$route.params.data.totalNumber;
+      console.log(that.$route.params.data,"13")
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -188,6 +190,7 @@
             if(length>1){
               that.ifHaveData = true;
               that.allGoods = arr.slice(0,length-1);
+              console.log(that.allGoods,"asdf")
             }else{
               that.ifHaveData = false;
             }
@@ -216,6 +219,7 @@
       },
       //监听publicHeader标签
       msgFromHeader: function(data) {
+        console.log(data,"dataFromSearch")
         var that = this;
         that.seachDataFrombRrandLidPage = data;
       },
@@ -273,6 +277,7 @@
           obj.currentPage = 1;
         }
         obj.numberPerPage = 12;
+        console.log(obj,"searchDateObj")
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -284,7 +289,7 @@
               that.ifHaveData = false;
             }
             that.totalCount=res.data.totalNumber;
-
+            console.log(res,"allGood")
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

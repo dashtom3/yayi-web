@@ -6,7 +6,7 @@
       </div>
       <div class="infoLeft_2">
         <ul>
-          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg">
+          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg" :key="goodImg">
             <img  :src="goodAllImgs[index]+'?imageView2/1/w/60/h/60'" />
           </li>
           <div class="clearFloat"></div>
@@ -52,38 +52,41 @@
         注册证号：{{itemDetail.registerId}}
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
-      <div class="shuxingWrap" style="height:auto">
-        <div class="" v-for="(item, index1) in items" v-if="item.propertyName" >
-          <span style="float:left">{{item.propertyName}}：</span>
-          <div class="shuxing">
-            <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList"  :disabled = "!oneAttrVal.enabled">
-              {{oneAttrVal.data}}
-            </button>
-            <div class="clearFloat"></div>
+      <div v-if="nowGoodDetails.state==1">
+         <div class="shuxingWrap" style="height:auto">
+          <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
+            <span style="float:left">{{item.propertyName}}：</span>
+            <div class="shuxing">
+              <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal"  :disabled = "!oneAttrVal.enabled">
+                {{oneAttrVal.data}}
+              </button>
+              <div class="clearFloat"></div>
+            </div>
           </div>
-        </div>
-        <div class="clearFloat"></div>
-      </div>
-      <div class="priceWrap">
-        数量：
-        <div class="calculator">
-          <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
-          <!-- <span>{{goodDefaultNum}}</span> -->
-          <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
-          <span v-on:click="addGoodNum()">+</span>
-          <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
           <div class="clearFloat"></div>
         </div>
-        <div style="clear:both"></div>
+        <div class="priceWrap">
+          数量：
+          <div class="calculator">
+            <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
+            <!-- <span>{{goodDefaultNum}}</span> -->
+            <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
+            <span :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()">+</span>
+            <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
+            <div class="clearFloat"></div>
+          </div>
+          <div style="clear:both"></div>
+        </div>
+        <div v-if="kuCunBuZu" class="goodBtn">
+          <span @click="addGwcThisGood()">加入购物车</span>
+          <span @click="nowToBuyThis()">立即购买</span>
+        </div>
+        <div v-else class="goodBtn kucunbuzu">
+          <span >加入购物车</span>
+          <span >立即购买</span>
+        </div>
       </div>
-      <div v-if="kuCunBuZu" class="goodBtn">
-        <span @click="addGwcThisGood()">加入购物车</span>
-        <span @click="nowToBuyThis()">立即购买</span>
-      </div>
-      <div v-else class="goodBtn kucunbuzu">
-        <span >加入购物车</span>
-        <span >立即购买</span>
-      </div>
+      <div v-else class="fontRed">商品已下架</div>
     </div>
     <div class="clearFloat"></div>
     <div>
@@ -229,8 +232,9 @@ import util from '../../../common/util'
         if(jiSuanSkuObj.sku){
           that.nowGoodDetails.itemPrice = jiSuanSkuObj.obj.itemSkuPrice;
           var kuCun = jiSuanSkuObj.obj.stockNum;
-          if(that.goodDefaultNum>kuCun){
+          if(that.goodDefaultNum>=kuCun){
             that.kuCunBuZu = false;
+            that.goodDefaultNum = kuCun;
           }else{
             that.kuCunBuZu = true;
           }

@@ -259,6 +259,7 @@ export default {
     // console.log(gongJuSheBeiMoneyToMoney,gongJuSheBeiMoney,gongJuSheBeiRata,"333")
     var finalyMoney = 0;
     finalyMoney = gongJuSheBeiMoneyToMoney + haoCaiMoneyToMoney + daoBangMoneyToMoney;
+    console.log(finalyMoney,"finalyMoney");
     return Math.round(finalyMoney);
   },
   // RMB兑换钱币规则

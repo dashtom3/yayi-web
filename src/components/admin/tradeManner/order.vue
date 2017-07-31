@@ -54,6 +54,7 @@
             <span v-if="scope.row.state == '5'">订单已确认</span>
             <span v-if="scope.row.state == '3'">卖家已发货</span>
             <span v-if="scope.row.state == '4'">交易成功</span>
+            <span v-if="scope.row.state == '9'">已评价</span>
             <span v-if="scope.row.state == '10'">买家已付款</span>
             <span v-if="scope.row.state == '0'">交易关闭</span>
           </template>
@@ -116,7 +117,6 @@
           <el-col :span="8" style="overflow:hidden" align="center">订单号：{{nowOrderDetails.orderId}}<div class="grid-content bg-purple-light"></div></el-col>
           <el-col :span="8" align="center"><span v-if="nowOrderDetails.endTime">签收时间：{{nowOrderDetails.endTime}}</span><div class="grid-content bg-purple"></div></el-col>
         </el-row>
-
         <div class="order_header">
           <el-col :span="3" align="center"><div class="grid-content bg-purple">&nbsp;</div></el-col>
           <el-col :span="3" align="center">商品<div class="grid-content bg-purple"></div></el-col>
@@ -129,7 +129,7 @@
         <div class="order_box clearfix">
           <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item"> 
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
-            <el-col :span="5" align="center">{{item.itemInfo.itemName}}<br/>{{item.itemPropertyNamea}}<br/>{{item.itemPropertyNameb}}<br/>{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
+            <el-col :span="5" align="center">{{item.itemInfo.itemName}}<br />{{item.itemPropertyNamea}}<span v-if="item.itemPropertyNameb">;</span>{{item.itemPropertyNameb}}<span v-if="item.itemPropertyNamec">;</span>{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.price}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.num}}<div class="grid-content bg-purple"></div></el-col>
@@ -141,6 +141,12 @@
           </div>
         </div>
         <div class="pay_info clearfix">
+          <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
+            
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="lookAtFaPiaoWrap = false">确 定</el-button>
+            </span>
+          </el-dialog>
           <ul class="fl" style="width:130px;">
             <li v-if="nowOrderDetails.payType">支付方式</li>
             <li>发票</li>
@@ -154,7 +160,7 @@
             </li>
             <li>
               <div v-if="nowOrderDetails.invoiceHand">不申请发票</i></div>
-              <div v-else>发票抬头：{{nowOrderDetails.invoiceHand}}</div>
+              <div v-else><el-button class="_btn" @click="lookAtFaPiaoWrap = true">关闭</el-button></div>
             </li>
             <li>
               <div v-if="nowOrderDetails.isRegister==0">不需要产品认证</div>
@@ -273,7 +279,6 @@
               </td>
             </tr>
             <tr class="bgc">
-              <td>是否退款</td>
               <td>商品名称+属性</td>
               <td>价格*数量</td>
               <td>退货数量</td>
@@ -281,29 +286,21 @@
               <td>退回乾币数</td>
               <td>扣除乾币数</td>
             </tr>
-            <tr v-for="(item, index) in orderInfo.orderitemList" :key="index" style="height:46px;">
-              <td>
-                <template>
-                  <el-checkbox v-model="item.checked" size="small"></el-checkbox>
-                </template>
-              </td>
-              <td>{{item.itemName}}</td>
+            <tr v-for="(item, index) in orderInfo.orderitemList" :key="item" style="height:46px;" v-if="item.refunNum>=1">
+              <td>{{item.itemName}}<br />{{item.itemPropertyNamea}}<span v-if="item.itemPropertyNameb">;</span>{{item.itemPropertyNameb}}<span v-if="item.itemPropertyNamec">;</span>{{item.itemPropertyNamec}}</td>
               <td>{{item.price + '*' + item.num}}</td>
               <td style="width:200px;position:relative;">
                 <div id="inputCenter" v-show="item.num" style="position:absolute;top:4px;">
-                  <i style="position:absolute;left:30px;top:2px;" class="icon_i_l" :class="{i_disabled: !item.checked}" @click="reduceCount(index, item)">-</i>
-                  <el-input v-model="item.count" :disabled="!item.checked" style="width:88px;position:absolute;left:60px;"></el-input>
-                  <i style="position:absolute;left:150px;top:2px" class="icon_i_r" :class="{i_disabled: !item.checked}" @click="addCount(index, item)">+</i>
+                  <el-input v-model="item.refunNum" :disabled="true" style="width:88px;position:absolute;left:60px;"></el-input>
                 </div>
               </td>
-              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refundAmt}}</td>
-              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.untread}}</td>
-              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.outCoins}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refund.returnMoney}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refund.returnQb}}</td>
+              <td :rowspan="orderInfo.orderitemList.length" v-if="index == 0">{{orderInfo.refund.dedQb}}</td>
             </tr>
           </table>
           <div class="btn_box">
-            <el-button class="_btn" type="primary" @click="goToBackMoney()">保存</el-button>
-            <el-button class="_btn" @click="lookTuiKun = false">取消</el-button>
+            <el-button class="_btn" @click="lookTuiKun = false">关闭</el-button>
           </div>
       </el-dialog>
     </el-col>
@@ -314,6 +311,7 @@
   export default {
     data() {
       return {
+        lookAtFaPiaoWrap:false,
         lookTuiKun:false,
         //默认每页数据量
         pagesize: 10,
@@ -337,7 +335,7 @@
             {value: '5',label: '订单已确认'},
             {value: '3',label: '卖家已发货'},
             {value: '4',label: '交易成功'},
-            {value: '0',label: '交易关闭'}
+            {value: '0',label: '交易关闭'},
           ],
         //是否退款
         drawback: [{
@@ -463,7 +461,7 @@
           for(let i in list){
             var obj = {
               goodBrandName:list[i].itemBrandName,
-              goodSort:list.itemType,
+              goodSort:list[i].itemType,
               price:list[i].price
             };
             if(list[i].checked){
@@ -481,7 +479,7 @@
           // untread = money - refundAmt;
           //显示退款扣除钱币数据
           outCoins =  this.global.goodToMoney(jiSuanArr); //计算剩余数量的东西赠送的铅笔
-          console.log(outCoins,"1")
+          console.log(outCoins)
           var returnObj = {
             refundAmt:refundAmt,
             untread:untread,
@@ -500,7 +498,7 @@
         .then((res) => {
           console.log(res,"lookAtTuiKuanOrder")
           if (res.data.callStatus === 'SUCCEED') {
-            
+            that.orderInfo = res.data.data;
           } else {
             that.$message.error('错误，请刷新页面！');
           }
@@ -625,14 +623,17 @@
           obj.orderCTime = date1;
           obj.orderETime = date2;
         }
-        // if(that.value1){
-        //   // 退款状态
-        //     for(let a in that.drawback){
-        //       if(that.value1 == that.drawback[a].label1){
-        //         obj.isRefund = that.drawback[a].value1;
-        //       }
-        //     }
-        // }
+        if(that.value1){
+          console.log(that.value1)
+          // 退款状态
+          if(that.value1=="全部"){
+            obj.isRefund = "";
+          }else if(that.value1==1){
+            obj.isRefund = "是";
+          }else if(that.value1==2){
+            obj.isRefund = "否";
+          }
+        }
         console.log(obj,"searchObj")
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
@@ -659,16 +660,20 @@
             this.nowOrderDetails = res.data.data;
             var num = 0;
             var allMoney = 0;
+            var arr = [];
             for(let i in this.nowOrderDetails.orderitemList){
               if(this.nowOrderDetails.orderitemList[i].refunNum>0){
                 num += 1;
+                var datqa = this.nowOrderDetails.orderitemList[i];
+                datqa.num = parseInt(datqa.num) - parseInt(datqa.refunNum);
+                arr.push(datqa);
                 allMoney += this.nowOrderDetails.orderitemList[i].refunNum * this.nowOrderDetails.orderitemList[i].price;
               }
             }
+            // console.log(this.global.goodToMoney(arr),"0000");
             this.nowOrderDetails.tuikuanzhonglei = num;
             // 计算
-            var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList)
-            console.log(returndata,"sadfasf")
+            var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList);
             this.nowOrderDetails.outCoins = 0;
             this.nowOrderDetails.refundAmt = 0;
             this.nowOrderDetails.untread = 0;
@@ -678,7 +683,6 @@
               this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
               this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
             }
-            console.log( this.nowOrderDetails.giveQb , returndata.outCoins,"33")
             this.nowOrderDetails.outCoins = this.nowOrderDetails.giveQb - returndata.outCoins;
 
             this.receivingInfo = [];
@@ -832,10 +836,11 @@
           .then((res) => {
             console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
-              var data = that.orderList[that.tuiKuanIndex];
-              data.state = 10;
-              that.orderList.splice(that.tuiKuanIndex,1,data);
-              that.refundVisible = false;
+              // var data = that.orderList[that.tuiKuanIndex];
+              // data.state = 10;
+              // that.orderList.splice(that.tuiKuanIndex,1,data);
+              // that.refundVisible = false;
+              // that.getOrderList();
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

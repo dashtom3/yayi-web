@@ -7,9 +7,7 @@
         您还没有登陆，登录后购物车的商品将保存到您账户中!
         <img src="../../../images/gwc/gwc3.png" alt="">
       </div>
-      <div class="allGoods">
-        全部商品（{{gwcGoods.length}}）
-      </div>
+      <div class="allGoods">  全部商品（{{gwcGoods.length}}）</div>
       <div class="gwcTitle">
         <span class="cursorPointer" v-on:click="checkAll()">
           <el-checkbox v-model="selectaLL">全选</el-checkbox>
@@ -20,49 +18,83 @@
         <span>小计(元)</span>
         <span>操作</span>
       </div>
-      <div style="min-height:402px;padding-bottom:90px;">
-      <div class="oneGood" v-for="(good,index) in gwcGoods">
-        <div class="">
-          <el-checkbox style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>
-          <div class="imgWrap" @click="goToThisDetail(good)">
-              <img :src="good.pic+'?imageView2/1/w/80/h/80'" alt="">
+      <div style="min-height:455px;padding-bottom:90px;">
+      <div :class="{thisGoodIsNokuCun:good.state!=1}" class="oneGood" v-for="(good,index) in gwcGoods" :key="good" >
+        <div v-if="good.state==1">
+          <div class="">
+            <el-checkbox  style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>
+            <div class="imgWrap" @click="goToThisDetail(good)">
+                <img :src="good.pic+'?imageView2/1/w/80/h/80'" alt="">
+            </div>
           </div>
-        </div>
-        <div class="goodInfo">
-          <span>{{good.name}}</span>
-          <p>
-            <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
-            <span v-if="good.itemPropertyTwoValue">；{{good.itemPropertyTwoValue}}</span>
-            <span v-if="good.itemPropertyThreeValue">；{{good.itemPropertyThreeValue}}</span>
-            <span v-if="good.itemPropertyFourValue">；{{good.itemPropertyFourValue}}</span>
-            <span v-if="good.itemPropertyFiveValue">；{{good.itemPropertyFiveValue}}</span>
-            <span v-if="good.itemPropertySixValue">；{{good.itemPropertySixValue}}</span>
-          </p>
-        </div>
-        <div class="onePrice">
-          <span>￥{{good.price}}</span>
-        </div>
-        <div class="jisuanqi">
-          <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
-            <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index,good)">-</span>
-            <!-- <span >{{good.num}}</span> -->
-            <input @change="oneGoodNumChange(index,good)" type="text" v-model="good.num">
-            <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index,good)">+</span>
+          <div class="goodInfo">
+            <span>{{good.name}}</span>
+            <p>
+              <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
+              <span v-if="good.itemPropertyTwoValue">；{{good.itemPropertyTwoValue}}</span>
+              <span v-if="good.itemPropertyThreeValue">；{{good.itemPropertyThreeValue}}</span>
+              <span v-if="good.itemPropertyFourValue">；{{good.itemPropertyFourValue}}</span>
+              <span v-if="good.itemPropertyFiveValue">；{{good.itemPropertyFiveValue}}</span>
+              <span v-if="good.itemPropertySixValue">；{{good.itemPropertySixValue}}</span>
+            </p>
           </div>
-          <div class=""  v-show="good.num>=good.goodLeaveNum">
-            （库存不足）
+          <div class="onePrice">
+            <span>￥{{good.price}}</span>
           </div>
+          <div class="jisuanqi">
+            <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
+              <span :class="{colorBlue:good.num>1}" v-on:click="reduceGood(index,good)">-</span>
+              <input @change="oneGoodNumChange(index,good)" type="text" v-model="good.num">
+              <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index,good)">+</span>
+            </div>
+            <div class=""  v-show="good.num>=good.goodLeaveNum">
+              （库存不足）
+            </div>
+          </div>
+          <div class="thisPrice">
+              ￥{{good.price*good.num}}
+          </div>
+          <div class="operas">
+            <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good)">收藏</span>
+            <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
+          </div>
+          <div style="clear:both"> </div>
         </div>
-        <div class="thisPrice">
-            ￥{{good.price*good.num}}
+        <div v-else >
+          <div class="">
+            <span class="nowUserGood">失效</span>
+            <div class="imgWrap" ><img :src="good.pic+'?imageView2/1/w/80/h/80'" alt=""></div>
+          </div>
+          <div class="goodInfo">
+            <span>{{good.name}}</span>
+            <p>
+              <span v-if="good.itemPropertyInfo">{{good.itemPropertyInfo}}</span>
+              <span v-if="good.itemPropertyTwoValue">；{{good.itemPropertyTwoValue}}</span>
+              <span v-if="good.itemPropertyThreeValue">；{{good.itemPropertyThreeValue}}</span>
+              <span v-if="good.itemPropertyFourValue">；{{good.itemPropertyFourValue}}</span>
+              <span v-if="good.itemPropertyFiveValue">；{{good.itemPropertyFiveValue}}</span>
+              <span v-if="good.itemPropertySixValue">；{{good.itemPropertySixValue}}</span>
+            </p>
+          </div>
+          <div class="onePrice"> <span>￥{{good.price}}</span></div>
+          <div class="jisuanqi">
+            <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
+              <span :class="{colorBlue:good.num>1}" >-</span>
+              <input type="text" disabled="true" v-model="good.num">
+              <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" >+</span>
+            </div>
+            <div class=""  v-show="good.num>=good.goodLeaveNum">（库存不足）</div>
+          </div>
+          <div class="thisPrice"> ￥{{good.price*good.num}} </div>
+          <div class="operas" style="width:133px;text-align:right">
+            <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
+          </div>
+          <div style="clear:both"> </div>
         </div>
-        <div class="operas">
-          <span :class="{colorBlue:index==addBlueColor}" v-on:mouseenter="showBlue(index)" v-on:mouseleave="hideBlue(index)" v-on:click="saveOne(index,good)">收藏</span>
-          <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
-        </div>
-        <div style="clear:both"> </div>
       </div>
 </div>
+
+<!-- <div style="height:128px;" v-if="jiwsuanbtnFixed"></div> -->
 <div class="goodFooterWrap" :class="{jiwsuanbtnFixedClass:jiwsuanbtnFixed}">
   <div class="goodsFooter" >
     <div class="selectaLLFooter cursorPointer" v-on:click="checkAll()">
@@ -71,6 +103,7 @@
     <div class="footerOpera">
       <span v-on:click="deleteAll()">删除</span>
       <span v-on:click="saveAll()" class="colorBlue">收藏</span>
+      <span v-on:click="clearAllGoodNoUser()" class="colorBlue">清空失效商品</span>
     </div>
     <div class="haveSelectedGoodNum">
       <span>已选择<span class="colorRed">{{haveSelectedGoodNum}}</span>件商品</span>
@@ -131,7 +164,7 @@
           this.sendDataList = [];
           var flag = true;
           for(let a= 0;a<this.gwcGoods.length;a++){
-            if(this.gwcGoods[a].checked){
+            if(this.gwcGoods[a].checked&&this.gwcGoods[a].state==1){
               this.allMoeny+=this.gwcGoods[a].price*this.gwcGoods[a].num;
               this.haveSelectedGoodNum+= parseInt(this.gwcGoods[a].num);
               this.sendDataList.push(this.gwcGoods[a]);
@@ -157,8 +190,27 @@
     },
     methods: {
       oneGoodNumChange:function(index,good){
+        if(good.num < 0 ){
+          return false;
+        }
+        if(good.num>good.goodLeaveNum){
+          good.num = good.goodLeaveNum;
+        }else{
+          good.num = parseInt(good.num);
+        }
         var that = this;
         that.updataNum(this.gwcGoods[index].num,good);
+      },
+      clearAllGoodNoUser:function(){
+        var that = this;
+        that.global.axiosGetReq('/cart/clear', obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.getGwcList();
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       getGwcList:function(){
         var that = this;
@@ -173,7 +225,7 @@
             for(let i in data){
               data[i].checked = false;
               data[i].totalMoney = data[i].num*data[i].price;
-              data[i].goodLeaveNum = 200;
+              data[i].goodLeaveNum = 10;
             }
             this.gwcGoods = data;
             that.calculationPayBtnPosi();
@@ -186,6 +238,7 @@
               if(flag>200){
                 that.jiwsuanbtnFixed = true;
               }
+              console.log(that.jiwsuanbtnFixed)
             };
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -300,14 +353,13 @@
         }else{
 
         }
-
       },
       addGood:function(index,good){
         var that = this;
         if(this.gwcGoods[index].num<this.gwcGoods[index].goodLeaveNum){
           this.gwcGoods[index].num++;
+          that.updataNum(this.gwcGoods[index].num,good);
         }
-        that.updataNum(this.gwcGoods[index].num,good);
       },
       updataNum:function(num,good){
         var that = this;
@@ -444,6 +496,12 @@ right: -150px;
   font-size: 14px;
   color:#333333;
 }
+.gwcWrap .thisGoodIsNokuCun{
+  background: lightgray;  
+}
+.gwcWrap .thisGoodIsNokuCun *{
+  color: gray !important;
+}
 .gwcWrap .allGoods{
   text-align: center;
   font-size: 16px;
@@ -481,6 +539,15 @@ margin-right: 140px;
 position: relative;
 top: 5px;
   }
+ .gwcWrap .oneGood .nowUserGood{
+   border-radius: 5px;
+   display: inline-block;
+   background: #F2F2F2;
+   text-align: center;
+   float:left;
+   margin-top:33px;
+   padding: 3px ;
+ }
   .gwcWrap .oneGood div{
     display: inline-block;
     float: left;
