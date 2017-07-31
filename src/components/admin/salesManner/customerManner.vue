@@ -48,9 +48,16 @@
         </template>
       </el-table-column>
     </el-table>
-		<!-- <paging :childmsg="pageProps" style="text-align:center;margin-top:20px;" @childSay="pageHandler"></paging> -->
-    <!-- 添加视频 -->
-    					 
+    <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pagesize"
+        layout="prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
+    </div>
+    <!-- 添加客户信息 -->				 
     <el-dialog :title="!isEdit? '添加客户信息':'修改客户信息'" size="tiny" v-model="customerVisible" :close-on-click-modal="true">
 	    <ul class="customer_wrap">
 		    <li class="clearfix">
@@ -93,10 +100,12 @@
           value: '3',
           label: '联系电话'
         }],
-        pageProps: {
-          pageNum: 1,
-          totalPage: 1
-        },
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 1,
         sel_value: '1',
         selectInput: '',
         customerList: [],
@@ -120,42 +129,46 @@
         this.sel_value = key;
         this.selectInput = '';
       },
-      // pageHandler(data){
-      //   this.pageProps.pageNum = data
-      //   this.queryHandler()
-      // },
-      queryHandler(){
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.queryHandler(val)
+      },
+      queryHandler(val){
       	var params;
+      	if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
       	if(this.sel_value == '1'){
       		params = {
       			companyName: this.selectInput,
       			companyAdd: '',
       			linkMan: '',
-      			// currentPage: this.pageProps.pageNum,
-         //    numberPerPage: 10
+      			currentPage: this.currentPage,
+            numberPerpage: this.pagesize
       		}	
       	}else if(this.sel_value == '2'){
       		params = {
       			companyName: '',
       			companyAdd: this.selectInput,
       			linkMan: '',
-      			// currentPage: this.pageProps.pageNum,
-         //    numberPerPage: 10
+      			currentPage: this.currentPage,
+            numberPerpage: this.pagesize
       		}	
       	}else if(this.sel_value == '3'){
       		params = {
       			companyName: '',
       			companyAdd: '',
       			linkMan: this.selectInput,
-      			// currentPage: this.pageProps.pageNum,
-         //    numberPerPage: 10
+      			currentPage: this.currentPage,
+            numberPerpage: this.pagesize
       		}	
       	}
         global.axiosPostReq('/cus/show',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
             this.customerList = res.data.data
-            // console.log(this.customerList)
-            // this.pageProps.totalPage = res.data.totalPage
+            this.totalCount = res.data.totalNumber
           }
         })
       },
@@ -197,8 +210,6 @@
 	          }
 	        })
       	}
-      	
-
       },
 			customerAddHandler(){
 				this.customerVisible = true;

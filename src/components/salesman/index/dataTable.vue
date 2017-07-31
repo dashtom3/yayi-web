@@ -5,9 +5,9 @@
     </el-col>
     <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
       <div class="grid-content bg-purple-dark fl">
-        <span>销售总额：<i class="i_col_red">￥<span>{{tableData.saleAllMoney}}</span></i></span>
-        <span class="margin_l">耗材类销售总额：<i class="i_col_red">￥{{tableData.haocaiAllMoney}}</i></span>
-        <span class="margin_l">工具设备类销售总额：<i class="i_col_red">￥{{tableData.gongjuAllMoney}}</i></span>
+        <span>实际销售总额：<i class="i_col_red">￥<span>{{tableData.saleAllMoney}}</span></i></span>
+        <span class="margin_l">实际销售总额-耗材类：<i class="i_col_red">￥{{tableData.haocaiAllMoney}}</i></span>
+        <span class="margin_l">实际销售总额-工具设备类：<i class="i_col_red">￥{{tableData.gongjuAllMoney}}</i></span>
       </div>
       <div class="grid-content bg-purple-dark fr">
         <span class="margin_l">共：<i class="i_col_red">{{tableData.orderNum}}</i>单</span>
@@ -23,15 +23,15 @@
         </el-table-column>
         <el-table-column prop="userPhone" align="center" label="客户手机号" width="150">
         </el-table-column>
-        <el-table-column prop="allMoney" align="center" label="销售额（元）">
+        <el-table-column prop="allMoney" align="center" label="销售总额（元）">
         </el-table-column>
-        <el-table-column prop="haocaiMoney"  align="center"label="耗材类（元）">
+        <el-table-column prop="refundMoney" align="center" label="已退款总额（元）">
         </el-table-column>
-        <el-table-column prop="gongjuMoney" align="center" label="工具设备类（元）">
+        <el-table-column prop="actualMoney" align="center" label="实际销售总额（元）">
         </el-table-column>
-        <el-table-column prop="refundMoney" align="center" label="已退款金额（元）">
+        <el-table-column prop="haocaiMoney"  align="center"label="实际销售总额-耗材类（元）">
         </el-table-column>
-        <el-table-column prop="actualMoney" align="center" label="实际销售额（元）">
+        <el-table-column prop="gongjuMoney" align="center" label="实际销售总额-工具设备类（元）">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
@@ -209,18 +209,18 @@ export default {
           tooltip: {
               trigger: 'axis',
               formatter: function (params, ticket, callback) { 
-              //图表title名称  
-              var seriesName = params[0].seriesName   
-              //x轴名称  
-              var name = params[0].name  
-              //值  
-              var desc = params[0].data.name  
+                //图表title名称  
+                var seriesName = params[0].seriesName   
+                //x轴名称  
+                var name = params[0].name  
+                //值  
+                var desc = params[0].data.name  
 
-              return seriesName + '<br />' + that.monthX + '月'+ name + '日' + '<br />' + desc
-        }  
+                return seriesName + '<br />' + that.monthX + '月'+ name + '日' + '<br />' + desc
+              }  
           },
           legend: {
-              data:['当日销售额（元）']
+              data:['实际销售额（元）']
           },
           grid: {
               left: '3%',
@@ -245,14 +245,14 @@ export default {
           },
           yAxis: {
               type: 'value',
-              name: '当日销售额（元）',
-              max: 4000,
+              name: '实际销售额（元）',
+              max: 8000,
               min: 0,
               splitNumber: 10,
           },  
           series: [
               {
-                  name:'当日销售额（元）',
+                  name:'实际销售额（元）',
                   type:'line',
                   data: this.echartData
               }

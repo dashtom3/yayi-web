@@ -50,6 +50,7 @@ const UserManner_certificationList = resolve => require(['@/components/admin/use
 
 //系统管理
 const AdminManner_admin = resolve => require(['@/components/admin/adminManner/admin'], resolve)
+const AdminManner_oplog = resolve => require(['@/components/admin/adminManner/oplog'], resolve)
 
 // 销售员管理
 const SalesManner_salesList =resolve => require(['@/components/admin/salesManner/salesList'], resolve)
@@ -267,7 +268,7 @@ let router = new Router({
       // leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-setting', // 图标样式class
       children: [
-        // {path: '/admin/adminManner/oplog', component: adminManner_oplog, name: '操作日志', menuShow: true},
+        {path: '/admin/adminManner/oplog', component: AdminManner_oplog, name: '操作日志', menuShow: true},
         {path: '/admin/adminManner/admin', component: AdminManner_admin, name: '管理员列表', menuShow: true}
       ]
     },

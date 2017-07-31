@@ -7,15 +7,16 @@
     </el-col>
     <el-col :span="24" class="warp-main">
     	<el-form label-width="80px" class="clearfix">
-	    	<el-select v-model="value" class="fl t_select_width">
-			    <el-option
-			      v-for="item in optSelect"
-			      :key="item.value"
-			      :label="item.label"
-			      :value="item.value">
-			    </el-option>
+        <el-input v-model="trueName" class="fl t_input_w">
+  	    	<el-select v-model="value" slot="prepend" class="fl t_select_width">
+  			    <el-option
+  			      v-for="item in optSelect"
+  			      :key="item.value"
+  			      :label="item.label"
+  			      :value="item.value">
+  			    </el-option>
 			  </el-select>
-        <el-input v-model="trueName" class="fl t_input_w"></el-input>
+        </el-input>
         <el-form-item label="操作内容" class="fl t_input_width">
           <el-input v-model="optContent"></el-input>
         </el-form-item>
@@ -82,7 +83,7 @@
 		display:block;
 	}
 	.t_input_w{
-		width:220px!important;
+		width:320px!important;
 	}
 	.t_input_width{
 		width:300px;
