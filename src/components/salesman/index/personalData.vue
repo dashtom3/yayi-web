@@ -255,9 +255,10 @@
           }
         }
       })
-
+      //钱包未设置提现方式跳转过来的状态
       if(this.toEditDraw && this.toEditDraw.isActive){
         this.changShowPane(2)
+        this.getMoneySet = false
       }
       this.queryPersonInfo()
     },

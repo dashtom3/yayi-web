@@ -38,23 +38,23 @@
     <el-table :data="certificationList"  border style="width: 100%;">
       <el-table-column  prop="trueName"  align="center" label="真实姓名"> 
       </el-table-column>
-      <el-table-column  prop="phone"  align="center" label="手机号"> 
+      <el-table-column  prop="phone"  align="center" label="手机号" width="140"> 
       </el-table-column>
-      <el-table-column  prop="certification.type"  align="center"  label="类型"> 
+      <el-table-column  prop="certification.type"  align="center" width="70" label="类型"> 
         <template scope="scope">
           <span v-if='scope.row.certification.type === 1'>个人</span>
           <span v-else-if='scope.row.certification.type === 2'>机构</span>
         </template>
        </el-table-column>
       <el-table-column  prop="certification.companyName"  align="center"  label="单位名称">  </el-table-column>
-      <el-table-column  align="center"  label="所在地"> 
+      <el-table-column  align="center" width="170" label="所在地"> 
         <template scope="scope">
             <span>{{scope.row.certification.part}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="certification.workAddress" align="center"  label="详细地址"> 
+      <el-table-column prop="certification.workAddress" align="center" width="160" label="详细地址"> 
       </el-table-column>
-      <el-table-column  prop="certification.doctorPic"  align="center"  label="资格证" class-name="imgWrap">
+      <el-table-column  prop="certification.doctorPic"  align="center" width="80" label="资格证" class-name="imgWrap">
         <template scope="scope">
           <el-tooltip class="item" effect="dark" content="点击查看大图" placement="left">
             <img style="width:32px;height:32px;cursor:pointer;vertical-align:middle;" :src="certificationList[scope.$index].certification.doctorPic" v-on:click="showBigImg(scope.$index)">

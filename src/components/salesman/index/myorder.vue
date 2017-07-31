@@ -15,7 +15,7 @@
         累计收入：<i class="i_col">￥<span>{{allCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :monthNo="monthNo" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -37,7 +37,6 @@ export default {
     return {
       monthVal: '',
       monthX: '',
-      monthNo: 31,
       allCommission: 0,
       echartsTitle: '',
       //默认每页数据量
@@ -145,22 +144,26 @@ export default {
         month: this.dateInfo.month,
         token: global.getSalesToken()
       }
-      //根据当前月份计算有多少天
-      this.monthNo = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month)
-
+      let day = 0
+      this.echartData = []
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
-        console.log(res.data.data)
         if (res.data.callStatus === 'SUCCEED') { 
-          for(var i=0;i<res.data.data.length;i++){
+          //找出最大天数
+          day = res.data.data.length && new Date(res.data.data[res.data.data.length-1].created).getDate() || 1
+          //初始化所有数据为0
+          for(var j=0;j<day;j++){
             this.echartData.push({
+              name: '(￥' + 0 + '， ' + 0 + '单)',
+              value:  0
+            })
+          }
+          //遍历数组替换初始化数据
+          for(var i=0;i<res.data.data.length;i++){
+            this.echartData.splice(new Date(res.data.data[i].created).getDate(),1,{
               name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
               value:  res.data.data[i].dayCommission
             })
           }
-          this.echartData.unshift({
-            name: '(￥' + 0 + '， ' + 0 + '单)',
-            value:  0
-          })
         }else{
           this.$message.error('网络出错，请稍后再试！');
         }

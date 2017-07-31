@@ -234,26 +234,26 @@
     
     <!-- 主要列表 -->
     <el-table :data="salesList"  border style="width: 100%">
-      <el-table-column  prop="trueName"  align="center"  label="销售员姓名"></el-table-column>
-      <el-table-column  prop="phone"  align="center"  label="手机号"></el-table-column>
-      <el-table-column  prop="created"  align="center"  label="注册时间"> 
+      <el-table-column  prop="trueName"  align="center" label="销售员姓名"></el-table-column>
+      <el-table-column  prop="phone"  align="center" width="140" label="手机号"></el-table-column>
+      <el-table-column  prop="created"  align="center" width="180" label="注册时间"> 
         <template scope="scope">
           <span>{{new Date(scope.row.created).getFullYear()+'-'+ fillZero(new Date(scope.row.created).getMonth()+1)+'-'+fillZero(new Date(scope.row.created).getDate())+' '+fillZero(new Date(scope.row.created).getHours())+":"+fillZero(new Date(scope.row.created).getMinutes())+":"+fillZero(new Date(scope.row.created).getSeconds())}}</span>
         </template>
       </el-table-column>
-      <el-table-column  prop="isBindUser"  align="center"  label="是否绑定客户"> 
+      <el-table-column  prop="isBindUser"  align="center" width="140" label="是否绑定客户"> 
         <template scope="scope">
           <span v-if="scope.row.isBindUser===1">是</span>
           <span v-else-if="scope.row.isBindUser===2">否</span>
         </template>
       </el-table-column>
-      <el-table-column  prop="bindUserNum"  align="center"  label="客户数量">
+      <el-table-column  prop="bindUserNum"  align="center" width="100" label="客户数量">
         <template scope="scope">
           <span v-if="scope.row.bindUserNum===null">0</span>
           <span v-else>{{scope.row.bindUserNum}}</span>
         </template>
       </el-table-column>
-      <el-table-column  prop="totalGetMoney"  align="center" sortable label="累计收入（元）"></el-table-column>
+      <el-table-column  prop="totalGetMoney"  align="center" sortable width="180" label="累计收入（元）"></el-table-column>
       <el-table-column  label="操作"  align="center">
         <template scope="scope">
             <el-button v-if="scope.row.isBindUser===2" type="text"  v-on:click="bindUser(scope.$index, scope.row)">绑定客户</el-button>
@@ -287,19 +287,19 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
         pagesizeWallet: 10,
         currentPageWallet: 1,
-        totalCountWallet: 1000,
+        totalCountWallet: 1,
         pagesizeList: 10,
         currentPageList: 1,
-        totalCountList: 1000,
+        totalCountList: 1,
         pagesizeNoBind: 10,
         currentPageNoBind: 1,
-        totalCountNoBind: 1000,
+        totalCountNoBind: 1,
         pagesizeDetail: 10,
         currentPageDetail: 1,
-        totalCountDetail: 1000,
+        totalCountDetail: 1,
         noBindSearchContent:null,
         BindSearchContent:null,
         detailPhone: '',

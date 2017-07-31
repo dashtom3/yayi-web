@@ -37,11 +37,11 @@
 
     <!--商品列表-->
     <el-table :data="goodsList" border :default-sort = "{prop: 'salesNo'}">
-      <el-table-column prop="itemId" label="商品编号" align="center" >
+      <el-table-column prop="itemId" label="商品编号" width="140" align="center" >
       </el-table-column>
-      <el-table-column prop="itemName" label="商品名称" align="center" >
+      <el-table-column prop="itemName" label="商品名称" width="160" align="center" >
       </el-table-column>
-      <el-table-column prop="itemSKU" label="sku代码" align="center" >
+      <el-table-column prop="itemSKU" label="sku代码" width="150" align="center" >
       </el-table-column>
       <el-table-column prop="itemBrandName" label="品牌名称" align="center" >
       </el-table-column>
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column prop="sales" label="销量" sortable align="center" >
       </el-table-column>
-      <el-table-column prop="salesMoney" label="销售额（元）" sortable  align="center" >
+      <el-table-column prop="salesMoney" label="销售额（元）" sortable width="160"  align="center" >
       </el-table-column>
       <el-table-column prop="refundNum" label="累计退款次数" align="center" >
       </el-table-column>

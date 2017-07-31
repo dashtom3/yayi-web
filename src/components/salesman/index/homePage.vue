@@ -40,7 +40,7 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" :monthNo="monthNo" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -73,7 +73,6 @@
         monthX: '',
         withDrawState: false,
         phone: '',
-        monthNo: 30,
         trueName: '',
         accountNumber: '',
         imgUrl: '',
@@ -191,41 +190,33 @@
           }
         })
       },
-      //根据当前月份计算当月总天数
-      getDaysInMonth(year,month){ 
-        month = parseInt(month,10);  
-        var temp = new Date(year,month,0); 
-        return temp.getDate(); 
-      },
       //查询收入
       echartPic(){
         let params = {
           year: this.dateInfo.year,
           month: this.dateInfo.month,
           token: global.getSalesToken()
-        }
-        //根据当前月份计算有多少天
-        this.monthNo = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month)
-        
-        var day = 0
+        }      
+        let day = 0
         this.echartData = []
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') { 
-            day = 27
+          if (res.data.callStatus === 'SUCCEED') {
+            //找出最大天数 
+            day = res.data.data.length && new Date(res.data.data[res.data.data.length-1].created).getDate() || 1
+            //初始化所有数据为0
             for(var j=0;j<day;j++){
               this.echartData.push({
                 name: '(￥' + 0 + '， ' + 0 + '单)',
                 value:  0
               })
             }
+            //遍历数组替换初始化数据
             for(var i=0;i<res.data.data.length;i++){
-              this.echartData.push({
+              this.echartData.splice(new Date(res.data.data[i].created).getDate(),1,{
                 name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
                 value:  res.data.data[i].dayCommission
-              })     
+              })    
             }
-            
-            console.log(this.echartData)
           }else{
             this.$message.error('网络出错，请稍后再试！');
           }
