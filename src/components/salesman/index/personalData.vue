@@ -188,7 +188,7 @@
         lablePosi:"right",
         showPane:1,
         showDefaultData:true,
-        getMoneySet:true,
+        getMoneySet:false,
         imageUrl: '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
@@ -258,7 +258,6 @@
       //钱包未设置提现方式跳转过来的状态
       if(this.toEditDraw && this.toEditDraw.isActive){
         this.changShowPane(2)
-        this.getMoneySet = false
       }
       this.queryPersonInfo()
     },
@@ -289,7 +288,10 @@
             this.personalData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
             this.personalData.birthday = res.data.data.birthday && res.data.data.birthday || new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
             this.personalData.sex = res.data.data.sex || 1
-            this.personalData.postalType = res.data.data.postalType && res.data.data.postalType || '支付宝'
+            this.personalData.postalType = res.data.data.postalType && res.data.data.postalType
+            if(this.personalData.postalType){
+              this.getMoneySet = true
+            }
           }
         })
       },

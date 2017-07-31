@@ -75,7 +75,16 @@
           <th>小计</th>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
-          <td>{{item.itemName}}{{item.itemNameitemPropertyNamea}}{{item.itemNameitemPropertyNameb}}{{item.itemNameitemPropertyNamec}}</td>
+          <td>
+            <div>
+              {{item.itemName}}
+            </div>
+            <div>
+              <span v-if="item.itemPropertyNamea">{{item.itemPropertyNamea}}</span>
+              <span v-if="item.itemPropertyNameb">{{';'+item.itemPropertyNameb}}</span>
+              <span v-if="item.itemPropertyNamec">{{';'+item.itemPropertyNamec}}</span>
+            </div>
+          </td>
           <td>{{item.price}}</td>
           <td>{{item.num}}</td>
           <td>{{item.total}}</td>
@@ -352,7 +361,8 @@ export default {
     line-height: 40px;
     text-align: center;
     font-size: 16px;
-    background: url(../../../images/salesman/titlebg.png) 400px 34px no-repeat;
+    background: url(../../../images/salesman/titlebg.png) no-repeat;
+    background-position: center bottom;
   }
   .datail_tb{
     width: 100%;

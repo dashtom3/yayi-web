@@ -5,7 +5,7 @@
       <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
       <div class="tab_box">
         <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
-<!--         <div class="tab_item" :class="{spe: isActive7}" @click="changeActive7(tab07Text);">销售排行榜</div> -->
+        <div class="tab_item" :class="{spe: isActive7}" @click="changeActive7(tab07Text);">销售排行榜</div>
         <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
         <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
         <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
@@ -33,9 +33,8 @@
   import homePage from "./homePage"
   import myOrder from "./myorder"
   import myWallet from "./myWallet"
-  var tab07 = Vue.extend({
-    template: '<div>this is 07</div>',
-  });
+  import saleCharts from "./saleCharts"
+  
   export default {
     name: 'salesIndex',
     data () {
@@ -68,6 +67,7 @@
       tab04: myClient,
       tab05: myWallet,
       tab06: personalData,
+      tab07: saleCharts,
       myOrder,
     },
     //*******导航钩子*********//
