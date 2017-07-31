@@ -54,7 +54,7 @@
             <span v-if="scope.row.state == '5'">订单已确认</span>
             <span v-if="scope.row.state == '3'">卖家已发货</span>
             <span v-if="scope.row.state == '4'">交易成功</span>
-            <span v-if="scope.row.state == '9'">已评价</span>
+            <span v-if="scope.row.state == '9'">交易成功</span>
             <span v-if="scope.row.state == '10'">买家已付款</span>
             <span v-if="scope.row.state == '0'">交易关闭</span>
           </template>
@@ -76,7 +76,7 @@
             <el-button  size="mini"  type="info"  @click="getOneOrderDetailsById(scope.$index, scope.row)">详情</el-button>
             <el-button  size="mini"  v-show='scope.row.state!=0&&scope.row.state!=4'  @click="handleClose(scope.$index, scope.row)">关闭交易</el-button>
             <el-button  size="mini"  type="success"  v-show='scope.row.state === "2"'  @click="handleSure(scope.$index, scope.row)">确认订单</el-button>
-            <el-button  size="mini"  type="danger"  v-show='scope.row.state>=2&&scope.row.state<=5&&scope.row.refundInfo!="是"'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
+            <el-button  size="mini"  type="danger"  v-show='scope.row.state!=0 && scope.row.state!=1 && scope.row.refundInfo!="是"'  @click="handleDrawback(scope.$index, scope.row)">退款处理</el-button>
             <el-button  size="mini"  v-show='scope.row.refundInfo=="是"'  @click="lookAtTuiKuanOrder(scope.$index, scope.row)">查看退款</el-button>
             <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
@@ -142,7 +142,7 @@
         </div>
         <div class="pay_info clearfix">
           <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
-            <ul>
+            <ul v-if="thisOrderInvoice">
               <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
               <li v-if="thisOrderInvoice.InvoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.InvoiceState==0?"个人":"公司"}}</span></li>
               <li v-if="thisOrderInvoice.companyName"><span>公司名：</span><span>{{thisOrderInvoice.companyName}}</span></li>
@@ -325,6 +325,7 @@
   export default {
     data() {
       return {
+        thisOrderInvoice:null,
         lookAtFaPiaoWrap:false,
         lookTuiKun:false,
         //默认每页数据量
@@ -847,7 +848,7 @@
         var that = this;
         var data = that.wacthTuiKuanList;
         var sendObj = {
-          token:"111",
+          // token:"111",
           orderItem:[]
         };
         for(let i in data){
@@ -864,6 +865,7 @@
           that.$alert('请至少选择一件退款的商品',  {confirmButtonText: '确定',});
         }else{
           sendObj.orderItem = JSON.stringify(sendObj.orderItem);
+          console.log(sendObj)
           that.global.axiosPostReq('/showUserOrderManage/makeRefundData',sendObj)
           .then((res) => {
             console.log(res)
@@ -871,7 +873,7 @@
               // var data = that.orderList[that.tuiKuanIndex];
               // data.state = 10;
               // that.orderList.splice(that.tuiKuanIndex,1,data);
-              // that.refundVisible = false;
+              that.refundVisible = false;
               that.getOrderList();
             } else {
               that.$message.error('网络出错，请稍后再试！');

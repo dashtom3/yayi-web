@@ -63,7 +63,7 @@
         <div v-else >
           <div class="">
             <span class="nowUserGood">失效</span>
-            <div class="imgWrap" ><img :src="good.pic+'?imageView2/1/w/80/h/80'" alt=""></div>
+            <div style="margin-left:0;" class="imgWrap" ><img :src="good.pic+'?imageView2/1/w/80/h/80'" alt=""></div>
           </div>
           <div class="goodInfo">
             <span>{{good.name}}</span>
@@ -86,7 +86,7 @@
             <div class=""  v-show="good.num>=good.goodLeaveNum">（库存为0）</div>
           </div>
           <div class="thisPrice"> ￥{{good.price*good.num}} </div>
-          <div class="operas" style="width:133px;text-align:right">
+          <div class="operas" style="width:154px;text-align:right">
             <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
           </div>
           <div style="clear:both"> </div>
@@ -203,7 +203,7 @@
       },
       clearAllGoodNoUser:function(){
         var that = this;
-        that.global.axiosGetReq('/cart/clear', obj)
+        that.global.axiosPostReq('/cart/clear')
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getGwcList();
@@ -683,7 +683,10 @@ margin-right: 16px;
   cursor: pointer;
 }
 .gwcWrap  .goodsFooter .footerOpera span:nth-child(1){
-  margin-right: 40px;
+  margin-right: 20px;
+}
+.gwcWrap  .goodsFooter .footerOpera span:nth-child(2){
+  margin-right: 20px;
 }
 .gwcWrap  .goodsFooter  .haveSelectedGoodNum{
   margin-left: 234px;
