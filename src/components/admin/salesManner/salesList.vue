@@ -444,7 +444,7 @@
           currentPage: this.currentPageWallet,
           numberPerpage: this.pagesizeWallet
         }
-        global.axiosGetReq('/myWallet/detailss',obj).then((res) => {
+        global.axiosPostReq('/myWallet/detailss',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.tableData = res.data.data
             this.totalCountWallet = res.data.totalNumber

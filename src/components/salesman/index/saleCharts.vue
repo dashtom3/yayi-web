@@ -31,7 +31,7 @@
 	      <el-table-column prop="ranking" label="排名变化" align="center">
 	      </el-table-column>
 	    </el-table>
-	    <el-col :span="24" class="warp-breadcrum">
+	    <el-col :span="24" class="warp-breadcrum" v-show="btn_show">
 	      <div id="saleChart" :style="{width: '1200px', height: '600px', margin: 'auto' }"></div>
 	    </el-col>
 		</div>
@@ -84,7 +84,7 @@
         }]
 			}
 		},
-		created(){
+		mounted(){
 			this.drawBar()
 		},
 		methods: {
@@ -95,6 +95,7 @@
 	      if (myChart === undefined) {  
 	        myChart = echarts.init(document.getElementById('saleChart'));
 	      }
+
 	      myChart.clear();
 	      myChart.setOption({
 	      	title: {
@@ -134,10 +135,10 @@
 	    },
       
 			tabChartHandler(){
-
+				this.btn_show = true
 			},
 			tabTableHandler(){
-
+				this.btn_show = false
 			}
 		}
 	}
