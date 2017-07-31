@@ -52,7 +52,8 @@
         注册证号：{{itemDetail.registerId}}
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
-      <div v-if="nowGoodDetails.state==1">
+      <div v-if="nowGoodDetails.state==0" class="fontRed">商品已下架</div>
+      <div v-else>
          <div class="shuxingWrap" style="height:auto">
           <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
             <span style="float:left">{{item.propertyName}}：</span>
@@ -71,7 +72,7 @@
             <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
             <!-- <span>{{goodDefaultNum}}</span> -->
             <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
-            <span :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()">+</span>
+             <span v-if="nowGoodDetails.itemValueList" :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()">+</span> 
             <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
             <div class="clearFloat"></div>
           </div>
@@ -86,7 +87,7 @@
           <span >立即购买</span>
         </div>
       </div>
-      <div v-else class="fontRed">商品已下架</div>
+      
     </div>
     <div class="clearFloat"></div>
     <div>

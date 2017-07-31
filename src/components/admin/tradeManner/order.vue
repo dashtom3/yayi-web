@@ -142,7 +142,21 @@
         </div>
         <div class="pay_info clearfix">
           <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
-            
+            <ul>
+              <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
+              <li v-if="thisOrderInvoice.InvoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.InvoiceState==0?"个人":"公司"}}</span></li>
+              <li v-if="thisOrderInvoice.companyName"><span>公司名：</span><span>{{thisOrderInvoice.companyName}}</span></li>
+              <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
+              <li v-if="thisOrderInvoice.registeredAddress"><span>纳税人识别号：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
+
+              <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>
+              <li v-if="thisOrderInvoice.opneBank"><span>开户行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
+              <li v-if="thisOrderInvoice.bankNumber"><span>卡号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
+              <li v-if="thisOrderInvoice.stickNanme"><span>收票人姓名：</span><span>{{thisOrderInvoice.stickNanme}}</span></li>
+              <li v-if="thisOrderInvoice.stickPhone"><span>收票人电话：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
+              <li v-if="thisOrderInvoice.stickaddress"><span>收票人地址：</span><span>{{thisOrderInvoice.stickaddress}}</span></li>
+              <li v-if="thisOrderInvoice.invoiceHead"><span>发票抬头：</span><span>{{thisOrderInvoice.invoiceHead}}</span></li>
+            </ul>
             <span slot="footer" class="dialog-footer">
               <el-button type="primary" @click="lookAtFaPiaoWrap = false">确 定</el-button>
             </span>
@@ -159,8 +173,8 @@
               <div v-else-if="nowOrderDetails.payType==0">支付宝支付</div>
             </li>
             <li>
-              <div v-if="nowOrderDetails.invoiceHand">不申请发票</i></div>
-              <div v-else><el-button class="_btn" @click="lookAtFaPiaoWrap = true">关闭</el-button></div>
+              <div v-if="nowOrderDetails.invoiceHand==0">不申请发票</i></div>
+              <div v-else><el-button class="_btn" @click="lookAtFaPiaoFun(nowOrderDetails)">查看发票详情</el-button></div>
             </li>
             <li>
               <div v-if="nowOrderDetails.isRegister==0">不需要产品认证</div>
@@ -190,7 +204,7 @@
             <tr v-for="(item, index) in nowOrderDetails.orderitemList" :key="item" v-show="item.refunNum>0">
               <td>{{item.itemSKU}}</td>
               <td>{{item.itemInfo.itemName}}</td>
-              <td>{{item.price + '*' + item.num}}</td>
+              <td>{{item.price + '*' + (parseInt(item.num)+parseInt(item.refunNum))}}</td>
               <td>{{item.refunNum}}</td>
               <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0" >{{nowOrderDetails.refundAmt}}</td>
               <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0"  >{{nowOrderDetails.untread}}</td>
@@ -300,7 +314,7 @@
             </tr>
           </table>
           <div class="btn_box">
-            <el-button class="_btn" @click="lookTuiKun = false">关闭</el-button>
+            <el-button class="_btn" style="margin:auto;display:block" @click="lookTuiKun = false">关闭</el-button>
           </div>
       </el-dialog>
     </el-col>
@@ -449,6 +463,22 @@
 
     },
     methods: {
+      lookAtFaPiaoFun:function(order){
+        console.log(order);
+        var that = this;
+        var obj = {
+          orderId:"eb6efd1142fc66060b927a57387"
+        };
+        that.global.axiosPostReq('/showUserOrderManage/lookAtInvoice')
+        .then((res) => {
+          console.log(res,"lookAtFaPiaoFun")
+          if (res.data.callStatus === 'SUCCEED') {
+           that.thisOrderInvoice = res.data.data
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+      },
       handleCloseDetails:function(){
         this.nowOrderDetails = null;
       },
@@ -678,10 +708,11 @@
             this.nowOrderDetails.refundAmt = 0;
             this.nowOrderDetails.untread = 0;
             if(this.nowOrderDetails.actualPay<=allMoney){
-              this.nowOrderDetails.refundAmt = allMoney -  this.nowOrderDetails.actualPay;
-            }else{
               this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
               this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
+            }else{
+              this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
+              // this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
             }
             this.nowOrderDetails.outCoins = this.nowOrderDetails.giveQb - returndata.outCoins;
 
@@ -701,7 +732,8 @@
           state:"",
           orderCTime:"",
           orderETime:"",
-          isRefund:""
+          isRefund:"",
+          currentPage:this.currentPage
         };
         that.global.axiosPostReq('/showUserOrderManage/showOrder')
         .then((res) => {
@@ -840,7 +872,7 @@
               // data.state = 10;
               // that.orderList.splice(that.tuiKuanIndex,1,data);
               // that.refundVisible = false;
-              // that.getOrderList();
+              that.getOrderList();
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

@@ -167,8 +167,9 @@
       // 初始化搜索框值
       that.searchDataFromIndex = that.$route.params.data;
       that.searchWordFromIndex = that.$route.params.word;
-      // that.totalCount = that.$route.params.data.totalNumber;
-      console.log(that.$route.params.data,"13")
+      if(that.searchDataFromIndex){
+        that.totalCount = that.searchDataFromIndex.totalNumber;
+      }
         // 品牌和分类，0表示不限
       that.intBrandId = classifyIdAndbrandId.split("AND")[1];//品牌id
       var intClassfy = classifyIdAndbrandId.split("AND")[0];
@@ -222,6 +223,7 @@
         console.log(data,"dataFromSearch")
         var that = this;
         that.seachDataFrombRrandLidPage = data;
+        that.totalCount = data.totalNumber;
       },
       getClassfytAndBrandList:function(){
         var that = this;

@@ -83,7 +83,7 @@
               <input type="text" disabled="true" v-model="good.num">
               <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" >+</span>
             </div>
-            <div class=""  v-show="good.num>=good.goodLeaveNum">（库存不足）</div>
+            <div class=""  v-show="good.num>=good.goodLeaveNum">（库存为0）</div>
           </div>
           <div class="thisPrice"> ￥{{good.price*good.num}} </div>
           <div class="operas" style="width:133px;text-align:right">
@@ -225,7 +225,6 @@
             for(let i in data){
               data[i].checked = false;
               data[i].totalMoney = data[i].num*data[i].price;
-              data[i].goodLeaveNum = 10;
             }
             this.gwcGoods = data;
             that.calculationPayBtnPosi();
@@ -534,6 +533,7 @@ margin-right: 140px;
     padding: 40px 20px 29px 0;
     border-bottom: 1px solid #eeeeee;
     height: 78px;
+    padding-right: 0;
   }
   .gwcWrap .oneGood  .selecta{
 position: relative;
@@ -583,7 +583,7 @@ top: 5px;
     margin-top: 42px;
     }
   .gwcWrap .oneGood  .onePrice{
-    margin-left: 100px;
+    margin-left: 104px;
     width: 80px;
     text-align: center;
     margin-right: 120px;
@@ -637,6 +637,8 @@ top: 5px;
     }
     .gwcWrap .oneGood  .operas{
       float: right;
+          width: 154px;
+    text-align: right;
     }
   .gwcWrap .oneGood  .operas span{
     display: block;
