@@ -554,11 +554,17 @@
             }
             if (that.$router.history.current.name !== 'brandLib') {
               var data1 = res.data.data;
+              data1.numberPerPage = res.data.numberPerPage;
+              data1.totalNumber = res.data.totalNumber;
+              data1.totalPage = res.data.totalPage;
               var search_word = that.searchCargo;
               that.$router.push({ name: 'brandLib', params: { classifyIdAndbrandId: '0-0-0AND0', data: data1, word: search_word}});
               window.scroll(0,0);
             } else {
               var data2 = res.data.data;
+              data2.numberPerPage = res.data.numberPerPage;
+              data2.totalNumber = res.data.totalNumber;
+              data2.totalPage = res.data.totalPage;
               var search_word2 = that.searchCargo;
               data2.push(search_word2);
               that.$emit('listenToBrand', data2);

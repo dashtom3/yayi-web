@@ -619,6 +619,7 @@
             itemId: scope.row.itemId,
           }
           that.global.axiosPostReq('/item/down',obj).then((res) => {
+            console.log(res,'xiajia')
             if (res.data.callStatus === 'SUCCEED') {
               that.getItemInfo();
               that.clearWord();
