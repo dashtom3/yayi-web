@@ -208,8 +208,10 @@
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               // console.log(res.data);
-              that.getClassify();
-              that.getAllClassify();
+              that.getClassify()
+              that.getAllClassify()
+              that.searchClassfyName = ''
+              that.searchParentClassfyName = ''
               that.$message({
                 type: 'success',
                 message: '删除成功!'

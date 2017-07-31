@@ -59,7 +59,7 @@
           <span style="margin-left: 10px;font-size:14px;">（您有<span style="color:#D81E06;">{{allQb}}</span>个乾币,</span>
           <span style="margin-left: 0px;font-size:14px;">本单最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币）</span>
           <div style="margin-left:24px;">
-            <input type="text" class="qianbi_word" v-show="qianbi_word" @input="changeQb" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
+            <input type="text" class="qianbi_word" v-show="qianbi_word" @input="changeQb" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数（单位为整数）"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
           </div>
         </div>
       </div>
@@ -848,12 +848,13 @@
       //失去焦点时
       qbDed: function() {
         var that = this; 
-        if (isNaN(that.qianbi_des)) {
+        var r = /^\+?[1-9][0-9]*$/;　　//正整数
+        // if (isNaN(that.qianbi_des)) {
+        //   that.$message.error('请输入正确数字格式！');
+        //   return false
+        // }
+        if (!r.test(that.qianbi_des)) {
           that.$message.error('请输入正确数字格式！');
-          return false
-        }
-        if (that.qianbi_des > 0 && that.qianbi_des < 1) {
-          that.$message.error('乾币只能是整数！');
           return false
         }
         that.isLoading = true;
