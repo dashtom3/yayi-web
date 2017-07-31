@@ -89,6 +89,26 @@
         </el-pagination>
         <!-- 分页 -->
       </div>
+      <!-- 发票详情 -->
+      <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
+        <ul v-if="thisOrderInvoice" class="invoiceDetails">
+          <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
+          <li v-if="thisOrderInvoice.InvoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.InvoiceState==0?"个人":"公司"}}</span></li>
+          <li v-if="thisOrderInvoice.companyName"><span>公司名：</span><span>{{thisOrderInvoice.companyName}}</span></li>
+          <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
+          <li v-if="thisOrderInvoice.registeredAddress"><span>纳税人识别号：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
+          <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>
+          <li v-if="thisOrderInvoice.opneBank"><span>开户行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
+          <li v-if="thisOrderInvoice.bankNumber"><span>卡号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
+          <li v-if="thisOrderInvoice.stickNanme"><span>收票人姓名：</span><span>{{thisOrderInvoice.stickNanme}}</span></li>
+          <li v-if="thisOrderInvoice.stickPhone"><span>收票人电话：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
+          <li v-if="thisOrderInvoice.stickaddress"><span>收票人地址：</span><span>{{thisOrderInvoice.stickaddress}}</span></li>
+          <li v-if="thisOrderInvoice.invoiceHead"><span>发票抬头：</span><span>{{thisOrderInvoice.invoiceHead}}</span></li>
+        </ul>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="lookAtFaPiaoWrap = false">关 闭</el-button>
+        </span>
+      </el-dialog>
 
       <!--详情界面-->
       <el-dialog v-if="nowOrderDetails" title="订单详情" v-model="detailVisible" size="small" :close-on-click-modal="true" :before-close="handleCloseDetails">
@@ -141,26 +161,7 @@
           </div>
         </div>
         <div class="pay_info clearfix">
-          <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
-            <ul v-if="thisOrderInvoice">
-              <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
-              <li v-if="thisOrderInvoice.InvoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.InvoiceState==0?"个人":"公司"}}</span></li>
-              <li v-if="thisOrderInvoice.companyName"><span>公司名：</span><span>{{thisOrderInvoice.companyName}}</span></li>
-              <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
-              <li v-if="thisOrderInvoice.registeredAddress"><span>纳税人识别号：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
-
-              <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>
-              <li v-if="thisOrderInvoice.opneBank"><span>开户行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
-              <li v-if="thisOrderInvoice.bankNumber"><span>卡号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
-              <li v-if="thisOrderInvoice.stickNanme"><span>收票人姓名：</span><span>{{thisOrderInvoice.stickNanme}}</span></li>
-              <li v-if="thisOrderInvoice.stickPhone"><span>收票人电话：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
-              <li v-if="thisOrderInvoice.stickaddress"><span>收票人地址：</span><span>{{thisOrderInvoice.stickaddress}}</span></li>
-              <li v-if="thisOrderInvoice.invoiceHead"><span>发票抬头：</span><span>{{thisOrderInvoice.invoiceHead}}</span></li>
-            </ul>
-            <span slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="lookAtFaPiaoWrap = false">确 定</el-button>
-            </span>
-          </el-dialog>
+          
           <ul class="fl" style="width:130px;">
             <li v-if="nowOrderDetails.payType">支付方式</li>
             <li>发票</li>
@@ -204,7 +205,7 @@
             <tr v-for="(item, index) in nowOrderDetails.orderitemList" :key="item" v-show="item.refunNum>0">
               <td>{{item.itemSKU}}</td>
               <td>{{item.itemInfo.itemName}}</td>
-              <td>{{item.price + '*' + (parseInt(item.num)+parseInt(item.refunNum))}}</td>
+              <td>{{item.price + '*' + (parseInt(item.num))}}</td>
               <td>{{item.refunNum}}</td>
               <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0" >{{nowOrderDetails.refundAmt}}</td>
               <td :rowspan="nowOrderDetails.tuikuanzhonglei" v-if="index==0"  >{{nowOrderDetails.untread}}</td>
@@ -468,12 +469,13 @@
         console.log(order);
         var that = this;
         var obj = {
-          orderId:"eb6efd1142fc66060b927a57387"
+          orderId:order.orderId
         };
-        that.global.axiosPostReq('/showUserOrderManage/lookAtInvoice')
+        that.global.axiosPostReq('/showUserOrderManage/queryOrderInvoice',obj)
         .then((res) => {
           console.log(res,"lookAtFaPiaoFun")
           if (res.data.callStatus === 'SUCCEED') {
+          that.lookAtFaPiaoWrap = true;
            that.thisOrderInvoice = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -848,7 +850,6 @@
         var that = this;
         var data = that.wacthTuiKuanList;
         var sendObj = {
-          // token:"111",
           orderItem:[]
         };
         for(let i in data){
@@ -892,6 +893,14 @@
 <style scoped>
 .el-table th>.cell{
   text-align: center;
+}
+.invoiceDetails li {
+  line-height:40px;
+}
+.invoiceDetails li span:nth-child(1){
+  display:inline-block;
+  width:100px;
+  text-align: right;
 }
 .fl{
 	float:left;

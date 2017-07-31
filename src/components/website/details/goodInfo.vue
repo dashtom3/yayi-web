@@ -52,8 +52,8 @@
         注册证号：{{itemDetail.registerId}}
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
-      <div v-if="nowGoodDetails.state==0" class="fontRed">商品已下架</div>
-      <div v-else>
+      <div v-show="nowGoodDetails.state==0" class="fontRed">商品已下架</div>
+      <div >
          <div class="shuxingWrap" style="height:auto">
           <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
             <span style="float:left">{{item.propertyName}}：</span>

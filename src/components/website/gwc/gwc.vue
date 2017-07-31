@@ -61,7 +61,7 @@
           <div style="clear:both"> </div>
         </div>
         <div v-else >
-          <div class="">
+          <div class="" @click="goToThisDetail(good)">
             <span class="nowUserGood">失效</span>
             <div style="margin-left:0;" class="imgWrap" ><img :src="good.pic+'?imageView2/1/w/80/h/80'" alt=""></div>
           </div>
