@@ -40,7 +40,7 @@
     </div>
     <div class="clearFloat"></div>
     <div class="curOrder">本月订单</div>
-    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" :maxEchartVal="maxEchartVal" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -60,6 +60,8 @@
   export default {
     data () {
       return {
+        //echarts数据最大值
+        maxEchartVal: 0,
         //默认每页数据量
         pagesize: 10,
         //当前页码
@@ -190,7 +192,7 @@
           }
         })
       },
-      //查询收入
+      //查询
       echartPic(){
         let params = {
           year: this.dateInfo.year,
@@ -198,11 +200,12 @@
           token: global.getSalesToken()
         }      
         let day = 0
+        let echartsArr = []
         this.echartData = []
         global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            //找出最大天数 
-            day = res.data.data.length && new Date(res.data.data[res.data.data.length-1].created).getDate() || 1
+            //当天的日期
+            day = new Date().getDate() + 1
             //初始化所有数据为0
             for(var j=0;j<day;j++){
               this.echartData.push({
@@ -212,10 +215,19 @@
             }
             //遍历数组替换初始化数据
             for(var i=0;i<res.data.data.length;i++){
+              echartsArr.push(res.data.data[i].dayCommission)
               this.echartData.splice(new Date(res.data.data[i].created).getDate(),1,{
                 name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
                 value:  res.data.data[i].dayCommission
               })    
+            }
+
+            //根据数据设置一个最大值
+            if(res.data.data.length){
+              this.maxEchartVal = Math.max.apply(null, echartsArr)
+              this.maxEchartVal = (Math.ceil(this.maxEchartVal/1000)*1000)<8000?8000:(Math.ceil(this.maxEchartVal/1000)*1000)
+            }else{
+              this.maxEchartVal = 8000
             }
           }else{
             this.$message.error('网络出错，请稍后再试！');

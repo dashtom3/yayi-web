@@ -138,7 +138,7 @@ require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');
 
 export default {
-  props: ['orderInfo','echartData','echartsTitle','monthX'],
+  props: ['orderInfo','echartData','echartsTitle','monthX','maxEchartVal'],
   data() {
     return {
       sumAmt: 0,
@@ -236,6 +236,9 @@ export default {
           xAxis: {
               type: 'category',
               name: this.monthX+"月",
+              nameTextStyle: {
+                fontWeight: 'bold'
+              },
               boundaryGap: false,
               axisLabel:{
                  //X轴刻度配置
@@ -246,9 +249,12 @@ export default {
           yAxis: {
               type: 'value',
               name: '实际销售额（元）',
-              max: 8000,
+              nameTextStyle: {
+                fontWeight: 'bold'
+              },
+              max: this.maxEchartVal,
               min: 0,
-              splitNumber: 10,
+              splitNumber: 10
           },  
           series: [
               {

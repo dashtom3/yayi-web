@@ -15,7 +15,7 @@
         累计收入：<i class="i_col">￥<span>{{allCommission}}</span></i>
       </div>
     </el-col>
-    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
+    <dataTable :orderInfo="orderInfo" :echartsTitle="echartsTitle" :monthX="monthX" :maxEchartVal="maxEchartVal" :echartData="echartData" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
       <el-pagination
@@ -35,9 +35,14 @@ import global from '../../global/global'
 export default {
   data() {
     return {
+      //日期select
       monthVal: '',
+      //月份
       monthX: '',
+      //echarts数据最大值
+      maxEchartVal: 0,
       allCommission: 0,
+      //标题
       echartsTitle: '',
       //默认每页数据量
       pagesize: 10,
@@ -137,19 +142,26 @@ export default {
       var temp = new Date(year,month,0); 
       return temp.getDate(); 
     },
-    //查询收入
+    //查询销售额
     echartPic(){
       let params = {
         year: this.dateInfo.year,
-        month: this.dateInfo.month,
+        month: this.fillZero(this.dateInfo.month),
         token: global.getSalesToken()
       }
       let day = 0
+      let echartsArr = []
       this.echartData = []
       global.axiosGetReq('/saleMyOrder/chart',params).then((res) => {
         if (res.data.callStatus === 'SUCCEED') { 
-          //找出最大天数
-          day = res.data.data.length && new Date(res.data.data[res.data.data.length-1].created).getDate() || 1
+          //是否为当前月份
+          if(this.dateInfo.month === new Date().getMonth()+1){
+            day = new Date().getDate() + 1
+          }else{
+            //找出最大天数
+            day = this.getDaysInMonth(this.dateInfo.year,this.dateInfo.month) + 1
+          }
+          
           //初始化所有数据为0
           for(var j=0;j<day;j++){
             this.echartData.push({
@@ -157,13 +169,23 @@ export default {
               value:  0
             })
           }
+          
           //遍历数组替换初始化数据
           for(var i=0;i<res.data.data.length;i++){
+            echartsArr.push(res.data.data[i].dayCommission)
             this.echartData.splice(new Date(res.data.data[i].created).getDate(),1,{
               name: '(￥' + res.data.data[i].dayCommission + '， ' +  res.data.data[i].dayOrderNum + '单)',
               value:  res.data.data[i].dayCommission
             })
           }
+          //根据数据设置一个最大值
+          if(res.data.data.length){
+            this.maxEchartVal = Math.max.apply(null, echartsArr)
+            this.maxEchartVal = (Math.ceil(this.maxEchartVal/1000)*1000)<8000?8000:(Math.ceil(this.maxEchartVal/1000)*1000)
+          }else{
+            this.maxEchartVal = 8000
+          }
+          
         }else{
           this.$message.error('网络出错，请稍后再试！');
         }
@@ -171,7 +193,7 @@ export default {
     },
     selHandler(val){
       this.dateInfo.year = val.split("-")[0]
-      this.dateInfo.month = val.split("-")[1]
+      this.dateInfo.month = Number(val.split("-")[1])
       this.echartsTitle = this.dateInfo.year + '年'+ parseInt(this.dateInfo.month) +'月份业绩记录'
       this.monthX = parseInt(this.dateInfo.month)
       this.echartData = []
