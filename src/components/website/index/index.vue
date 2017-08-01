@@ -2,7 +2,7 @@
   <div class="index">
 <!--     <loading></loading> -->
     <backToTop></backToTop>
-    <publicHeader></publicHeader>
+    <publicHeader :msgFromIndex="reLogData"></publicHeader>
     <classify :brandListData="brandList"></classify>
     <carousel></carousel>
     <preventive></preventive>
@@ -22,7 +22,8 @@
     name: 'index',
     data () {
       return {
-        brandList:[]
+        brandList:[],
+        reLogData: '',
       }
     },
     components: {
@@ -35,6 +36,10 @@
       // loading,
     },
     created: function() {
+      var that = this;
+      if (that.$route.params.data == 'RE_LOGIN') {
+        that.reLogData = 'RE_LOGIN'
+      }
     },
     methods: {
     }

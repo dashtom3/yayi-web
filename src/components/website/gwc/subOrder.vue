@@ -677,7 +677,12 @@
       },
       freight: function() {
         var that = this
-        that.nowQb = that.gwcTotal + that.freight
+        let total = that.gwcTotal + that.freight
+        if (that.allQb >= total) {
+          that.nowQb = total
+        }else {
+        
+        }
       }
     },
     components: {
@@ -863,7 +868,7 @@
         //   return false
         // }
         if (!r.test(that.qianbi_des)) {
-          that.$message.error('请输入正确数字格式！');
+          that.$message.error('请输入整数！');
           return false
         }
         that.isLoading = true;
@@ -962,7 +967,7 @@
                 if (res.data.callStatus === 'SUCCEED') {
                   that.freight = res.data.data.postFee
                   let total = that.gwcTotal + that.freight
-                  if (that.nowQb >= total) {
+                  if (that.allQb >= total) {
                     that.nowQb = total
                   }
                   console.log(that.freight,'无默认地址运费')
@@ -988,7 +993,7 @@
                 if (res.data.callStatus === 'SUCCEED') {
                   that.freight = res.data.data.postFee
                   let total = that.gwcTotal + that.freight
-                  if (that.nowQb >= total) {
+                  if (that.allQb >= total) {
                     that.nowQb = total
                   }
                   console.log(that.freight,'运费')

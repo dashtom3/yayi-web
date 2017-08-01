@@ -222,7 +222,7 @@
   var crypto = require('crypto');
   export default {
     name: 'publicHeader',
-    props:['msgFromGoodInfo'],
+    props:['msgFromGoodInfo','msgFromIndex'],
     data () {
       return {
         bindBanner: '',
@@ -294,6 +294,17 @@
     },
     created: function() {
       var that = this;
+      if (that.msgFromIndex == 'RE_LOGIN') {
+        that.hasLogin = true
+        that.changeForget1 = true
+        that.changeForget2 = false
+        that.changeForget3 = false
+        that.showLogin2 = false
+        that.showLogin3 = false
+        that.showLogin1 = true
+        that.car_num = 0
+        that.activeInColor = '#333333'
+      }
       that.Gtoken = that.global.getToken();
       if (JSON.parse(that.global.getHistory()) == null) {
         that.Hrecord = []
@@ -479,7 +490,6 @@
         that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.bindBanner = 'url(' + res.data.data[0].advImg + ')';
-            // console.log(that.bindBanner)
           }else{
             that.$message.error('获取广告数据失败！');
           }
@@ -607,11 +617,17 @@
         };
         that.global.axiosGetReq('/cart/list', obj).then((res) => {
           if(res.data.errorCode === 'RE_LOGIN'){
-            that.global.removeMsg();
-            that.hasLogin = true;
-            that.car_num = 0;
+            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
+            that.global.removeMsg()
+            that.hasLogin = true
+            that.changeForget1 = true
+            that.changeForget2 = false
+            that.changeForget3 = false
+            that.showLogin2 = false
+            that.showLogin3 = false
+            that.showLogin1 = true
+            that.car_num = 0
             that.activeInColor = '#333333'
-            that.$router.push({path:'/'})
             that.$message({
               showClose: true,
               message: '登陆过期，请重新登陆！',
@@ -637,7 +653,7 @@
               }
               that.total_num = sum;
               that.total_price = sumPrice;
-              console.log(res.data.data,'ppppp');
+              // console.log(res.data.data,'ppppp');
               return false
             }
           } else {
@@ -675,7 +691,6 @@
                   }
                   that.total_num = sum;
                   that.total_price = sumPrice;
-                  //console.log(res.data.data);
                   return false
                 }
               } else {
@@ -694,7 +709,6 @@
       // logo跳转
       logo: function() {
         var that = this;
-        // console.log('hh');
         that.$router.push({ path: '/index' });
       },
       // 我的订单
@@ -838,7 +852,6 @@
           var obj = { phone: that.ms_mobilephone }
           that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
-            // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
               for(let  i=0; i<=60; i++) {
                 window.setTimeout(function(){
@@ -855,7 +868,6 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              // console.log(res);
             }
           })
         }
@@ -870,7 +882,6 @@
           var obj = { phone: that.fg_mobilephone }
           that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
-            // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
               for(let  i=0; i<=60; i++) {
                 window.setTimeout(function(){
@@ -887,7 +898,6 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              // console.log(res);
             }
           })
        }
@@ -902,7 +912,6 @@
           var obj = { phone: that.rg_mobilephone }
           that.global.axiosPostReq('/user/getVerifyCode', obj)
           .then((res) => {
-            // this.loading = false;
             if (res.data.callStatus === 'SUCCEED') {
               for(let  i=0; i<=60; i++) {
                 window.setTimeout(function(){
@@ -919,7 +928,6 @@
               }
             } else {
               that.$message.error('获取验证码失败！');
-              // console.log(res);
             }
           })
         }
@@ -942,7 +950,6 @@
         }
         that.global.axiosPostReq('/user/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-
             that.global.setToken(res.data.token)
             that.global.setUser(res.data.data)
             that.$message({
@@ -984,8 +991,7 @@
         }
         that.global.axiosPostReq('/user/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            // console.log(res.data.token);
-            console.log(res,"查看token");
+            // console.log(res,"查看token");
             that.global.setToken(res.data.token)
             that.global.setUser(res.data.data)
             that.$message({
@@ -1035,8 +1041,6 @@
         }
         that.global.axiosPostReq('/user/forgetPwd', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res, '1');
-            console.log(res.data, '2');
             that.changeForget1 = true;
             that.changeForget2 = false;
             that.changeForget3 = false;
