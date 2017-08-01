@@ -76,7 +76,6 @@
       next(vm => {
         var that = vm;
         that.global.axiosPostReq('/findCus/registered').then((res) => {
-          console.log(res.data,'898989898')
           if(res.data.errorCode === 'RE_LOGIN'){
             that.$router.push({path:'/salesLog'})
             that.$message.error('登陆过期，请重新登录！')
@@ -87,19 +86,19 @@
     },
 
     methods: {
-    relogin: function(){
-      var that = this
-      if (that.$router.history.current.name == 'salesIndex') {
-        that.global.axiosPostReq('/findCus/registered').then((res) => {
-          console.log(res.data,'898989898')
-          if(res.data.errorCode === 'RE_LOGIN'){
-            that.$router.push({path:'/salesLog'})
-            that.$message.error('登陆过期，请重新登录！')
-            return false;
-          }
-        })
-      };
-    },
+      relogin: function(){
+        var that = this
+        if (that.$router.history.current.name == 'salesIndex') {
+          that.global.axiosPostReq('/findCus/registered').then((res) => {
+            console.log(res.data,'898989898')
+            if(res.data.errorCode === 'RE_LOGIN'){
+              that.$router.push({path:'/salesLog'})
+              that.$message.error('登陆过期，请重新登录！')
+              return false;
+            }
+          })
+        };
+      },
       getMsg:function(data){
         //console.log(data)
         var that = this;
