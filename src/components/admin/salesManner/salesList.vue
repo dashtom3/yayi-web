@@ -459,7 +459,7 @@
         var params = {
           saleId: this.saleId
         }
-        that.global.axiosGetReq('/PW/shows',params).then((res) => {
+        that.global.axiosGetReq('/PW/adminShows',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.walletform.balance = Number(res.data.data.toFixed(2))
             that.walletform.remainder = that.walletform.balance
