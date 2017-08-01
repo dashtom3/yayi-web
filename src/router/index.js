@@ -309,18 +309,32 @@ let router = new Router({
 // })
 
 // router.beforeEach((to, from, next) => {
-//   // console.log('to:' + to.path)
-//   if (to.path.startsWith('/admin/login')) {
-//     window.sessionStorage.removeItem('access-user')
-//     next()
-//   } else {
-//     let user = JSON.parse(window.sessionStorage.getItem('access-user'))
-//     if (!user) {
-//       next({path: '/admin/login'})
-//     } else {
-//       next()
+//   var that = this
+//   var obj = {
+//     phone:that.global.getUser().phone,
+//     token:that.global.getToken()
+//   };
+//   that.global.axiosGetReq('/cart/list', obj).then((res) => {
+//     if(res.data.errorCode === 'RE_LOGIN'){
+//       that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
+//       that.global.removeMsg()
+//       that.hasLogin = true
+//       that.changeForget1 = true
+//       that.changeForget2 = false
+//       that.changeForget3 = false
+//       that.showLogin2 = false
+//       that.showLogin3 = false
+//       that.showLogin1 = true
+//       that.car_num = 0
+//       that.activeInColor = '#333333'
+//       that.$message({
+//         showClose: true,
+//         message: '登陆过期，请重新登陆！',
+//         type: 'error'
+//       });
+//       return false;
 //     }
-//   }
+//   })
 // })
 
 export default router

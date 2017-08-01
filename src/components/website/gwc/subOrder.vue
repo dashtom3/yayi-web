@@ -573,6 +573,16 @@
           // console.log(that.fromGwc.details,'uiuiuiu')
           // console.log(that.global.goodToMoney(that.fromGwc.details),'papapap')
         }
+        var obj = {
+          phone:that.global.getUser().phone,
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/cart/list', obj).then((res) => {
+          if(res.data.errorCode === 'RE_LOGIN'){
+            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
+            return false;
+          }
+        })
       })
     },
     watch: {
@@ -1179,6 +1189,7 @@
           that.$message.error('请选择一个收货地址！');
           return false
         }
+        that.isLoading = true;
         for (var i = 0; i < that.orderItem.length; i++) {
           // that.orderItem[i].itemName = that.orderItem[i].name
           // that.orderItem[i].picPath = that.orderItem[i].pic
@@ -1237,15 +1248,16 @@
         console.log(obj,'opopopp');
         axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
-          console.log(res,'huihui')
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {
+              that.isLoading = false;
               that.$message.error('提交订单失败！');
             } else{
-              console.log(res.data.data.actualPay, 'kkkkk')
               if (res.data.data.actualPay == 0) {
+                that.isLoading = false;
                 that.$router.push({name:'paySuccess', params: { payData: 'success' }})
               } else {
+                that.isLoading = false;
                 let orderD = res.data.data
                 window.sessionStorage.setItem('order', JSON.stringify(orderD))
                 window.sessionStorage.removeItem('suborderData')

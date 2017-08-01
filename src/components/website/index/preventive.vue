@@ -87,12 +87,9 @@ export default {
     window.addEventListener('scroll', that.menu);
     that.getAllBrandList();
     that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-      // console.log(res.data.data,'popopop')
       if (res.data.callStatus === 'SUCCEED') {
         that.classifyItems = res.data.data.classifyList;
-        // console.log(that.classifyItems,'fff');
         for (let i = 0; i < that.classifyItems.length; i++) {
-          //console.log(that.classifyItems[i].oneClassify);
           that.classifyItems[i].items = []
           var obj = {
             oneClassify: that.classifyItems[i].oneClassify,
@@ -100,8 +97,6 @@ export default {
           that.global.axiosPostReq('/item/queryItemSearchGet', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.classifyItems[i].items = res.data.data
-              //console.log(res.data.data,'ppp',i)
-              //that.items.push(res.data.data);
             } else {
               that.$message.error('网络出错，请稍后再试1！');
             }

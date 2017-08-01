@@ -71,7 +71,16 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
-        console.log('3333333')
+        var obj = {
+          phone:that.global.getUser().phone,
+          token:that.global.getToken()
+        };
+        that.global.axiosGetReq('/cart/list', obj).then((res) => {
+          if(res.data.errorCode === 'RE_LOGIN'){
+            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
+            return false;
+          }
+        })
         if (that.$router.history.current.name == '我的乾币') {
           that.isActive1 = false;
           that.isActive2 = true;
