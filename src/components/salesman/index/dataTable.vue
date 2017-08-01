@@ -5,19 +5,19 @@
     </el-col>
     <el-col :span="24" style="margin-bottom:10px;margin-top:40px;">
       <div class="grid-content bg-purple-dark fl">
-        <span>实际销售总额：<i class="i_col_red">￥<span>{{tableData.saleAllMoney}}</span></i></span>
-        <span class="margin_l">实际销售总额-耗材类：<i class="i_col_red">￥{{tableData.haocaiAllMoney}}</i></span>
-        <span class="margin_l">实际销售总额-工具设备类：<i class="i_col_red">￥{{tableData.gongjuAllMoney}}</i></span>
+        <span><b>实际销售总额：</b><i class="i_col_red">￥<span>{{tableData.saleAllMoney}}</span></i></span>
+        <span class="margin_l"><b>实际销售总额-耗材类：</b><i class="i_col_red">￥{{tableData.haocaiAllMoney}}</i></span>
+        <span class="margin_l"><b>实际销售总额-工具设备类：</b><i class="i_col_red">￥{{tableData.gongjuAllMoney}}</i></span>
       </div>
       <div class="grid-content bg-purple-dark fr">
-        <span class="margin_l">共：<i class="i_col_red">{{tableData.orderNum}}</i>单</span>
+        <span class="margin_l"><b>共：</b><i class="i_col_red">{{tableData.orderNum}}</i><b>单</b></span>
       </div>
     </el-col>
 		<el-col :span="24" class="warp-main" style="margin: auto;margin-bottom:100px;">
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
         <el-table-column type="index" align="center" label="序号" width="70">
         </el-table-column>
-        <el-table-column prop="orderCreated" align="center" label="下单时间" width="210">
+        <el-table-column prop="orderCreated" align="center" label="下单时间" width="180">
         </el-table-column>
         <el-table-column prop="userName" align="center" label="客户姓名">
         </el-table-column>
@@ -81,8 +81,8 @@
             </div>
             <div>
               <span v-if="item.itemPropertyNamea">{{item.itemPropertyNamea}}</span>
-              <span v-if="item.itemPropertyNameb">{{';'+item.itemPropertyNameb}}</span>
-              <span v-if="item.itemPropertyNamec">{{';'+item.itemPropertyNamec}}</span>
+              <span v-if="item.itemPropertyNameb">{{'；'+item.itemPropertyNameb}}</span>
+              <span v-if="item.itemPropertyNamec">{{'；'+item.itemPropertyNamec}}</span>
             </div>
           </td>
           <td>{{item.price}}</td>
