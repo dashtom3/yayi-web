@@ -295,6 +295,7 @@
     created: function() {
       var that = this;
       if (that.msgFromIndex == 'RE_LOGIN') {
+        that.global.removeMsg()
         that.hasLogin = true
         that.changeForget1 = true
         that.changeForget2 = false
@@ -372,7 +373,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.car_num = res.data.data.length;
             } else {
-              that.$message.error('登陆过期，请重新登陆！');
+              that.$message.error('登录过期，请重新登录！');
             }
           })
         }
@@ -630,7 +631,7 @@
             that.activeInColor = '#333333'
             that.$message({
               showClose: true,
-              message: '登陆过期，请重新登陆！',
+              message: '登录过期，请重新登录！',
               type: 'error'
             });
             return false;

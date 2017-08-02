@@ -94,7 +94,7 @@
         <ul v-if="thisOrderInvoice" class="invoiceDetails">
           <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
           <li v-if="thisOrderInvoice.invoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.invoiceState==0?"个人":"公司"}}</span></li>
-          <li v-if="thisOrderInvoice.companyName"><span>{{thisOrderInvoice.invoiceState==0?"个人":"公司名"}}：</span><span>{{thisOrderInvoice.companyName}}</span></li>
+          <li v-if="thisOrderInvoice.companyName"><span>{{thisOrderInvoice.invoiceState==0?"发票抬头":"发票抬头"}}：</span><span>{{thisOrderInvoice.companyName}}</span></li>
           <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
           <li v-if="thisOrderInvoice.registeredAddress"><span>纳税人识别号：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
           <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>

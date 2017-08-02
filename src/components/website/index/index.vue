@@ -39,6 +39,7 @@
       var that = this;
       if (that.$route.params.data == 'RE_LOGIN') {
         that.reLogData = 'RE_LOGIN'
+        that.$message.error('登录过期，请重新登录！')
       }
     },
     methods: {

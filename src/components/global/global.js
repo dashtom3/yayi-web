@@ -1,33 +1,34 @@
 import axios from 'axios'
+import router from '../../router'
 export default {
   baseUrl: 'http://47.93.48.111:8080/api',
   // baseUrl: 'http://192.168.1.103:8081/api',
   qiNiuUrl: 'http://upload-z2.qiniu.com/',
   qiniuShUrl: 'http://orl5769dk.bkt.clouddn.com/',
-  success (obj, msg, url) {
-    obj.$message({
-      message: msg,
-      type: 'success',
-      duration: '1000',
-      onClose: function () {
-        if (url) {
-          obj.$router.push(url)
-        }
-      }
-    })
-  },
-  error (obj, msg, url) {
-    obj.$message({
-      message: msg,
-      duration: '1000',
-      type: 'error',
-      onClose: function () {
-        if (url) {
-          obj.$router.push(url)
-        }
-      }
-    })
-  },
+  // success (obj, msg, url) {
+  //   obj.$message({
+  //     message: msg,
+  //     type: 'success',
+  //     duration: '1000',
+  //     onClose: function () {
+  //       if (url) {
+  //         obj.$router.push(url)
+  //       }
+  //     }
+  //   })
+  // },
+  // error (obj, msg, url) {
+  //   obj.$message({
+  //     message: msg,
+  //     duration: '1000',
+  //     type: 'error',
+  //     onClose: function () {
+  //       if (url) {
+  //         obj.$router.push(url)
+  //       }
+  //     }
+  //   })
+  // },
   extendCopy(p) {
 　　　　var c = {};
 　　　　for (var i in p) {
@@ -114,47 +115,99 @@ export default {
   removeHistory () {
     localStorage.removeItem('userHistory')
   },
-  axiosPostReq (url, data) {
-    var myurl = window.location.href;
-    var adminFlag = myurl.indexOf("admin")!=-1;
-    // 后台
-    if(adminFlag){
-      axios.defaults.headers['adminToken'] = this.getAdminToken()
-    }
-    // 创客
-    var salesFlag = myurl.indexOf("salesIndex")!=-1;
-    var salesLogin = myurl.indexOf("salesLog")!=-1;
-    if(salesFlag || salesLogin){
-      axios.defaults.headers['saleToken'] = this.getSalesToken()
-    }
-    if (!adminFlag&&!salesFlag&&!salesLogin) {
-      // 电商
-      axios.defaults.headers['token'] = this.getToken()
-    }
-    //axios.defaults.headers['token'] = this.getToken()
-    return axios.post(this.baseUrl + url, this.postHttpData(data))
+  axiosPostReq(url, data) {
+    return new Promise((resolve, reject) => {
+      var formData = new FormData()
+      for (let i in data) {
+        if (data[i] != null) {
+          formData.append(i, data[i])
+        }
+      }
+      var myurl = window.location.href;
+      var adminFlag = myurl.indexOf("admin")!=-1;
+      if(adminFlag){
+        axios.defaults.headers['adminToken'] = this.getAdminToken()  // 后台token
+      }
+      var salesFlag = myurl.indexOf("salesIndex")!=-1;
+      var salesLogin = myurl.indexOf("salesLog")!=-1;
+      if(salesFlag || salesLogin){
+        axios.defaults.headers['saleToken'] = this.getSalesToken()   // 创客token
+      }
+      if (!adminFlag&&!salesFlag&&!salesLogin) {
+        axios.defaults.headers['token'] = this.getToken()  // 电商token
+      }
+      axios.post(this.baseUrl + url, formData)
+        .then((res) => {
+          if(res.data.errorCode === 'RE_LOGIN') {
+            Promise.reject("登录过期，请重新登录！").then(function(reason) {
+              // 未被调用
+            }, function(reason) {
+              if(salesFlag || salesLogin) {
+                router.push({name:'salesLog', params: { data: 'RE_LOGIN'}})
+                return false
+              }
+              router.push({name:'index', params: { data: 'RE_LOGIN'}})
+              console.log(reason); 
+              return false
+            });
+          }
+          if (res.data.callStatus === 'SUCCEED') {
+            resolve(res);
+          } else {
+            resolve(res);
+          }
+        }).catch(() => {
+          reject('网络请求错误');
+        });
+    });
   },
-  axiosGetReq (url, getParamsObj) {
-    var myurl = window.location.href;
-    var adminFlag = myurl.indexOf("admin")!=-1;
-    // 后台
-    if(adminFlag){
-      axios.defaults.headers['adminToken'] = this.getAdminToken()
-    }
-    // 创客
-    var salesFlag = myurl.indexOf("salesIndex")!=-1;
-    var salesLogin = myurl.indexOf("salesLog")!=-1;
-    if(salesFlag || salesLogin){
-      axios.defaults.headers['saleToken'] = this.getSalesToken()
-    }
-    if (!adminFlag&&!salesFlag&&!salesLogin) {
-      // 电商
-      axios.defaults.headers['token'] = this.getToken()
-    }
-    return axios.get(this.baseUrl + url ,{params:getParamsObj})
+  axiosGetReq(url, data) {
+    return new Promise((resolve, reject) => {
+      var formData = ''
+      for (let i in data) {
+        if (data[i] != null) {
+          formData = formData + '&' + i + '=' + data[i]
+        }
+      }
+      var myurl = window.location.href;
+      var adminFlag = myurl.indexOf("admin")!=-1;
+      if(adminFlag){
+        axios.defaults.headers['adminToken'] = this.getAdminToken()  // 后台token
+      }
+      var salesFlag = myurl.indexOf("salesIndex")!=-1;
+      var salesLogin = myurl.indexOf("salesLog")!=-1;
+      if(salesFlag || salesLogin){
+        axios.defaults.headers['saleToken'] = this.getSalesToken()   // 创客token
+      }
+      if (!adminFlag&&!salesFlag&&!salesLogin) {
+        axios.defaults.headers['token'] = this.getToken()  // 电商token
+      }
+      axios.get(this.baseUrl + url, {params:data})
+        .then((res) => {
+          if(res.data.errorCode === 'RE_LOGIN') {
+            Promise.reject("登录过期，请重新登录！").then(function(reason) {
+              // 未被调用
+            }, function(reason) {
+              if(salesFlag || salesLogin) {
+                router.push({name:'salesLog', params: { data: 'RE_LOGIN'}})
+                return false
+              }
+              router.push({name:'index', params: { data: 'RE_LOGIN'}})
+              console.log(reason); 
+              return false
+            });
+          }
+          if (res.data.callStatus === 'SUCCEED') {
+            resolve(res);
+          } else {
+            resolve(res);
+          }
+        }).catch(() => {
+          reject('网络请求错误');
+        });
+    });
   },
   axiosGetQiNiuReq (url, getParamsObj) {
-
     return axios.get(this.qiniuShUrl + url ,{params:getParamsObj})
   },
   getQiNiuToken () {

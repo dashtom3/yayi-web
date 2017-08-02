@@ -71,34 +71,26 @@
       myOrder,
     },
     //*******导航钩子*********//
-    beforeRouteEnter (to, from, next) {
-      // 通过 `vm` 访问组件实例
-      next(vm => {
-        var that = vm;
-        that.global.axiosPostReq('/findCus/registered').then((res) => {
-          if(res.data.errorCode === 'RE_LOGIN'){
-            that.$router.push({path:'/salesLog'})
-            that.$message.error('登陆过期，请重新登录！')
-            return false;
-          }
-        })
-      })
+    // beforeRouteEnter (to, from, next) {
+    //   // 通过 `vm` 访问组件实例
+    //   next(vm => {
+    //     var that = vm;
+    //     that.global.axiosPostReq('/findCus/registered').then((res) => {
+    //       if(res.data.errorCode === 'RE_LOGIN'){
+    //         that.$router.push({path:'/salesLog'})
+    //         that.$message.error('登陆过期，请重新登录！')
+    //         return false;
+    //       }
+    //     })
+    //   })
+    // },
+    created: function() {
+      var that = this
+      if (that.$route.params.data == 'RE_LOGIN') {
+        that.$message.error('登陆过期，请重新登录！')
+      }
     },
-
     methods: {
-      relogin: function(){
-        var that = this
-        if (that.$router.history.current.name == 'salesIndex') {
-          that.global.axiosPostReq('/findCus/registered').then((res) => {
-            console.log(res.data,'898989898')
-            if(res.data.errorCode === 'RE_LOGIN'){
-              that.$router.push({path:'/salesLog'})
-              that.$message.error('登陆过期，请重新登录！')
-              return false;
-            }
-          })
-        };
-      },
       getMsg:function(data){
         //console.log(data)
         var that = this;
@@ -129,10 +121,8 @@
         this.isActive6 = false;
         this.isActive7 = false;
         this.dataValue = '';
-        this.relogin()
       },
       changeActive2: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = true;
@@ -144,7 +134,6 @@
         this.dataValue = '';
       },
       changeActive3: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -156,7 +145,6 @@
         this.dataValue = '';
       },
       changeActive4: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -168,7 +156,6 @@
         this.dataValue = '';
       },
       changeActive5: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -180,7 +167,6 @@
         this.dataValue = '';
       },
       changeActive6: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -192,7 +178,6 @@
         this.dataValue = '';
       },
       changeActive7: function(tabText) {
-        this.relogin()
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;

@@ -125,7 +125,7 @@
         <el-button type="primary" @click="nextToFirst('ruleForm')">下一步</el-button>
       </el-form-item>
       <!-- 选择属性弹出框 开始 -->
-      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
+      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible" size="smalle">
         <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
@@ -410,8 +410,12 @@
       //获取商品属性列表
       getAllProperty: function() {
         var that = this;
-        that.global.axiosGetReq('/item/queryProperty').then((res) => {
+        var obj = {
+          numberPerPage: 50,
+        }
+        that.global.axiosGetReq('/item/queryProperty',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data,'lihui')
             that.tableData2 = res.data.data
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {

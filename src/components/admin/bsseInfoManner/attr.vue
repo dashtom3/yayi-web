@@ -314,7 +314,7 @@
           if(that.flag1){
             var obj2 = {
               itemPropertyId:parseInt(that.tableData[that.changAttrIndex].itemPropertyId),
-              itemPropertyName:that.tableData[that.changAttrIndex].itemPropertyName,
+              itemPropertyName:that.formData.addGoodAttrName,
               itemPparamList:[]
             };
             for(let i in that.tableData[that.changAttrIndex].itempropertydList){
@@ -326,6 +326,7 @@
               console.log(res);
               if (res.data.callStatus === 'SUCCEED') {
                 that.showAddGoodAttr = false;
+                that.getGoodAttrList();
               } else {
                 that.$message.error('网络出错，请稍后再试！');
               }
