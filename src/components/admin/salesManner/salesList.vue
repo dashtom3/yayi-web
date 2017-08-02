@@ -138,6 +138,10 @@
             <el-table-column prop="balanceIn" align="center" label="进账（元）" width="180">
             </el-table-column>
             <el-table-column prop="balanceOut" align="center" label="出账（元）" width="180">
+              <template scope="scope">
+                <span v-if="scope.row.balanceOut === 0"></span>
+                <span v-else>{{scope.row.balanceOut}}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="balance" align="center" label="钱包余额（元）">
             </el-table-column>
@@ -150,7 +154,8 @@
             <template scope="scope">
               <span v-if="scope.row.describey.indexOf('管理员增加') !== -1">{{"管理员增加￥"+ scope.row.balanceIn}}</span>
               <span v-else-if="scope.row.describey.indexOf('管理员减少') !== -1">{{"管理员扣除￥"+ scope.row.balanceOut}}</span>
-              <span v-else="scope.row.describey.indexOf('出账提现成功') !== -1">{{"提现￥"+ scope.row.balanceOut}}</span>
+              <span v-else-if="scope.row.describey.indexOf('每月结算') !== -1">{{new Date(scope.row.created).getMonth()+"月收入￥"+ scope.row.balanceIn}}</span>
+              <span v-else>{{"提现￥"+ scope.row.balanceOut}}</span>
             </template>
             </el-table-column>
           </el-table>
@@ -461,7 +466,7 @@
         }
         that.global.axiosGetReq('/PW/adminShows',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.walletform.balance = Number(res.data.data.toFixed(2))
+            that.walletform.balance = res.data.data && Number(res.data.data.toFixed(2))
             that.walletform.remainder = that.walletform.balance
           } else {
             that.$message.error('网络出错，请稍后再试！');
@@ -469,9 +474,9 @@
         })
       },
       walletHandler(index, row){
-
         this.walletVisible = true
         this.saleId = row.saleId
+        this.queryWallet()
         this.getBalance()
       },
       handleCurrentWalletChange(val){

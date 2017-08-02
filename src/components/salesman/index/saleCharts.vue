@@ -7,29 +7,31 @@
 			<div class="sale-tab">
 				<el-date-picker
 		      v-model="sale_date"
-		      type="date"
-		      placeholder="选择日期">
+		      type="month"
+		      placeholder="选择日期"
+		      :clearable="false"
+		      @change="selHandler">
 		    </el-date-picker>
 		    <el-button type="primary" class="tab-btn01" v-show="!btn_show" @click="tabChartHandler">切换至图表模式</el-button>
 		    <el-button type="primary" class="tab-btn01" v-show="btn_show" @click="tabTableHandler">切换至表格模式</el-button>
 			</div>
 			<h1 class="title">2017年7月销售排行榜</h1>
 			<div class="title_info">
-				共5000名销售员，您当前排名：第<span class="color-red">2</span>名，比上月提升<span class="color-red">5</span>个名次。其中客户数为<span class="color-red">101</span>，订单数为<span class="color-red">48</span>，销售额为<span class="color-red">490,000</span>元。
+				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
 			</div>
 			<el-table :data="tableData" style="width: 100%" v-show="!btn_show">
 				<el-table-column type="index" label="排名" align="center" width="180">
 	      </el-table-column>
-	      <el-table-column prop="salePhone" label="销售员" align="center" width="180">
+	      <el-table-column prop="phone" label="销售员" align="center" width="180">
 	      </el-table-column>
-	      <el-table-column prop="custNo" label="客户数" align="center" width="180">
+	      <el-table-column prop="bindUserNum" label="客户数" align="center" width="180">
 	      </el-table-column>
-	      <el-table-column prop="orderNo" label="订单数" align="center">
+	      <el-table-column prop="orderCount" label="订单数" align="center">
 	      </el-table-column>
 	      <el-table-column prop="saleMoney" label="销售额（元）" align="center">
 	      </el-table-column>
-	      <el-table-column prop="ranking" label="排名变化" align="center">
-	      </el-table-column>
+	      <!-- <el-table-column prop="rowNum" label="排名变化" align="center">
+	      </el-table-column> -->
 	    </el-table>
 	    <el-col :span="24" class="warp-breadcrum" v-show="btn_show">
 	      <div id="saleChart" :style="{width: '1200px', height: '600px', margin: 'auto' }"></div>
@@ -51,43 +53,80 @@
 			return {
 				sale_date: '',
 				btn_show: false,
-				tableData: [{
-          salePhone: 18652599279,
-          custNo: 100,
-          orderNo: 100,
-          saleMoney: 100.00,
-          ranking: 'up'
-        },{
-          salePhone: 18652599279,
-          custNo: 100,
-          orderNo: 100,
-          saleMoney: 100.00,
-          ranking: 'up'
-        },{
-          salePhone: 18652599279,
-          custNo: 100,
-          orderNo: 100,
-          saleMoney: 100.00,
-          ranking: 'up'
-        },{
-          salePhone: 18652599279,
-          custNo: 100,
-          orderNo: 100,
-          saleMoney: 100.00,
-          ranking: 'up'
-        },{
-          salePhone: 18652599279,
-          custNo: 100,
-          orderNo: 100,
-          saleMoney: 100.00,
-          ranking: 'up'
-        }]
+				tableData: [],
+				sale_total_num: 0,
+				ranking_info: {
+					rowNum: 0,
+					orderCount: 0,
+					bindUserNum: 0,
+					saleMoney: 0
+				},
+				ranking_arr: [],
+				data_arr: []
 			}
 		},
-		mounted(){
-			this.drawBar()
+		created(){
+			this.sale_date = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
+			this.queryHandler()
+			this.init()
 		},
 		methods: {
+			init(){
+				var that = this
+				var params = {
+					beYearMonth: this.sale_date,
+					saleToken: that.global.getSalesToken()
+				}
+				that.global.axiosGetReq('/rankingList/compareData',params).then((res) => {
+	        if (res.data.callStatus === 'SUCCEED') { 
+	          this.sale_total_num = res.data.num
+	          this.ranking_info = res.data.data
+	        }else if(res.data.callStatus === 'FAILED'){
+	        	this.$message.error('非常抱歉，您未上榜');
+	        	this.sale_total_num = 0
+	        	this.ranking_info = {
+							rowNum: 0,
+							orderCount: 0,
+							bindUserNum: 0,
+							saleMoney: 0
+						}
+	        }else{
+	          this.$message.error('网络出错，请稍后再试！');
+	        }
+      	})
+			},
+			queryHandler(){
+				var that = this
+				var params = {
+					beYearMonth: this.sale_date
+				}
+				this.ranking_arr = []
+	      this.data_arr = []
+				that.global.axiosGetReq('/rankingList/list',params).then((res) => {
+	        if (res.data.callStatus === 'SUCCEED') { 
+	          this.tableData = res.data.data
+	          
+	          for(var i=0;i<res.data.data.length;i++){
+	          	this.ranking_arr.push(res.data.data[i].rowNum)
+	          	this.data_arr.push(res.data.data[i].saleMoney)
+	          }
+	          this.ranking_arr = this.ranking_arr.reverse()
+	          this.data_arr = this.data_arr.reverse()
+	        }else{
+	          this.$message.error('网络出错，请稍后再试！');
+	        }
+      	})
+			},
+			selHandler(val){
+	      this.sale_date = val
+	      this.queryHandler()
+	      this.init()
+	      this.drawBar()
+	    },
+			//月份补0
+	    fillZero(n){
+	      return n<10 ? '0'+ n: n 
+	    },
 			drawBar(){
 	      var that = this;
 	      // 基于准备好的dom，初始化echarts实例
@@ -99,7 +138,7 @@
 	      myChart.clear();
 	      myChart.setOption({
 	      	title: {
-			        text: '世界人口总量'
+			        text: '排名'
 			    },
 			    tooltip: {
 			        trigger: 'axis',
@@ -122,13 +161,15 @@
 			    },
 			    yAxis: {
 			        type: 'category',
-			        data: ['巴西','印尼','美国','印度','中国','世界人口(万)']
+			        data: this.ranking_arr
 			    },
 			    series: [
 			        {
 			            name: '2011年',
 			            type: 'bar',
-			            data: [18203, 23489, 29034, 104970, 131744, 630230]
+			            barWidth: 30,
+			            barGap: '1%',
+			            data: this.data_arr
 			        }
 			    ]
 	      });
@@ -136,6 +177,7 @@
       
 			tabChartHandler(){
 				this.btn_show = true
+				this.drawBar()
 			},
 			tabTableHandler(){
 				this.btn_show = false

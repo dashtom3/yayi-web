@@ -119,6 +119,8 @@
           this.currentPage = val
         }
         let params = {
+          year: this.dateInfo.year,
+          month: this.dateInfo.month,
           currentPage: this.currentPage,
           numberPerPage: this.pagesize,
           token: global.getSalesToken()
@@ -147,6 +149,8 @@
         }
 
         let params = {
+          year: this.dateInfo.year,
+          month: this.dateInfo.month,
           currentPage: this.currentPage,
           numberPerPage: this.pagesize,
           token: global.getSalesToken()

@@ -88,19 +88,7 @@
 				pwd1: '',
 				realName1: '',
 				userName1: '',
-				adminList: [{
-					userName: '某一',
-					pwd: '123456',
-					realName: '张三',
-				},{
-					userName: '某二',
-					pwd: '123456',
-					realName: '李四',
-				},{
-					userName: '某三',
-					pwd: '123456',
-					realName: '王五',
-				}],
+				adminList: [],
 				adminAddBtn: false,
 				adminstratorId: '',
 				isEdit: false,

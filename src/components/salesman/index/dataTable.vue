@@ -237,7 +237,7 @@ export default {
               type: 'category',
               name: this.monthX+"月",
               nameTextStyle: {
-                fontWeight: 'bold'
+                fontWeight: 'bolder'
               },
               boundaryGap: false,
               axisLabel:{
@@ -250,7 +250,7 @@ export default {
               type: 'value',
               name: '实际销售额（元）',
               nameTextStyle: {
-                fontWeight: 'bold'
+                fontWeight: 'bolder'
               },
               max: this.maxEchartVal,
               min: 0,
