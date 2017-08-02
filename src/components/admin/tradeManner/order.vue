@@ -46,7 +46,7 @@
           <template scope="scope">
             <span>{{scope.row.created}}</span>
           </template>
-        </el-table-column> 
+        </el-table-column>
         <el-table-column prop="state" label="订单状态" min-width="120" align="center" >
           <template scope="scope">
             <span v-if="scope.row.state == '1'">等待买家付款</span>
@@ -81,9 +81,9 @@
             <el-button  size="mini"  type="primary"  v-show='scope.row.state === "5"'  @click="handleDelivery(scope.$index, scope.row)">仓库发货</el-button>
           </template>
         </el-table-column>
-      </el-table> 
+      </el-table>
 
-      <div class="block">
+      <div class="block" v-show="orderList.length>0">
         <!-- 分页 -->
         <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
         </el-pagination>
@@ -94,16 +94,20 @@
         <ul v-if="thisOrderInvoice" class="invoiceDetails">
           <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
           <li v-if="thisOrderInvoice.invoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.invoiceState==0?"个人":"公司"}}</span></li>
+ <!--          <li v-if="thisOrderInvoice.invoiceState==0"><span>发票抬头：</span><span>{{thisOrderInvoice.invoiceHead}}</span></li> -->
+<!--           <li v-if="thisOrderInvoice.companyName"><span>单位名称：</span><span>{{thisOrderInvoice.companyName}}</span></li> -->
           <li v-if="thisOrderInvoice.companyName"><span>{{thisOrderInvoice.invoiceState==0?"发票抬头":"发票抬头"}}：</span><span>{{thisOrderInvoice.companyName}}</span></li>
           <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
-          <li v-if="thisOrderInvoice.registeredAddress"><span>纳税人识别号：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
+
+          <li v-if="thisOrderInvoice.registeredAddress"><span>注册地址：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
           <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>
-          <li v-if="thisOrderInvoice.opneBank"><span>开户行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
-          <li v-if="thisOrderInvoice.bankNumber"><span>卡号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
+          <li v-if="thisOrderInvoice.opneBank"><span>开户银行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
+          <li v-if="thisOrderInvoice.bankNumber"><span>银行帐号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
           <li v-if="thisOrderInvoice.stickNanme"><span>收票人姓名：</span><span>{{thisOrderInvoice.stickNanme}}</span></li>
-          <li v-if="thisOrderInvoice.stickPhone"><span>收票人电话：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
+          <li v-if="thisOrderInvoice.stickPhone"><span>收票人手机号：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
           <li v-if="thisOrderInvoice.stickaddress"><span>收票人地址：</span><span>{{thisOrderInvoice.stickaddress}}</span></li>
-          <li v-if="thisOrderInvoice.invoiceHead"><span>发票抬头：</span><span>{{thisOrderInvoice.invoiceHead}}</span></li>
+
+
         </ul>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="lookAtFaPiaoWrap = false">关 闭</el-button>
@@ -147,7 +151,7 @@
           <el-col :span="7"><div class="grid-content bg-purple"></div></el-col>
         </div>
         <div class="order_box clearfix">
-          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item"> 
+          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item">
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
             <el-col :span="5" align="center">{{item.itemInfo.itemName}}<br />{{item.itemPropertyNamea}}<span v-if="item.itemPropertyNameb">;</span>{{item.itemPropertyNameb}}<span v-if="item.itemPropertyNamec">;</span>{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
@@ -161,7 +165,7 @@
           </div>
         </div>
         <div class="pay_info clearfix">
-          
+
           <ul class="fl" style="width:130px;">
             <li v-if="nowOrderDetails.payType">支付方式</li>
             <li>发票</li>
@@ -475,8 +479,8 @@
         .then((res) => {
           console.log(res,"lookAtFaPiaoFun")
           if (res.data.callStatus === 'SUCCEED') {
-          that.lookAtFaPiaoWrap = true;
-           that.thisOrderInvoice = res.data.data
+            that.lookAtFaPiaoWrap = true;
+            that.thisOrderInvoice = res.data.data
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -507,7 +511,7 @@
             jiSuanArr.push(obj);
           }
           //显示退款金额最终数据
-          
+
           //显示退款退回钱币最终数据    当退款的金额 大于 实际支付的金额，
           // untread = money - refundAmt;
           //显示退款扣除钱币数据
@@ -846,7 +850,7 @@
           // this.orderInfo.orderitemList[index].count += 1;
         }
       },
-      goToBackMoney:function(){ 
+      goToBackMoney:function(){
         var that = this;
         var data = that.wacthTuiKuanList;
         var sendObj = {

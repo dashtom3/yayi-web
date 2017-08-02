@@ -125,7 +125,7 @@
         <el-button type="primary" @click="nextToFirst('ruleForm')">下一步</el-button>
       </el-form-item>
       <!-- 选择属性弹出框 开始 -->
-      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible" size="smalle">
+      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
         <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
@@ -137,6 +137,12 @@
             </template>
           </el-table-column>
         </el-table>
+          <div class="block">
+            <!-- 分页 -->
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
+            </el-pagination>
+            <!-- 分页 -->
+          </div>
         <div class="btn_box">
           <el-button type="primary" @click="confirm_type">确定</el-button>
           <el-button type="primary" @click="dialogTableVisible = false">取消</el-button>
@@ -217,6 +223,12 @@
         activeTable: [],
         newArr: [],
         editCargo: {},
+        //默认每页数据量
+        pagesize: 10,
+        //当前页码
+        currentPage: 1,
+        //默认数据总数
+        totalCount: 0,
       }
     },
     components: {
@@ -372,6 +384,12 @@
       }
     },
     methods: {
+      handleCurrentChange(val) {
+        var that = this
+        that.currentPage = val
+        that.getAllProperty()
+        // that.search(val)
+      },
       //获取获取商品编号
       getItemId: function() {
         var that = this;
@@ -411,12 +429,15 @@
       getAllProperty: function() {
         var that = this;
         var obj = {
-          numberPerPage: 50,
+          currentPage: that.currentPage,
+          numberPerPage: that.pagesize,
+          // numberPerPage: 500,
         }
         that.global.axiosGetReq('/item/queryProperty',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             console.log(res.data,'lihui')
             that.tableData2 = res.data.data
+            that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.tableData2.length; i++) {
               for(var k in that.tableData2[i].itempropertydList) {
                 that.tableData2[i].itempropertydList[k].checked = false;

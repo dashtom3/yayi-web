@@ -28,7 +28,7 @@
     <el-table-column prop="allMoney" align="center" label="销售额（元）"></el-table-column>
     <el-table-column prop="moneyRefund" align="center" label="已退款金额（元）"></el-table-column>
     <el-table-column prop="allActual" align="center" label="实际销售额（元）"></el-table-column>
-    <el-table-column prop="getMoney" align="center" label="收入"></el-table-column>
+    <el-table-column prop="getMoney" align="center" label="收入（元）"></el-table-column>
     <el-table-column prop="beYearMonth" align="center" label="收入所属年月"></el-table-column>
 <!--     <el-table-column prop="settlementTime" align="center" label="结算日期"></el-table-column> -->
     <el-table-column align="center" label="操作">
@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column prop="actualMoney" label="实际销售额（元）">
         </el-table-column>
-        <el-table-column prop="inCome" label="收入">
+        <el-table-column prop="inCome" label="收入（元）">
         </el-table-column>
       </el-table>
     </div>
@@ -124,6 +124,10 @@
         </tr>
       </table>
     </div> -->
+    <div class="block">
+    <el-pagination @current-change="handleCurrentChange1" :current-page.sync="currentPage1" :page-size="pagesize1" layout="prev, pager, next, jumper" :total="totalCount1" v-show="this.totalCount1 > this.pagesize1">
+      </el-pagination>
+    </div>
     </el-dialog>
     <div class="block">
       <!-- 分页 -->
@@ -171,14 +175,20 @@
         orderState: '',
         //默认每页数据量
         pagesize: 10,
+        pagesize1: 10,
         //当前页码
         currentPage: 1,
+        currentPage1: 1,
         //默认数据总数
         totalCount: 1000,
+        totalCount1: 1000,
         // 业绩统计
         inComeTableData: [],
         // 业绩明细
         inComeDetailTableData: [],
+        saleId: null,
+        beYearMonth: null,
+        getState: null,
       }
     },
     created: function() {
@@ -192,46 +202,80 @@
         that.currentPage = val
         that.search(val)
       },
+      //分页2
+      handleCurrentChange1(val) {
+        var that = this
+        that.currentPage1 = val
+        that.details()
+      },
+      handleClose: function() {
+        var that = this
+        that.showIncomeInfor = false
+        that.saleId = null
+        that.beYearMonth = null
+        that.getState = null
+        that.currentPage = 1
+      },
       // 查看详情
       details: function(scope) {
         var that = this
-        console.log(scope.row,'详情')
+        if (scope == undefined) {
+          if (that.saleId !== null) {
+            var obj = {
+              saleId: that.saleId,
+              beYearMonth: that.beYearMonth,
+              getState: that.getState,
+              // startDate: startDate,
+              // endDate: endDate,
+              currentPage: that.currentPage1,
+              numberPerPage: that.pagesize1,
+            }
+          } 
+        } else {
+          that.saleId = scope.row.saleId
+          that.beYearMonth = scope.row.beYearMonth
+          that.getState = scope.row.getState
           var obj = {
-          saleId: scope.row.saleId,
-          beYearMonth: scope.row.beYearMonth,
-          getState: scope.row.getState,
-          // startDate: startDate,
-          // endDate: endDate,
-          currentPage: that.currentPage,
-          numberPerPage: that.pagesize,
+            saleId: scope.row.saleId,
+            beYearMonth: scope.row.beYearMonth,
+            getState: scope.row.getState,
+            // startDate: startDate,
+            // endDate: endDate,
+            currentPage: that.currentPage1,
+            numberPerPage: that.pagesize1,
+          }
         }
         that.global.axiosGetReq('/saleIncomeList/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data,'详情接口')
+            console.log(res.data,'详情接口')
             that.someOneUserDetails.saleName = res.data.data.saleName
             that.someOneUserDetails.salePhone = res.data.data.salePhone
-            that.someOneUserDetails.date = scope.row.beYearMonth
-            that.someOneUserDetails.state = scope.row.getState
-            var objData = res.data.data.orderVoList
-            that.inComeTableData = []
-            // var obj1 = {
-            //   type: '耗材类',
-            //   salesMoney: res.data.data.haocaiMoney,
-            //   returnMoney: res.data.data.haocaiRefund,
-            //   actualMoney: res.data.data.haocaiActual,
-            //   inCome: parseInt(res.data.data.haocaiGetMoney),
-            // }
-            // var obj2 = {
-            //   type: '工具设备类',
-            //   salesMoney: res.data.data.gongjuMoney,
-            //   returnMoney: res.data.data.gongjuRefund,
-            //   actualMoney: res.data.data.gongjuActual,
-            //   inCome: parseInt(res.data.data.gongjuGetMoney),
-            // }
-            // that.inComeTableData.push(obj1,obj2)
+            if (that.saleId !== null) {
+              that.someOneUserDetails.date = that.beYearMonth
+              that.someOneUserDetails.state = that.getState
+            } else {
+              that.someOneUserDetails.date = scope.row.beYearMonth
+              that.someOneUserDetails.state = scope.row.getState
+            }
+            that.inComeTableData = [] //清空
+            var obj1 = {
+              type: '耗材类',
+              salesMoney: res.data.data.saleDataStatistics.haocaiMoney,
+              returnMoney: res.data.data.saleDataStatistics.haocaiRefund,
+              actualMoney: res.data.data.saleDataStatistics.haocaiActual,
+              inCome: parseInt(res.data.data.haocaiGetMoney),
+            }
+            var obj2 = {
+              type: '工具设备类',
+              salesMoney: res.data.data.saleDataStatistics.gongjuMoney,
+              returnMoney: res.data.data.saleDataStatistics.gongjuRefund,
+              actualMoney: res.data.data.saleDataStatistics.gongjuActual,
+              inCome: parseInt(res.data.data.gongjuGetMoney),
+            }
+            that.inComeTableData.push(obj1,obj2)
             // that.getMoneyList = res.data.data
             that.inComeDetailTableData = res.data.data.orderVoList
-            that.totalCount = res.data.totalNumber;
+            that.totalCount1 = res.data.totalNumber;
           } else {
             that.$message.error('网络出错，请稍后再试！')
           }

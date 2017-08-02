@@ -1223,7 +1223,7 @@
         var obj = {
           // totalFee: that.gwcTotal, //总价
           // actualPay: that.gwcTotal-that.qianbi_des, //实际付款
-          token:that.global.getToken(),
+          // token: that.global.getToken(),
           receiverId: parseInt(that.receiverId), //收货地址id
           postFee: that.freight,
           // invoiceHand: that.tax_des, //发票抬头
@@ -1233,20 +1233,19 @@
           giveQb: '',  //获得乾币
           orderItem: orderItem, //JSON数组
           invoiceStyle: that.invoice_style, // 发票类型
-          invoiceState: that.invoice_state, // 发票性质
+          InvoiceState: that.invoice_state, // 发票性质
           invoiceHand: that.invoiceHand, //发票抬头
           companyName: that.company_name,
           taxpayerNum: that.taxpayer_num,
           registeredAddress: that.registered_address,
           registeredPhone: that.registered_phone,
-          openBank: that.open_bank,
+          opneBank: that.open_bank,
           bankNumber: that.bank_number,
-          stickName: that.stick_name,
+          stickNanme: that.stick_name,
           stickPhone: that.stick_phone,
-          stickAddress: that.stick_address,
+          stickaddress: that.stick_address,
         }
         console.log(obj,'opopopp');
-        axios.defaults.headers['token'] = that.global.getToken()
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {
