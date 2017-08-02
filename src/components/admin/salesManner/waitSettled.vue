@@ -369,7 +369,7 @@
 </script>
 
 <style>
-  .incomeWrap   .asgagewgf h3{
+  .incomeWrap .asgagewgf h3{
     font-weight: 500;
     line-height: 50px;
     color: #20a0ff;
@@ -377,18 +377,17 @@
   .incomeWrap .el-select .el-input{
     width: 120px;
   }
-  .incomeWrap   .asgagewgf .personalInfor{
+  .incomeWrap  .asgagewgf .personalInfor{
     position: relative;
   }
-  .incomeWrap   .asgagewgf .personalInfor img{
+  .incomeWrap  .asgagewgf .personalInfor img{
     position: absolute;
     top: 0;
     right: 0;
     width: 150px;
     height: 150px;
   }
-  .incomeWrap   .asgagewgf  span{
-    width: 30%;
+  .incomeWrap .asgagewgf span{
     display: inline-block;
     line-height: 35px;
   }
@@ -403,10 +402,10 @@
   .incomeWrap .asgagewgf .ordertable .maniCont{
     text-align: center;
   }
-  .incomeWrap .asgagewgf .ordertable  .lastTr{
+  .incomeWrap .asgagewgf .ordertable .lastTr{
     color: red;
   }
-  .incomeWrap .asgagewgf .ordertable  .lastTr td:nth-child(2){
+  .incomeWrap .asgagewgf .ordertable .lastTr td:nth-child(2){
     text-align: right;
     padding-right: 10px;
   }
