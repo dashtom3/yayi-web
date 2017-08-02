@@ -49,9 +49,9 @@
       </el-table-column>
       <el-table-column prop="sales" label="销量" sortable align="center" >
       </el-table-column>
-      <el-table-column prop="salesMoney" label="销售额（元）" sortable width="160"  align="center" >
+      <el-table-column prop="salesMoney" label="销售额（元）" width="160"  align="center" >
       </el-table-column>
-      <el-table-column prop="refundNum" label="累计退款次数" align="center" >
+      <el-table-column prop="refundNum" label="累计退款次数" sortable align="center" @sort-change="sortRefundHandler">
       </el-table-column>
     </el-table>
     <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
@@ -102,6 +102,9 @@
       this.queryBrand()//查询所有品牌
     },
     methods: {
+      sortRefundHandler(){
+        alert(1)
+      },
       handleCurrentChange(val) {
         this.currentPage = val 
         this.queryHandler(val)

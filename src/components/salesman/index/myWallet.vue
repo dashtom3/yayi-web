@@ -50,7 +50,8 @@
         </el-table-column>
         <el-table-column prop="balanceOut" align="center" label="出账">
           <template scope="scope">
-            <span class="col_red">{{scope.row.balanceOut}}</span>
+            <span class="col_red" v-if="scope.row.balanceOut === 0"></span>
+            <span class="col_red" v-else>{{scope.row.balanceOut}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="balance" align="center" label="账户余额">
@@ -201,7 +202,7 @@
       };
       return {
         //默认查询日期
-        dateVal: [new Date(new Date().getTime() - 3600 * 1000 * 24 * 30), new Date()],
+        dateVal: [new Date(new Date().setMonth(new Date().getMonth() - 1)), new Date()],
         //当前是否有提钱申请
         withDrawState: false,
         queryState: '',

@@ -15,7 +15,7 @@
 		    <el-button type="primary" class="tab-btn01" v-show="!btn_show" @click="tabChartHandler">切换至图表模式</el-button>
 		    <el-button type="primary" class="tab-btn01" v-show="btn_show" @click="tabTableHandler">切换至表格模式</el-button>
 			</div>
-			<h1 class="title">2017年7月销售排行榜</h1>
+			<h1 class="title">{{year}}年{{month}}月销售排行榜</h1>
 			<div class="title_info">
 				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
 			</div>
@@ -56,21 +56,32 @@
 				tableData: [],
 				sale_total_num: 0,
 				ranking_info: {
-					rowNum: 0,
+					rowNum: 1,
 					orderCount: 0,
 					bindUserNum: 0,
 					saleMoney: 0
 				},
+				year: '',
+				month: '',
 				ranking_arr: [],
-				data_arr: []
+				data_arr: [],
+				color_arr: []
 			}
 		},
 		created(){
 			this.sale_date = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
+			this.year = this.sale_date.split('-')[0]
+	    this.month = this.sale_date.split('-')[1]
+	    this.init()
 			this.queryHandler()
-			this.init()
+		},
+		watch: {
+			tableData: function(){
+				this.drawBar()
+			}
 		},
 		methods: {
+			//查询排行榜文字数据
 			init(){
 				var that = this
 				var params = {
@@ -81,20 +92,24 @@
 	        if (res.data.callStatus === 'SUCCEED') { 
 	          this.sale_total_num = res.data.num
 	          this.ranking_info = res.data.data
-	        }else if(res.data.callStatus === 'FAILED'){
-	        	this.$message.error('非常抱歉，您未上榜');
-	        	this.sale_total_num = 0
-	        	this.ranking_info = {
-							rowNum: 0,
-							orderCount: 0,
-							bindUserNum: 0,
-							saleMoney: 0
-						}
+	          if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
+	        		this.$message.error('非常抱歉，您未上榜');
+	        		this.ranking_info.rowNum = 0
+	        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
+	        		this.sale_total_num = 0
+		        	this.ranking_info = {
+								rowNum: 0,
+								orderCount: 0,
+								bindUserNum: 0,
+								saleMoney: 0
+							}
+	        	}
 	        }else{
 	          this.$message.error('网络出错，请稍后再试！');
 	        }
       	})
 			},
+			//查询排行榜table数据
 			queryHandler(){
 				var that = this
 				var params = {
@@ -102,16 +117,33 @@
 				}
 				this.ranking_arr = []
 	      this.data_arr = []
+	      this.color_arr = []
 				that.global.axiosGetReq('/rankingList/list',params).then((res) => {
 	        if (res.data.callStatus === 'SUCCEED') { 
 	          this.tableData = res.data.data
+	          console.log(res.data.data,'qqqqqqqq')
 	          
-	          for(var i=0;i<res.data.data.length;i++){
-	          	this.ranking_arr.push(res.data.data[i].rowNum)
-	          	this.data_arr.push(res.data.data[i].saleMoney)
+	          //当前销售员的排行颜色为红色
+	          if(res.data.data !== null){
+	          	for(var i=0;i<res.data.data.length;i++){
+		          	this.ranking_arr.push(res.data.data[i].rowNum)
+		          	this.data_arr.push(res.data.data[i].saleMoney)
+		          	this.color_arr.push('#5db7e8')
+		          }
+	          	this.color_arr.splice(this.ranking_info.rowNum-1, 1, '#ff0000')
+		          this.color_arr = this.color_arr.reverse()
+		          this.ranking_arr = this.ranking_arr.reverse()
+		          this.data_arr = this.data_arr.reverse()
+	          }else{
+	          	if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
+		        		this.$message.error('非常抱歉，您未上榜');
+			        	this.ranking_info.rowNum = 0
+		        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
+		        		this.tableData = []
+		        		this.init()
+		        	}
 	          }
-	          this.ranking_arr = this.ranking_arr.reverse()
-	          this.data_arr = this.data_arr.reverse()
+	          
 	        }else{
 	          this.$message.error('网络出错，请稍后再试！');
 	        }
@@ -119,9 +151,10 @@
 			},
 			selHandler(val){
 	      this.sale_date = val
-	      this.queryHandler()
+	      this.year = this.sale_date.split('-')[0]
+	      this.month = this.sale_date.split('-')[1]
 	      this.init()
-	      this.drawBar()
+	      this.queryHandler()  
 	    },
 			//月份补0
 	    fillZero(n){
@@ -129,6 +162,7 @@
 	    },
 			drawBar(){
 	      var that = this;
+	      document.getElementById('saleChart').style.height = this.data_arr.length && this.data_arr.length * 100 + 'px' || '300px'
 	      // 基于准备好的dom，初始化echarts实例
 	      var myChart = echarts.getInstanceByDom(document.getElementById('saleChart'));
 	      if (myChart === undefined) {  
@@ -147,7 +181,7 @@
 			        }
 			    },
 			    legend: {
-			        data: ['2011年']
+			        data: [this.year+'年']
 			    },
 			    grid: {
 			        left: '3%',
@@ -165,8 +199,24 @@
 			    },
 			    series: [
 			        {
-			            name: '2011年',
+			            name: this.year+'年',
 			            type: 'bar',
+			            itemStyle: {
+                    normal: {
+                      color(params) {
+                        var colorList = that.color_arr;
+                        return colorList[params.dataIndex]
+                      },
+                      label: {
+                          show: true,
+                          position: 'right',
+                          formatter: '{c}',
+                          textStyle: {
+                          	color: '#000'
+                          }
+                      }
+                    }
+                  },
 			            barWidth: 30,
 			            barGap: '1%',
 			            data: this.data_arr
@@ -177,7 +227,7 @@
       
 			tabChartHandler(){
 				this.btn_show = true
-				this.drawBar()
+	      this.queryHandler() 
 			},
 			tabTableHandler(){
 				this.btn_show = false
