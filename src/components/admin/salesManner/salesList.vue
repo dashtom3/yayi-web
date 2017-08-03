@@ -417,7 +417,8 @@
           sign: parseFloat(this.walletform.type),
           money: parseFloat(this.walletform.num)
         }
-        if (!this.isAmt(this.walletform.num)) {
+        
+        if (!this.isAmt(this.walletform.num) || parseFloat(this.walletform.num) === 0) {
           this.$message.error("金额只能是有两位小数的正数");
           return false;
         }else if(this.walletform.type === "2" && this.walletform.num > this.walletform.balance){

@@ -5,7 +5,7 @@
     <div class="head">
       <span :class="{nowTabActive:1==currentTabs}" v-on:click="changeTabs(1)">个人信息</span>
       <span :class="{nowTabActive:2==currentTabs}" v-on:click="changeTabs(2)">资质认证</span>
-      <span :class="{nowTabActive:3==currentTabs}" v-on:click="changeTabs(3)">绑定销售员</span>
+      <span :class="{nowTabActive:3==currentTabs}" v-on:click="changeTabs(3)">绑定客户代表</span>
       <div style="clear:both"></div>
     </div>
     <div style="height:745px;" v-if="!personInfo.phone"></div>
