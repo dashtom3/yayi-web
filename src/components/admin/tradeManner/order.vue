@@ -701,9 +701,9 @@
             for(let i in this.nowOrderDetails.orderitemList){
               if(this.nowOrderDetails.orderitemList[i].refunNum>0){
                 num += 1;
-                var datqa = this.nowOrderDetails.orderitemList[i];
-                datqa.num = parseInt(datqa.num) - parseInt(datqa.refunNum);
-                arr.push(datqa);
+                // var datqa = this.nowOrderDetails.orderitemList[i];
+                // datqa.num = parseInt(datqa.num) - parseInt(datqa.refunNum);
+                // arr.push(datqa);
                 allMoney += this.nowOrderDetails.orderitemList[i].refunNum * this.nowOrderDetails.orderitemList[i].price;
               }
             }
@@ -716,12 +716,12 @@
             this.nowOrderDetails.untread = 0;
             if(this.nowOrderDetails.actualPay<=allMoney){
               this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
-              this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
+              this.nowOrderDetails.untread = Math.round(allMoney - this.nowOrderDetails.actualPay);
             }else{
               this.nowOrderDetails.refundAmt = this.nowOrderDetails.actualPay;
               // this.nowOrderDetails.untread = allMoney - this.nowOrderDetails.actualPay;
             }
-            this.nowOrderDetails.outCoins = this.nowOrderDetails.giveQb - returndata.outCoins;
+            this.nowOrderDetails.outCoins = Math.round(this.nowOrderDetails.giveQb - returndata.outCoins);
 
             this.receivingInfo = [];
             res.data.data.receiver.userPhone = oneOrder.phone;
