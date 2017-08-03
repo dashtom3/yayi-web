@@ -16,8 +16,11 @@
 		    <el-button type="primary" class="tab-btn01" v-show="btn_show" @click="tabTableHandler">切换至表格模式</el-button>
 			</div>
 			<h1 class="title">{{year}}年{{month}}月销售排行榜</h1>
-			<div class="title_info">
+			<div class="title_info" v-show="!isRanking">
 				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
+			</div>
+			<div class="title_info" v-show="isRanking">
+				共{{sale_total_num}}名销售员，非常抱歉，您当前未上榜。
 			</div>
 			<el-table :data="tableData" style="width: 100%" v-show="!btn_show">
 				<el-table-column type="index" label="排名" align="center" width="180">
@@ -55,6 +58,7 @@
 				btn_show: false,
 				tableData: [],
 				sale_total_num: 0,
+				isRanking: false,
 				ranking_info: {
 					rowNum: 1,
 					orderCount: 0,
@@ -69,11 +73,15 @@
 			}
 		},
 		created(){
+			var that = this
 			this.sale_date = new Date().getFullYear() + '-' + this.fillZero(new Date().getMonth() + 1)
 			this.year = this.sale_date.split('-')[0]
 	    this.month = this.sale_date.split('-')[1]
 	    this.init()
-			this.queryHandler()
+			// this.queryHandler()
+			setTimeout(function(){
+				that.queryHandler()
+			}, 500)
 		},
 		watch: {
 			tableData: function(){
@@ -91,10 +99,10 @@
 				that.global.axiosGetReq('/rankingList/compareData',params).then((res) => {
 	        if (res.data.callStatus === 'SUCCEED') { 
 	          this.sale_total_num = res.data.num
-	          this.ranking_info = res.data.data
+	          this.ranking_info = res.data.data || {}
 	          if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
-	        		this.$message.error('非常抱歉，您未上榜');
-	        		this.ranking_info.rowNum = 0
+	          	this.ranking_info.rowNum = 0
+	        		this.isRanking = true
 	        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
 	        		this.sale_total_num = 0
 		        	this.ranking_info = {
@@ -127,28 +135,34 @@
 		          	this.data_arr.push(res.data.data[i].saleMoney)
 		          	this.color_arr.push('#5db7e8')
 		          }
-	          	this.color_arr.splice(this.ranking_info.rowNum-1, 1, '#ff0000')
-		          this.color_arr = this.color_arr.reverse()
+		          //存在排名的情况下
+		          if(this.ranking_info.rowNum){
+		          	this.color_arr.splice(this.ranking_info.rowNum-1, 1, '#ff0000')
+		            this.color_arr = this.color_arr.reverse()
+		          }
+		          
 		          this.ranking_arr = this.ranking_arr.reverse()
 		          this.data_arr = this.data_arr.reverse()
 	          }else{
 	          	if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
-		        		this.$message.error('非常抱歉，您未上榜');
+		        		this.isRanking = true
 			        	this.ranking_info.rowNum = 0
 		        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
 		        		this.tableData = []
-		        		this.init()
 		        	}
 	          }  
 	        }
       	})
 			},
 			selHandler(val){
+				var that = this
 	      this.sale_date = val
 	      this.year = this.sale_date.split('-')[0]
 	      this.month = this.sale_date.split('-')[1]
 	      this.init()
-	      this.queryHandler()  
+	      setTimeout(function(){
+	      	that.queryHandler() 
+	      }, 500)      
 	    },
 			//月份补0
 	    fillZero(n){
@@ -156,7 +170,7 @@
 	    },
 			drawBar(){
 	      var that = this;
-	      document.getElementById('saleChart').style.height = this.data_arr.length && this.data_arr.length * 100 + 'px' || '300px'
+	      document.getElementById('saleChart').style.height = this.data_arr.length && this.data_arr.length * 100 + 'px' || '400px'
 	      // 基于准备好的dom，初始化echarts实例
 	      var myChart = echarts.getInstanceByDom(document.getElementById('saleChart'));
 	      if (myChart === undefined) {  
@@ -221,6 +235,7 @@
       
 			tabChartHandler(){
 				this.btn_show = true
+				this.init()
 	      this.queryHandler() 
 			},
 			tabTableHandler(){

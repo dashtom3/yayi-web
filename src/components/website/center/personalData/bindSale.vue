@@ -118,17 +118,14 @@
       },
       validateHandler(){
         let params = {
-          saleId: '',
-          phone: this.willBindSale,
-          trueName: '',
-          isBindUser: '',
-          currentPage: 1,
-          numberPerPage: 10
+          salePhone: this.willBindSale,
+          state: 2,
+          token: global.getToken()
         }
-        global.axiosGetReq('/saleList/query',params).then((res) => {
+        global.axiosGetReq('/userPersonalInfo/queryBind',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
-            if(res.data.data.length){
-              this.findSaleName = res.data.data[0].trueName
+            if(res.data.data){
+              this.findSaleName = res.data.data.true_name || '未知'
               this.showSearchInfo = true
               this.noSearchSale = false
             }else{

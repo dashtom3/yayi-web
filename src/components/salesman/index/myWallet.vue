@@ -503,7 +503,11 @@
     }
   }
 </script>
-
+<style>
+  #WithDrawForm .el-form-item__error{
+    margin-left: 92px;
+  }
+</style>
 <style scoped>
   .el-button--primary {
     color: #fff;
@@ -664,11 +668,10 @@
     line-height: 40px;
     text-align: center;
     font-size: 16px;
-    background: url(../../../images/salesman/titlebg.png) 400px 34px no-repeat;
+    background: url(../../../images/salesman/titlebg.png) no-repeat;
+    background-position: center bottom;
   }
-  #WithDrawForm .el-form-item__error{
-    margin-left: 92px;
-  }
+  
   .datail_tb{
     width: 100%;
     border-collapse: collapse;/* 边框合并属性  */

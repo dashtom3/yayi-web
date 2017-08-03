@@ -135,9 +135,9 @@
         </el-tab-pane>
         <el-tab-pane label="钱包明细" name="second" style="min-height:500px;">
           <el-table :data="tableData" border style="width: 100%;margin: 34px auto;">
-            <el-table-column prop="balanceIn" align="center" label="进账（元）" width="180">
+            <el-table-column prop="balanceIn" align="center" label="进账（元）" width="130">
             </el-table-column>
-            <el-table-column prop="balanceOut" align="center" label="出账（元）" width="180">
+            <el-table-column prop="balanceOut" align="center" label="出账（元）" width="130">
               <template scope="scope">
                 <span v-if="scope.row.balanceOut === 0"></span>
                 <span v-else>{{scope.row.balanceOut}}</span>
@@ -466,7 +466,7 @@
         }
         that.global.axiosGetReq('/PW/adminShows',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.walletform.balance = res.data.data && Number(res.data.data.toFixed(2))
+            that.walletform.balance = res.data.data && Number(res.data.data.toFixed(2)) || 0
             that.walletform.remainder = that.walletform.balance
           } else {
             that.$message.error('网络出错，请稍后再试！');
