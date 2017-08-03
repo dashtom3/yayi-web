@@ -227,7 +227,6 @@
         }
         that.global.axiosGetReq('/saleIncomeList/detail',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data,'详情接口')
             that.someOneUserDetails.saleName = res.data.data.saleName
             that.someOneUserDetails.salePhone = res.data.data.salePhone
             if (that.saleId !== null) {
@@ -243,14 +242,14 @@
               salesMoney: res.data.data.saleDataStatistics.haocaiMoney,
               returnMoney: res.data.data.saleDataStatistics.haocaiRefund,
               actualMoney: res.data.data.saleDataStatistics.haocaiActual,
-              inCome: parseInt(res.data.data.haocaiGetMoney),
+              inCome: res.data.data.haocaiGetMoney,
             }
             var obj2 = {
               type: '工具设备类',
               salesMoney: res.data.data.saleDataStatistics.gongjuMoney,
               returnMoney: res.data.data.saleDataStatistics.gongjuRefund,
               actualMoney: res.data.data.saleDataStatistics.gongjuActual,
-              inCome: parseInt(res.data.data.gongjuGetMoney),
+              inCome: res.data.data.gongjuGetMoney,
             }
             that.inComeTableData.push(obj1,obj2)
             // that.getMoneyList = res.data.data
@@ -290,7 +289,6 @@
         }
         that.global.axiosPostReq('/saleIncomeList/queryDone',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data,'pppap')
             that.getMoneyList = res.data.data
             that.totalCount = res.data.totalNumber;
           } else {
@@ -334,12 +332,10 @@
           currentPage: that.currentPage,
           numberPerPage: that.pagesize,
         }
-        console.log(obj,'llllll')
         that.global.axiosPostReq('/saleIncomeList/queryDone',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.getMoneyList = res.data.data
             that.totalCount = res.data.totalNumber;
-            console.log(res.data,'222');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }

@@ -175,12 +175,13 @@ export default {
             });
           }
           if (res.data.callStatus === 'SUCCEED') {
+            // this.$message.error('错了哦，这是一条错误消息');
             resolve(res);
           } else {
             resolve(res);
           }
         }).catch(() => {
-          alert('网络请求错误');
+          // this.$message.error('错了哦，这是一条错误消息');
           reject('网络请求错误');
         });
     });
