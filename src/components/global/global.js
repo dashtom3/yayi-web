@@ -5,30 +5,7 @@ export default {
   // baseUrl: 'http://192.168.1.103:8081/api',
   qiNiuUrl: 'http://upload-z2.qiniu.com/',
   qiniuShUrl: 'http://orl5769dk.bkt.clouddn.com/',
-  // success (obj, msg, url) {
-  //   obj.$message({
-  //     message: msg,
-  //     type: 'success',
-  //     duration: '1000',
-  //     onClose: function () {
-  //       if (url) {
-  //         obj.$router.push(url)
-  //       }
-  //     }
-  //   })
-  // },
-  // error (obj, msg, url) {
-  //   obj.$message({
-  //     message: msg,
-  //     duration: '1000',
-  //     type: 'error',
-  //     onClose: function () {
-  //       if (url) {
-  //         obj.$router.push(url)
-  //       }
-  //     }
-  //   })
-  // },
+
   extendCopy(p) {
 　　　　var c = {};
 　　　　for (var i in p) {
@@ -203,6 +180,7 @@ export default {
             resolve(res);
           }
         }).catch(() => {
+          alert('网络请求错误');
           reject('网络请求错误');
         });
     });

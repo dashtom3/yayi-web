@@ -240,7 +240,7 @@
             that.brands = res.data.data.itemBrandList;
             that.intClassftAndBrand();
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -293,7 +293,7 @@
             that.totalCount=res.data.totalNumber;
             console.log(res,"allGood")
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

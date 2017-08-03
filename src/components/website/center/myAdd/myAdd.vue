@@ -231,7 +231,7 @@
             }
             //this.getData = res.data.data;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -377,7 +377,7 @@
               that.getMyAdd();
               that.$message(res.data.msg);
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {
@@ -408,7 +408,7 @@
             that.$message('设置默认地址成功！');
             that.getMyAdd();
           } else {
-            that.$message.error('保存地址失败！');
+            // that.$message.error('保存地址失败！');
           }
         })
       }

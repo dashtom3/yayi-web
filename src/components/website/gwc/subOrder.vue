@@ -573,16 +573,6 @@
           // console.log(that.fromGwc.details,'uiuiuiu')
           // console.log(that.global.goodToMoney(that.fromGwc.details),'papapap')
         }
-        var obj = {
-          phone:that.global.getUser().phone,
-          token:that.global.getToken()
-        };
-        that.global.axiosGetReq('/cart/list', obj).then((res) => {
-          if(res.data.errorCode === 'RE_LOGIN'){
-            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
-            return false;
-          }
-        })
       })
     },
     watch: {
@@ -725,7 +715,7 @@
             that.allQb = 0
           }
         } else {
-          that.$message.error('网络出错，请稍后再试！');
+          // that.$message.error('网络出错，请稍后再试！');
         }
       })
     },
@@ -909,7 +899,7 @@
                 that.isLoading = false;
               }
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
               that.isLoading = false;
             }
           })
@@ -1008,7 +998,7 @@
                   }
                   console.log(that.freight,'运费')
                 } else {
-                  that.$message.error('网络出错，请稍后再试！');
+                  // that.$message.error('网络出错，请稍后再试！');
                 }
               })
             }
@@ -1026,7 +1016,7 @@
             }
             //this.getData = res.data.data;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -1178,7 +1168,7 @@
             that.freight = res.data.data.postFee
             console.log(that.freight,'选择地址时运费')
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

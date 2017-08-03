@@ -84,12 +84,6 @@
     //     })
     //   })
     // },
-    created: function() {
-      var that = this
-      if (that.$route.params.data == 'RE_LOGIN') {
-        that.$message.error('登陆过期，请重新登录！')
-      }
-    },
     methods: {
       getMsg:function(data){
         //console.log(data)

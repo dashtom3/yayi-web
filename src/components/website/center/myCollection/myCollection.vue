@@ -63,7 +63,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.allGoods = res.data.data;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -80,7 +80,7 @@
             that.$alert('删除收藏成功！', {confirmButtonText: '确定',});
             that.allGoods.splice(index,1);
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -98,7 +98,7 @@
               this.$alert('删除全部收藏成功！', {confirmButtonText: '确定',});
               that.allGoods = [];
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {

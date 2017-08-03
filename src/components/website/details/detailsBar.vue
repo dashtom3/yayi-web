@@ -35,7 +35,7 @@
             that.allClassfy = res.data.data;
             console.log(that.allClassfy,'allClassfy')
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -110,7 +110,7 @@
             this.fenlei = arr;
             this.Classify = res.data.data;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

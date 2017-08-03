@@ -65,16 +65,6 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
-        var obj = {
-          phone:that.global.getUser().phone,
-          token:that.global.getToken()
-        };
-        that.global.axiosGetReq('/cart/list', obj).then((res) => {
-          if(res.data.errorCode === 'RE_LOGIN'){
-            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
-            return false;
-          }
-        })
         if (JSON.parse(window.sessionStorage.getItem('order')) == null) {
           that.$router.push({path:'/'})
         }else {

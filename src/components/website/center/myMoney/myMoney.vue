@@ -92,7 +92,7 @@ import util from '../../../../common/util'
             that.totalCount=res.data.totalNumber;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -115,7 +115,7 @@ import util from '../../../../common/util'
             that.totalCount=res.data.totalNumber;
             // this.childConfig.pageNum = parseInt(this.getData.length/this.everyPageShowNum)+1;
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

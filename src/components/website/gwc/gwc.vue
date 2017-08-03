@@ -145,23 +145,6 @@
       classify,
       publicFooter
     },
-    //*******导航钩子*********//
-    beforeRouteEnter (to, from, next) {
-      // 通过 `vm` 访问组件实例
-      next(vm => {
-        var that = vm;
-        var obj = {
-          phone:that.global.getUser().phone,
-          token:that.global.getToken()
-        };
-        that.global.axiosGetReq('/cart/list', obj).then((res) => {
-          if(res.data.errorCode === 'RE_LOGIN'){
-            that.$router.push({name:'index', params: { data: 'RE_LOGIN'}})
-            return false;
-          }
-        })
-      })
-    },
     watch:{
       selectaLL:function(){
         // if(this.selectaLL){
@@ -225,7 +208,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.getGwcList();
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -257,7 +240,7 @@
               console.log(that.jiwsuanbtnFixed)
             };
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -304,7 +287,7 @@
                 that.gwcGoods=[];
                 that.$message({  type: 'success',  message: '删除成功!'});
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             })
           }).catch(() => {
@@ -336,7 +319,7 @@
               if (res.data.callStatus === 'SUCCEED') {
                 this.gwcGoods=[];
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             })
           }).catch(() => {
@@ -393,7 +376,7 @@
             // this.gwcGoods.splice(index,1);
             // this.$message({type: 'success',  message: '商品收藏成功!' });
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -432,7 +415,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           })
         })
@@ -453,7 +436,7 @@
             if (res.data.callStatus === 'SUCCEED') {
               that.gwcGoods.splice(index,1);
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           })
         })

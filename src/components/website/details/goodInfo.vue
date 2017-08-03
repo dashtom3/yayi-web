@@ -202,7 +202,7 @@ import util from '../../../common/util'
             }
             that.nowGoodSKUDefault();
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -314,7 +314,7 @@ import util from '../../../common/util'
               this.$alert("取消收藏成功！", {confirmButtonText: '确定'});
               this.ifshoucang = 0;
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           });
       },
@@ -334,7 +334,7 @@ import util from '../../../common/util'
                 that.$alert("收藏成功！", {confirmButtonText: '确定'});
                 that.ifshoucang = 1;
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             });
           }else{
@@ -377,7 +377,7 @@ import util from '../../../common/util'
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             });
           }else{
