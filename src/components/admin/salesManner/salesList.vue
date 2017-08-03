@@ -133,8 +133,8 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="钱包明细" name="second">
-          <el-table :data="tableData" border style="width: 100%;margin: 34px auto;height:500px;">
+        <el-tab-pane label="钱包明细" name="second" style="min-height:500px;">
+          <el-table :data="tableData" border style="width: 100%;margin: 34px auto;">
             <el-table-column prop="balanceIn" align="center" label="进账（元）" width="180">
             </el-table-column>
             <el-table-column prop="balanceOut" align="center" label="出账（元）" width="180">

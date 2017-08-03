@@ -110,8 +110,6 @@ export default {
           this.orderInfo.saleAllMoney = res.data.data.saleAllMoney.toFixed(2) || '0.00'
           this.orderInfo.orderNum = res.data.data.orderNum || 0
           this.allCommission = res.data.data.allCommission.toFixed(2) || '0.00'
-        }else{
-          this.$message.error('网络出错，请稍后再试！');
         }
       })
     },
@@ -135,8 +133,6 @@ export default {
         if (res.data.callStatus === 'SUCCEED') { 
           this.orderInfo.myOrderVoList = res.data.data
           this.totalCount = res.data.totalNumber
-        }else{
-          this.$message.error('网络出错，请稍后再试！');
         }
       })
     },
@@ -188,10 +184,7 @@ export default {
             this.maxEchartVal = (Math.ceil(this.maxEchartVal/1000)*1000)<8000?8000:(Math.ceil(this.maxEchartVal/1000)*1000)
           }else{
             this.maxEchartVal = 8000
-          }
-          
-        }else{
-          this.$message.error('网络出错，请稍后再试！');
+          }  
         }
       })
     },

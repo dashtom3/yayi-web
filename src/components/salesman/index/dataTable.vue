@@ -303,11 +303,8 @@ export default {
           that.sumActualMoney = this.orderDetailList[0].actualMoneyHaocai + this.orderDetailList[1].actualMoneyGongju
           
           this.detailVisible = true
-        }else{
-          this.$message.error('网络出错，请稍后再试！');
         }
-      })
-      
+      })   
     }
 	}
 }

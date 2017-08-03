@@ -104,8 +104,6 @@
 								saleMoney: 0
 							}
 	        	}
-	        }else{
-	          this.$message.error('网络出错，请稍后再试！');
 	        }
       	})
 			},
@@ -121,7 +119,6 @@
 				that.global.axiosGetReq('/rankingList/list',params).then((res) => {
 	        if (res.data.callStatus === 'SUCCEED') { 
 	          this.tableData = res.data.data
-	          console.log(res.data.data,'qqqqqqqq')
 	          
 	          //当前销售员的排行颜色为红色
 	          if(res.data.data !== null){
@@ -142,10 +139,7 @@
 		        		this.tableData = []
 		        		this.init()
 		        	}
-	          }
-	          
-	        }else{
-	          this.$message.error('网络出错，请稍后再试！');
+	          }  
 	        }
       	})
 			},

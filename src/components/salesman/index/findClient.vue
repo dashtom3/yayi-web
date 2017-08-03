@@ -91,11 +91,8 @@
         var that =this;
         that.global.axiosPostReq('/findCus/unregistered')
         .then((res) => {
-          console.log(res,"getNoRegistUserList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableDataNoRegist = res.data.data;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -103,11 +100,8 @@
         var that =this;
         that.global.axiosPostReq('/findCus/registered')
         .then((res) => {
-          console.log(res,"getWaitBindUserList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -141,15 +135,12 @@
         }
         that.global.axiosPostReq(searchUrl, obj)
         .then((res) => {
-          console.log(res,"searchUserBySearchConet")
           if (res.data.callStatus === 'SUCCEED') {
             if(that.nowBtn){
               that.tableData = res.data.data;
             }else{
               that.tableDataNoRegist = res.data.data;
             }
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },

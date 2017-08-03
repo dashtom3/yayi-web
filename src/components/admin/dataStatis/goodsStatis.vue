@@ -36,7 +36,7 @@
     </el-col>
 
     <!--商品列表-->
-    <el-table :data="goodsList" border :default-sort = "{prop: 'salesNo'}">
+    <el-table :data="goodsList" border @sort-change="sortRefundHandler">
       <el-table-column prop="itemId" label="商品编号" width="140" align="center" >
       </el-table-column>
       <el-table-column prop="itemName" label="商品名称" width="160" align="center" >
@@ -47,11 +47,11 @@
       </el-table-column>
       <el-table-column prop="price" label="价格（元）" align="center" >
       </el-table-column>
-      <el-table-column prop="sales" label="销量" sortable align="center" >
+      <el-table-column prop="sales" label="销量" sortable="sales" align="center" >
       </el-table-column>
       <el-table-column prop="salesMoney" label="销售额（元）" width="160"  align="center" >
       </el-table-column>
-      <el-table-column prop="refundNum" label="累计退款次数" sortable align="center" @sort-change="sortRefundHandler">
+      <el-table-column prop="refundNum" label="累计退款次数" sortable="refundNum" align="center">
       </el-table-column>
     </el-table>
     <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
@@ -89,6 +89,7 @@
         }],
         sel_value: '1',
         brandName: '',
+        state: '1',
         brands: [{
           value1: '',
           label1: '全部'
@@ -102,8 +103,14 @@
       this.queryBrand()//查询所有品牌
     },
     methods: {
-      sortRefundHandler(){
-        alert(1)
+      sortRefundHandler({ prop }){
+        if(prop === "sales"){
+          this.state = "1"
+          this.queryHandler()
+        }else if(prop === "refundNum"){
+          this.state = "2"
+          this.queryHandler()
+        }
       },
       handleCurrentChange(val) {
         this.currentPage = val 
@@ -138,6 +145,7 @@
         }
         if(this.sel_value == '1'){
           params = {
+            state: this.state,
             itemName: this.sel_input,
             itemId: '',
             itemSKU: '',
@@ -148,6 +156,7 @@
           }
         }else if(this.sel_value == '2'){
           params = {
+            state: this.state,
             itemName: '',
             itemId: this.sel_input,
             itemSKU: '',
@@ -158,6 +167,7 @@
           }
         }else if(this.sel_value == '3'){
           params = {
+            state: this.state,
             itemName: '',
             itemId: '',
             itemSKU: this.sel_input,
@@ -181,6 +191,14 @@
     }
   }
 </script>
+<style>
+  .el-table .sort-caret.ascending{
+    display: none;
+  }
+  .el-table .sort-caret.descending{
+    bottom: 12px;
+  }
+</style>
 
 <style scoped>
   .fl{
@@ -200,4 +218,5 @@
   .t_select_width{
     width:110px;
   }
+  
 </style>

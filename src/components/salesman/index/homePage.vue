@@ -134,8 +134,6 @@
             this.orderInfo.orderNum = res.data.data.orderNum || 0
             this.allCommission = res.data.data.allCommission.toFixed(2) || '0.00'
             
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -161,8 +159,6 @@
             
             this.orderInfo.myOrderVoList = res.data.data
             this.totalCount = res.data.totalNumber
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -191,8 +187,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("申请中") !== -1 ? true : false
             that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -233,8 +227,6 @@
             }else{
               this.maxEchartVal = 8000
             }
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },

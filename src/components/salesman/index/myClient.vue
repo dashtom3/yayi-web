@@ -58,11 +58,8 @@
         };
         that.global.axiosGetReq("/saleMyClient/myClient",obj)
         .then((res) => {
-          console.log(res,"getMyClientList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -79,11 +76,8 @@
           };
           that.global.axiosGetReq("/saleMyClient/myClient",obj)
           .then((res) => {
-            console.log(res,"searchUserBySearchConet")
             if (res.data.callStatus === 'SUCCEED') {
               that.tableData = res.data.data;
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
             }
           })
         // }else{

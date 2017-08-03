@@ -310,8 +310,6 @@
                   }
                 }, i * 1000)
               }
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
             }
           })
         }
@@ -336,8 +334,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.withDrawState = res.data.data && res.data.data.split(",")[0].indexOf("申请中") !== -1 ? true : false
             that.withTotalAmt = res.data.data && parseFloat(res.data.data.split(",")[1]).toFixed(2) || '0.00'
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -405,8 +401,6 @@
             this.withdrawalsTX = res.data.data[0] && res.data.data[0].czze.toFixed(2) || '0.00'
             this.tableData = res.data.data
             this.totalCount = res.data.totalNumber
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -458,8 +452,6 @@
             }else{
                this.incomeVisible = true
             }
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         }) 
       },
@@ -501,8 +493,6 @@
                 },3000)
               }else if(res.data.callStatus === 'FAILED'){
                 this.$message.error('请输入正确的验证码！')
-              }else{
-                this.$message.error('网络出错，请稍后再试！');
               }
             })
           } else {
