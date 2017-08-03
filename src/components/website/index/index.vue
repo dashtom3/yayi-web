@@ -35,6 +35,32 @@
       backToTop,
       // loading,
     },
+    //*******导航钩子*********//
+    beforeRouteEnter (to, from, next) {
+      // 通过 `vm` 访问组件实例
+      next(vm => {
+        var that = vm;
+        //   https://open.weixin.qq.com/connect/qrconnect?appid=wxd342cb43ba1b1e6f&redirect_uri=http%3a%2f%2fwww.yayiabc.com&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect
+        // var myurl = window.location.href;
+        // let code = myurl.substring(34,66)
+        // if (code !== '') {
+        //   console.log(myurl.substring(34,66),'90909')
+        //   var obj = {
+        //     code: code,
+        //   }
+        //   console.log(obj,'oooooo')
+        //   that.global.axiosPostReq('/wxLogin/bandUser',obj).then((res) => {
+        //     if (res.data.callStatus === 'SUCCEED') {
+        //       console.log(res.data,'succeed')
+        //     } else if (res.data.callStatus === 'FAILED') {
+        //       console.log(res.data,'failed')
+        //     }
+        //   })
+        // } else {
+        //   console.log('wu')
+        // }
+      })
+    },
     created: function() {
       var that = this;
       if (that.$route.params.data == 'RE_LOGIN') {
