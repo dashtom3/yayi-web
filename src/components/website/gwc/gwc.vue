@@ -61,6 +61,14 @@
           <div style="clear:both"> </div>
         </div>
         <div v-else >
+          <span class="thisGoodIsNoUser">
+            <img src="../../../images/gwc/nouser.png" alt="">
+            <!-- <span style="width: 0;
+              height: 0;
+              border-top: 50px solid #999999;
+              border-right: 50px solid transparent;position:absolute;top:0;left:0;z-index:0"></span>
+              <span style="z-index:100">失效</span> -->
+            </span>
           <div class="" @click="goToThisDetail(good)">
             <span class="nowUserGood">失效</span>
             <div style="margin-left:0;" class="imgWrap" ><img :src="good.pic+'?imageView2/1/w/80/h/80'" alt=""></div>
@@ -80,14 +88,14 @@
           <div class="jisuanqi">
             <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
               <span :class="{colorBlue:good.num>1}" >-</span>
-              <input type="text" disabled="true" v-model="good.num">
+              <input style="background:#cccccc" type="text" disabled="true" v-model="good.num">
               <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" >+</span>
             </div>
             <div class=""  v-show="good.num>=good.goodLeaveNum">（库存为0）</div>
           </div>
           <div class="thisPrice"> ￥{{good.price*good.num}} </div>
           <div class="operas" style="width:154px;text-align:right">
-            <span class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
+            <span style="margin-top:28px;" class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
           </div>
           <div style="clear:both"> </div>
         </div>
@@ -496,11 +504,11 @@ right: -150px;
   color:#333333;
 }
 .gwcWrap .thisGoodIsNokuCun{
-  background: lightgray;  
+  background: #cccccc;
 }
-.gwcWrap .thisGoodIsNokuCun *{
+/*.gwcWrap .thisGoodIsNokuCun *{
   color: gray !important;
-}
+}*/
 .gwcWrap .allGoods{
   text-align: center;
   font-size: 16px;
@@ -534,19 +542,34 @@ margin-right: 140px;
     border-bottom: 1px solid #eeeeee;
     height: 78px;
     padding-right: 0;
+
+    position: relative;
   }
   .gwcWrap .oneGood  .selecta{
 position: relative;
 top: 5px;
   }
+.gwcWrap .oneGood  .thisGoodIsNoUser{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  color: white;
+  line-height: 50px;
+}
  .gwcWrap .oneGood .nowUserGood{
-   border-radius: 5px;
+   /*border-radius: 5px;*/
    display: inline-block;
-   background: #F2F2F2;
+   /*background: #F2F2F2;*/
    text-align: center;
    float:left;
    margin-top:33px;
    padding: 3px ;
+   width: 34px;
+   color: #cccccc;
  }
   .gwcWrap .oneGood div{
     display: inline-block;

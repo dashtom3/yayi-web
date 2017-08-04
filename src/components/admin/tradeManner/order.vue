@@ -171,6 +171,7 @@
             <li>发票</li>
             <li>产品注册证</li>
             <li>订单留言</li>
+            <li>赠送钱币</li>
           </ul>
           <ul class="fl">
             <li v-if="nowOrderDetails.payType">
@@ -188,6 +189,11 @@
             <li>
               <div v-if="!nowOrderDetails.buyerMessage"> 留言为空 </div>
               <div v-else>{{nowOrderDetails.buyerMessage}}</div>
+            </li>
+            <li>
+              <div>
+                {{nowOrderDetails.giveQb}}
+              </div>
             </li>
           </ul>
         </div>
@@ -501,10 +507,10 @@
               goodSort:list[i].itemType,
               price:list[i].price
             };
-            if(list[i].checked){
-              refundAmt += list.refunNum * list.price;
+            if(parseInt(list[i].refunNum)>0){
+              refundAmt += parseInt(list.refunNum) * list.price;
               // money += list.refunNum * list.price;
-              obj.num = parseInt(list[i].num) - parseInt(list.refunNum);
+              obj.num = parseInt(list[i].num) - parseInt(list[i].refunNum);
             }else{
               obj.num = list[i].num;
             }
@@ -516,7 +522,6 @@
           // untread = money - refundAmt;
           //显示退款扣除钱币数据
           outCoins =  this.global.goodToMoney(jiSuanArr); //计算剩余数量的东西赠送的铅笔
-          console.log(outCoins)
           var returnObj = {
             refundAmt:refundAmt,
             untread:untread,
@@ -711,6 +716,7 @@
             this.nowOrderDetails.tuikuanzhonglei = num;
             // 计算
             var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList);
+            console.log(returndata)
             this.nowOrderDetails.outCoins = 0;
             this.nowOrderDetails.refundAmt = 0;
             this.nowOrderDetails.untread = 0;
