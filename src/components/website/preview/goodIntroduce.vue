@@ -41,7 +41,6 @@
   max-width: 100% !important;
   display: block;
   margin: 20px auto;
-
 }
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

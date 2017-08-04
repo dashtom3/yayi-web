@@ -499,7 +499,7 @@
       menu: function() {
         var that = this;
         var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if(scroll >= 60) {
+        if(scroll > 60) {
           that.isActive = true;
         } else {
           that.isActive = false;
@@ -1154,10 +1154,10 @@
   .speH {
     width: 100%;
     position: fixed;
-    right: 0;
-    left: 0;
-    margin: auto;
-    z-index: 99;
+    top: 0;
+/*    right: 0;
+    left: 0;*/
+/*    margin: auto;*/
     background-color: #fff;
   }
   .spe {

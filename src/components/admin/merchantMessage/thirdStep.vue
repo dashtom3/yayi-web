@@ -365,7 +365,7 @@
                   that.saveLoading = false
                   that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
                 } else {
-                  that.$message.error('网络出错，请稍后再试！');
+                  // that.$message.error('网络出错，请稍后再试！');
                   that.saveLoading = false
                 }
               })
@@ -423,7 +423,7 @@
                   that.saveLoading = false
                   that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
                 } else {
-                  that.$message.error('网络出错，请稍后再试！');
+                  // that.$message.error('网络出错，请稍后再试！');
                   that.saveLoading = false
                 }
               })

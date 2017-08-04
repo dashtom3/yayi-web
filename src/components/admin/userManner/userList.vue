@@ -140,7 +140,7 @@
         </div>
         <div class="">
           <span>口腔执业医师资格证：</span>
-          <img style="width:100px;height:100px;display:block" :src="someOneUserDetails.doctorPic" alt="">
+          <img style="width:100px;height:100px;display:block" :src="someOneUserDetails.doctorPic" alt="" v-if="someOneUserDetails.doctorPic">
         </div>
       </div>
       <h3>绑定的销售</h3>
@@ -235,10 +235,16 @@
         var str = "";
         if(data==1){
           str = "个人";
-        }else{
-          str = "机构";
+          return str;
         }
-        return str;
+        if (data==2){
+          str = "机构";
+          return str;
+        }
+        if (data !==1 && data !==2) {
+          str = "";
+          return str;
+        }
       }
     },
     methods: {
