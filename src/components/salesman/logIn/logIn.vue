@@ -18,8 +18,8 @@
               <div class="logIn_box">
                 <p class="ms_register" @click="ms_register" @mouseover="arrow_in" @mouseout="arrow_out"><img v-if="arrowChange" src="../../../images/index/arrow_grey.png" alt="img" style="margin-right: 10px;"><img v-else src="../../../images/index/arrow_blue.png" alt="img" style="margin-right: 10px;">注册</p>
                 <div class="logIn_header">
-                  <div class="messageLog" :class="{ speBottom: isLog1}" @click="messageLog">短信登录</div>
                   <div class="pwdLog" :class="{ speBottom: isLog2}" @click="pwdLog">密码登录</div>
+                  <div class="messageLog" :class="{ speBottom: isLog1}" @click="messageLog">短信登录</div>
                 </div>
                 <div v-show="changeLog1" class="des_box">
                   <div>
@@ -201,10 +201,10 @@
         rg_pwd: '',
         rg_confirmPwd: '',
         isNum: false,
-        changeLog1: true,
-        changeLog2: false,
-        isLog1: true,
-        isLog2: false,
+        changeLog1: false,
+        changeLog2: true,
+        isLog1: false,
+        isLog2: true,
         agree: false,
         hYzm: true,
         fg_hYzm: true,
