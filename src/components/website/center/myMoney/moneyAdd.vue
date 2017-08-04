@@ -3,12 +3,12 @@
     <div class="contentWrap">
       <div class="payForm">
         <div class="oneLine">
-          <span>兑换金额：</span>
+          <span>购买金额：</span>
           <span><input  v-model="payMuch" type="text" class="payMuch"></span>
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
         <div class="">
-          <span>兑换乾币数：</span>
+          <span>可获得乾币数：</span>
           <span class="showPayMuch">{{finalyMoney}}</span>
         </div>
         <div class="">
@@ -21,12 +21,12 @@
         <div @click="sureExchange()" class="sureBtn">支付</div>
       </div>
       <div class="exchangeRule">
-        <p>乾币兑换标准</p>
+        <p>乾币充值标准</p>
         <ul>
-          <li>(1) 1000元≤单次购买金额<2000元，兑换乾币数量=当次实际兑换金额*110%；</li>
-          <li>(2) 2000元≤单次购买金额<5000元，兑换乾币数量=当次实际兑换金额*115%；</li>
-          <li>(3) 5000元≤单次购买金额<10000元，兑换乾币数量=当次实际兑换金额*120%；</li>
-          <li>(4) 单次购买金额≥10000元，兑换乾币数量=当次实际兑换金额*125%。</li>
+          <li>(1) 1000元≤单次购买金额<2000元，可获得乾币数量=当次实际购买金额*110%；</li>
+          <li>(2) 2000元≤单次购买金额<5000元，可获得乾币数量=当次实际购买金额*115%；</li>
+          <li>(3) 5000元≤单次购买金额<10000元，可获得乾币数量=当次实际购买金额*120%；</li>
+          <li>(4) 单次购买金额≥10000元，可获得乾币数量=当次实际购买金额*125%。</li>
         </ul>
       </div>
     </div>
@@ -70,7 +70,7 @@ export default {
         if(nowPayMuch > 0){
           finalyPayMuch = nowPayMuch;
         } else {
-          errMsg = "请输入合法的乾币数量";
+          // errMsg = "请输入合法的乾币数量";
         }
       } else {
         errMsg = "请输入合法的乾币数量";
@@ -105,7 +105,8 @@ export default {
     //充值乾币
     sureExchange: function() {
       var that = this;
-      if(that.payMuch !== '') {
+      console.log(that.payMuch)
+      if(that.payMuch) {
         if (that.payType == '1') {
           var obj = {
             token: that.global.getToken(),
@@ -153,7 +154,8 @@ export default {
             },3000);
         }
       } else {
-        that.$alert('请输入兑换乾币数量', {confirmButtonText: '确定',});
+        console.log("..")
+        that.$alert('请填写本次购买金额', {confirmButtonText: '确定',});
       }
     },
     // 确认关闭
@@ -186,7 +188,7 @@ export default {
   text-align: center;
 }
 .myMoneyAddWrap .payForm{
-  width: 382px;
+  width: 402px;
       margin: auto;
 }
 .oneLine{
@@ -204,7 +206,7 @@ export default {
 }
 .myMoneyAddWrap .payForm div span:nth-child(1){
   margin-right: 18px;
-  width: 85px;
+  width: 100px;
   text-align: right;
   display: inline-block;
 }
