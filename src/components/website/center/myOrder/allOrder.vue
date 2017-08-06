@@ -51,7 +51,7 @@
           <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
         </div>
         <div class="left des_p">
-           <p style="margin-bottom: 20px;" >{{cargo.itemInfo.itemName}}</p> 
+           <p style="margin-bottom: 20px;" >{{cargo.itemInfo.itemName}}</p>
           <p>
             {{cargo.itemPropertyNamea}}<span v-if="cargo.itemPropertyNameb">；</span>
             {{cargo.itemPropertyNameb}}<span v-if="cargo.itemPropertyNamec">；</span>
@@ -353,6 +353,7 @@
 
             }
             that.totalCount=res.data.totalNumber;
+            
           } else {
             that.$message.error('网络错误！');
           }

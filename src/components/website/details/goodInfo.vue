@@ -94,7 +94,7 @@
       <div class="goodMore">
         <span :class="{nowGoodMore:goodInforWord==1}" v-on:click="changeGoodInforWord('1','goodIntroduce')">商品介绍</span>
         <span :class="{nowGoodMore:goodInforWord==3}" v-on:click="changeGoodInforWord('3','instructions')">使用说明</span>
-        <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2','goodComment')">商品评论</span>
+        <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2','goodComment')">商品评论({{commentList.length}})</span>
       </div>
       <div >
         <transition name="component-fade" mode="out-in">

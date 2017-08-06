@@ -87,9 +87,9 @@
           <div class="onePrice"> <span>￥{{good.price}}</span></div>
           <div class="jisuanqi">
             <div class="" :class="{thismargin:good.num<good.goodLeaveNum}">
-              <span :class="{colorBlue:good.num>1}" >-</span>
+              <span>-</span>
               <input style="background:#cccccc" type="text" disabled="true" v-model="good.num">
-              <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" >+</span>
+              <span>+</span>
             </div>
             <div class=""  v-show="good.num>=good.goodLeaveNum">（库存为0）</div>
           </div>

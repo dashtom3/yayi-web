@@ -138,7 +138,7 @@
         <h4 class="detail_h4">订单信息</h4>
         <el-row class="order_header">
           <el-col :span="8" align="center"><span v-if="nowOrderDetails.created">下单时间：{{nowOrderDetails.created}}</span><div class="grid-content bg-purple"></div></el-col>
-          <el-col :span="8" style="overflow:hidden" align="center">订单号：{{nowOrderDetails.orderId}}<div class="grid-content bg-purple-light"></div></el-col>
+          <el-col :span="8" style="overflow:hidden;text-align:left;width:100%;padding-left:10px;" align="center">订单号：{{nowOrderDetails.orderId}}<div class="grid-content bg-purple-light"></div></el-col>
           <el-col :span="8" align="center"><span v-if="nowOrderDetails.endTime">签收时间：{{nowOrderDetails.endTime}}</span><div class="grid-content bg-purple"></div></el-col>
         </el-row>
         <div class="order_header">
@@ -171,7 +171,7 @@
             <li>发票</li>
             <li>产品注册证</li>
             <li>订单留言</li>
-            <li>赠送钱币</li>
+            <li>赠送乾币</li>
           </ul>
           <ul class="fl">
             <li v-if="nowOrderDetails.payType">

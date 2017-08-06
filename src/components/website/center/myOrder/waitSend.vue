@@ -1,5 +1,5 @@
 <template>
-  <div class="waitSend">
+  <div class="waitSend" :class="{noOrderClass:no_order}">
     <div class="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
@@ -10,9 +10,9 @@
       <div class="left deal_operate">交易操作</div>
     </div>
     <!--  暂无订单开始 -->
-    <div class="no_order" v-show="no_order">
-      <div style="margin-top:67px; margin-bottom:40px;"><img src="../../../../images/center/noOrder.png" alt="img"></div>
-      <div><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
+    <div  class="no_order" v-show="no_order">
+      <div style="padding-top:67px; padding-bottom:40px;"><img src="../../../../images/center/noOrder.png" alt="img"></div>
+      <div style=""><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
     </div>
     <!--  暂无订单结束 -->
     <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
@@ -223,6 +223,7 @@
               // that.pageProps = obj;
             }
             that.totalCount=res.data.totalNumber;
+            that.no_order = true;
             console.log(that.items,"getAllOrder_waitSend");
           } else {
             that.$message.error('网络错误！');
@@ -235,6 +236,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.noOrderClass{
+  border:1px solid #d7d7d7;
+  height: 300px;
+}
 .waitSend{
   margin-top: 30px;
 }

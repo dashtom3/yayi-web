@@ -1,5 +1,5 @@
 <template>
-  <div class="waitComment">
+  <div class="waitComment" :class="{noOrderClass:no_order}">
     <div class="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
@@ -364,6 +364,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.noOrderClass{
+  border:1px solid #d7d7d7;
+  height: 300px;
+  margin-top: 30px;
+}
 .orderDetails .order_table{
   margin-bottom: 0
 }
@@ -399,7 +404,7 @@
   .order_table {
     width: 1069px;
     height: 40px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-bottom: 20px;
     font-size: 14px;
     font-weight: bold;

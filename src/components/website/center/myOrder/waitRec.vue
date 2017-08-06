@@ -1,5 +1,5 @@
 <template>
-  <div class="waitRec">
+  <div class="waitRec" :class="{noOrderClass:no_order}">
     <div class="order_table">
       <div class="left cargo">商品</div>
       <div class="left price">单价（元）</div>
@@ -330,7 +330,7 @@
               // that.pageProps = obj;
             }
             that.totalCount=res.data.totalNumber;
-
+// that.no_order = true;
           } else {
             that.$message.error('网络错误！');
           }
@@ -342,8 +342,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.waitRec{
+  margin-top: 30px;
+}
+.noOrderClass{
+  border:1px solid #d7d7d7;
+  height: 300px;
+}
 .orderDetails .order_table{
-  margin-bottom: 0
+  margin-bottom: 0;
+  margin-top: 0;
 }
 .orderDetails .order_item{
   border-top: none;
@@ -377,7 +385,7 @@
   .order_table {
     width: 1069px;
     height: 40px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-bottom: 20px;
     font-size: 14px;
     font-weight: bold;

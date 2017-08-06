@@ -58,8 +58,22 @@
       if(that.$route.params.currentView == 'tab01') {
         that.$emit('listenToChildEvent','tab01')
       }
+      // that.getOrdersNums();
     },
     methods: {
+      getOrdersNums:function(){
+        var that = this;
+        that.global.axiosPostReq('/OrderDetails/queryOrderNums')
+        .then((res) => {
+          console.log(res,"nums")
+          if (res.data.callStatus === 'SUCCEED') {
+
+          } else {
+            that.$message.error('网络出错，请稍后再试！');
+          }
+        })
+
+      },
       changeActive1: function(tabText) {
         this.currentView = tabText;
         this.isActive1 = true;
