@@ -37,6 +37,7 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, .2);
+        z-index: 999;
     }
 
     .content {
@@ -50,9 +51,11 @@
         background-color: #fff;
         padding: 0 50px;
         border-radius: 3px;
+        z-index: 999;
     }
 
     .title {
+        text-align: center;
         font-weight: 600;
         font-size: 18px;
         margin-top: 20px;

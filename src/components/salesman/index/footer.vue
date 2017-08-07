@@ -7,7 +7,7 @@
             <span class="center">|</span>
             <span class="link" @click="goFeedback">意见反馈</span>
         </div>
-        <div class="copyright" @click="goCopyright">Copyright &copy; 2017  yayiABC.com 版权所有 沪ICP 备14038156-2</div>
+        <div >Copyright &copy; 2017  yayiABC.com 版权所有 <span class="copyright" @click="goCopyright">沪ICP 备14038156-2</span></div>
         <message :title="title" v-show="messageShow" @messageshow="messageChange">{{content}}</message>
     </div>
 </template>
