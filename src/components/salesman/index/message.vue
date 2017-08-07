@@ -1,7 +1,7 @@
 <template>
     <div class="message-container">
         <div class="mask" @click="closeMessage"></div>
-        <div class="content" @scroll="scroll">
+        <div class="content">
             <div class="title">{{title}}</div>
             <span class="close" @click="closeMessage">&times;</span>
             <div class="text-container">
@@ -24,18 +24,12 @@
       closeMessage(e) {
         this.$emit('messageshow', false)
         e.stopPropagation();
-      },
-      scroll(e) {
-        e.preventDefault();
       }
     }
   }
 </script>
 
 <style scoped>
-    body {
-        overflow: hidden;
-    }
     .mask {
         position: fixed;
         top: 0;
