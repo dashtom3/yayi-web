@@ -181,7 +181,8 @@ export default {
   font-size: 14px;
 }
 .myMoneyAddWrap .exchangeRule{
-
+width: 522px;
+margin: auto;
 }
 .myMoneyAddWrap .exchangeRule p{
   font-weight: 600;
@@ -222,7 +223,7 @@ export default {
 }
 .myMoneyAddWrap .exchangeRule ul{
   margin: auto;
-  width: 518px;
+  width: 100%;
 }
 .myMoneyAddWrap .exchangeRule li{
   margin-top: 20px;

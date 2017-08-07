@@ -60,7 +60,7 @@
           </div>
           <div style="clear:both"> </div>
         </div>
-        <div v-else >
+        <div v-else class="goodIsNoUser">
           <span class="thisGoodIsNoUser">
             <img src="../../../images/gwc/nouser.png" alt="">
             <!-- <span style="width: 0;
@@ -459,6 +459,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.goodIsNoUser *{
+  cursor: auto !important;
+}
 .notLogin{
   display: block;
   margin: auto;
