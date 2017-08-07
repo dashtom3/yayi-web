@@ -79,14 +79,14 @@
             </div>
           </li>
           <div class="clearfix">
-          
+
           </div>
         </ul>
         <div v-else style="text-align:center;margin-top:100px;">
           <h4>{{noGoods}}</h4>
         </div>
       </div>
-      <div class="block">
+      <div class="block" style="margin-bottom:40px;">
         <!-- 分页 -->
         <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
         </el-pagination>
@@ -552,7 +552,7 @@ border-radius: 3px;
   border-top: 1px solid #bcbcbc;
 }
 .threeClassfy li {
-  
+
   display: inline-block;
   cursor: pointer;
     border-radius: 5px;

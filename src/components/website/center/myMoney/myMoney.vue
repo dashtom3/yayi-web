@@ -20,7 +20,7 @@
   <!-- <div class="fenyeWrap" v-if="childConfig.pageNum>1">
     <paging0 :childmsg="childConfig" v-on:childSay="msgFromChlid"></paging0>
   </div> -->
-  <div class="block">
+  <div class="block" v-if="totalCount > 0">
     <!-- 分页 -->
     <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
     </el-pagination>
@@ -42,7 +42,7 @@ import util from '../../../../common/util'
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 0,
         childConfig:{
           pageNum:null
         },
@@ -51,7 +51,7 @@ import util from '../../../../common/util'
         everyPageShowNum:10,
         myAllMoney:{
           currentMoney:0,
-          details:[]
+          details:[{}]
         }
       }
     },
