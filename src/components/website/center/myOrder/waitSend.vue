@@ -223,7 +223,7 @@
               // that.pageProps = obj;
             }
             that.totalCount=res.data.totalNumber;
-            that.no_order = true;
+            // that.no_order = true;
             console.log(that.items,"getAllOrder_waitSend");
           } else {
             that.$message.error('网络错误！');
