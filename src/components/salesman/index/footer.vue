@@ -7,7 +7,7 @@
             <span class="center">|</span>
             <span class="link" @click="goFeedback">意见反馈</span>
         </div>
-        <div class="copyright">Copyright © 2017  yayiABC.com 版权所有</div>
+        <div class="copyright" @click="goCopyright">Copyright &copy; 2017  yayiABC.com 版权所有 沪ICP 备14038156-2</div>
         <message :title="title" v-show="messageShow" @messageshow="messageChange">{{content}}</message>
     </div>
 </template>
@@ -113,10 +113,13 @@
 第9条 本公司拥有对本标准的最终解释权。`
       },
       goFeedback() {
-        window.open('http://cn.mikecrm.com/DWbWBLO')
+        window.open('http://cn.mikecrm.com/DWbWBLO');
       },
       messageChange(e) {
         this.messageShow = e;
+      },
+      goCopyright() {
+        window.open('http://www.miibeian.gov.cn')
       }
     }
   }
@@ -135,11 +138,11 @@
     }
 
     .salesFoot .center {
-        width: 85px;
+        width: 60px;
         display: inline-block;
     }
 
-    .link:hover {
+    .copyright:hover, .link:hover {
         cursor: pointer;
         color: #5DB7E7;
         transition: all ease 0.5s;
