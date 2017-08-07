@@ -7,7 +7,7 @@
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
-      <component :is="currentView" keep-alive></component>
+      <component v-on:msgFromChild="msgtoparent" :is="currentView" keep-alive></component>
     </transition>
   </div>
 </template>
@@ -41,6 +41,9 @@
       this.getMoneyListFn();
     },
     methods: {
+      msgtoparent:function(data){
+        this.getMoneyListFn();
+      },
       changeActive1: function(tabText) {
         this.currentView = tabText;
         this.isActive1 = true;

@@ -60,6 +60,7 @@ import util from '../../../../common/util'
     // },
     created:function(){
       this.getMoneyList();
+
     },
     methods: {
       handleCurrentChange(val) {
@@ -105,6 +106,7 @@ import util from '../../../../common/util'
         .then((res) => {
           // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
+            this.$emit("msgFromChild","hah")
             if(res.data.data.length>0){
               // that.currentMoney = res.data.data[0].user.qbBalance;
               for(let i in res.data.data){
