@@ -1,26 +1,27 @@
 <template>
-  <div class="salesIndex">
-    <salesHead v-on:msgFromChild="getMsg"></salesHead>
-    <div class="saleSecond">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
-      <div class="tab_box">
-        <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
-        <div class="tab_item" :class="{spe: isActive7}" @click="changeActive7(tab07Text);">销售排行榜</div>
-        <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
-        <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
-        <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
-        <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">我的钱包</div>
-        <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">个人信息</div>
-      </div>
-      <div class="clearfix"></div>
+    <div class="salesIndex">
+        <salesHead v-on:msgFromChild="getMsg"></salesHead>
+        <div class="saleSecond">
+            <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="changeActive1(tab01Text)"/>
+            <div class="tab_box">
+                <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">首页</div>
+                <div class="tab_item" :class="{spe: isActive7}" @click="changeActive7(tab07Text);">销售排行榜</div>
+                <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">发现客户</div>
+                <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">我的业绩</div>
+                <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">我的客户</div>
+                <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">我的钱包</div>
+                <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">个人信息</div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 点击导航后要切换的内容 -->
+        <transition name="component-fade" mode="out-in">
+            <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :toEditDraw="dataValue1" :is="currentView"
+                       keep-alive></component>
+        </transition>
+        <div class="clearfix"></div>
+        <salesFoot></salesFoot>
     </div>
-    <!-- 点击导航后要切换的内容 -->
-    <transition name="component-fade" mode="out-in">
-      <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :toEditDraw="dataValue1" :is="currentView" keep-alive></component>
-    </transition>
-    <div class="clearfix"></div>
-    <salesFoot></salesFoot>
-  </div>
 </template>
 
 <script>
@@ -34,10 +35,11 @@
   import myOrder from "./myorder"
   import myWallet from "./myWallet"
   import saleCharts from "./saleCharts"
-  
+  import messafe from "./saleCharts"
+
   export default {
     name: 'salesIndex',
-    data () {
+    data() {
       return {
         isActive1: true,
         isActive2: false,
@@ -85,27 +87,27 @@
     //   })
     // },
     methods: {
-      getMsg:function(data){
+      getMsg: function (data) {
         //console.log(data)
         var that = this;
-        if(data=="goToMyClient"){
+        if (data == "goToMyClient") {
           that.changeActive4(that.tab04Text);
           that.dataValue = '';
-        }else if(data=="goToFindClient"){
+        } else if (data == "goToFindClient") {
           that.changeActive3(that.tab03Text);
           that.dataValue = '';
-        }else if(data=="editMyPersData"){
+        } else if (data == "editMyPersData") {
           that.changeActive6(that.tab06Text);
           that.dataValue = '';
-        }else if(data.myMoney=='getMyMoney'){
+        } else if (data.myMoney == 'getMyMoney') {
           that.changeActive5(that.tab05Text);
           that.dataValue = data;
-        }else if(data.flag=="editWithDraw"){
+        } else if (data.flag == "editWithDraw") {
           that.changeActive6(that.tab06Text);
           that.dataValue1 = data;
         }
       },
-      changeActive1: function(tabText) {
+      changeActive1: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = true;
         this.isActive2 = false;
@@ -116,7 +118,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive2: function(tabText) {
+      changeActive2: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = true;
@@ -127,7 +129,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive3: function(tabText) {
+      changeActive3: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -138,7 +140,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive4: function(tabText) {
+      changeActive4: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -149,7 +151,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive5: function(tabText) {
+      changeActive5: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -160,7 +162,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive6: function(tabText) {
+      changeActive6: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -171,7 +173,7 @@
         this.isActive7 = false;
         this.dataValue = '';
       },
-      changeActive7: function(tabText) {
+      changeActive7: function (tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
@@ -191,34 +193,38 @@
 </script>
 
 <style scoped>
-.saleSecond {
-  width: 1200px;
-  height: 90px;
-  margin: auto;
-  margin-bottom: 3px;
-  border-bottom: 1px solid #eeeeee;
-}
-.logo_img {
-  float: left;
-  margin-top: 20px;
-  margin-right: 88px;
-  cursor: pointer;
-}
-.tab_box {
-  float: left;
-}
-.tab_item {
-  float: left;
-  width: 130px;
-  height: 90px;
-  line-height: 90px;
-  color: #000;
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-}
-.spe {
-  color: #5DB7E7;
-  border-bottom: 3px solid #5DB7E7;
-}
+    .saleSecond {
+        width: 1200px;
+        height: 90px;
+        margin: auto;
+        margin-bottom: 3px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .logo_img {
+        float: left;
+        margin-top: 20px;
+        margin-right: 88px;
+        cursor: pointer;
+    }
+
+    .tab_box {
+        float: left;
+    }
+
+    .tab_item {
+        float: left;
+        width: 130px;
+        height: 90px;
+        line-height: 90px;
+        color: #000;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .spe {
+        color: #5DB7E7;
+        border-bottom: 3px solid #5DB7E7;
+    }
 </style>
