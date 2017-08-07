@@ -77,7 +77,7 @@ export default {
       }
       that.payMuch = finalyPayMuch;
       that.payMuchErrMsg = errMsg;
-      that.finalyMoney = that.global.moneyToMoney(that.payMuch)
+      that.finalyMoney = that.global.moneyToMoney(that.payMuch) || 0;
     },
   },
   created: function() {
