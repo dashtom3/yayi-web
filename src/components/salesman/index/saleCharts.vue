@@ -113,6 +113,7 @@
 							}
 	        	}
 	        }
+	        this.queryHandler()
       	})
 			},
 			//查询排行榜table数据

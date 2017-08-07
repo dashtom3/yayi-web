@@ -122,7 +122,7 @@
                 <el-radio label="2">减少余额</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="数量：">
+            <el-form-item label="金额：">
               <el-input v-model="walletform.num" class="wallet_w" @change="changeNumHandler"></el-input>
             </el-form-item>
             <el-form-item label="修改后的余额：">

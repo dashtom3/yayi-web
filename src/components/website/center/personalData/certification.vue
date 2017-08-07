@@ -99,7 +99,7 @@
       state:function(){
         if(this.state == 2){
           this.certificateState = this.userData.state;
-          this.ert(this.certiData.failReason);
+          this.ert(this.userData.failReason);
         }
       },
       ifPass: function(){
@@ -177,8 +177,6 @@
             });
             this.ifPass = true;
             this.btnVisible = false;
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -199,7 +197,7 @@
             type: 'warning',
             callback: action => {
               //提交后台改变状态
-              this.certiData.ifOnce = 1;
+              this.certiData.ifOnce = 0;
               this.saveJudge();
             }
           })
@@ -229,13 +227,11 @@
             confirmButtonText: '确定',
             type: 'warning',
             callback: action => {
-              //提交后台改变状态
-              this.certiData.ifOnce = 1;
-              this.saveJudge();
+              //不通过让他重新编辑
+              this.ifPass = false;
+              this.btnVisible = true;
             }
           })
-          this.ifPass = false;
-          this.btnVisible = true;
         }
       },
       uploadFile(res, file) {

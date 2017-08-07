@@ -4,6 +4,7 @@ import Index from '@/components/website/index/index'
 import Details from '@/components/website/details/details'
 import BrandLib from '@/components/website/brandLib/brandLib'
 import Center from '@/components/website/center/center'
+import Protocols from '@/components/website/protocols/protocols'
 // 懒加载方式，当路由被访问的时候才加载对应组件
 // const Details = resolve => require(['@/components/website/details/details'], resolve)
 // const BrandLib = resolve => require(['@/components/website/brandLib/brandLib'], resolve)
@@ -13,6 +14,25 @@ const center_myMoney = resolve => require(['@/components/website/center/myMoney/
 const center_myCollection = resolve => require(['@/components/website/center/myCollection/myCollection'], resolve)
 const center_personalData = resolve => require(['@/components/website/center/personalData/personal'], resolve)
 const center_myAdd = resolve => require(['@/components/website/center/myAdd/myAdd'], resolve)
+//协议
+//关于我们
+const Protocols_certificate = resolve => require(['@/components/website/protocols/aboutUs/certificate'], resolve)
+const Protocols_aboutABC = resolve => require(['@/components/website/protocols/aboutUs/aboutABC'], resolve)
+//乾币规则
+const Protocols_currencyService = resolve => require(['@/components/website/protocols/currency/currencyService'], resolve)
+const Protocols_daobangStandard = resolve => require(['@/components/website/protocols/currency/daobangStandard'], resolve)
+const Protocols_currencyGift = resolve => require(['@/components/website/protocols/currency/currencyGift'], resolve)
+const Protocols_currencyExchange = resolve => require(['@/components/website/protocols/currency/currencyExchange'], resolve)
+//售后服务
+const Protocols_refundDes = resolve => require(['@/components/website/protocols/saleService/refundDes'], resolve)
+const Protocols_returnPolicy = resolve => require(['@/components/website/protocols/saleService/returnPolicy'], resolve)
+const Protocols_returnFlow = resolve => require(['@/components/website/protocols/saleService/returnFlow'], resolve)
+//更多
+const Protocols_purchaseService = resolve => require(['@/components/website/protocols/more/purchaseService'], resolve)
+const Protocols_registration = resolve => require(['@/components/website/protocols/more/registration'], resolve)
+const Protocols_invoiceDes = resolve => require(['@/components/website/protocols/more/invoiceDes'], resolve)
+const Protocols_feedback = resolve => require(['@/components/website/protocols/more/feedback'], resolve)
+
 
 const Gwc = resolve => require(['@/components/website/gwc/gwc'], resolve)
 const Suborder = resolve => require(['@/components/website/gwc/suborder'], resolve)
@@ -63,6 +83,9 @@ const AdvertSets_adv = resolve => require(['@/components/admin/advertSets/adv'],
 
 //视频管理
 const VideoManner_video = resolve => require(['@/components/admin/videoManner/video'], resolve)
+
+//优惠码设置
+const Coupon_set = resolve => require(['@/components/admin/coupon/coupon_set'], resolve)
 
 // 运费管理
 const FreightSet = resolve => require(['@/components/admin/freightManner/freightSet'], resolve)
@@ -236,6 +259,17 @@ let router = new Router({
         {path: '/admin/videoManner/video', component: VideoManner_video, name: '视频管理', menuShow: true}
       ]
     },
+    {
+      path: '/couponSets',
+      component: Home,
+      name: '优惠码设置',
+      menuShow: true,
+      leaf: true, // 只有一个节点
+      iconCls: 'iconfont icon-books2', // 图标样式class
+      children: [
+        {path: '/admin/coupon/coupon_set', component: Coupon_set, name: '优惠码设置', menuShow: true}
+      ]
+    },
 		{
       path: '/freightManner',
       component: Home,
@@ -283,6 +317,56 @@ let router = new Router({
       name: 'salesLog',
       component: SalesLog,
     },
+    //footer协议部分
+    {
+      path: '/protocols',
+      component: Protocols,
+      name: '关于我们',
+      //leaf: true, // 只有一个节点
+      protocolShow: true,
+      children: [
+        {path: '/protocols/certificate', component: Protocols_certificate, name: '资质证件',protocolShow: true},
+        {path: '/protocols/aboutABC', component: Protocols_aboutABC, name: '关于牙医ABC',protocolShow: true}
+      ]
+    },
+    {
+      path: '/protocols',
+      component: Protocols,
+      name: '乾币规则',
+      //leaf: true, // 只有一个节点
+      protocolShow: true,
+      children: [
+        {path: '/protocols/currencyService', component: Protocols_currencyService, name: '乾币服务与管理协议',protocolShow: true},
+        {path: '/protocols/daobangStandard', component: Protocols_daobangStandard, name: '道邦品牌促销乾币赠予标准',protocolShow: true},
+        {path: '/protocols/currencyGift', component: Protocols_currencyGift, name: '乾币赠予标准',protocolShow: true},
+        {path: '/protocols/currencyExchange', component: Protocols_currencyExchange, name: '乾币兑换标准',protocolShow: true}
+      ]
+    },
+    {
+      path: '/protocols',
+      component: Protocols,
+      name: '售后服务',
+      //leaf: true, // 只有一个节点
+      protocolShow: true,
+      children: [
+        {path: '/protocols/refundDes', component: Protocols_refundDes, name: '退款说明',protocolShow: true},
+        {path: '/protocols/returnPolicy', component: Protocols_returnPolicy, name: '退换货政策',protocolShow: true},
+        {path: '/protocols/returnFlow', component: Protocols_returnFlow, name: '退换货流程',protocolShow: true}
+      ]
+    },
+    {
+      path: '/protocols',
+      component: Protocols,
+      name: '更多',
+      //leaf: true, // 只有一个节点
+      protocolShow: true,
+      children: [
+        {path: '/protocols/purchaseService', component: Protocols_purchaseService, name: '产品采购服务协议',protocolShow: true},
+        {path: '/protocols/registration', component: Protocols_registration, name: '牙医abc注册协议',protocolShow: true},
+        {path: '/protocols/invoiceDes', component: Protocols_invoiceDes, name: '发票说明',protocolShow: true},
+        // {path: '/protocols/feedback', component: Protocols_feedback, name: '意见反馈',protocolShow: true}
+      ]
+    }
 	],
 })
 
