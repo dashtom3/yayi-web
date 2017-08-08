@@ -162,7 +162,7 @@
   .classfyDetail{
     width: 1200px;
     margin: 39px auto;
-    min-height: 630px;
+    max-height: 450px;
     position: absolute;
     top: 0;
     z-index: 5;
@@ -177,8 +177,7 @@
     z-index: 5;
     background: white;
     margin: 39px auto;
-    padding: 30px 0 0 0;
-    min-height: 600px;
+    height: 450px;
     left: 0;
     /*border: 1px solid #cccccc;*/
     /*border-top: none;*/
@@ -201,7 +200,7 @@
     position: relative;
     float: left;
     margin-left: 28px;
-    margin-bottom: 28px;
+    margin-top: 20px;
     width: 138px ;
     height: 138px;
     text-align: center;
@@ -226,15 +225,15 @@
     background: #005aab;
     float: left;
     color:white;
-    min-height: 630px;
+    height: 450px;
   }
   .classfyDetail_left li {
     cursor: pointer;
   }
   .classfyDetail_right{
     width: 1000px;
+    height: 450px;
     margin-left: 200px;
-    margin-top: 30px;
     font-size: 14px;
 
   }
@@ -243,7 +242,7 @@
     width: 150px;
     text-align: center;
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 3px;
   }
   .details .title:hover{
     color: #90cbee;
@@ -252,8 +251,8 @@
     margin-left: 150px;
     border-bottom: 1px solid #eeeeee;
     line-height: 20px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    padding-bottom: 6px;
+    padding-top: 6px;
     min-height: 35px;
   }
   .details .detail li{

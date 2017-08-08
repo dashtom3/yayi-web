@@ -1,7 +1,7 @@
 <template>
   <div class="carousel">
     <div class="block">
-      <el-carousel height="630px">
+      <el-carousel height="450px">
         <el-carousel-item v-for="(item, index) in bannerList" :key="item.advImg">
           <img :src="item.advImg" alt="banner" />
         </el-carousel-item>
@@ -37,8 +37,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .block {
-  width: 100%;
-  height: 100%;
+  max-width: 1920px;
+  max-height: 450px;
   margin: 0 auto;
   text-align: center;
 }
