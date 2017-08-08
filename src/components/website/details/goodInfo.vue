@@ -338,7 +338,17 @@ import util from '../../../common/util'
               }
             });
           }else{
-            this.$alert("请先登录后再收藏！", {confirmButtonText: '确定'});
+            this.$alert("请先登录后再收藏！", {confirmButtonText: '确定',
+            beforeClose:(action, instance, done) => {
+             if (action === 'confirm') {
+               var num = parseInt(Math.random()*1000);
+               that.$emit("goodInfoSay",num);
+               done();
+             } else {
+               done();
+             }
+           }
+          });
           }
         }
         if(arg==2){
