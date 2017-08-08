@@ -95,7 +95,7 @@
           </div>
           <div class="thisPrice"> ￥{{good.price*good.num}} </div>
           <div class="operas" style="width:154px;text-align:right">
-            <span style="margin-top:28px;" class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
+            <span style="margin-top:28px;margin-right:6px;cursor:pointer !important" class="colorRed" v-on:click="deleteOne(index,good)">删除</span>
           </div>
           <div style="clear:both"> </div>
         </div>
@@ -460,7 +460,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .goodIsNoUser *{
-  cursor: auto !iwmportant;
+  cursor: auto !important;
 }
 .notLogin{
   display: block;
