@@ -16,7 +16,7 @@
     margin: 0;
   }
   #app {
-    font-family: 'Microsoft YaHei',Arial,Helvetica,sans-serif,'宋体';
+    font-family: "Microsoft YaHei";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #333;
