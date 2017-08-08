@@ -86,7 +86,11 @@
 		    </li>
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:48px;"><i class="i_col_red">*</i>有效期：</span></span>
-		      <el-input v-model="benefit_updated" class="fl" style="width:200px;"></el-input>
+		      <el-date-picker
+			      v-model="benefit_updated"
+			      type="datetime"
+			      placeholder="选择日期时间">
+			    </el-date-picker>
 		    </li>
 		  </ul>
 	    <div style="margin-top:30px;">
@@ -100,35 +104,54 @@
 	    <ul class="coupon_detail">
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:20px;">优惠码名称：</span></span>
-		      <span></span>
+		      <span>{{benefitNameSpan}}</span>
 		    </li>
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:6px;">可兑换乾币数：</span></span>
-		      <span></span>
+		      <span>{{benefitQbSpan}}</span>
 		    </li>
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:20px;">优惠码总数：</span></span>
-		      <span></span>
+		      <span>{{benefitNumSpan}}</span>
 		    </li>
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:20px;">未兑换数量：</span></span>
-		      <span></span>
+		      <span>{{benefitValueNumSpan}}</span>
 		    </li>
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:48px;">有效期：</span></span>
-		      <span></span>
+		      <span>{{new Date(this.updatedSpan).getFullYear()+'-'+ fillZero(new Date(this.updatedSpan).getMonth()+1)+'-'+fillZero(new Date(this.updatedSpan).getDate())+' '+fillZero(new Date(this.updatedSpan).getHours())+":"+fillZero(new Date(this.updatedSpan).getMinutes())+":"+fillZero(new Date(this.updatedSpan).getSeconds())}}</span>
 		    </li>
 		  </ul>
-		  <el-table :data="couponList" border>
-      <el-table-column prop="couponName" label="优惠码" align="center">
-      </el-table-column>
-      <el-table-column prop="exchangeableNo" label="是否已兑换" align="center">
-      </el-table-column>
-      <el-table-column prop="couponTotal" label="兑换时间" align="center">
-      </el-table-column>
-      <el-table-column prop="canExchangeableNo" label="兑换人" align="center">
-      </el-table-column>
-    </el-table>
+		  <div style="min-height:600px;">
+		  	<el-table :data="detailList" border>
+		      <el-table-column prop="benefitCode" label="优惠码" align="center">
+		      </el-table-column>
+		      <el-table-column prop="state" label="是否已兑换" align="center">
+		      	<template scope="scope">
+		          <span v-if='scope.row.state === 1'>否</span>
+		          <span v-else-if='scope.row.state === 2'>是</span>
+		        </template>
+		      </el-table-column>
+		      <el-table-column prop="benefitTime" label="兑换时间" align="center">
+		      	<template scope="scope">
+		      		<span v-if="scope.row.benefitTime">{{new Date(scope.row.benefitTime).getFullYear()+'-'+ fillZero(new Date(scope.row.benefitTime).getMonth()+1)+'-'+fillZero(new Date(scope.row.benefitTime).getDate())+' '+fillZero(new Date(scope.row.benefitTime).getHours())+":"+fillZero(new Date(scope.row.benefitTime).getMinutes())+":"+fillZero(new Date(scope.row.benefitTime).getSeconds())}}</span>
+		      		<span v-else></span>
+		      	</template>
+		      </el-table-column>
+		      <el-table-column prop="benefitPerson" label="兑换人" align="center">
+		      </el-table-column>
+		    </el-table>
+		    <div class="block" style="position:absolute;top:760px;right:12px;" v-show="this.totalCountDetail > this.pagesizeDetail">
+		      <el-pagination
+		        @current-change="handleCurrentChangeDetail"
+		        :current-page.sync="currentPageDetail"
+		        :page-size="pagesizeDetail"
+		        layout="prev, pager, next, jumper"
+		        :total="totalCountDetail">
+		      </el-pagination>
+		    </div>
+		  </div>
 	    <div style="margin-top:30px;text-align:center;">
 	      <el-button @click="couponDetail=false">关闭</el-button>
 	    </div>
@@ -146,6 +169,9 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1,
+        pagesizeDetail: 10,
+        currentPageDetail: 1,
+        totalCountDetail: 1,
 				couponName: '',
 				isValid:'3',
 				valids: [
@@ -154,12 +180,19 @@
           {value: '2',label: '否'}
 				],
 				couponList: [],
+				detailList: [],
 				couponVisible: false,
 				couponDetail: false,
 				coupon_name: '',
 				benefit_qb: '',
-				benefit_num: 0,
-				benefit_updated: ''
+				benefit_num: '',
+				benefit_updated: '',
+				benefitNameSpan: '',
+      	benefitQbSpan: '',
+        benefitNumSpan: '',
+        benefitValueNumSpan: '',
+        updatedSpan: '',
+        benefitIdSpan: ''
 			}
 		},
 		created(){
@@ -173,23 +206,31 @@
         this.currentPage = val 
         this.queryHandler(val)
       },
+      handleCurrentChangeDetail(val){
+      	this.currentPageDetail = val 
+      	this.handleView()
+      },
+      //添加
       saveHandler(){
       	var that = this
 				var params = {
 					benefitName: this.coupon_name,
 					benefitQb: this.benefit_qb,
 					benefitNum: this.benefit_num,
-					updated: this.benefit_updated
+					updated: new Date(this.benefit_updated).getFullYear() + '-' + this.fillZero((new Date(this.benefit_updated).getMonth() + 1)) + '-' + this.fillZero(new Date(this.benefit_updated).getDate())+' '+this.fillZero(new Date(this.benefit_updated).getHours())+":"+this.fillZero(new Date(this.benefit_updated).getMinutes())+":"+this.fillZero(new Date(this.benefit_updated).getSeconds()) 
 				}
-				that.global.axiosGetReq('/benefit/add',params).then((res) => {
+				that.global.axiosPostReq('/benefit/add',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             this.$message({
               type: 'success',
               message: '添加成功!'
             });
+            this.couponVisible = false
+            this.queryHandler()
           }
         })
       },
+      //查询
 			queryHandler(val){
 				var that = this
 				if (val == undefined || typeof(val) == 'object') {
@@ -211,14 +252,50 @@
         })
 			},
 			addHandler(){
-				
+				this.coupon_name = ''
+				this.benefit_qb = ''
+				this.benefit_num = ''
+				this.benefit_updated = ''
 				this.couponVisible = true
 			},
-			handleView(){
+			//详情
+			handleView(index, row){
+				var that = this
+				if(row){
+					this.benefitNameSpan = row.benefitName
+	      	this.benefitQbSpan = row.benefitQb
+	        this.benefitNumSpan = row.benefitNum
+	        this.benefitValueNumSpan = row.benefitValueNum
+	        this.updatedSpan = row.updated
+	        this.benefitIdSpan = row.benefitId
+				}			
+				var params = {
+					benefitId: this.benefitIdSpan,
+					currentPage: this.currentPageDetail,
+          numberPerPage: this.pagesizeDetail
+				}
+				that.global.axiosGetReq('/benefit/detail',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.detailList = res.data.data
+            this.totalCountDetail = res.data.totalNumber
+          }
+        })
 				this.couponDetail = true
 			},
-			handleDownLoad(){
-
+			//下载
+			handleDownLoad(index, row){
+				var that = this
+				if(row){
+	        this.benefitIdSpan = row.benefitId
+				}			
+				var params = {
+					benefitId: this.benefitIdSpan
+				}
+				that.global.axiosPostReq('/benefit/downLoad',params).then((res) => {
+            // console.log(res.data)
+            var blob = new Blob([res.data],{type:"text/plain"})
+            console.log(blob)
+        })
 			}
 		}
 	}

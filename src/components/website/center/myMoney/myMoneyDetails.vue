@@ -2,6 +2,7 @@
   <div class="myMoneyList">
     <div class="tab_box">
       <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">乾币充值</div>
+      <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">乾币兑换</div>
       <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">乾币明细</div>
       <span class="currentMoneyWrap">当前乾币：{{currentMoney}}</span>
     </div>
@@ -16,6 +17,7 @@
   import Vue from 'vue'
   import myMoneyAdd from './moneyAdd'
   import myMoney from './myMoney'
+  import moneyExchange from './moneyExchange'
   import util from '../../../../common/util'
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
@@ -28,14 +30,17 @@
         currentMoney: 0,
         isActive1: true,
         isActive2: false,
+        isActive3: false,
         tab01Text: "tab01",
         tab02Text: "tab02",
+        tab03Text: "tab03",
         currentView: 'tab01', //默认选中的导航栏
       }
     },
     components: {
       tab01: myMoneyAdd,
       tab02: myMoney,
+      tab03: moneyExchange
     },
     created:function(){
       this.getMoneyListFn();
@@ -48,11 +53,19 @@
         this.currentView = tabText;
         this.isActive1 = true;
         this.isActive2 = false;
+        this.isActive3 = false;
       },
       changeActive2: function(tabText) {
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = true;
+        this.isActive3 = false;
+      },
+      changeActive3: function(tabText) {
+        this.currentView = tabText;
+        this.isActive1 = false;
+        this.isActive2 = false;
+        this.isActive3 = true;
       },
       getMoneyListFn:function(){
         var that = this;

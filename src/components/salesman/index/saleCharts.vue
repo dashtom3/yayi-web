@@ -17,7 +17,7 @@
 			</div>
 			<h1 class="title">{{year}}年{{month}}月销售排行榜</h1>
 			<div class="title_info" v-show="!isRanking">
-				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
+				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，实际销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
 			</div>
 			<div class="title_info" v-show="isRanking">
 				共{{sale_total_num}}名销售员，非常抱歉，您当前未上榜。
@@ -31,7 +31,7 @@
 	      </el-table-column>
 	      <el-table-column prop="orderCount" label="订单数" align="center">
 	      </el-table-column>
-	      <el-table-column prop="saleMoney" label="销售额（元）" align="center">
+	      <el-table-column prop="saleMoney" label="实际销售额（元）" align="center">
 	      </el-table-column>
 	      <!-- <el-table-column prop="rowNum" label="排名变化" align="center">
 	      </el-table-column> -->

@@ -194,10 +194,10 @@
 <!--                   <p class="rg_alrHave" @click="rg_alrHave">已有账号</p> -->
                   <div class="rg_confirm_btn" @click="rg_register">注册</div>
                   <div class="rg_choose_box">
-                    <input type="checkbox" v-model="agree" class="checkYa" /><span class="rg_choose_word">我已阅读并同意<span class="publicHover" @click="serviceClause">牙医ABC服务条款</span></span>
+                    <input type="checkbox" v-model="agree" class="checkYa" /><span class="rg_choose_word">我已阅读并同意<span class="publicHover col-blue" @click="serviceClause">牙医abc注册协议</span></span>
                   </div>
                   <transition name="shake">
-                    <p class="rg_choose_error" v-show="rgAgree_alert">请先同意牙医ABC服务条款!</p>
+                    <p class="rg_choose_error" v-show="rgAgree_alert">请先同意牙医abc注册协议!</p>
                   </transition>
               </div>
             </div>
@@ -633,6 +633,7 @@
       // 牙医ABC服务条款
       serviceClause: function() {
         var that = this;
+        that.$router.push({path: '/protocols/aboutABC'})
       },
       //获取注册登录banner
       init: function() {
@@ -1276,6 +1277,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .col-blue{
+    color: #005aab;
+  }
   input {
     border: 1px solid #e9e9e9;
     outline:medium;

@@ -97,7 +97,7 @@
         searchUserContent:"",
         searchUserType:"真实姓名",
         searchType:"",
-        searchState:"",
+        searchState:1,
         certificationList:[],
         bigImgSrc: '',
         selectVal: '',
