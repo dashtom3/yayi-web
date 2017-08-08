@@ -37,14 +37,13 @@
     </div>
     <!--  品牌库页面 结束 -->
     <!--  本期主推页面 开始 -->
-    <div class="preventive_box d_jump" :class="{active:index%2==1}" v-if="index<1"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
-      <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
-        <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
-        <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
+    <div class="preventive_box d_jump">
+      <div class="img_box_change">
+        <img class="brand_img" src="../../../images/index/yayi.png" alt="img">
         <p class="classifyName">本期主推</p>
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-if="index<10" v-for="(item,index) in classifyItem.items" :key="item.itemName" @click="toDetail(item)">
+        <div class="preventive_item" v-if="index<10" v-for="(item,index) in RecommendListData" :key="item.itemId" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src="item.itemDetail.itemPica+'?imageView2/1/w/200/h/200'" alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
@@ -93,6 +92,7 @@ export default {
       sideItems: [],
       brandListData:[],
       brandListData1: [],
+      RecommendListData: [],
     }
   },
   computed: {
@@ -107,6 +107,7 @@ export default {
     var that = this;
     window.addEventListener('scroll', that.menu);
     that.getAllBrandList();
+    that.getAllRecommend();
     that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
       if (res.data.callStatus === 'SUCCEED') {
         that.classifyItems = res.data.data.classifyList;
@@ -214,6 +215,14 @@ export default {
           that.brandListData1 = res.data.data;
         } else {
           that.$message.error('网络出错，请稍后再试3！');
+        }
+      })
+    },
+    getAllRecommend:function(){
+      var that = this;
+      that.global.axiosGetReq('/item/getAllRecommendItemList').then((res) => {
+        if (res.data.callStatus === 'SUCCEED') {
+          that.RecommendListData = res.data.data;
         }
       })
     },
