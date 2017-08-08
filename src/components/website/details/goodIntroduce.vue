@@ -5,7 +5,8 @@
         <ul>
           <li>品名：{{instruction.addName}}</li>
           <li>注册证号：{{instruction.registerId}}</li>
-          <li>其他：{{instruction.remark}}</li>
+
+          <li>产品标准：{{instruction.itemLevels}}</li>
           <li>使用范围：{{instruction.itemRange}}</li>
         </ul>
       </div>
@@ -22,28 +23,10 @@
           <li>品牌：{{instruction.itemBrandName}}</li>
           <li>医械类别：{{instruction.apparatusType}}</li>
           <li>商家货号：{{instruction.storeItemId}}</li>
+          <li>其他：{{instruction.remark}}</li>
         </ul>
       </div>
       <div style="clear:both;float:none"></div>
-      <!-- <div>
-        <span>品名：{{instruction.addName}}</span>
-        <span>单位：{{instruction.unit}}</span>
-        <span>品牌：{{instruction.itemBrandName}}</span>
-      </div>
-      <div>
-        <span>注册证有效期\注册证号：{{instruction.registerId}}</span>
-        <span>产品包装：{{instruction.itemPacking}}</span>
-        <span>医械类别：{{instruction.apparatusType}}</span>
-      </div>
-      <div>
-        <span>其他：{{instruction.remark}}</span>
-        <span>备案日期：{{instruction.registerDate}}</span>
-        <span>商家货号：{{instruction.storeItemId}}</span>
-      </div>
-      <div>
-        <span>使用范围：{{instruction.itemRange}}</span>
-        <span>生产企业名称：{{instruction.producePompany}}</span>
-      </div> -->
     </div>
     <div class="instruction" v-html="instruction.itemDesc"></div>
   </div>
