@@ -236,11 +236,10 @@
         var obj = {
           phone: that.nowUserMoneyNum,
           qbBalance: that.yayiCoin,
-          token: '',
         }
         console.log(obj);
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
-          console.log(res);
+          console.log(res,'99909')
           if (res.data.callStatus === 'SUCCEED') {
             that.currentPage = 1
             that.getClassify()

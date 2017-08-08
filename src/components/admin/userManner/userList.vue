@@ -111,7 +111,7 @@
     <!-- 用户详情 -->
     <el-dialog custom-class="asgagewgf" title="用户详情" :visible.sync="showUserDetailInfor">
       <div class="personalInfor">
-        <img :src="someOneUserDetails.userPic" alt="">
+        <img v-if="someOneUserDetails.userPic" :src="someOneUserDetails.userPic" alt="">
         <h3>个人信息</h3>
         <div class="">
           <span>用户编号：{{someOneUserDetails.userId}}</span>
