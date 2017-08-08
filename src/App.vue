@@ -109,8 +109,8 @@
   }
   .publicHover:hover {
     cursor: pointer;
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
-/*牙医ABC蓝色#5DB7E7;#5ed6dc;#04D8DD;红色#D81E06;*/
+/*牙医ABC 深蓝#005aab; hover浅蓝#329af0;#04D8DD;红色#D81E06;*/
 </style>

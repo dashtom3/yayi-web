@@ -3,13 +3,14 @@
     <!--  锚点侧边栏 开始 -->
     <div v-show="isActive" class="sidebar">
       <div class="sideBtn" :class="{spe: 0==yayi}" @click="jump(0)">品牌库</div>
-      <div class="sideBtn" v-for="(sideItem,index) in classifyItems" :key="sideItem" :class="{spe: (index+1)==yayi}" @click="jump(index+1)">{{sideItem.oneClassify}}</div>
+      <div class="sideBtn" :class="{spe: 1==yayi}" @click="jump(1)">本期主推</div>
+      <div class="sideBtn" v-for="(sideItem,index) in classifyItems" :key="sideItem.oneClassify" :class="{spe: (index+2)==yayi}" @click="jump(index+2)">{{sideItem.oneClassify}}</div>
     </div>
     <!--  锚点侧边栏 结束 -->
     <!--  品牌库页面 开始 -->
     <div class="brand_box d_jump">
       <div class="img_box">
-        <img class="brand_img" src="../../../images/index/brand.png" alt="img">
+        <img class="brandd_img" src="../../../images/index/brand.png" alt="img">
       </div>
       <div class="prev" @click="prev()">
         <img src="../../../images/index/prev.png" alt="img">
@@ -35,15 +36,34 @@
       </el-carousel>
     </div>
     <!--  品牌库页面 结束 -->
+    <!--  本期主推页面 开始 -->
+    <div class="preventive_box d_jump" :class="{active:index%2==1}" v-if="index<1"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
+      <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
+        <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
+        <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
+        <p class="classifyName">本期主推</p>
+      </div>
+      <div class="preventive_container">
+        <div class="preventive_item" v-if="index<10" v-for="(item,index) in classifyItem.items" :key="item.itemName" @click="toDetail(item)">
+          <div class="item_img_box">
+            <img class="item_img" :src="item.itemDetail.itemPica+'?imageView2/1/w/200/h/200'" alt="img">
+            <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+          </div>
+          <p class="item_des">{{item.itemName}}</p>
+          <p class="item_price">￥{{item.itemPrice}}</p>
+        </div>
+      </div>
+    </div>
+    <!--  本期主推页面 结束 -->
     <!--  一级分类页面 开始 -->
-    <div class="preventive_box d_jump" :style="{backgroundImage:  'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem">
+    <div class="preventive_box d_jump" :style="{backgroundImage:  'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
       <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
         <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
         <p class="classifyName">{{classifyItem.oneClassify}}</p>
       </div>
       <div class="preventive_container">
-        <div class="preventive_item" v-if="index<8" v-for="(item,index) in classifyItem.items" :key="item" @click="toDetail(item)">
+        <div class="preventive_item" v-if="index<10" v-for="(item,index) in classifyItem.items" :key="item.itemName" @click="toDetail(item)">
           <div class="item_img_box">
             <img class="item_img" :src="item.itemDetail.itemPica+'?imageView2/1/w/200/h/200'" alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
@@ -54,6 +74,7 @@
       </div>
     </div>
     <!--  一级分类页面 结束 -->
+    <div class="clearfix" style="width: 100%; height:60px; background-color:#fff;"></div>
   </div>
 </template>
 
@@ -117,7 +138,7 @@ export default {
       } else {
         that.isActive = false;
       }
-      var num = parseInt((scroll-742)/800);
+      var num = parseInt((scroll-742)/636);
       that.yayi = num;
       // console.log(scroll);
     },
@@ -233,21 +254,21 @@ a {
   text-align: center;
   margin-bottom: 1px;
   color: #fff;
-  background-color: #5DB7E7;
+  background-color: #005aab;
 }
 .sideBtn:hover {
   cursor: pointer;
-  background-color: #5ed6dc;
+  background-color: #329af0;
   transition: all ease 0.5s;
 }
 .spe {
-  background-color: #5ed6dc !important;
+  background-color: #329af0 !important;
   transition: all ease 0.5s;
 }
 /*----------品牌库页面 开始-------------*/
   .brand_box {
     width: 1200px;
-    height: 800px;
+    height: 636px;
     margin: 0 auto;
     text-align: center;
     position: relative;
@@ -266,8 +287,8 @@ a {
     opacity: 0.8;
     cursor: pointer;
   }
-  .brand_box .brand_img {
-    margin-top: 82px;
+  .brand_box .brandd_img {
+    margin-top: 60px;
   }
   .brand_container {
     width: 800px;
@@ -277,8 +298,8 @@ a {
   }
   .brand_container .brand_item {
     float: left;
-    width: 163px;
-    height: 163px;
+    width: 152px;
+    height: 152px;
     margin-top: 70px;
     margin-left: 17.5px;
     margin-right: 17.5px;
@@ -304,7 +325,7 @@ a {
 /*-------------品牌库页面 结束-------------*/
 .preventive_box {
   width: 100%;
-  height: 800px;
+  height: 671px;
   margin: 0 auto;
   position: relative;
   text-align: center;
@@ -315,26 +336,22 @@ a {
 .active {
   background-color: #fff !important;
 }
-.brand_img {
-  margin-top: 20px;
-  margin-bottom: 30px;
-}
 .preventive_container {
   width: 1200px;
   margin: 0 auto;
 }
 .preventive_item {
-  width: 265px;
-  height: 290px;
+  width: 220px;
+  height: 241px;
   border: 1px #bcbcbc solid;
   float: left;
   padding: 5px 5px 0 5px;
-  margin-right: 17px;
+  margin-right: 10px;
   margin-bottom: 17px;
   position: relative;
-    background-color: #fff;
+  background-color: #fff;
 }
-.preventive_item:nth-child(4n+0) {
+.preventive_item:nth-child(5n+0) {
   margin-right: 0px;
 }
 .preventive_item:hover {
@@ -345,7 +362,7 @@ a {
   border: 1px solid #fff;
 }
 .preventive_item:hover .item_des{
-  color: #5DB7E7;
+  color: #005aab;
   transition: all 0.5s ease;
 }
 .preventive_item .item_img_box .item_img {
@@ -353,7 +370,7 @@ a {
   max-height: 100%;
 }
 .preventive_item .item_des:hover {
-  color: #5DB7E7;
+  color: #005aab;
   transition: all 0.5s ease;
 }
 .preventive_item .item_des{
@@ -368,15 +385,14 @@ a {
   right: 15px;
 }
 .item_img_box {
-  width: 263px;
-  height: 200px;
+  width: 170px;
+  height: 158px;
+  margin: 0 auto;
   background: white;
 }
 .item_img {
-  /*max-width: 100%;
-  max-height: 100%;*/
-  max-width: 40%;
-  max-height: 40%;
+  max-width: 100%;
+  max-height: 100%;
   display: inline-block;
   vertical-align: middle;
 }
@@ -388,4 +404,9 @@ a {
   right: 0px;
   transform: translateX(-19px);
 }
+.brand_img {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
 </style>

@@ -2,7 +2,7 @@
   <div class="carousel">
     <div class="block">
       <el-carousel height="630px">
-        <el-carousel-item v-for="(item, index) in bannerList" :key="item">
+        <el-carousel-item v-for="(item, index) in bannerList" :key="item.advImg">
           <img :src="item.advImg" alt="banner" />
         </el-carousel-item>
       </el-carousel>

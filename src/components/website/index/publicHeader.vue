@@ -19,7 +19,7 @@
           <div v-else class="elseLine"></div>
           <div class="car_hover" v-if="cargo_show">
             <p class="cargo_title">最近加入的产品：</p>
-            <div class="cargo_box" v-for="item in filteredItems" :key="item" @click="gotoDetails(item)">
+            <div class="cargo_box" v-for="item in filteredItems" :key="item.name" @click="gotoDetails(item)">
               <img class="cargo_sm" :src=item.pic alt="img">
               <div class="cargo_des">{{item.name}}</div>
               <div class="cargo_price">￥{{item.price}}*{{item.num}}</div>
@@ -207,8 +207,8 @@
     </div>
     <!--     注册页 end    -->
     <div class="headerSecond" v-show="Second">
-      <img class="logo_img" src="../../../images/index/logo.png" alt="img" @click="logo">
-      <div class="search_box right">
+      <img class="logo_img left" src="../../../images/index/logo.png" alt="img" @click="logo">
+      <div class="search_box left">
         <input class="search_word" type="text" @keyup.enter="search_cargo" v-model="searchCargo" autocomplete="on">
         <img @click="search_cargo" class="search_img" src="../../../images/index/search.png" alt="img">
         <p class="search_p" @click="search_cargo">搜索</p>
@@ -216,6 +216,10 @@
           <span class="historySearch" v-for="(item,index) in filteredHrecord" @click="search_cargo(item,index)">{{item}}</span>
         </div>
       </div>
+      <img src="../../../images/index/first.png" style="float: left; margin-right: 50px;" alt="img">
+      <img src="../../../images/index/second.png" style="float: left; margin-right: 50px;" alt="img">
+      <img src="../../../images/index/third.png" style="float: left; margin-right: 50px;" alt="img">
+      <img src="../../../images/index/fouth.png" style="float: left;" alt="img">
     </div>
     <div class="clearfix"></div>
   </div>
@@ -431,7 +435,7 @@
         userHistory: [],
         activeInColor: '#333',
         activeOutColor: '#333',
-        //activeColor: '#5DB7E7'
+        //activeColor: '#005aab'
       }
     },
     created: function() {
@@ -483,7 +487,7 @@
       showLogin1 : function() {
         var that = this;
         if (that.showLogin1 == true) {
-          that.activeInColor = '#5DB7E7'
+          that.activeInColor = '#005aab'
         } else {
           that.activeInColor = '#333'
         }
@@ -492,7 +496,7 @@
       showLogin3 : function() {
         var that = this;
         if (that.showLogin3 == true) {
-          that.activeOutColor = '#5DB7E7'
+          that.activeOutColor = '#005aab'
         } else {
           that.activeOutColor = '#333'
         }
@@ -1245,7 +1249,7 @@
             that.global.setToken(res.data.token)
             that.global.setUser(res.data.data)
             that.$message({
-              message: '注册成功！',
+              message: '注册成功！牙医abc送您60乾币！',
               type: 'success'
             });
             that.Gtoken = that.global.getToken();
@@ -1357,7 +1361,7 @@
     z-index: 1000;
   }
   .logIn:hover, .register:hover, .my_order:hover, .yayi:hover, .system_enter:hover{
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
     transition: all ease 0.5s;
   }
@@ -1372,7 +1376,7 @@
     margin-left: 60px;
   }
   .yayi:hover {
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
     transition: all ease 0.5s;
   }
@@ -1500,7 +1504,7 @@
     color: #999;
   }
   .cargo_rm:hover {
-    color: #5DB7E8;
+    color: #329af0;
     transition: all ease 0.5s;
   }
   .total_box {
@@ -1523,7 +1527,7 @@
     width: 70px;
     height: 30px;
     line-height: 30px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     text-align: center;
     border-radius: 6px;
     margin-top: 13px;
@@ -1564,7 +1568,7 @@
     margin-bottom: 5px;
   }
   .ms_register:hover {
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
 /*    transition: all ease 0.5s;
 */  }
@@ -1584,8 +1588,8 @@
     padding-bottom: 8px;
   }
   .speBottom {
-    color: #5DB7E8;
-    border-bottom: 3px solid #5DB7E7;
+    color: #329af0;
+    border-bottom: 3px solid #005aab;
   }
   .pwdLog {
     width: 104px;
@@ -1598,7 +1602,7 @@
   }
   .messageLog:hover, .pwdLog:hover{
     cursor: pointer;
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
   .des_box {
@@ -1630,7 +1634,7 @@
     width: 130px;
     height: 41px;
     line-height: 40px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
 /*    background-color: #EBEBEB;*/
     text-align: center;
@@ -1638,7 +1642,7 @@
   }
   .getCode:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
   .logIn_btn {
@@ -1648,12 +1652,12 @@
     margin: 0 auto;
     margin-top: 40px;
     text-align: center;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
   }
   .logIn_btn:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
   .logIn_btn2 {
@@ -1663,12 +1667,12 @@
     margin: 0 auto;
     margin-top: 20px;
     text-align: center;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
   }
   .logIn_btn2:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
   .logIn_error {
@@ -1683,7 +1687,7 @@
   }
   .forgetPwd:hover {
     cursor: pointer;
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
 /*-------------------短信密码登录 end----------------------*/
@@ -1716,7 +1720,7 @@
     width: 130px;
     height: 40px;
     line-height: 40px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
     text-align: center;
   }
@@ -1743,7 +1747,7 @@
     margin-top: 25px;
     line-height: 40px;
     text-align: center;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
   }
   .fg_alrHave {
@@ -1753,12 +1757,12 @@
   }
   .fg_alrHave:hover {
     cursor: pointer;
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
   .fg_confirm_btn:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
 /*-------------------忘记密码 end----------------------*/
@@ -1791,14 +1795,14 @@
     width: 130px;
     height: 41px;
     line-height: 41px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
     text-align: center;
     transform: translateY(-1px);
   }
   .rg_getCode:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
   .rg_pwd_box {
@@ -1824,12 +1828,12 @@
     margin-top: 26px;
     line-height: 40px;
     text-align: center;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
   }
   .rg_confirm_btn:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.5s;
   }
   .rg_alrHave {
@@ -1839,19 +1843,19 @@
   }
   .rg_alrHave:hover {
     cursor: pointer;
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
   .rg_logIn {
     text-align: right;
   }
   .rg_logIn:hover {
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
 /*    transition: all ease 0.5s;*/
   }
   .alreadyLog:hover {
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
     transition: all ease 0.5s;
   }
@@ -1863,7 +1867,7 @@
     transform: translateY(-5%);
   }
   .logOut:hover {
-    color: #5DB7E7;
+    color: #005aab;
     cursor: pointer;
     transition: all ease 0.5s;
   }
@@ -1890,23 +1894,23 @@
     width: 1200px;
     height: 63px;
     margin: 0 auto;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 /*    background-color: #EECE7C;*/
   }
   .headerSecond .search_box {
-    margin-top: 18px;
-    margin-right: 110px;
+    margin-top: 3px;
+    margin-right: 83px;
     position: relative;
   }
   .headerSecond .search_word {
     width: 420px;
     height: 33px;
-    border: 1px solid #5DB7E8;
+    border: 1px solid #005aab;
     outline: medium;
     padding-left: 45px;
   }
   .headerSecond .search_word:focus {
-    border: 1px solid #5DB7E7 !important;
+    border: 1px solid #005aab !important;
 /*    transition: all linear 0.2s;*/
   }
   .headerSecond .search_img {
@@ -1916,6 +1920,9 @@
   }
   .search_img:hover {
     cursor: pointer;
+  }
+  .headerSecond .logo_img {
+    margin-right: 103px;
   }
   .headerSecond .logo_img:hover {
     cursor: pointer;
@@ -1928,13 +1935,13 @@
     height: 35px;
     line-height: 35px;
     font-size: 14px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     text-align: center;
     color: #fff;
   }
   .search_p:hover {
     cursor: pointer;
-    box-shadow: 0px 0px 7px #5DB7E7;
+    box-shadow: 0px 0px 7px #005aab;
     transition: all 0.5s ease;
   }
   .historySearch_box {
@@ -1950,7 +1957,7 @@
   }
   .historySearch:hover {
     cursor: pointer;
-    color: #5db7e8;
+    color: #329af0;
     transition: all ease 0.5s;
   }
 </style>

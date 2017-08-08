@@ -1,11 +1,11 @@
 <template>
+<div style="width:100%; background-color:#005aab;">
   <div class="classify">
     <div class="cargo" v-on:mouseenter="cargo" v-on:mouseleave="hideCargo">
-      <span style="font-size:16px">商品分类</span>
-
-      <img v-if="change1" src="../../../images/index/down.png" alt="img">
-      <img v-else src="../../../images/index/up.png" alt="img">
-      <div v-show="!change1"  class="classfyDetail" v-if="allClassfy.length>0"  >
+      <span class="cargo_word">商品分类</span>
+<!--       <img v-if="change1" src="../../../images/index/down.png" alt="img">
+      <img v-else src="../../../images/index/up.png" alt="img"> -->
+      <div v-show="!change1"  class="classfyDetail" v-if="allClassfy.length>0">
         <ul class="classfyDetail_left">
           <li :class="{oneHover:index1==defaultOne}" v-for="(one,index1) in allClassfy" v-on:mouseenter="getTwo(index1,one)" v-on:click="goToClassfy1(index1)">{{one.oneClassify}}</li>
         </ul>
@@ -24,10 +24,9 @@
       </div>
     </div>
     <div class="brand" v-on:mouseenter="brand" v-on:mouseleave="hideBrand">
-      <span style="font-size:16px">品牌库</span>
-
-      <img v-if="!change2" src="../../../images/index/up.png" alt="img">
-      <img v-else src="../../../images/index/down.png" alt="img">
+      <span class="cargo_word">品牌库</span>
+<!--       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
+      <img v-else src="../../../images/index/down.png" alt="img"> -->
       <div class="brandLib"  v-if="!change2">
         <div class="imgWrap" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
           <img :src="oneBrand.itemBrandLogo" alt="img">
@@ -37,6 +36,7 @@
     </div>
   </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -158,32 +158,31 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-
   /*------------------------------------*/
   .classfyDetail{
     width: 1200px;
-    margin: 30px auto;
+    margin: 39px auto;
     min-height: 630px;
     position: absolute;
     top: 0;
     z-index: 5;
     background: white;
     box-shadow: 0 0 5px #e1e1e1;
+    text-align: left;
   }
   .brandLib{
-      width: 1200px;
-      position: absolute;
-      top: 0;
-      z-index: 5;
-      background: white;
-      margin: 30px auto;
-      padding: 30px  0 0  0;
-      min-height: 600px;
-      left: 0;
-      /*border: 1px solid #cccccc;*/
-      /*border-top: none;*/
-      box-shadow: 0 0 5px #e1e1e1;
+    width: 1200px;
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    background: white;
+    margin: 39px auto;
+    padding: 30px 0 0 0;
+    min-height: 600px;
+    left: 0;
+    /*border: 1px solid #cccccc;*/
+    /*border-top: none;*/
+    box-shadow: 0 0 5px #e1e1e1;
   }
   .brandLib .imgWrap img{
     max-width: 70%;
@@ -224,7 +223,7 @@
     width: 200px;
     text-align: center;
     line-height: 46px;
-    background: #5db8e8;
+    background: #005aab;
     float: left;
     color:white;
     min-height: 630px;
@@ -244,11 +243,11 @@
     width: 150px;
     text-align: center;
     font-weight: bold;
-    margin-top: 15px;
+    margin-top: 8px;
   }
-    .details .title:hover{
-        color: #90cbee;
-    }
+  .details .title:hover{
+    color: #90cbee;
+  }
   .details .detail{
     margin-left: 150px;
     border-bottom: 1px solid #eeeeee;
@@ -263,11 +262,11 @@
     line-height: 35px;
     cursor: pointer;
   }
-    .details .detail li:hover{
-      color: #90cbee;
-    }
+  .details .detail li:hover{
+    color: #90cbee;
+  }
   .classfyDetail .oneHover{
-    background: #5ed6dc;
+    background: #329af0;
   }
   .classfyDetail .twoHover{
     color: #5db8e8;
@@ -279,36 +278,39 @@
   /*-------------------------*/
   .classify {
     width: 1200px;
-    height: 30px;
+    height: 39px;
     margin: 0 auto;
     position: relative;
     font-size: 14px;
-/*    background-color: #EECE7C;*/
   }
   .cargo {
     width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 39px;
+    line-height: 39px;
     float: left;
-    margin-right: 85px;
-
+    text-align: center;
   }
   .cargo:hover {
     cursor: pointer;
+    background-color: #329af0;
+  }
+  .cargo_word {
+    font-size:16px; 
+    color: #fff; 
+    margin: 0 auto;
   }
   .brand {
     width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 39px;
+    line-height: 39px;
     float: left;
+    text-align: center;
   }
   .brand:hover {
     cursor: pointer;
+    background-color: #329af0;
   }
   .classify img {
     margin-left: 10px;
   }
-
-
-
 </style>
