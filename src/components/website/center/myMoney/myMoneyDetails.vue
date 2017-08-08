@@ -81,7 +81,7 @@
   position: absolute;
     right: 0;
     top: 10px;
-    color: #5DB7E7;
+    color: #005aab;
     font-size: 14px;
 }
 /*-------animation start------*/
@@ -92,7 +92,7 @@
   opacity: 0;
 }
 .spe {
-  background-color: #5DB7E7;
+  background-color: #005aab;
   color: #fff !important;
 }
 .myOrder {
@@ -117,7 +117,7 @@
 }
 .tab_item:hover {
   cursor: pointer;
-  background-color: #5DB7E7;
+  background-color: #005aab;
   transition: all ease 0.5s;
   color: #fff;
 }

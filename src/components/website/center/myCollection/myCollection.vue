@@ -119,7 +119,7 @@
 color:  #D81E06;
 }
 .myCollection .colorBlue{
-color:  #5db7e8;
+color:  #329af0;
 }
 .head{
   padding-left: 38px;
@@ -196,7 +196,7 @@ vertical-align: middle;
   padding-right: 10px;
 }
 .goodDetail li:hover .title{
-  color: #5db7e8;
+  color: #329af0;
 }
 .goodDetail .goodFooter{
 margin-top: 18px;
@@ -211,59 +211,4 @@ padding-right: 10px;
 .nogood{
   margin: 128px 0 138px 496px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>

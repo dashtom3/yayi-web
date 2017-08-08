@@ -185,7 +185,7 @@
   }
   .footerDes span:hover {
     cursor: pointer;
-    color: #5DB7E7;
+    color: #329af0;
     transition: all ease 0.5s;
     text-decoration: underline;
   }
@@ -201,7 +201,7 @@
     cursor: pointer;
   }
   .copyright span:hover{
-    color: #5DB7E7;
+    color: #329af0;
     text-decoration: underline;
   }
 </style>

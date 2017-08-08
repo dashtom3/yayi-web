@@ -173,7 +173,7 @@
   margin-top: -12px;
 }
 .changeImg:hover{
-  color: #5db7e8;
+  color: #005aab;
 }
 .error {
   position: absolute;
@@ -211,8 +211,8 @@
 }
 .personalData .mainContent .el-button--primary{
   margin-left: 12px ;
-  background-color: #5db7e8;
-  border-color: #5db7e8;
+  background-color: #005aab;
+  border-color: #005aab;
   width: 160px;
   line-height: 42px;
   padding: 0;
@@ -230,22 +230,4 @@
   cursor: pointer;
   transform: translateX(-50%);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>

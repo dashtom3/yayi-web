@@ -350,8 +350,8 @@
 }
 .certification .el-button--primary{
   margin-left: 168px ;
-  background-color: #5db7e8;
-  border-color: #5db7e8;
+  background-color: #005aab;
+  border-color: #005aab;
   width: 160px;
   line-height: 42px;
   padding: 0;

@@ -167,10 +167,10 @@
 .content{
   margin-left: 42px;
   width: 970px;
-  color: #5db7e8;
+  color: #005aab;
 }
 .showSearchInfoClass{
-  color: #5db7e8;
+  color: #005aab;
   line-height: 50px;
   padding-left: 110px;
 }
@@ -192,8 +192,8 @@
 .bindSale .el-button--primary{
   display: block;
   margin: auto;
-  background-color: #5db7e8;
-  border-color: #5db7e8;
+  background-color: #005aab;
+  border-color: #005aab;
   width: 160px;
   line-height: 42px;
   margin-top: 20px;

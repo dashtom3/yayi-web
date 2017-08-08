@@ -234,7 +234,7 @@ margin: auto;
     width: 160px;
     line-height: 40px;
     color: white;
-    background: #5DB7E7;
+    background: #005aab;
     margin: 30px auto;
     border-radius: 5px;
     cursor: pointer;

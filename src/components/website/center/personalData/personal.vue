@@ -77,11 +77,11 @@
 }
 .head span:hover{
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 }
 .head .nowTabActive{
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 }
 </style>
 <style >

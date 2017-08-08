@@ -149,7 +149,7 @@ import util from '../../../../common/util'
   margin-bottom: 30px;
 }
 .colorBlue{
-  color: #5db7e8;
+  color: #005aab;
 }
 .colorRed{
   color: #D81E06;

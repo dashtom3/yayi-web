@@ -494,7 +494,7 @@ border-radius: 3px;
     cursor: pointer;
 }
 .classifyLine .qqqq{
-  background: #5db7e8;
+  background: #005aab;
     color: white;
 }
 .brandLib{
@@ -514,11 +514,11 @@ border-radius: 3px;
     margin-top: 7px;
 }
 .brandLib .eedrf{
-  background: #5db7e8;
+  background: #005aab;
     color: white;
 }
 .asdff{
-  background: #5db7e8;
+  background: #005aab;
   color: white;
 }
 .fenlei1{
@@ -534,10 +534,10 @@ border-radius: 3px;
     color: black;
 }
 .nowOrder{
-  color: #5db7e8;
+  color: #005aab;
 }
 .nowOrder span{
-  background: #5db7e8;
+  background: #005aab;
 }
 .classfyDetail{
   border: 1px solid #bcbcbc;
@@ -633,8 +633,8 @@ right: 0;
   margin-top: 20px;
 }
 .brandLine .selectedClassfy{
-  color: #5db7e8;
-  border: 1px solid #5db7e8;
+  color: #005aab;
+  border: 1px solid #005aab;
 }
 .classifyLine{
   margin-top: 20px;
@@ -643,17 +643,17 @@ right: 0;
   margin-left: 19px;
 }
 .classifyLine .selectedClassfy{
-  color: #5db7e8;
+  color: #005aab;
 }
 .brandLibWrap{
   width: 1200px;
 margin: 0 auto;
 }
 .indexLine{
-  color: #5db7e8;
+  color: #005aab;
 }
 .showBlueColor:hover{
-  color: #5db7e8;
+  color: #005aab;
   cursor: pointer;
 }
 .classifyLine span {
@@ -740,7 +740,7 @@ transition: all 0.5s ease;*/
 /* } */
 .allGoods .blueBgc{
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 }
 .allGoods li .imgWrap{
   width: 270px;
@@ -772,9 +772,9 @@ transition: all 0.5s ease;*/
 }
 .allGoods li:hover .goodTitle{
   cursor: pointer;
-  /*background: #5db7e8;*/
+  /*background: #005aab;*/
   transition: all ease 0.5s;
-  color: #5db7e8;
+  color: #005aab;
   transition: all 0.5s ease;
 }
 .goodBottom{
@@ -784,7 +784,6 @@ transition: all 0.5s ease;*/
 .goodBottom span:nth-child(2){
   float: right;
 }
-
 .fenye{
   text-align: center;
   padding: 20px;

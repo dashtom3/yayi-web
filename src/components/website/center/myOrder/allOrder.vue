@@ -548,7 +548,7 @@
       outline: medium;
     }
     .search_word:focus {
-    border: 1px solid #5DB7E7 !important;
+    border: 1px solid #005aab !important;
 /*    transition: all linear 0.2s;*/
   }
   .search_img {
@@ -695,13 +695,13 @@
     margin: 0 auto;
     /*margin-top: 49px;*/
     line-height: 28px;
-    background-color: #5DB7E7;
+    background-color: #005aab;
     color: #fff;
     border-radius: 5px;
   }
   .payBtn:hover {
     cursor: pointer;
-    background-color: #5ed6dc;
+    background-color: #329af0;
     transition: all ease 0.2s;
   }
 
@@ -777,7 +777,7 @@
   float: right;
   margin-right: 20px;
   cursor: pointer;
-  color: #5DB7E7;
+  color: #005aab;
 }
 
 .orderDetails div p:nth-child(1){

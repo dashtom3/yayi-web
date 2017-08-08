@@ -460,12 +460,12 @@ th,td {
   text-align: center;
   color: #fff;
   border-radius: 5px;
-  background-color: #5DB7E7;
+  background-color: #005aab;
   margin-bottom: 50px;
 }
 .save_btn:hover {
   cursor: pointer;
-  background-color: #5ed6dc;
+  background-color: #329af0;
   transition: all ease 0.5s;
 }
 .has_address_box {
@@ -567,7 +567,7 @@ th,td {
   margin-left: 20px;
 }
 .edit:hover, .remove:hover{
-  color: #5DB7E7;
+  color: #005aab;
   cursor: pointer;
 }
 .remove {
@@ -575,7 +575,7 @@ th,td {
   float: left;
 }
 .default_add {
-  color: #5DB7E7; 
+  color: #005aab; 
   font-size:14px;
   margin: auto;
   position: absolute;
@@ -596,7 +596,7 @@ th,td {
   text-align: center;  
   border-radius: 6px; 
   color: #fff; 
-  background-color: #5DB7E7; 
+  background-color: #005aab; 
   font-size: 14px;
 }
 .all_detail {

@@ -200,7 +200,7 @@
   opacity: 0;
 }
 .spe {
-  background-color: #5ed6dc !important;
+  background-color: #329af0 !important;
 }
 .big_box {
   width: 1200px;
@@ -223,11 +223,11 @@
   color: #fff;
   font-size: 14px;
   margin-bottom: 1px;
-  background-color: #5DB7E7;
+  background-color: #005aab;
 }
 .left_item:hover {
   cursor: pointer;
-  background-color: #5ed6dc;
+  background-color: #329af0;
   transition: all ease 0.5s;
 }
 .right_box {

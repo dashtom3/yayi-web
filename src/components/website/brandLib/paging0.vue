@@ -99,7 +99,7 @@
 </script>
 <style scoped>
 .paging0 span{
-  border: 1px solid #5db7e8;
+  border: 1px solid #005aab;
   border-radius: 3px;
   height: 38px;
   width:38px;
@@ -112,7 +112,7 @@
 .paging0 input{
   width: 38px;
   height: 38px;
-  border: 1px solid #5db7e8;
+  border: 1px solid #005aab;
   border-radius: 3px;
   position: relative;
   top: -2px;
@@ -126,7 +126,7 @@
 }
 .paging0 .currentPageStyle{
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 }
 .paging0 .noBorder{
   border: none;
