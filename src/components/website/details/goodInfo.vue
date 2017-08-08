@@ -385,7 +385,16 @@ import util from '../../../common/util'
           }
         }else{
           var num = Math.random();
-          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',
+           beforeClose:(action, instance, done) => {
+            if (action === 'confirm') {
+              that.$emit("goodInfoSay",num);
+              done();
+            } else {
+              done();
+            }
+          }
+         });
         }
       },
       jiSuanSku:function(){
@@ -490,7 +499,15 @@ import util from '../../../common/util'
             that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});
           }
         }else{
-          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',beforeClose:(action, instance, done) => {
+           if (action === 'confirm') {
+             that.$emit("goodInfoSay","sayToLogin");
+             done();
+           } else {
+             done();
+           }
+         }
+       });
         }
       },
     },

@@ -460,7 +460,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .goodIsNoUser *{
-  cursor: auto !important;
+  cursor: auto !iwmportant;
 }
 .notLogin{
   display: block;
