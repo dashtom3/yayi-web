@@ -104,8 +104,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.advertList = res.data.data
             this.img_src = res.data.data.advImg;
-          }else{
-            this.$message.error('获取广告数据失败！');
           }
         })
 			},

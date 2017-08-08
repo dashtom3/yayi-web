@@ -27,8 +27,6 @@
         that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.bannerList = res.data.data.splice(1)
-          }else{
-            that.$message.error('获取广告数据失败！');
           }
         })
       }

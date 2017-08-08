@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="personal">
     <div class="head">
@@ -8,9 +6,8 @@
       <span :class="{nowTabActive:3==currentTabs}" v-on:click="changeTabs(3)">绑定客户代表</span>
       <div style="clear:both"></div>
     </div>
-    <div style="height:745px;" v-if="!personInfo.phone"></div>
-    <personalData :userData="personInfo" v-show="1==currentTabs" v-if="personInfo.phone"></personalData>
-    <certification :userData="personInfo" v-bind:state="currentTabs" v-if="personInfo.phone" v-show="2==currentTabs"></certification>
+    <personalData v-show="1==currentTabs"></personalData>
+    <certification v-bind:state="currentTabs" v-show="2==currentTabs"></certification>
     <bindSale v-show="3==currentTabs"></bindSale>
   </div>
 </template>
@@ -25,15 +22,13 @@
     name: 'personal',
     data () {
       return {
-        currentTabs: 1,
-        personInfo: {}
+        currentTabs: 1
       }
     },
     props: ['salesman'],
     created: function() {
       var that = this
       that.currentTabs = that.salesman;
-      that.init()
       if(that.currentTabs == 3){
         that.changeTabs(that.currentTabs)
       }else{
@@ -58,29 +53,8 @@
     },
     methods:{
       changeTabs:function(index){
-        this.currentTabs = index;
-        if(index == 2){
-          this.init()
-        }
-      },
-      init(){
-        var obj = {
-          phone: global.getUser().phone,
-          token: global.getToken()
-        }
-        //查询个人信息
-        global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') { 
-            this.personInfo = res.data.data
-            this.personInfo.birthday = res.data.data.birthday && util.formatDate.format(new Date(res.data.data.birthday))
-            this.personInfo.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
-            this.personInfo.type = res.data.data.type && res.data.data.type.toString()
-            this.personInfo.part = res.data.data.part && res.data.data.part.split(",")
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      }
+        this.currentTabs = index
+      }   
     }
   }
 </script>

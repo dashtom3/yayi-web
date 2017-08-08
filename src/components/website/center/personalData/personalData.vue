@@ -55,25 +55,23 @@
 <script>
   import global from '../../../global/global'
   import util from '../../../../common/util'
-  export default {
-    props: ["userData"],  
+  export default {  
     data () {
       return {
         currentTabs:1,
         trueName_validate: false,
         birthDay_validate: false,
-        imageUrl: this.userData.userPic || '',
+        imageUrl: '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
         //作为局部这个组件的data的初始值
         personData: {
           phone: global.getUser().phone,
-          token: global.getToken(),
-          userPic: this.userData.userPic || '',
-          trueName: this.userData.trueName || '',
-          sex: this.userData.sex || '1',
-          birthday: this.userData.birthday,
-          qq: this.userData.qq || '',
+          userPic: '',
+          trueName: '',
+          sex: '1',
+          birthday: '',
+          qq: '',
         }
       }
     },
@@ -86,6 +84,7 @@
           }
         }
       })
+      this.init()
     },
     watch: {
       personData: {
@@ -101,6 +100,22 @@
       }
     },
     methods: {
+      //查询个人信息
+      init(){
+        var obj = {
+          phone: global.getUser().phone,
+          token: global.getToken()
+        }
+        //查询个人信息
+        global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.personData.trueName = res.data.data.trueName
+            this.personData.birthday = res.data.data.birthday && util.formatDate.format(new Date(res.data.data.birthday))
+            this.personData.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
+            this.personData.qq = res.data.data.qq
+          }
+        })
+      },
       //编辑个人信息
       savePerInfo(){
         var params = {
@@ -123,7 +138,6 @@
           this.birthDay_validate = true;
           return false;
         }
-        console.log('web',params)
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateUser', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -131,8 +145,6 @@
               message: '个人信息修改成功！',
               type: 'success'
             });
-          }else{
-            this.$message.error('网络出错，请稍后再试！');
           }
         })
       },

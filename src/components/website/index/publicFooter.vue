@@ -197,4 +197,11 @@
     text-align: center;
     background: #ddd;
   }
+  .copyright span{
+    cursor: pointer;
+  }
+  .copyright span:hover{
+    color: #5DB7E7;
+    text-decoration: underline;
+  }
 </style>

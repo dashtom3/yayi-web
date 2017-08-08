@@ -71,8 +71,8 @@
       <el-table-column  label="操作"  align="center" >
         <template scope="scope">
           <span v-if="certificationList[scope.$index].certification.state=='1'">
-            <el-button type="text"  v-on:click="pass(scope.$index)">通过</el-button>
-            <el-button type="text"   v-on:click="dontPass(scope.$index)">不通过</el-button>
+            <el-button type="text" v-on:click="pass(scope.$index)">通过</el-button>
+            <el-button type="text" v-on:click="dontPass(scope.$index)">不通过</el-button>
           </span>
         </template>
       </el-table-column>
@@ -195,12 +195,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.certificationList[index].certification.state = "2";
+          this.certificationList[index].certification.state = 2;
           let params = {
             phone: this.certificationList[index].phone,
             state: this.certificationList[index].certification.state,
-            failReason: '',
-            token: 'f02fa6e1-ddbe-462d-af65-b9ca4f4835e2'
+            failReason: ''
           }
           global.axiosPostReq('/userCertificationList/verify',params).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
@@ -209,28 +208,23 @@
                 message: '审核通过!'
               });
               this.search();
-            }else{
-              this.$message({
-                type: 'info',
-                message: '审核取消'
-              });
             }
           })
-        })
+        }).catch(() => {
+                    
+        });
       },
       dontPass:function(index){
         this.$prompt('拒绝理由','确定审核不通过吗?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(({value}) => {
-          this.certificationList[index].certification.state = "3";
+          this.certificationList[index].certification.state = 3;
           let params = {
             phone: this.certificationList[index].phone,
             state: this.certificationList[index].certification.state,
-            failReason: value,
-            token: 'f02fa6e1-ddbe-462d-af65-b9ca4f4835e2'
+            failReason: value
           }
-          console.log('ceshi jujue',params)
           global.axiosPostReq('/userCertificationList/verify',params).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               this.$message({
@@ -238,14 +232,11 @@
                 message: '审核不通过!'
               });
               this.search();
-            }else{
-              this.$message({
-                type: 'info',
-                message: '审核取消'
-              });
             }
           })
-        })
+        }).catch(() => {
+                    
+        });
       },
       showBigImg:function(index){
         this.ifShowBigImg = true;

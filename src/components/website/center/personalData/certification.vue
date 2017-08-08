@@ -41,6 +41,9 @@
           <transition name="shake">
             <p v-show="audited_validate" class="adopt">资质审核通过！</p>
           </transition>
+          <transition name="shake">
+            <p v-show="pending_validate" class="adopt">您的认证信息我们会尽快审核，请耐心等待~</p>
+          </transition>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="savePerInfo" v-show="btnVisible">提交</el-button>
@@ -55,7 +58,7 @@
   import global from '../../../global/global'
   export default {
     name: 'certification',
-    props:["state","userData"],
+    props:["state"],
     data () {
       return {
         // 1,ing-----2,false
@@ -63,23 +66,23 @@
         companyName_validate: false,
         doctorPic_validate: false,
         sczgz:"口腔执业医师资格证：",
-        imageUrl: this.userData.doctorPic || '',
+        imageUrl: '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
         btnVisible: true,
         ifPass: false,
         audited_validate: false,
+        pending_validate: false,
         partStr: '',
         certiData: {
           phone: global.getUser().phone,
-          token: global.getToken(),
-          type: this.userData.type || '1',
-          companyName: this.userData.companyName || '',
-          part: this.userData.part || ['北京','北京市','东城区'],
-          workAddress: this.userData.workAddress || '',
-          doctorPic: this.userData.doctorPic || '',
-          ifOnce: this.userData.judge || 0
-        } //作为局部这个组件的data的初始值
+          type:'1',
+          companyName: '',
+          part: ['北京','北京市','东城区'],
+          workAddress: '',
+          doctorPic: '',
+          judge: 0
+        }
       }
     },
     created(){
@@ -91,6 +94,7 @@
           }
         }
       })
+      this.init()
     },
     components:{
       selectThree
@@ -98,8 +102,8 @@
     watch:{
       state:function(){
         if(this.state == 2){
-          this.certificateState = this.userData.state;
-          this.ert(this.userData.failReason);
+          this.certificateState = this.certiData.state;
+          this.ert(this.certiData.failReason);
         }
       },
       ifPass: function(){
@@ -120,6 +124,27 @@
       }
     },
     methods:{
+      //查询个人信息
+      init(){
+        var obj = {
+          phone: global.getUser().phone,
+          token: global.getToken()
+        }
+        global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') { 
+            this.certiData.companyName = res.data.data.companyName
+            this.certiData.type = res.data.data.type && res.data.data.type.toString()
+            this.certiData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
+            this.certiData.workAddress = res.data.data.workAddress
+            this.certiData.doctorPic = res.data.data.doctorPic
+            this.certiData.judge = res.data.data.judge
+            this.certiData.state = res.data.data.state
+            this.certiData.failReason = res.data.data.failReason || '无'
+            this.certiData.trueName = res.data.data.trueName
+            this.imageUrl = res.data.data.doctorPic
+          }
+        })
+      },
       saveJudge(){
         var params = {
           phone: global.getUser().phone,
@@ -129,7 +154,7 @@
           part: this.certiData.part.join(","),
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
-          judge: this.certiData.ifOnce
+          judge: this.certiData.judge
         }
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
@@ -149,7 +174,7 @@
           part: this.certiData.part.join(","),
           workAddress: this.certiData.workAddress,
           doctorPic: this.imageUrl,
-          judge: this.certiData.ifOnce
+          judge: this.certiData.judge
         }
 
         //验证单位名称必输
@@ -163,7 +188,7 @@
           return false;
         }
         //编辑资质认证前需先完成个人信息验证
-        if(!this.userData.trueName){
+        if(!this.certiData.trueName){
           this.$message.error('请先完善个人信息部分！');
           return false;
         }
@@ -171,12 +196,14 @@
         //保存个人信息
         global.axiosPostReq('/userPersonalInfo/updateCertification', params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.$message({
-              message: '您的认证信息我们会尽快审核，请耐心等待~',
-              type: 'success'
-            });
+            // this.$message({
+            //   message: '您的认证信息我们会尽快审核，请耐心等待~',
+            //   type: 'success'
+            // });
+            this.init()
             this.ifPass = true;
             this.btnVisible = false;
+            this.pending_validate = true;
           }
         })
       },
@@ -191,43 +218,53 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1 && this.certiData.ifOnce===0){
+        if(this.certificateState==1 && this.certiData.judge===0){
           this.$confirm('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
             type: 'warning',
             callback: action => {
               //提交后台改变状态
-              this.certiData.ifOnce = 0;
+              this.certiData.judge = 1;
               this.saveJudge();
             }
           })
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==1 && this.certiData.ifOnce===1){
+          this.pending_validate = true;
+        }else if(this.certificateState==1 && this.certiData.judge===1){
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2 && this.certiData.ifOnce===0){
+          this.pending_validate = true;
+        }else if(this.certificateState==2 && this.certiData.judge===0){
           this.$confirm('您的认证信息已审核通过',{
             confirmButtonText: '确定',
             type: 'warning',
             callback: action => {
               //提交后台改变状态
-              this.certiData.ifOnce = 1;
+              this.certiData.judge = 1;
               this.saveJudge();
             }
           })
           this.ifPass = true;
           this.btnVisible = false;
-        }else if(this.certificateState==2 && this.certiData.ifOnce===1){
+          this.audited_validate = true;
+          this.pending_validate = false;
+        }else if(this.certificateState==2 && this.certiData.judge===1){
           this.ifPass = true;
           this.btnVisible = false;
           this.audited_validate = true;
-        }else if(this.certificateState==3 && this.certiData.ifOnce===0){
+          this.pending_validate = false;
+        }else if(this.certificateState==3 && this.certiData.judge===0){
           this.$confirm('抱歉，您的认证信息审核不通过，原因：'+ msg +',请重新填写！',{
             confirmButtonText: '确定',
             type: 'warning',
             callback: action => {
               //不通过让他重新编辑
+              this.certiData.type = '',
+              this.certiData.companyName = null,
+              this.certiData.part = ['北京','北京市','东城区'],
+              this.certiData.workAddress = null,
+              this.imageUrl = null,
               this.ifPass = false;
               this.btnVisible = true;
             }

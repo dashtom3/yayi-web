@@ -128,6 +128,7 @@
   #main .el-menu{
     width: 180px;
     line-height: 40px;
+    overflow: hidden;
   }
   #main .el-submenu{
     border-bottom: 1px solid #fff;
@@ -137,17 +138,17 @@
     height: 40px;
     line-height: 40px;
     text-align: center;
-    background-color: #3d76b3;
+    background-color: #005aab;
   }
   #main .el-submenu .el-menu-item {
-    background-color: #3d76b3;
+    background-color: #005aab;
   }
   #main .el-submenu .el-submenu__title:hover, #main .el-menu-item:hover{
     background-color: #5db7e8;
   }
   #main .el-submenu .el-menu-item.is-active, #main .el-menu-item.is-active
   .el-submenu .el-menu-item.is-active:hover, #main .el-menu-item.is-active:hover {
-    background-color: #7dc5ed;
+    background-color: #5baef3;
     color: #fff;
   }
   #main .is-active, #main .is-opened{
@@ -176,7 +177,13 @@
     padding: 0 30px 20px 30px;
   }
   .text-wrap h3{
+    text-align: center;
+    font-weight: normal;
+    color: #005aab;
     margin-bottom: 10px;
+    padding-bottom: 10px;
+    background: url(../../../images/index/title_line.png) no-repeat;
+    background-position: center bottom;
   }
   .text-wrap h4{
     margin: 6px 0;

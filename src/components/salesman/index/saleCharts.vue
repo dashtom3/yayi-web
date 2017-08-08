@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
 		<div class="banner-img">
-			
+			<img :src="ranking_img" alt="排行榜">
 		</div>
 		<div class="brandWarp">
 			<div class="sale-tab">
@@ -65,6 +65,7 @@
 					bindUserNum: 0,
 					saleMoney: 0
 				},
+				ranking_img: '',
 				year: '',
 				month: '',
 				ranking_arr: [],
@@ -78,10 +79,7 @@
 			this.year = this.sale_date.split('-')[0]
 	    this.month = this.sale_date.split('-')[1]
 	    this.init()
-			// this.queryHandler()
-			setTimeout(function(){
-				that.queryHandler()
-			}, 500)
+			this.queryBanner()
 		},
 		watch: {
 			tableData: function(){
@@ -89,6 +87,15 @@
 			}
 		},
 		methods: {
+			//查询banner
+			queryBanner(){
+        var that = this;
+        that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.ranking_img = res.data.data && res.data.data[res.data.data.length-1].advUrl
+          }
+        })
+      },
 			//查询排行榜文字数据
 			init(){
 				var that = this
@@ -160,10 +167,7 @@
 	      this.sale_date = val
 	      this.year = this.sale_date.split('-')[0]
 	      this.month = this.sale_date.split('-')[1]
-	      this.init()
-	      setTimeout(function(){
-	      	that.queryHandler() 
-	      }, 500)      
+	      this.init()     
 	    },
 			//月份补0
 	    fillZero(n){
@@ -237,7 +241,6 @@
 			tabChartHandler(){
 				this.btn_show = true
 				this.init()
-	      this.queryHandler() 
 			},
 			tabTableHandler(){
 				this.btn_show = false
@@ -260,7 +263,9 @@
 	.banner-img{
 		width: 100%;
 		height: 630px;
-		background: #ccc;
+	}
+	.banner-img img{
+		width: 100%;
 	}
 	.brandWarp{
 		width: 1200px;
