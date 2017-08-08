@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="品牌名称">
             <el-select v-model="cargo.brand" placeholder="请选择">
-              <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand">
+              <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand">
               </el-option>
             </el-select>
           </el-form-item>
@@ -125,7 +125,7 @@
           <th class="stock">库存</th>
           <th class="enable">是否启用</th>
         </tr>
-        <tr class="activeTable_des" v-for="(table,index) in details.itemValueList" :key="table">
+        <tr class="activeTable_des" v-for="(table,index) in details.itemValueList" :key="table.itemPropertyInfo">
           <td v-if="table.itemPropertyInfo">
            <span>{{table.itemPropertyInfo}}</span>
           </td>

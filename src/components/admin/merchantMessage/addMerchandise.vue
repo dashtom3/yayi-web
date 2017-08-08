@@ -23,13 +23,13 @@
       </el-form-item>
       <el-form-item label="品牌名称" prop="itemBrandId">
         <el-select v-model="ruleForm.itemBrandId" placeholder="请选择">
-          <el-option v-for="brand in brandOptions" :key="brand" :label="brand.itemBrandName" :value="brand.itemBrandId">
+          <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand.itemBrandId">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品类型" prop="itemSort">
         <el-select v-model="ruleForm.itemSort" placeholder="请选择">
-          <el-option v-for="type in typeOptions" :key="type" :label="type.itemTypeName" :value="type.itemTypeName">
+          <el-option v-for="type in typeOptions" :key="type.itemTypeName" :label="type.itemTypeName" :value="type.itemTypeName">
           </el-option>
         </el-select>
       </el-form-item>
@@ -48,11 +48,11 @@
         <el-button v-if="chooseShopType" type="primary" @click="chooseType()" :disabled='true'>选择属性</el-button>
         <el-button v-else type="primary" @click="chooseType()">选择属性</el-button>
       </el-form-item>
-      <div class="active_box" v-for="(item,index) in items" :key="item">
+      <div class="active_box" v-for="(item,index) in items" :key="item.itemPropertyName">
         <span class="choose_title">{{item.itemPropertyName}}</span>
         <el-button type="primary" @click="removeDes(index)">删除</el-button>
         <div style="margin-top: 15px;">
-          <el-checkbox v-for="sitem in item.itempropertydList" :label="sitem" :key="item" v-model="sitem.checked" @change="checkAllActive()">{{sitem.itemPparam}}</el-checkbox>
+          <el-checkbox v-for="sitem in item.itempropertydList" :label="sitem" :key="sitem.itemPparam" v-model="sitem.checked" @change="checkAllActive()">{{sitem.itemPparam}}</el-checkbox>
         </div>
       </div>
       <!--  添加属性变换表格 开始 -->
@@ -96,7 +96,7 @@
           <th class="stock">库存</th>
           <th class="enable">是否启用</th>
         </tr>
-        <tr class="activeTable_des" v-for="(activeItem,index) in activeItems" :key="">
+        <tr class="activeTable_des" v-for="(activeItem,index) in activeItems" :key="activeItem.itemSkuPrice">
         <!-- <span>{{activeItem}}</span> -->
           <!-- <td v-for="(item,index) in activeItem">{{item.itemPparam}}</td> -->
           <td v-for="(item,key) in activeItem" v-if="key != 'itemSkuPrice' && key != 'tiChen' && key != 'itemQb' && key != 'stockNum' && key != 'canUse'" >{{item}}</td>
@@ -133,7 +133,7 @@
           </el-table-column>
           <el-table-column prop="itempropertydList" label="规格值">
             <template scope="scope">
-              <span v-for="type in scope.row.itempropertydList" :key="type">{{type.itemPparam}}/ </span>
+              <span v-for="type in scope.row.itempropertydList" :key="type.itemPparam">{{type.itemPparam}}/ </span>
             </template>
           </el-table-column>
         </el-table>

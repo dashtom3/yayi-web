@@ -92,7 +92,7 @@
         that.secondForm.itemLevels = that.editCargo.itemDetail.itemLevels
         that.secondForm.itemRange = that.editCargo.itemDetail.itemRange
         that.secondForm.remark = that.editCargo.itemDetail.remark
-        var k = that.editCargo.itemDetail.registerDate.split('/')
+        var k = that.editCargo.itemDetail.registerDate.split('／')
         that.registerDate.date1 = k[0]
         that.registerDate.date2 = k[1]
         if (that.registerDate.date1 == '暂无') {
@@ -100,7 +100,7 @@
         } else if(that.registerDate.date2 == '暂无') {
           that.registerDate.date2 = ''
         }
-        // console.log(that.registerDate,'o9999')
+        console.log(that.registerDate,'o9999')
       } else {
         that.ruleForm = that.$route.params.ruleForm
         that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
