@@ -1,11 +1,11 @@
 <template>
   <div class="myOrder">
     <div class="tab_box">
-      <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">全部订单</div>
-      <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">待付款</div>
-      <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">待发货</div>
-      <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">待收货</div>
-      <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">待评价</div>
+      <div class="tab_item" :class="{spe: isActive1}" @click="changeActive1(tab01Text);">全部订单({{all}})</div>
+      <div class="tab_item" :class="{spe: isActive2}" @click="changeActive2(tab02Text);">待付款({{waitpay}})</div>
+      <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">待发货({{waitsend}})</div>
+      <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">待收货({{waitrec}})</div>
+      <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">待评价({{waitcomment}})</div>
 <!--       <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">退款／退货／换货中</div> -->
     </div>
     <!-- 点击导航后要切换的内容 -->
@@ -30,6 +30,12 @@
     name: 'myOrder',
     data () {
       return {
+        numsArr:[],
+        all:0,
+        waitpay:0,
+        waitrec:0,
+        waitsend:0,
+        waitcomment:0,
         isActive1: true,
         isActive2: false,
         isActive3: false,
@@ -58,16 +64,41 @@
       if(that.$route.params.currentView == 'tab01') {
         that.$emit('listenToChildEvent','tab01')
       }
-      // that.getOrdersNums();
+      that.getOrdersNums();
+    },
+    watch:{
+      numsArr:{
+        handler:function(){
+          for(let i in this.numsArr){
+            var num = this.numsArr[i].counts;
+            var state = this.numsArr[i].state;
+            console.log(num)
+            this.all += num;
+            if(state==1){
+              this.waitpay += num;
+            }
+            if(state==4){
+              this.waitcomment += num;
+            }
+            if(state==3){
+              this.waitrec += num;
+            }
+            if(state==2 || state==5){
+              this.waitsend += num;
+            }
+          }
+        },
+        deep:true
+      }
     },
     methods: {
       getOrdersNums:function(){
         var that = this;
         that.global.axiosPostReq('/OrderDetails/queryOrderNums')
         .then((res) => {
-          console.log(res,"nums")
+          console.log(res,'nums')
           if (res.data.callStatus === 'SUCCEED') {
-
+            this.numsArr = res.data.data;
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
