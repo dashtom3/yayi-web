@@ -1,7 +1,7 @@
 <template>
     <div class="message-container">
         <div class="mask" @click="closeMessage"></div>
-        <div class="content" @scroll="scroll">
+        <div class="content">
             <div class="title">{{title}}</div>
             <span class="close" @click="closeMessage">&times;</span>
             <div class="text-container">
@@ -24,18 +24,12 @@
       closeMessage(e) {
         this.$emit('messageshow', false)
         e.stopPropagation();
-      },
-      scroll(e) {
-        e.preventDefault();
       }
     }
   }
 </script>
 
 <style scoped>
-    body {
-        overflow: hidden;
-    }
     .mask {
         position: fixed;
         top: 0;
@@ -43,6 +37,7 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, .2);
+        z-index: 999;
     }
 
     .content {
@@ -56,9 +51,11 @@
         background-color: #fff;
         padding: 0 50px;
         border-radius: 3px;
+        z-index: 999;
     }
 
     .title {
+        text-align: center;
         font-weight: 600;
         font-size: 18px;
         margin-top: 20px;
