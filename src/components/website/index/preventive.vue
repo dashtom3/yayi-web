@@ -171,15 +171,16 @@ export default {
           //isTop = false;
         }
         if( hei > 0) {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop + 30;
+          document.documentElement.scrollTop = document.body.scrollTop = window.pageYOffset = osTop + 30;
           isTop = true;
-          if (document.body.scrollTop >= total || document.documentElement.scrollTo >= total){
+          if (document.body.scrollTop >= total || document.documentElement.scrollTop >= total || window.pageYOffset >= total){
             clearInterval(timer);
           }
         } else {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop - 30;
+          document.documentElement.scrollTop = document.body.scrollTop = window.pageYOffset = osTop - 30;
           isTop = true;
-          if (document.body.scrollTop <= total || document.documentElement.scrollTo <= total){
+          if (document.documentElement.scrollTop <= total || window.pageYOffset <= total){
+            // console.log(document.body.scrollTop,document.documentElement.scrollTop,window.pageYOffset)
             clearInterval(timer);
           }
         }
