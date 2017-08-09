@@ -32,7 +32,7 @@
             :on-success="uploadFile"
             :before-upload="beforeAvatarUpload"
             :data="qiNiuToken">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" >
+            <img v-if="imageUrl" :src="imageUrl" :class="{disabledPoint: ifPass}" class="avatar" >
             <i class="el-icon-plus avatar-uploader-icon" v-if="!certiData.doctorPic"></i>
           </el-upload>
           <transition name="shake">
@@ -335,6 +335,9 @@
     width: 970px;
     border: 1px solid #eeeeee;
     border-radius: 3px;
+  }
+  .disabledPoint{
+    cursor: default;
   }
 </style>
 <style>

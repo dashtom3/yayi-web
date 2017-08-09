@@ -224,7 +224,7 @@
     }
 
     .spe {
-        color: #5DB7E7;
-        border-bottom: 3px solid #5DB7E7;
+        color: #005aab;
+        border-bottom: 3px solid #005aab;
     }
 </style>

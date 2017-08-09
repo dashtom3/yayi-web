@@ -100,7 +100,7 @@
     </el-dialog>
 
     <!-- 查看详情 -->		 
-    <el-dialog title="优惠码详情" size="small" v-model="couponDetail" :close-on-click-modal="true">
+    <el-dialog title="优惠码详情" size="small" v-model="couponDetail" @close="closeHandler">
 	    <ul class="coupon_detail">
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:20px;">优惠码名称：</span></span>
@@ -153,7 +153,7 @@
 		    </div>
 		  </div>
 	    <div style="margin-top:30px;text-align:center;">
-	      <el-button @click="couponDetail=false">关闭</el-button>
+	      <el-button @click="couponDetail = false">关闭</el-button>
 	    </div>
     </el-dialog>
 	</el-row>
@@ -209,6 +209,11 @@
       handleCurrentChangeDetail(val){
       	this.currentPageDetail = val 
       	this.handleView()
+      },
+      //关闭详情
+      closeHandler(){
+      	this.couponDetail = false
+      	this.queryHandler()
       },
       //添加
       saveHandler(){
@@ -282,19 +287,33 @@
         })
 				this.couponDetail = true
 			},
+			downFile(blob, fileName) {
+		    if (window.navigator.msSaveOrOpenBlob) {
+		        navigator.msSaveBlob(blob, fileName);
+		    } else {
+		        var link = document.createElement('a');
+		        link.href = window.URL.createObjectURL(blob);
+		        link.download = fileName;
+		        link.click();
+		        window.URL.revokeObjectURL(link.href);
+		    }
+			},
 			//下载
 			handleDownLoad(index, row){
 				var that = this
 				if(row){
 	        this.benefitIdSpan = row.benefitId
 				}			
-				var params = {
-					benefitId: this.benefitIdSpan
-				}
-				that.global.axiosPostReq('/benefit/downLoad',params).then((res) => {
-            console.log(res.data)
-            
-        })
+				// var params = {
+				// 	benefitId: this.benefitIdSpan
+				// }
+
+				// that.global.axiosGetReq('/benefit/downLoad',params).then((res) => {
+    //         var blob = new Blob([res.data], {type: "application/vnd.ms-excel;charset=utf-8"}), 
+				// 		fileName = '优惠码';
+				//     that.downFile(blob, fileName);
+    //     })
+        window.open('http://47.93.48.111:8080/api/benefit/downLoad?benefitId='+ this.benefitIdSpan)
 			}
 		}
 	}

@@ -275,7 +275,7 @@ let router = new Router({
       component: Home,
       name: '运费管理',
       menuShow: true,
-      //leaf: true, // 只有一个节点
+      leaf: true, // 只有一个节点
       iconCls: 'iconfont icon-books2', // 图标样式class
       children: [
         {path: '/admin/freightManner/freightSet', component: FreightSet, name: '运费设置', menuShow: true}

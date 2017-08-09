@@ -37,7 +37,7 @@
           <template scope="scope">
             <el-button
               size="mini"
-              type="info"
+              type="primary"
               @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
           </template>  
         </el-table-column>
@@ -311,6 +311,16 @@ export default {
 </script>
 
 <style scope>
+  .el-button--primary {
+    color: #fff;
+    background-color: #005aab!important;
+    border-color: #005aab!important;
+  }
+  .el-button--primary:hover {
+    color: #fff;
+    background-color: #329af0!important;
+    border-color: #329af0!important;
+  }
 	.brandWarp{
     width: 1200px;
     margin: auto;

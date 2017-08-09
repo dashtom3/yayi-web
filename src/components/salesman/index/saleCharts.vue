@@ -37,7 +37,8 @@
 	      </el-table-column> -->
 	    </el-table>
 	    <el-col :span="24" class="warp-breadcrum" v-show="btn_show">
-	      <div id="saleChart" :style="{width: '1200px', height: '600px', margin: 'auto' }"></div>
+	      <div id="saleChart" :style="{width: '1200px', height: '600px', }"></div>
+	      <span class="charts-x-pos">实际销售额（元）</span>
 	    </el-col>
 		</div>
 		
@@ -141,7 +142,7 @@
 	          	for(var i=0;i<res.data.data.length;i++){
 		          	this.ranking_arr.push(res.data.data[i].rowNum)
 		          	this.data_arr.push(res.data.data[i].saleMoney)
-		          	this.color_arr.push('#5db7e8')
+		          	this.color_arr.push('#005aab')
 		          }
 		          this.color_arr.unshift('#ff0000')
 		          //存在排名的情况下并且在20名之类
@@ -260,20 +261,21 @@
 <style scoped>
   .el-button--primary {
     color: #fff;
-    background-color: #5db7e8!important;
-    border-color: #5db7e8!important;
+    background-color: #005aab!important;
+    border-color: #005aab!important;
   }
   .el-button--primary:hover {
     color: #fff;
-    background-color: #57a5cf!important;
-    border-color: #57a5cf!important;
+    background-color: #329af0!important;
+    border-color: #329af0!important;
   }
 	.banner-img{
 		width: 100%;
-		height: 630px;
+		height: 450px;
 	}
 	.banner-img img{
 		width: 100%;
+		height: 100%;
 	}
 	.brandWarp{
 		width: 1200px;
@@ -281,6 +283,7 @@
 	}
 	.warp-breadcrum{
     margin-top: 36px;
+    position: relative;
   }
 	.tab-btn01{
 		margin-left: 20px;
@@ -296,5 +299,10 @@
 	.color-red{
 		color: #ff0000;
 		font-weight: bold;
+	}
+	.charts-x-pos{
+		position: absolute;
+		right: -100px;
+		top: 844px;
 	}
 </style>

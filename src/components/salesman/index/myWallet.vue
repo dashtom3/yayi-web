@@ -60,7 +60,7 @@
           <template scope="scope">
             <el-button
               size="mini"
-              type="info"
+              type="primary"
               @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
           </template>  
         </el-table-column>
@@ -511,13 +511,13 @@
 <style scoped>
   .el-button--primary {
     color: #fff;
-    background-color: #5db7e8!important;
-    border-color: #5db7e8!important;
+    background-color: #005aab!important;
+    border-color: #005aab!important;
   }
   .el-button--primary:hover {
     color: #fff;
-    background-color: #57a5cf!important;
-    border-color: #57a5cf!important;
+    background-color: #329af0!important;
+    border-color: #329af0!important;
   }
   .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
     color: #bfcbd9;
@@ -554,16 +554,16 @@
     color: red;
   }
   .i_col_blue{
-    color: #20a0ff;
+    color: #005aab;
     font-weight: bold;
     font-style: normal;
   }
   .infoColor{
-    color: #56bff8;
+    color: #005aab;
     margin-left: 30px;
   }
   .col_blue{
-    color: #20a0ff;
+    color: #005aab;
   }
   .margin_l{
     margin-left: 76px;
@@ -596,7 +596,7 @@
     margin-right: 30px;
   }
   .active_nav{
-    background: #56bff8;
+    background: #005aab;
     color: #fff;
   }
   .btn_col{
@@ -604,22 +604,12 @@
     height: 36px;
     border-radius: 4px;
     cursor: pointer;
-    background: #5db7e8;
+    background: #005aab;
     border: none;
     color: #fff;
   }
   .withBtn{
     width: 100px;
-  }
-  .el-button--primary {
-    color: #fff;
-    background-color: #5db7e8!important;
-    border-color: #5db7e8!important;
-  }
-  .btn_col:hover{
-    background: #57a5cf;
-    border: none;
-    color: #fff;
   }
   .sel_wrap{
     border: 1px solid #eee;
@@ -705,7 +695,7 @@
     width: 18px;
   }
   .rules a{
-    color: #56bff8;
+    color: #005aab;
     margin-left: 20px;
     position: relative;
   }

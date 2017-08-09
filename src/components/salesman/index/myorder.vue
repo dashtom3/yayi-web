@@ -232,7 +232,7 @@ export default {
     height: 44px;
     font-size: 14px;
     line-height: 44px;
-    background: #5db7e8;
+    background: #005aab;
     color: #fff;
     text-align: center;
   }

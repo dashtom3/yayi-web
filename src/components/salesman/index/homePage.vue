@@ -14,7 +14,7 @@
           <span>{{phone}}</span>
         </div>
         <div class="oneInfor">
-          <span>真实姓名：</span>
+          <span v-if="this.trueName">真实姓名：</span>
           <span>{{trueName}}</span>
         </div>
         <div class="oneInfor">
@@ -257,13 +257,13 @@
 <style scoped>
 .el-button--primary {
   color: #fff;
-  background-color: #5db7e8!important;
-  border-color: #5db7e8!important;
+  background-color: #005aab!important;
+  border-color: #005aab!important;
 }
 .el-button--primary:hover {
   color: #fff;
-  background-color: #57a5cf!important;
-  border-color: #57a5cf!important;
+  background-color: #329af0!important;
+  border-color: #329af0!important;
 }
 .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
   color: #bfcbd9;
@@ -368,13 +368,6 @@
 .cashBtn{
   width: 100px;
   height: 40px;
-  background: #5db7e8;
-  color: #fff;
-}
-.cashBtn:hover{
-  width: 100px;
-  background: #57a5cf; 
-  color: #fff;
 }
 .index_personal_mymoney .headName{
   line-height: 40px;

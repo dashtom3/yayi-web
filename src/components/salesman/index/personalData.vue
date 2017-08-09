@@ -450,12 +450,12 @@
   line-height: 40px;
   text-align: center;
   color: white;
-  background: #5DB7E7;
+  background: #005aab;
   margin-bottom: 2px;
   cursor: pointer;
 }
 .perDataLeft .moreBlue{
-background: #5ed6dc;
+background: #329af0;
 }
 .persInfo{
   width: 818px;
@@ -481,7 +481,7 @@ background: #5ed6dc;
   cursor: pointer;
   border-radius: 2px;
   color: white;
-  background: #5DB7E7;
+  background: #005aab;
 }
 .setBtnWrap span{
   display: block;
@@ -493,7 +493,7 @@ background: #5ed6dc;
   cursor: pointer;
   border-radius: 2px;
   color: white;
-  background: #5DB7E7;
+  background: #005aab;
 }
 .baseInfo{
   margin-top: 40px;

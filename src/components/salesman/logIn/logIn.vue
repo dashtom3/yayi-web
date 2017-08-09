@@ -835,11 +835,11 @@
     /*----------------公共样式 start-------------------*/
 
     .useractive {
-        color: #5DB7E7;
+        color: #005aab;
     }
 
     .protocal {
-        color: #5DB7E7;
+        color:#005aab;
         font-style: normal;
         font-size: 12px;
         cursor: pointer;
@@ -903,7 +903,7 @@
     }
 
     .logIn:hover, .register:hover {
-        color: #5DB7E7;
+        color: #005aab;
         cursor: pointer;
         transition: all ease 0.5s;
     }
@@ -949,7 +949,7 @@
     }
 
     .ms_register:hover {
-        color: #5DB7E7;
+        color: #005aab;
         cursor: pointer;
         /*    transition: all ease 0.5s;
         */
@@ -972,8 +972,8 @@
     }
 
     .speBottom {
-        color: #5DB7E7;
-        border-bottom: 3px solid #5DB7E7;
+        color: #005aab;
+        border-bottom: 3px solid #005aab;
     }
 
     .pwdLog {
@@ -987,7 +987,7 @@
 
     .messageLog:hover, .pwdLog:hover {
         cursor: pointer;
-        color: #5DB7E7;
+        color: #005aab;
         transition: all ease 0.5s;
     }
 
@@ -1025,7 +1025,7 @@
         width: 130px;
         height: 40px;
         line-height: 40px;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
         /*    background-color: #EBEBEB;*/
         text-align: center;
@@ -1033,7 +1033,7 @@
 
     .getCode:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 
@@ -1044,13 +1044,13 @@
         margin: 0 auto;
         margin-top: 40px;
         text-align: center;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
     }
 
     .logIn_btn:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 
@@ -1061,13 +1061,13 @@
         margin: 0 auto;
         margin-top: 16px;
         text-align: center;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
     }
 
     .logIn_btn2:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 
@@ -1085,7 +1085,7 @@
 
     .forgetPwd:hover {
         cursor: pointer;
-        color: #5DB7E7;
+        color: #005aab;
         transition: all ease 0.5s;
     }
 
@@ -1122,7 +1122,7 @@
         width: 130px;
         height: 40px;
         line-height: 40px;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
         text-align: center;
     }
@@ -1154,7 +1154,7 @@
         margin-top: 39px;
         line-height: 40px;
         text-align: center;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
     }
 
@@ -1166,13 +1166,13 @@
 
     .fg_alrHave:hover {
         cursor: pointer;
-        color: #5DB7E7;
+        color: #005aab;
         transition: all ease 0.5s;
     }
 
     .fg_confirm_btn:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 
@@ -1209,14 +1209,14 @@
         width: 130px;
         height: 40px;
         line-height: 40px;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
         text-align: center;
     }
 
     .rg_getCode:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 
@@ -1247,13 +1247,13 @@
         margin-top: 39px;
         line-height: 40px;
         text-align: center;
-        background-color: #5DB7E7;
+        background-color: #005aab;
         color: #fff;
     }
 
     .rg_confirm_btn:hover {
         cursor: pointer;
-        background-color: #5ed6dc;
+        background-color: #329af0;
         transition: all ease 0.5s;
     }
 

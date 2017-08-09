@@ -108,10 +108,10 @@
 .bindedClient .span2{
   float: right;
   cursor: pointer;
-  color:#5db7e8;
+  color:#005aab;
 }
 .searchWrap{
-  border: 1px solid #5db7e8;
+  border: 1px solid #005aab;
   width: 500px;
   border-radius: 2px;
   margin-top: 30px;
@@ -130,7 +130,7 @@ cursor: pointer;
 }
 .myClientHeadBtn .sapnActive{
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 }
 .searchWrap input{
   border: none;
@@ -143,7 +143,7 @@ cursor: pointer;
   display: inline-block;
   float: right;
   width: 46px;
-  border-left: 1px solid #5db7e8;
+  border-left: 1px solid #005aab;
   height: 40px;
 }
 .searchWrap .imgWrap img{
