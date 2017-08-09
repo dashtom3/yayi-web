@@ -3,17 +3,19 @@
         <div class="footerBox">
             <span class="link" @click="goProtocol">创客管理协议</span>
             <span class="center">|</span>
-            <span class="link" @click="goIncome">创客销售收益标准</span>
-            <span class="center">|</span>
+            <span class="link" @click="goIncome" v-show="isLogin">创客销售收益标准</span>
+            <span class="center" v-show="isLogin">|</span>
             <span class="link" @click="goFeedback">意见反馈</span>
         </div>
-        <div >Copyright &copy; 2017  yayiABC.com 版权所有 <span class="copyright" @click="goCopyright">沪ICP 备14038156-2</span></div>
+        <div>Copyright &copy; 2017  yayiABC.com 版权所有 <span class="copyright"
+                                                           @click="goCopyright">沪ICP 备14038156-2</span></div>
         <message :title="title" v-show="messageShow" @messageshow="messageChange">{{content}}</message>
     </div>
 </template>
 
 <script>
   import message from "./message"
+  import global from '../../global/global'
 
   export default {
     name: 'salesFoot',
@@ -21,13 +23,18 @@
       return {
         title: '',
         content: '',
-        messageShow: false
+        messageShow: false,
+        isLogin: false
       }
     },
     components: {
       message
     },
     created: function () {
+      let saleToken = global.getSalesToken()
+      if (saleToken) {
+        this.isLogin = true
+      }
     },
     methods: {
       goProtocol() {
