@@ -11,7 +11,7 @@
               :on-success="uploadFile"
               :data="qiNiuToken">
               <img v-if="imageUrl" :src="imageUrl" class="avatar defaultCss">
-              <img src="../../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personData.userPic">
+              <img src="../../../../images/center/loadUserImg3.png" class="defaultCss" v-if="!personData.userPic">
               <div class="changeImg">更改头像</div>
             </el-upload>
           </el-form-item>

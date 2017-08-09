@@ -292,9 +292,8 @@
 					benefitId: this.benefitIdSpan
 				}
 				that.global.axiosPostReq('/benefit/downLoad',params).then((res) => {
-            // console.log(res.data)
-            var blob = new Blob([res.data],{type:"text/plain"})
-            console.log(blob)
+            console.log(res.data)
+            
         })
 			}
 		}

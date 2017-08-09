@@ -325,7 +325,7 @@
     position: absolute;
     left: 20px;
     font-size: 14px;
-    color: #56bff8;
+    color: #005aab;
   }
   .content{
     padding-top: 40px;

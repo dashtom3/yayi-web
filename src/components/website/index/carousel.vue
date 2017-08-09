@@ -26,7 +26,7 @@
         var that = this;
         that.global.axiosGetReq('/adv/showAdv',{}).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            that.bannerList = res.data.data.splice(1)
+            that.bannerList = res.data.data && res.data.data.splice(1, 4)
           }
         })
       }

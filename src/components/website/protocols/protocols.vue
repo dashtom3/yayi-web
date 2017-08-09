@@ -208,7 +208,7 @@
     margin: 30px 0;
   }
   .content-ul-1 img{
-    width: 600px;
+    width: 800px;
     margin: 30px 0 0 150px;
   }
   .refund_tbs {
