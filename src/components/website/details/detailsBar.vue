@@ -138,10 +138,10 @@
     padding: 20px 0;
 }
 .detailsBar .goodName{
-  color: #5db7e8 !important;
+  color: #005aab !important;
   cursor: pointer;
 }
 .detailsBar .goodName1{
-  color: #5db7e8 !important;
+  color: #005aab !important;
 }
 </style>

@@ -582,8 +582,8 @@ import util from '../../../common/util'
     border:1px solid #5db7e8;*/
   }
   .goodInfo .infoRight .attSty2 {
-    color:#5db7e8;
-    border:1px solid #5db7e8;
+    color:#005aab;
+    border:1px solid #005aab;
   }
   .details .clearFloat{
     clear:both;
@@ -736,18 +736,18 @@ import util from '../../../common/util'
       cursor: pointer;
   }
   .goodBtn span:nth-child(1){
-    background:#5db7e8;
+    background:#005aab;
     color: white;
   }
   .goodBtn span:nth-child(1):hover{
-    background:#57a5cf;
+    opacity: 0.8;
   }
   .goodBtn span:nth-child(2){
     color: white;
-    background:#5ed6dc;
+    background:#329af0;
   }
   .goodBtn span:nth-child(2):hover{
-    background:#54c5cb;
+    opacity: 0.8;
   }
   .goodMore {
     border-bottom: 1px solid #e5e5e5;
@@ -763,7 +763,7 @@ import util from '../../../common/util'
     cursor: pointer;
   }
   .nowGoodMore{
-    border-bottom: 2px solid #5db7e8;
+    border-bottom: 2px solid #005aab;
   }
 
 </style>

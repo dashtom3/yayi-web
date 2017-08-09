@@ -104,13 +104,34 @@
     text-align: right;
     margin-top: 20px;
   }
-  .publicHover {
-
-  }
   .publicHover:hover {
     cursor: pointer;
     color: #005aab;
     transition: all ease 0.5s;
+  }
+  .el-pager li.active {
+    border-color: #005aab;
+    background-color: #005aab;
+    color: #fff;
+    cursor: default;
+  }
+  .el-radio__input.is-checked .el-radio__inner, .el-button--primary, .el-checkbox__input.is-checked .el-checkbox__inner{
+    border-color: #005aab;
+    background-color: #005aab;
+  }
+  .el-button--primary:hover {
+    background: #329af0;
+    border-color: #329af0;
+  }
+  .el-input__inner:focus {
+    outline: 0;
+    border-color: #329af0;
+  }
+  .el-submenu .el-menu-item.is-active, .el-menu-item.is-active, .el-submenu .el-menu-item.is-active:hover, .el-menu-item.is-active:hover {
+    background-color: #329af0 !important;
+  }
+  .el-submenu__title:hover,.el-menu-item.is-active:hover{
+    background-color: #329af0 !important;
   }
 /*牙医ABC 深蓝#005aab; hover浅蓝#329af0;#04D8DD;红色#D81E06;*/
 </style>

@@ -71,7 +71,7 @@
             <span style="margin-right: 10px;">{{taxType}}</span>
             <span style="margin-right: 10px;">{{company_name}}</span>
             <span style="margin-right: 10px;">发票明细</span> 
-            <span style="color:#5DB7E7; cursor: pointer;" @click="editTax">修改</span>
+            <span style="color:#005aab; cursor: pointer;" @click="editTax">修改</span>
           </div>
 <!--           <div style="margin-left:24px;">
             <input type="text" class="tax_word" v-show="tax_word" v-model="tax_des" placeholder="请输入姓名或公司名称">
@@ -1301,7 +1301,7 @@ input:focus {
 .line {
   width: 100%;
   height: 1px;
-  background-color: #5DB7E7;
+  background-color: #005aab;
   margin-top: 31px;
 }
 .address_box {
@@ -1342,7 +1342,7 @@ input:focus {
 }
 .add_item:hover {
   cursor: pointer;
-  background-color: #5DB7E7;
+  background-color: #005aab;
   transition: all ease-out 0.3s;
   color: #fff;
 }
@@ -1484,7 +1484,7 @@ input:focus {
    margin-right: 13px;
 }
 .qianbi_word:focus,.tax_word:focus,.leave_word:focus {
-   border: 1px solid #5DB7E7;
+   border: 1px solid #005aab;
    transition: all ease 0.5s;
 }
 .leave_message {
@@ -1512,7 +1512,7 @@ input:focus {
 .checked_box {
   width: 472px;
   height: 308px;
-  border: 1px solid #5DB7E7;
+  border: 1px solid #005aab;
   padding: 20px;
   float: right;
 }
@@ -1541,7 +1541,7 @@ input:focus {
   margin-left: 170px;
   margin-bottom: 25px;
   font-size: 14px;
-  color: #5DB7E7;
+  color: #005aab;
 }
 .sixth_p {
   margin-bottom: 25px;
@@ -1556,19 +1556,19 @@ input:focus {
   line-height: 42px;
   text-align: center;
   color: #fff;
-  background-color: #5DB7E7;
+  background-color: #005aab;
   border-radius: 5px;
   float: right;
   margin-top: 30px;
   margin-bottom: 100px;
 }
 .submit_btn:hover {
-  background-color: #5ed6dc;
+  background-color: #329af0;
   transition: all ease 0.5s;
   cursor: pointer;
 }
 .right_word:hover {
-  color: #5DB7E7;
+  color: #005aab;
   transition: all ease 0.5s;
   cursor: pointer;
 }
@@ -1595,14 +1595,14 @@ input:focus {
 }
 .active_btn {
   cursor: pointer;
-  border: 1px solid #5DB7E7;
-  background-color: #5DB7E7;
+  border: 1px solid #005aab;
+  background-color: #005aab;
   color: #fff;
 }
 .zTax_btn:hover,.nTax_btn:hover {
   cursor: pointer;
-  border: 1px solid #5DB7E7;
-  background-color: #5DB7E7;
+  border: 1px solid #005aab;
+  background-color: #005aab;
   color: #fff;
   transition: all ease 0.5s;
 }
@@ -1617,8 +1617,8 @@ input:focus {
   height: 37px;
   line-height: 37px;
   text-align: center;
-  border: 1px solid #5DB7E7;
-  background-color: #5DB7E7;
+  border: 1px solid #005aab;
+  background-color: #005aab;
   color: #fff;
   border-radius: 7px;
   display: inline-block;

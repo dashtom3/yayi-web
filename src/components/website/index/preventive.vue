@@ -38,7 +38,7 @@
     <!--  品牌库页面 结束 -->
     <!--  本期主推页面 开始 -->
     <div class="preventive_box d_jump">
-      <div class="img_box_change">
+      <div class="img_box">
         <img class="brand_img" src="../../../images/index/yayi.png" alt="img">
         <p class="classifyName">本期主推</p>
       </div>
@@ -406,6 +406,8 @@ a {
   vertical-align: middle;
 }
 .classifyName {
+  width: 100px;
+  margin: auto;
   position: absolute;
   color: #fff;
   top: 45px;

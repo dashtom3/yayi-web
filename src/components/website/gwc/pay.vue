@@ -238,14 +238,14 @@
   text-align: center;
   color: #fff;
   font-size: 14px;
-  background-color: #5DB7E7;
+  background-color: #005aab;
 }
 .active {
-  border: 1px solid #5DB7E7 !important;
+  border: 1px solid #005aab !important;
 }
 .nowPay:hover {
   cursor: pointer;
-  background-color: #5ed6dc;
+  background-color: #329af0;
   transition: all ease 0.5s;
 }
 .WePayLogo {

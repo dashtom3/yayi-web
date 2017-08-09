@@ -1546,7 +1546,7 @@
     background-position: center;
 /*    background: url(../../../images/index/logBg.jpg) center no-repeat;*/
     text-align: center;
-    box-shadow: 1px 1px 5px #eee;
+    box-shadow: 3px 3px 15px #999999;
   }
   .transition-box .logIn_container {
     width: 1200px;
@@ -1592,7 +1592,7 @@
     padding-bottom: 8px;
   }
   .speBottom {
-    color: #329af0;
+    color: #005aab;
     border-bottom: 3px solid #005aab;
   }
   .pwdLog {

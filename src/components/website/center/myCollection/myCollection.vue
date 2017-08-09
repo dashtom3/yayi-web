@@ -119,7 +119,7 @@
 color:  #D81E06;
 }
 .myCollection .colorBlue{
-color:  #329af0;
+color:  #005aab;
 }
 .head{
   padding-left: 38px;
@@ -196,7 +196,7 @@ vertical-align: middle;
   padding-right: 10px;
 }
 .goodDetail li:hover .title{
-  color: #329af0;
+  color: #005aab;
 }
 .goodDetail .goodFooter{
 margin-top: 18px;

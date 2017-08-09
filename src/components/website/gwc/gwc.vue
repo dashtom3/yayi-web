@@ -477,7 +477,7 @@ top: 3px;
 
 }
  .gwcWrap .colorBlue{
-  color: #5db7e8;
+  color: #005aab;
 }
 .gwcWrap .colorRed{
   color:#e0645b;
@@ -490,7 +490,7 @@ top: 3px;
   width: 460px;
   line-height: 40px;
   color: white;
-  background: #5db7e8;
+  background: #005aab;
 text-align: center;
 box-shadow: 3px 3px 10px #96ccea;
 margin: auto;
