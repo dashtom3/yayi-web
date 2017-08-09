@@ -134,12 +134,12 @@ export default {
     menu: function() {
       var that = this;
       var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-      if(scroll >= 800) {
+      if(scroll >= 636) {
         that.isActive = true;
       } else {
         that.isActive = false;
       }
-      var num = parseInt((scroll-742)/636);
+      var num = parseInt((scroll-592)/636);
       that.yayi = num;
       // console.log(scroll);
     },
@@ -171,13 +171,13 @@ export default {
           //isTop = false;
         }
         if( hei > 0) {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop + 15;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop + 30;
           isTop = true;
           if (document.body.scrollTop >= total || document.documentElement.scrollTo >= total){
             clearInterval(timer);
           }
         } else {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop - 15;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop - 30;
           isTop = true;
           if (document.body.scrollTop <= total || document.documentElement.scrollTo <= total){
             clearInterval(timer);

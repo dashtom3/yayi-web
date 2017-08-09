@@ -207,7 +207,6 @@
           console.log(obj,'23232')
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              // console.log(res.data);
               that.getClassify()
               that.getAllClassify()
               that.searchClassfyName = ''
@@ -217,7 +216,7 @@
                 message: '删除成功!'
               });
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              that.$message.error(res.data.msg);
             }
           })
         }).catch(() => {
