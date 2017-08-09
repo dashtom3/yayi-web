@@ -28,8 +28,8 @@
       </ul>
       <div class="qr-code fr">
         <img src="../../../images/index/qr_code.png" alt="二维码">
-        <p>TEL:400-001-4980</p>
-        <p>E-mail:yayiabc@yayiabc.com</p>
+        <p>TEL：400-001-4980</p>
+        <p>E-mail：yayiabc@yayiabc.com</p>
       </div>
     </div>
     <p class="copyright">Copyright © 2017 yayiABC.com 版权所有 <span @click="beian">沪ICP 备14038156-2</span></p>

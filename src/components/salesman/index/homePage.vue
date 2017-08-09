@@ -5,7 +5,7 @@
       <div class="personal_left">
         <div class="userImgWrap">
           <img style="border-radius:50%;width:100%;height:100%;cursor:auto;" :src="imgUrl" alt="头像" v-if="imgUrl">
-          <img src="../../../images/center/loadUserImg.png" style="border-radius:50%;width:100%;height:100%;cursor:auto;" alt="头像" v-if="!imgUrl">
+          <img src="../../../images/center/loadUserImg3.png" style="border-radius:50%;width:100%;height:100%;cursor:auto;" alt="头像" v-if="!imgUrl">
         </div>
       </div>
       <div class="personal_right">

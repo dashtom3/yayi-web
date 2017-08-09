@@ -143,14 +143,19 @@
 		          	this.data_arr.push(res.data.data[i].saleMoney)
 		          	this.color_arr.push('#5db7e8')
 		          }
-		          //存在排名的情况下
-		          if(this.ranking_info.rowNum){
-		          	this.color_arr.splice(this.ranking_info.rowNum-1, 1, '#ff0000')
-		            this.color_arr = this.color_arr.reverse()
+		          this.color_arr.unshift('#ff0000')
+		          //存在排名的情况下并且在20名之类
+		          if(this.ranking_info.rowNum && this.ranking_info.rowNum<21){
+		          	this.color_arr.splice(this.ranking_info.rowNum, 1, '#ff0000')
 		          }
-		          
+
+	          	this.color_arr = this.color_arr.reverse()
+	          	//追加一个自己红色排第一个
+		          this.ranking_arr.unshift('我（'+this.ranking_info.rowNum+'）')
+		          this.data_arr.unshift(this.ranking_info.saleMoney)		          
 		          this.ranking_arr = this.ranking_arr.reverse()
 		          this.data_arr = this.data_arr.reverse()
+
 	          }else{
 	          	if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
 		        		this.isRanking = true
@@ -175,7 +180,9 @@
 	    },
 			drawBar(){
 	      var that = this;
-	      document.getElementById('saleChart').style.height = this.data_arr.length && this.data_arr.length * 100 + 'px' || '400px'
+	      // document.getElementById('saleChart').style.height = this.data_arr.length && this.data_arr.length * 100 + 'px' || '400px'
+	      document.getElementById('saleChart').style.height = '900px'
+
 	      // 基于准备好的dom，初始化echarts实例
 	      var myChart = echarts.getInstanceByDom(document.getElementById('saleChart'));
 	      if (myChart === undefined) {  
@@ -189,6 +196,7 @@
 			    },
 			    tooltip: {
 			        trigger: 'axis',
+			        show: false,
 			        axisPointer: {
 			            type: 'shadow'
 			        }

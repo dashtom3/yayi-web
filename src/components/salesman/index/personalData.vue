@@ -17,7 +17,7 @@
               :on-success="uploadFile"
               :data="qiNiuToken">
               <img v-if="personalData.salePic"  style="cursor:auto;" :src="personalData.salePic" class="avatar defaultCss">
-              <img src="../../../images/center/loadUserImg.png"  style="cursor:auto;" class="defaultCss" v-if="!personalData.salePic">
+              <img src="../../../images/center/loadUserImg3.png"  style="cursor:auto;" class="defaultCss" v-if="!personalData.salePic">
             </el-upload>
           </div>
           <div class="persInfo">

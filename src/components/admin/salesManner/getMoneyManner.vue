@@ -30,14 +30,14 @@
       <!--列表-->
       <el-table :data="getMoneyList" border style="width: 100%">
         <!-- <el-table-column prop="userId" align="center" label="销售员编号"></el-table-column> -->
-        <el-table-column prop="trueName" align="center" width="140" label="真实姓名"></el-table-column>
-        <el-table-column prop="phone" align="center" width="140" label="手机号"></el-table-column>
-        <el-table-column prop="balanceOut" align="center" width="100" label="提现金额"></el-table-column>
-        <el-table-column prop="postalType" align="center" width="80" label="类型"></el-table-column>
-        <el-table-column prop="openName" align="center" width="140" label="开户者"></el-table-column>
-        <el-table-column prop="bankName" align="center" width="120" label="银行"></el-table-column>
-        <el-table-column prop="accountNumber" align="center" label="账号" width="200"></el-table-column>
-        <el-table-column prop="createFormate" align="center" label="申请时间" width="180">
+        <el-table-column prop="trueName" align="center" width="120" label="真实姓名"></el-table-column>
+        <el-table-column prop="phone" align="center" width="130" label="手机号"></el-table-column>
+        <el-table-column prop="balanceOut" align="center" label="提现金额"></el-table-column>
+        <el-table-column prop="postalType" align="center" label="类型"></el-table-column>
+        <el-table-column prop="openName" align="center" label="开户者"></el-table-column>
+        <el-table-column prop="bankName" align="center" label="银行"></el-table-column>
+        <el-table-column prop="accountNumber" align="center" label="账号" width="180"></el-table-column>
+        <el-table-column prop="createFormate" align="center" label="申请时间">
           <template scope="scope">
             <span>{{new Date(scope.row.create).getFullYear()+'-'+ fillZero(new Date(scope.row.create).getMonth()+1)+'-'+fillZero(new Date(scope.row.create).getDate())+' '+fillZero(new Date(scope.row.create).getHours())+":"+fillZero(new Date(scope.row.create).getMinutes())+":"+fillZero(new Date(scope.row.create).getSeconds())}}</span>
           </template>
