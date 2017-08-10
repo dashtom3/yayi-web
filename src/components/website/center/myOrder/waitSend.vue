@@ -15,14 +15,14 @@
       <div style=""><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
     </div>
     <!--  暂无订单结束 -->
-    <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="item in items" :key="item.orderId" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.created.split(" ")[0]}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
-      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
+      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo.itemPropertyNamea">
         <div class="left des_img" style="width:81px;height:85px;" @click="goToThisDetails(cargo)">
           <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
         </div>
@@ -85,7 +85,7 @@
       </div>
       <div style="width:100%;border-color:#eeeeee;" class="order_item" v-if="nowOrderDetails.orderitemList">
         <!--  订单详情item 开始 -->
-        <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
+        <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo.itemPropertyNamea">
           <div class="left des_img" style="width:81px;height:85px;">
             <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
           </div>

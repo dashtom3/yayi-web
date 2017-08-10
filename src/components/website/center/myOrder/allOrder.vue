@@ -39,14 +39,14 @@
       <div><img src="../../../../images/center/noSearch.png" alt="img"></div>
     </div>
     <!--  查询无数据订单结束 -->
-    <div class="order_item" v-for="(item,index) in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="(item,index) in items" :key="item.orderId" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.created.split(" ")[0]}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
         <span class="orderDetailsBtn"  @click="lookOrderDetails(item)">订单详情</span>
       </div>
       <!--  订单详情item 开始 -->
-      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo">
+      <div class="order_des" v-for="cargo in item.orderitemList" :key="cargo.itemPropertyNamea">
         <div class="left des_img" @click="goToThisDetails(cargo)">
           <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
         </div>
@@ -115,7 +115,7 @@
           </div>
           <div style="width:100%;border-color:#eeeeee;" class="order_item" v-if="nowOrderDetails.orderitemList">
             <!--  订单详情item 开始 -->
-            <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo">
+            <div class="order_des" style="border:none;" v-for="cargo in nowOrderDetails.orderitemList" :key="cargo.itemPropertyNamea">
               <div class="left des_img">
                 <img :src="cargo.picPath+'?imageView2/1/w/80/h/80'" alt="img">
               </div>
@@ -163,12 +163,12 @@
     <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
       <div class="wlxxWrap" v-if="wuliuxinxi">
         <div class="wlxxLeft">
-          <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces" :key="one"><span class="circle"></span></span>
+          <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces" :key="one.AcceptStation"><span class="circle"></span></span>
           <span class="lastCircle"></span>
         </div>
         <div class="wlxxRight">
           <ul>
-            <li v-for="one in wuliuxinxi.Traces" :key="one">
+            <li v-for="one in wuliuxinxi.Traces" :key="one.AcceptStation">
               <span class="data">{{one.AcceptTime.split(" ")[0]}}</span>
               <div class="placeWrap">
                 <span class="place">{{one.AcceptStation}}</span>
@@ -191,7 +191,7 @@
     </el-dialog>
     <!-- 评价 -->
     <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-      <div class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList"  v-if="commentScores.length > 0" :key="item">
+      <div class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList"  v-if="commentScores.length > 0" :key="item.itemInfo">
         <div class="commentImgWrap">
           <img class="comment_img" :src="item.picPath" alt="img">
         </div>

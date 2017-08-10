@@ -4,7 +4,7 @@
       <img src="../../../images/details/noComment.png" alt="">
     </div>
     <ul v-else>
-      <li v-for="comment in comments" :key="comment">
+      <li v-for="comment in comments" :key="comment.userPhone">
         <div >
           <!-- <span class="name">{{comment.userName}}</span> -->
           <span class="phone">{{comment.userPhone | matUserPhone}}</span>

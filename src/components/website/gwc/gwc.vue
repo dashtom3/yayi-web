@@ -19,7 +19,7 @@
         <span>操作</span>
       </div>
       <div style="min-height:455px;padding-bottom:90px;">
-      <div :class="{thisGoodIsNokuCun:good.state!=1}" class="oneGood" v-for="(good,index) in gwcGoods" :key="good" >
+      <div :class="{thisGoodIsNokuCun:good.state!=1}" class="oneGood" v-for="(good,index) in gwcGoods" :key="good.itemPropertyInfo" >
         <div v-if="good.state==1">
           <div class="">
             <el-checkbox  style="float:left;margin-top:33px;"  v-model="good.checked"></el-checkbox>

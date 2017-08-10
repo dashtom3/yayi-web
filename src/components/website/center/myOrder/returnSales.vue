@@ -1,3 +1,5 @@
+
+
 <template>
   <div class="returnSales">
     <div class="search_box right">
@@ -16,7 +18,7 @@
     <!--  暂无订单开始 -->
     <div class="no_order" v-show="no_order">{{no_find}}</div>
     <!--  暂无订单结束 -->
-    <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="item in items" :key="item.date" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.date}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>

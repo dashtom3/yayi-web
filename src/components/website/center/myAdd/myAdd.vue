@@ -46,7 +46,7 @@
             <div class="left add_operate">操作</div>
           </div>
           <table class="table_address_header">
-            <tr class="address_des" v-for="add in address" :key="add">
+            <tr class="address_des" v-for="add in address" :key="add.receiverName">
               <td class="des_people">{{add.receiverName}}</td>
               <td class="des_place">{{add.province}}{{add.city}}{{add.county}}</td>
               <td class="des_des">{{add.receiverDetail}}</td>

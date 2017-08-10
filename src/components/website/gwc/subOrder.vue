@@ -13,7 +13,7 @@
           <p class="right_word" @click="addNew">新增收货地址</p>
         </div>
         <div class="add_des_box">
-          <div class="add_item" v-for="(item,index) in items" :key="item" @click="chooseAdd(item)">
+          <div class="add_item" v-for="(item,index) in items" :key="item.province" @click="chooseAdd(item)">
             <div class="clearfix"></div>
             <div class="first left">寄送至：</div>
             <div class="second left">

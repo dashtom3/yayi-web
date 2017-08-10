@@ -16,18 +16,18 @@
       <div class="classifyLine" >
         分类：
         <span class="defaultClassfy" :class="{qqqq:noLimitClassfy}" v-on:click="clearAllClassfy()">不限</span>
-          <span class="fenlei1" v-bind:class="{fenlieselect: classify1Index===index}" v-on:click="selectClassfy1(index,item)"  v-for="(item,index) in brandClassfy" :key="item">
+          <span class="fenlei1" v-bind:class="{fenlieselect: classify1Index===index}" v-on:click="selectClassfy1(index,item)"  v-for="(item,index) in brandClassfy" :key="item.oneClassify">
             {{item.oneClassify}}
           </span>
           <div class="classfyDetail" v-show="fenlie2.length>0">
             <div class="towClassfy" >
               <ul>
-                <li :class="{asdff:classify2Index==index}" v-on:click="selectClassfy2(index,item)" v-for="(item,index) in fenlie2" :key="item">{{item.classifyTwoName}}</li>
+                <li :class="{asdff:classify2Index==index}" v-on:click="selectClassfy2(index,item)" v-for="(item,index) in fenlie2" :key="item.classifyTwoName">{{item.classifyTwoName}}</li>
               </ul>
             </div>
             <div class="threeClassfy" v-show="fenlie3.length>0">
               <ul>
-                <li :class="{asdff:classify3Index==index}" v-on:click="selectClassfy3(index,item)" v-for="(item,index) in fenlie3" :key="item">{{item.classifyThreeName}}</li>
+                <li :class="{asdff:classify3Index==index}" v-on:click="selectClassfy3(index,item)" v-for="(item,index) in fenlie3" :key="item.classifyThreeName">{{item.classifyThreeName}}</li>
               </ul>
             </div>
           </div>
@@ -36,7 +36,7 @@
         <span style="margin-top:11px">品牌：</span>
         <span class="defaultBrand" :class="{eedrf:brandNoLimit}" v-on:click="brandNoLimitFn()">不限</span>
         <ul>
-          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands" :key="item">
+          <li v-bind:class="{selectedClassfy:index==selectThisBrand}" v-on:click="selectBrand(index,item)" v-for="(item,index) in brands" :key="item.itemBrandName">
             {{item.itemBrandName}}
             <img v-show="item.selected" src="../../../images/brandLib/1.png" alt="">
             <img v-show="!item.selected" src="../../../images/brandLib/2.png" alt="">
@@ -51,7 +51,7 @@
       </div> -->
       <div class="orderSelect">
         <ul>
-          <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}" :key="item">
+          <li v-for="(item,index) in orderArr" v-on:click="sureOrderStyle(index)"  :class="{nowOrder:orderState==index}" :key="item.orderName">
             {{item.orderName}}
             <span></span>
             <img v-if="!item.orderSort&&index>0&&index<3"  src="../../../images/brandLib/7.png" alt="">
@@ -67,7 +67,7 @@
 
       <div class="allGoods">
         <ul v-if="ifHaveData">
-          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)" :key="item">
+          <li  v-for="(item,index) in allGoods" v-on:click="goToThisDetail(index,item.itemId)" :key="item.itemName">
             <div class="imgWrap">
               <img class="goodImg" :src="item.itemDetail.itemPica+'?imageView2/1/w/255/h/255'" alt="">
               <span></span>

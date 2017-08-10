@@ -6,8 +6,8 @@
       </div>
       <div class="infoLeft_2">
         <ul>
-          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg" :key="goodImg">
-            <img  :src="goodAllImgs[index]+'?imageView2/1/w/60/h/60'" />
+          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg" :key="goodImg.id">
+            <img :src="goodAllImgs[index]+'?imageView2/1/w/60/h/60'" />
           </li>
           <div class="clearFloat"></div>
         </ul>
@@ -55,10 +55,10 @@
       <div v-show="nowGoodDetails.state==0" class="fontRed">商品已下架</div>
       <div v-show="nowGoodDetails.state!=0">
          <div class="shuxingWrap" style="height:auto">
-          <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
+          <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item.propertyName">
             <span style="float:left">{{item.propertyName}}：</span>
             <div class="shuxing">
-              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal" :disabled = "!oneAttrVal.enabled">
+              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal.data" :disabled = "!oneAttrVal.enabled">
                 {{oneAttrVal.data}}
               </button>
               <div class="clearFloat"></div>
