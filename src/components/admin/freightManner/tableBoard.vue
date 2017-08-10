@@ -104,7 +104,6 @@
           //       expression
           //     }
           // }
-          // console.log(that.items,'2232323')
         },
         deep: true
       },
@@ -122,7 +121,7 @@
             }
           }
           that.submitCities = a;
-          // console.log(that.submitCities);
+          
         },
         deep: true
       },
@@ -175,7 +174,7 @@
           if (a.length == item.place.length) {
             item.allcheck = true;
           }
-          //console.log(a,'ppp')
+          
         } else {
           for (var i = 0; i < item.place.length; i++) {
             if (item.place[i].checked == false) {

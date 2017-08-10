@@ -330,15 +330,13 @@
             }
             that.global.axiosPostReq('/item/queryProperty',obj).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
-                  console.log(res.data.data[0].itempropertydList,'search')
-                  // that.items[i].itempropertydList = new Array()
+
                     that.items[i].itempropertydList = res.data.data[0].itempropertydList
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
                 }
             })
           }
-          // console.log(that.activeItems,'bbbbbb')
         } else { // 添加商品进入时
           that.getItemId()
           that.getAllClassify()
@@ -362,7 +360,6 @@
             }
           }
           that.activeItems = activeItems
-          console.log(that.activeItems,'Yes')
         } 
         else { // 添加商品时如果商品属性返回否
           if (that.$route.params.ruleForm.itemValueList[0].canUse == 1) {
@@ -435,7 +432,6 @@
         }
         that.global.axiosGetReq('/item/queryProperty',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data,'lihui')
             that.tableData2 = res.data.data
             that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.tableData2.length; i++) {
@@ -468,7 +464,6 @@
       handleSelectionChange(val) {
         var that = this
         that.multipleSelection = val
-        // console.log(that.multipleSelection,'222');
       },
       //确定商品属性
       confirm_type: function() {
@@ -554,7 +549,6 @@
               that.ruleForm.itemValueList = subitem
               // that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
               that.ruleForm.shopType = that.shopType
-              console.log(that.ruleForm,'223355')
               that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm, editCargo:that.editCargo}})
             } else {
               window.sessionStorage.setItem('editChange', JSON.stringify(that.activeItems))
@@ -576,7 +570,6 @@
                   subitem[i].canUse = 0
                 }
               }
-              console.log(subitem,'tttt')
               window.sessionStorage.setItem('property', JSON.stringify(subitem))
               for (var i = 0; i < subitem.length; i++) {
                   delete subitem[i].itemSkuPrice
@@ -657,11 +650,9 @@
                 that.ruleForm.itemValueList = that.newArr
                 that.ruleForm.shopType = that.shopType //是否有商品属性
                 that.ruleForm.items = that.items //选择商品的属性
-                console.log(that.ruleForm, that.newArr,'223355');
                 that.$router.push({ name: 'secondStep', params:{ ruleForm: that.ruleForm }})
             }
           } else {
-            console.log('error submit!!')
             return false;
           }
         });

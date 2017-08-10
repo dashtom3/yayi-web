@@ -103,7 +103,6 @@ import global from '../global/global'
             }
             that.global.axiosPostReq('/adminstrator/login', obj).then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
-                // console.log(res.data.num,'op')
                 window.sessionStorage.setItem('accountType', res.data.num)
                 that.loading = false;
                 that.global.setAdminToken(res.data.token)
@@ -114,7 +113,6 @@ import global from '../global/global'
               }
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         });

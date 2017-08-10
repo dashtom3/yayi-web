@@ -104,7 +104,6 @@
         },
 		created(){
 			var that = this
-            console.log(window.sessionStorage.getItem('accountType'),'ioioio')
             let accountType = window.sessionStorage.getItem('accountType')
             if( accountType == 2 ){
               that.accountP = true

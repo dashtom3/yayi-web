@@ -274,7 +274,6 @@
     //   next(vm => {
     //     var that = vm;
     //     var token = window.localStorage.getItem('Token');
-    //     console.log(token);
     //   })
     // },
     created: function () {
@@ -293,7 +292,6 @@
       items: {
         handler: function () {
           var that = this;
-          console.log('22');
         },
         deep: true
       },
@@ -454,7 +452,6 @@
       },
       messageChange(e) {
         this.messageShow = e;
-        console.log(e);
       },
       // 登录成功后
       alreadyLog: function () {
@@ -580,7 +577,6 @@
                 }
               } else {
                 that.$message.error('获取验证码失败！');
-                console.log(res);
               }
             })
         }
@@ -612,7 +608,6 @@
                 }
               } else {
                 that.$message.error('获取验证码失败！');
-                console.log(res);
               }
             })
         }
@@ -644,7 +639,6 @@
                 }
               } else {
                 that.$message.error('获取验证码失败！');
-                console.log(res);
               }
             })
         }
@@ -703,7 +697,6 @@
         }
         that.global.axiosPostReq('/saleLog/pwdLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.token);
             that.global.setSalesToken(res.data.token)
             that.global.setSalesUser(res.data.data)
             that.$message({
@@ -748,8 +741,6 @@
         }
         that.global.axiosPostReq('/saleLog/forgetPwd', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res, '1');
-            console.log(res.data, '2');
             that.changeForget1 = true;
             that.changeForget2 = false;
             that.changeForget3 = false;

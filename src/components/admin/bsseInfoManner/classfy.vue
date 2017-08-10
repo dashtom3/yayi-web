@@ -139,7 +139,6 @@
       getAllClassify: function() {
         var that = this;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand').then((res) => {
-          // console.log(res.data);
           if (res.data.callStatus === 'SUCCEED') {
             that.options = res.data.data.classifyList
             for (var i = 0; i < that.options.length; i++) {
@@ -193,7 +192,6 @@
       // 删除分类
       DELEONE:function(scope){
         var that = this;
-        // console.log(scope.row.itemClassifyId);
         that.$confirm('确定删除该属性吗, 是否继续?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -204,7 +202,6 @@
             itemClassifyName: scope.row.itemClassifyName,
             itemClassifyGrade: scope.row.itemClassifyGrade,
           }
-          console.log(obj,'23232')
           that.global.axiosPostReq('/item/deleteItemClassify',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               that.getClassify()
@@ -229,7 +226,6 @@
       // 修改商品分类
       changeOneAttr: function(scope) {
         var that = this;
-        console.log(scope.row);
         //that.ruleForm.upClass.push(scope.row.itemPreviousClassify);
         that.bindTitle = "修改商品分类";
         that.dialogFormVisible = true;
@@ -280,7 +276,6 @@
       // 保存商品分类
       saveOneAttrs: function(formName) {
         var that = this;
-        // console.log(that.ruleForm);
         that.$refs[formName].validate((valid) => {
           if (valid) {
             if (that.bindTitle == "添加商品分类") {
@@ -312,7 +307,6 @@
                 itemOldName: that.ruleForm.oldClassname,
                 itemClassifyGrade: that.ruleForm.itemClassifyGrade,
               }
-              console.log(that.ruleForm,'22222222');
               that.global.axiosPostReq('/item/updateItemClassify',obj).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
                   that.getClassify();
@@ -333,7 +327,6 @@
               })
             }
           } else {
-            // console.log('error submit!!');
             return false;
           }
         });

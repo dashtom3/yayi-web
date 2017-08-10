@@ -355,9 +355,7 @@
           numberPerPage: that.pagesize,
         }
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
-          console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,'op')
             that.tableData = res.data.data;
             that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.tableData.length; i++) {
@@ -396,7 +394,6 @@
         var that = this;
         that.list = data;
         that.addMerchandise = false;
-        //console.log(data);
       },
       // 查询
       search: function(val) {
@@ -447,7 +444,6 @@
             numberPerPage: that.pagesize,
           }
         }
-        console.log(that.cargo,'90909090')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;            
@@ -455,7 +451,6 @@
             for (var i = 0; i < that.tableData.length; i++) {
               that.tableData[i].classify = that.tableData[i].oneClassify + '/' + that.tableData[i].twoClassify + '/' + that.tableData[i].threeClassify
             }
-            console.log(res.data,'999999');
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -491,7 +486,6 @@
                 that.editCargo.shopType = '2'
                 window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
                 that.$router.push({ name: 'addMerchandise'});
-                console.log(that.editCargo,'shopType2否');
               }else {
                 that.editCargo.shopType = '1'
                 for (var i = 0; i < that.editCargo.itemValueList.length; i++) {
@@ -543,7 +537,6 @@
                 }
                 window.sessionStorage.setItem('editCargo', JSON.stringify(that.editCargo))
                 that.$router.push({ name: 'addMerchandise'});
-                console.log(that.editCargo,'shopType1是');
               }
             }
           } else {

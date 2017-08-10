@@ -88,7 +88,6 @@
     // },
     methods: {
       getMsg: function (data) {
-        //console.log(data)
         var that = this;
         if (data == "goToMyClient") {
           that.changeActive4(that.tab04Text);

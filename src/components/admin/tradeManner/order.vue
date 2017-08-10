@@ -476,14 +476,12 @@
     },
     methods: {
       lookAtFaPiaoFun:function(order){
-        console.log(order);
         var that = this;
         var obj = {
           orderId:order.orderId
         };
         that.global.axiosPostReq('/showUserOrderManage/queryOrderInvoice',obj)
         .then((res) => {
-          console.log(res,"lookAtFaPiaoFun")
           if (res.data.callStatus === 'SUCCEED') {
             that.lookAtFaPiaoWrap = true;
             that.thisOrderInvoice = res.data.data
@@ -534,15 +532,11 @@
         var obj = {
           orderId:row.orderId
         };
-        console.log(obj)
         that.lookTuiKun = true;
         that.global.axiosPostReq('/showUserOrderManage/showRefundOrderMessage',obj)
         .then((res) => {
-          console.log(res,"lookAtTuiKuanOrder")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderInfo = res.data.data;
-          } else {
-            that.$message.error('错误，请刷新页面！');
           }
         })
       },
@@ -578,7 +572,6 @@
               }
         }
         if(that.value3.length!=0){
-          console.log(that.value3,"11111111")
           var date1,date2;
           date1 = that.value3[0].toLocaleString();
           date2 = that.value3[1].toLocaleString();
@@ -601,7 +594,6 @@
         obj.numberPerpage = 10;
         that.global.axiosGetReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
-          console.log(res,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
             that.totalCount=res.data.totalNumber;
@@ -616,7 +608,6 @@
         obj.logisticsName = that.wuliu;
         obj.orderId = that.faHuoOrder.orderId;
         obj.logisticsCode = that.wuLiuBianHao;
-        console.log(obj)
         if(that.wuLiuBianHao){
           that.global.axiosPostReq('/showUserOrderManage/warehouseDelivery',obj)
           .then((res) => {
@@ -652,7 +643,6 @@
               }
         }
         if(that.value3.length!=0){
-          console.log(that.value3,"22222222222")
           var date1,date2;
           if(that.value3[0]){
             date1 = that.value3[0].toLocaleString();
@@ -666,7 +656,6 @@
           obj.orderETime = date2;
         }
         if(that.value1){
-          console.log(that.value1)
           // 退款状态
           if(that.value1=="全部"){
             obj.isRefund = "";
@@ -676,10 +665,8 @@
             obj.isRefund = "否";
           }
         }
-        console.log(obj,"searchObj")
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
-          console.log(res,"searchOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
             that.totalCount=res.data.totalNumber;
@@ -696,7 +683,6 @@
         };
         that.global.axiosPostReq('/showUserOrderManage/queryOrderDetails',obj)
         .then((res) => {
-          console.log(res,"getOneOrderDetailsById")
           if (res.data.callStatus === 'SUCCEED') {
             this.detailVisible = true;
             this.nowOrderDetails = res.data.data;
@@ -712,11 +698,9 @@
                 allMoney += this.nowOrderDetails.orderitemList[i].refunNum * this.nowOrderDetails.orderitemList[i].price;
               }
             }
-            // console.log(this.global.goodToMoney(arr),"0000");
             this.nowOrderDetails.tuikuanzhonglei = num;
             // 计算
             var returndata = this.jisuanbuzhidao(this.nowOrderDetails.orderitemList);
-            console.log(returndata)
             this.nowOrderDetails.outCoins = 0;
             this.nowOrderDetails.refundAmt = 0;
             this.nowOrderDetails.untread = 0;
@@ -750,7 +734,6 @@
         };
         that.global.axiosPostReq('/showUserOrderManage/showOrder')
         .then((res) => {
-          console.log(res,"getOrderList")
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
           // that.pagesize=res.data.totalPage;
@@ -816,7 +799,6 @@
         that.tuiKuanIndex = index;
         that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
         .then((res) => {
-          console.log(res,"getOneOrderDetailsById")
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in res.data.data.orderitemList){
               res.data.data.orderitemList[i].count = 1;
@@ -876,10 +858,8 @@
           that.$alert('请至少选择一件退款的商品',  {confirmButtonText: '确定',});
         }else{
           sendObj.orderItem = JSON.stringify(sendObj.orderItem);
-          console.log(sendObj)
           that.global.axiosPostReq('/showUserOrderManage/makeRefundData',sendObj)
           .then((res) => {
-            console.log(res)
             if (res.data.callStatus === 'SUCCEED') {
               // var data = that.orderList[that.tuiKuanIndex];
               // data.state = 10;

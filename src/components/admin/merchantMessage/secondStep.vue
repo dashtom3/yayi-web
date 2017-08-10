@@ -101,7 +101,6 @@
         if(that.registerDate.date2 == '暂无') {
           that.registerDate.date2 = ''
         }
-        console.log(that.registerDate,'o9999')
       } else {
         that.ruleForm = that.$route.params.ruleForm
         that.ruleForm.isThrow = parseInt(that.ruleForm.isThrow)
@@ -122,7 +121,6 @@
               that.secondForm.date1 = that.registerDate.date1
               that.secondForm.date2 = that.registerDate.date2
               Object.assign(that.newForm,that.secondForm,that.ruleForm)
-              console.log(that.registerDate.date1,that.registerDate.date2,'kkkkk')
               that.secondStep = false
               that.thirdStep = true
             } else {
@@ -133,7 +131,6 @@
               that.thirdStep = true
             }
           } else {
-            console.log('error submit!!')
             return false;
           }
         });

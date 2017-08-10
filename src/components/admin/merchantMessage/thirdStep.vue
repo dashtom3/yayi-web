@@ -159,7 +159,6 @@
             that.qiNiuToken = {
               token: res.data.msg
             }
-            console.log(that.qiNiuToken.token)
           }
         })
         that.queryHandler();
@@ -170,7 +169,6 @@
             that.qiNiuToken = {
               token: res.data.msg
             }
-            console.log(that.qiNiuToken.token)
           }
         })
         that.queryHandler();
@@ -200,7 +198,6 @@
         that.quill1.clipboard.dangerouslyPasteHTML(that.editCargo.itemDetail.itemDesc);
         that.quill2.clipboard.dangerouslyPasteHTML(that.editCargo.itemDetail.itemUse);
       } else {
-        console.log(that.editCargo,'opop')
       }
     },
     methods: {
@@ -212,9 +209,7 @@
         }
         // var delta = that.quill1.getContents();
         // delta.push(insert);
-        // console.log(delta,'ppp')
         //var i = that.quill1.getContents().ops.length;
-        // console.log(i,'333')
         if (that.fwb == 0) {
           that.quill1.insertEmbed(0, 'image', that.imageUrl);
         } else {
@@ -277,7 +272,6 @@
       // 上传图片成功之后
       uploadFile(file, fileList) {
         var that = this;
-        console.log(fileList,file)
         var img_src = '';
         img_src = global.qiniuShUrl + file.key
         that.fileList.push(img_src)
@@ -290,35 +284,27 @@
         }else {
           var img_src = global.qiniuShUrl + file.response.key
         }
-        // console.log(file.name,'iiiiii')
-        // console.log(fileList,'opop')
-        // console.log(that.fileList,'opop2')
+
         // if (fileList.length < that.fileList.length && fileList.length > 0) {
-        //   console.log('1')
         //   var img_src = global.qiniuShUrl + file.response.key
         // } else if(fileList.length == 0) {
         //   var img_src = file.url
-        //   console.log('2')
         // } else if (fileList.length < that.fileList.length ) {
         //   var img_src = file.url
-        //   console.log('3')
         // }
         var b = that.fileList.filter(function(ele,index,arr) {
             return ele !== img_src;   
         });
         that.fileList = b;
-        console.log(that.fileList,'opopoppop')
       },
       // 保存新增商品
       save: function() {
         var that = this;
         that.saveLoading = true
         if (that.state !== 1) {
-          console.log('进入新增商品')
           // that.quill1.insertText(1, 'Hello', 'bold', true);
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
-          // console.log(that.thirdForm.itemDesc,that.thirdForm.itemUse);
           that.thirdForm.itemPica = that.fileList[0];
           that.thirdForm.itemPicb = that.fileList[1];
           that.thirdForm.itemPicc = that.fileList[2];
@@ -354,13 +340,11 @@
           xhr.send(itemValueList)
           xhr.onreadystatechange = function(){
             // var succeed = JSON.parse(xhr.response.callStatus)
-            // console.log(succeed)
             var succeed = JSON.parse(xhr.response)
             if(succeed.callStatus == 'SUCCEED') {
               delete that.thirdForm.itemValueList
               global.axiosPostReq('/item/insert',that.thirdForm).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
-                  console.log(res,'保存成功！');
                   that.$message('保存成功！');
                   that.saveLoading = false
                   that.$router.push({ name: '商品信息管理', params:{ list: true, addMerchandise: false}});
@@ -375,7 +359,6 @@
             }
           }
         } else {
-          console.log('进入修改商品')
           that.thirdForm.itemDesc = that.quill1.container.firstChild.innerHTML;
           that.thirdForm.itemUse = that.quill2.container.firstChild.innerHTML;
           that.thirdForm.itemPica = that.fileList[0];
@@ -417,7 +400,6 @@
               delete that.thirdForm.itemValueList
               global.axiosPostReq('/item/update',that.thirdForm).then((res) => {
                 if (res.data.callStatus === 'SUCCEED') {
-                  console.log(res,'修改商品成功！');
                   that.$message('修改商品成功！');
                   window.sessionStorage.removeItem('editCargo')
                   that.saveLoading = false

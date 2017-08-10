@@ -33,7 +33,6 @@
         }
         that.global.axiosPostReq('/saleLog/reLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res);
             that.global.removeSalesMsg()
             that.$message({
               message: '退出成功！',

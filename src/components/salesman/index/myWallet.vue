@@ -366,7 +366,6 @@
         } else {
           this.currentPage = val
         }
-        console.log(val)
 
         //选择分类
         if(val == '全部' || !val || (typeof(val) !== 'number' && val.indexOf('-') !== -1)) {

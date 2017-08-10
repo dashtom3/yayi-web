@@ -130,7 +130,6 @@
         var that = this;
         that.global.axiosPostReq('/freightManage/showFreeShipp')
         .then((res) => {
-          // console.log(res.data.data,"getSelfFreightList")
           if (res.data.callStatus === 'SUCCEED') {
             that.tab2_tableData = res.data.data;
             if(that.tab2_tableData[0].state==1){
@@ -182,7 +181,6 @@
         this.state = false;
       },
       handleClick(tab, event) {
-        // console.log(tab, event);
       },
       tab1_saveOne:function(index,one){
         var that = this;
@@ -211,7 +209,6 @@
         if(one.postCity[0]=="未添加地区"){
           str = "请选择地区！";
         }else{
-          // console.log(one.postCity)
           obj.postCity = one.postCity;
         }
         if(str){
@@ -241,7 +238,6 @@
       },
       tab1_changeOne:function(index){
         var that = this;
-        // console.log(index)
         var obj = that.tab1_tableData[index];
         obj.changeState = true;
         that.tab1_tableData.splice(index,1,obj);
@@ -254,7 +250,6 @@
         var that = this;
         that.$confirm('此操作将删除该自定义邮费, 是否继续?', '提示', {  confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
-          console.log(one)
           if(one.postFeeId){
             var obj = {
               postFeeId:one.postFeeId
@@ -273,7 +268,6 @@
         });
       },
       tab1_editThis:function(index,row){
-        console.log(row)
         var that = this;
         that.selectPlaceStale = 1;
         that.state = true;
@@ -312,7 +306,6 @@
         if(one.postCity[0]=="未添加地区 "){
           str = "请填写包邮地区！";
         }else{
-          console.log(one.postCity)
           obj.postCity = one.postCity;
         }
         if(str){
@@ -320,7 +313,6 @@
         }else{
           that.global.axiosPostReq('/freightManage/updateFreeShipp',obj)
           .then((res) => {
-            console.log(res.data.data,"tab2_save")
             if (res.data.callStatus === 'SUCCEED') {
             } else {
               that.$message.error('网络出错，请稍后再试！');

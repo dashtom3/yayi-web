@@ -101,9 +101,8 @@
         var that = vm;
         let admin = window.sessionStorage.getItem('adminToken')
         that.accountType = window.sessionStorage.getItem('accountType')
-        // console.log(,'管理员身份')
         if(admin){
-          console.log('欢迎光临！')
+          
         }else{
           that.$router.push('/admin/login');
         }
@@ -111,10 +110,10 @@
     },
     methods: {
       handleOpen() {
-        //console.log('handleopen');
+        
       },
       handleClose() {
-        //console.log('handleclose');
+        
       },
       //折叠导航栏
       collapse: function () {

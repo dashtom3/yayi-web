@@ -121,7 +121,6 @@
         }
         that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,'popop')
             that.moneyList = res.data.data;
             that.totalCount = res.data.totalNumber;
             for (var i = 0; i < that.moneyList.length; i++) {
@@ -182,7 +181,6 @@
           that.loadingCheckHead = true;
           that.global.axiosGetReq('/userQbList/list',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data);
               that.loadingCheckHead = false;
               that.moneyList = res.data.data;
               that.totalCount = res.data.totalNumber;
@@ -214,7 +212,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.loadingCheck = false
             that.yayiCoin = res.data.data.qbBalance
-            // console.log(that.yayiCoin,'okokoko');
           }
           // that.$message.error('网络出错，请稍后再试！');
         })
@@ -237,9 +234,7 @@
           phone: that.nowUserMoneyNum,
           qbBalance: that.yayiCoin,
         }
-        console.log(obj);
         that.global.axiosPostReq('/userQbList/update',obj).then((res) => {
-          console.log(res,'99909')
           if (res.data.callStatus === 'SUCCEED') {
             that.currentPage = 1
             that.getClassify()

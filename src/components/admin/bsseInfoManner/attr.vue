@@ -148,7 +148,6 @@
         that.global.axiosGetReq('/item/queryProperty',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getGoodAttrList");
             var data = res.data.data;
             that.tableData = data;
             that.totalCount=res.data.totalNumber;
@@ -163,7 +162,6 @@
         that.global.axiosGetReq('/item/queryProperty')
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getGoodAttrList");
             var data = res.data.data;
             that.tableData = data;
             that.totalCount=res.data.totalNumber;
@@ -179,7 +177,6 @@
         that.global.axiosGetReq('/item/queryProperty',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"reloadPage");
             var data = res.data.data;
             that.tableData = data;
             that.totalCount=res.data.totalNumber;
@@ -222,7 +219,6 @@
         }
       },
       changeThisAttr:function(index,item){
-        // console.log(item)
         this.changeThisAll = index;
         this.flag1 = false;
         this.attOperaType = 2;
@@ -236,7 +232,6 @@
           that.global.axiosPostReq('/item/queryProperty',obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res,"searchData")
               that.tableData = res.data.data;
               that.totalCount=res.data.totalNumber;
             } else {
@@ -251,7 +246,6 @@
             var obj = {
               itemPropertyId:item.itemPropertyId
             };
-            console.log(obj)
             that.global.axiosPostReq('/item/deleteProperty',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
@@ -291,13 +285,10 @@
             }
             obj.itemPparamList = arr;
             obj.itemPropertyName = that.formData.addGoodAttrName;
-            console.log(obj)
             that.global.axiosPostReq('/item/addPropertydAndPropertyName',obj)
             .then((res) => {
-              console.log(res)
               if (res.data.callStatus === 'SUCCEED') {
                 obj.itempropertydList = arr2;
-                // that.tableData.push(obj);
                 that.addGoodAttrValues = [];
                 that.formData.addGoodAttrName= null;
                 that.showAddGoodAttr  = false;
@@ -320,10 +311,8 @@
             for(let i in that.tableData[that.changAttrIndex].itempropertydList){
               obj2.itemPparamList.push(that.tableData[that.changAttrIndex].itempropertydList[i].itemPparam)
             }
-            console.log(obj2,"asas")
             that.global.axiosPostReq('/item/updateProperty',obj2)
             .then((res) => {
-              console.log(res);
               if (res.data.callStatus === 'SUCCEED') {
                 that.showAddGoodAttr = false;
                 that.getGoodAttrList();
