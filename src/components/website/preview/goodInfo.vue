@@ -2,12 +2,12 @@
   <div class="goodInfo">
   	<div class="infoLeft">
       <div class="infoLeft_1">
-        <img :src="bigImgUrl" />
+        <img :src="bigImgUrl+'?imageView2/1/w/400/h/400'" />
       </div>
       <div class="infoLeft_2">
         <ul>
-          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg">
-            <img  :src="goodAllImgs[index]" />
+          <li v-on:mouseenter="enter(index)" v-for="(goodImg ,index) in goodAllImgs" v-if="goodImg" :key="goodImg">
+            <img  :src="goodAllImgs[index]+'?imageView2/1/w/60/h/60'" />
           </li>
           <div class="clearFloat"></div>
         </ul>
@@ -52,42 +52,49 @@
         注册证号：{{itemDetail.registerId}}
       </div>
       <hr class="onePxLine" color="e5e5e5"></hr>
-      <div class="shuxingWrap" style="height:auto">
-        <div class="" v-for="(item, index1) in items" v-if="item.propertyName" >
-          <span style="float:left">{{item.propertyName}}：</span>
-          <div class="shuxing">
-            <!-- canUseEqulOneClass -->
-            <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList"  :disabled = "!oneAttrVal.enabled">
-              {{oneAttrVal.data}}
-            </button>
-            <div class="clearFloat"></div>
+      <div v-show="nowGoodDetails.state==0" class="fontRed">商品已下架</div>
+      <div v-show="nowGoodDetails.state!=0">
+         <div class="shuxingWrap" style="height:auto">
+          <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
+            <span style="float:left">{{item.propertyName}}：</span>
+            <div class="shuxing">
+              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal" :disabled = "!oneAttrVal.enabled">
+                {{oneAttrVal.data}}
+              </button>
+              <div class="clearFloat"></div>
+            </div>
           </div>
-        </div>
-        <div class="clearFloat"></div>
-      </div>
-      <div class="priceWrap">
-        数量：
-        <div class="calculator">
-          <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
-          <span>{{goodDefaultNum}}</span>
-          <span v-on:click="addGoodNum()">+</span>
           <div class="clearFloat"></div>
         </div>
-        <div style="clear:both">
-
+        <div class="priceWrap">
+          数量：
+          <div class="calculator">
+            <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
+            <!-- <span>{{goodDefaultNum}}</span> -->
+            <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
+             <span v-if="nowGoodDetails.itemValueList" :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()">+</span>
+            <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
+            <div class="clearFloat"></div>
+          </div>
+          <div style="clear:both"></div>
+        </div>
+        <div v-if="kuCunBuZu" class="goodBtn">
+          <span>加入购物车</span>
+          <span>立即购买</span>
+        </div>
+        <div v-else class="goodBtn kucunbuzu">
+          <span >加入购物车</span>
+          <span >立即购买</span>
         </div>
       </div>
-      <div class="goodBtn">
-        <span>加入购物车</span>
-        <span>立即购买</span>
-      </div>
+
     </div>
     <div class="clearFloat"></div>
     <div>
       <div class="goodMore">
         <span :class="{nowGoodMore:goodInforWord==1}" v-on:click="changeGoodInforWord('1','goodIntroduce')">商品介绍</span>
         <span :class="{nowGoodMore:goodInforWord==3}" v-on:click="changeGoodInforWord('3','instructions')">使用说明</span>
-        <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2','goodComment')">商品评论</span>
+        <span :class="{nowGoodMore:goodInforWord==2}" v-on:click="changeGoodInforWord('2','goodComment')">商品评论({{commentList.length}})</span>
       </div>
       <div >
         <transition name="component-fade" mode="out-in">
@@ -104,11 +111,13 @@ import goodIntroduce from './goodIntroduce'
 import goodComment from './goodComment'
 import instructions from './instructions'
 import myAddress from './selectThree'
+import util from '../../../common/util'
   export default {
     name: 'goodInfo',
     data () {
       return {
         currentView:"goodIntroduce",
+        kuCunBuZu:true,
         attrLength:0,
         nowGoodSKU:null,
         attrVal:[],
@@ -134,76 +143,16 @@ import myAddress from './selectThree'
     },
     methods:{
       nowGoodSKUDefault:function(){
-            var that =this;
-            var obj = {};
-            var attrs = [];
-            var LIST = that.nowGoodDetails.itemValueList;
-            for(let i in LIST){
-              if(LIST[i].itemSKU == that.nowGoodSKU){
-                obj = LIST[i];
-                break;
-              }
-            }
-            // this.sendItemAttrs = obj;
-            // var LIST2 = that.nowGoodDetails.propertyList;
-            // for(let m in LIST2[0].propertyInfoList){
-            //   if(obj.itemPropertyInfo==LIST2[0].propertyInfoList[m]){
-            //     var aa = LIST2[0];
-            //     aa.propertyInfoList.checkWhich = m;
-            //     that.nowGoodDetails.propertyList.splice(0,1,aa);
-            //     break;
-            //   }
-            // }
-            // if(LIST2[1].propertyName){
-            //   for(let m in LIST2[1].propertyInfoList){
-            //     if(obj.itemPropertyTwoValue==LIST2[1].propertyInfoList[m]){
-            //       var aa = LIST2[1];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(1,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[2].propertyName){
-            //   for(let m in LIST2[2].propertyInfoList){
-            //     if(obj.itemPropertyThreeValue==LIST2[2].propertyInfoList[m]){
-            //       var aa = LIST2[2];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(2,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[3].propertyName){
-            //   for(let m in LIST2[3].propertyInfoList){
-            //     if(obj.itemPropertyFourValue==LIST2[3].propertyInfoList[m]){
-            //       var aa = LIST2[3];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(3,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[4].propertyName){
-            //   for(let m in LIST2[4].propertyInfoList){
-            //     if(obj.itemPropertyFiveValue==LIST2[4].propertyInfoList[m]){
-            //       var aa = LIST2[4];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(4,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
-            // if(LIST2[5].propertyName){
-            //   for(let m in LIST2[5].propertyInfoList){
-            //     if(obj.itemPropertySixValue==LIST2[5].propertyInfoList[m]){
-            //       var aa = LIST2[5];
-            //       aa.propertyInfoList.checkWhich = m;
-            //       that.nowGoodDetails.propertyList.splice(5,1,aa);
-            //       break;
-            //     }
-            //   }
-            // }
+        var that =this;
+        var obj = {};
+        var attrs = [];
+        var LIST = that.nowGoodDetails.itemValueList;
+        for(let i in LIST){
+          if(LIST[i].itemSKU == that.nowGoodSKU){
+            obj = LIST[i];
+            break;
+          }
+        }
       },
       getNowGoodDetail:function(){
         var that = this;
@@ -217,7 +166,6 @@ import myAddress from './selectThree'
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data,"getNowGoodDetail")
           if (res.data.callStatus === 'SUCCEED') {
             that.ifshoucang = res.data.num;
             that.nowGoodSKU = res.data.msg;
@@ -233,6 +181,9 @@ import myAddress from './selectThree'
             that.goodAllImgs[4] = that.nowGoodDetails.itemDetail.itemPice;
             that.bigImgUrl = that.goodAllImgs[0];
             that.items = that.nowGoodDetails.propertyList;
+            for(let i in that.nowGoodDetails.commentList){
+              that.nowGoodDetails.commentList[i].created = util.formatDate.format(new Date( that.nowGoodDetails.commentList[i].created),'yyyy-MM-dd hh:mm:ss' );
+            }
             that.commentList = that.nowGoodDetails.commentList;
             that.instructions = that.nowGoodDetails.itemDetail;
             that.instructions.addName = that.nowGoodDetails.itemName;
@@ -245,19 +196,27 @@ import myAddress from './selectThree'
                 that.nowGoodDetails.propertyList[i].propertyInfoList[j] = {data:that.nowGoodDetails.propertyList[i].propertyInfoList[j],enabled:true}
               }
             }
+            if(that.nowGoodDetails.itemValueList[0].stockNum==0){
+              that.kuCunBuZu = false;
+            }
             that.nowGoodSKUDefault();
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            // that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
+      oneGoodNumChange:function(){
+          this.jiSuanKuCun();
+      },
       addGoodNum:function () {
-          this.goodDefaultNum += 1;
+          this.goodDefaultNum = parseInt(this.goodDefaultNum)+1;
+          this.jiSuanKuCun();
       },
       reduceGoodNum:function () {
         if(this.goodDefaultNum != 1){
-          this.goodDefaultNum -= 1;
+          this.goodDefaultNum = parseInt(this.goodDefaultNum)-1;
         }
+        this.jiSuanKuCun();
       },
       changeGoodInforWord:function(arg,view){
         this.goodInforWord = arg;
@@ -265,6 +224,20 @@ import myAddress from './selectThree'
       },
       checkDisabled: function(){
 
+      },
+      jiSuanKuCun:function(){
+        var that = this;
+        var jiSuanSkuObj = that.jiSuanSku();
+        if(jiSuanSkuObj.sku){
+          that.nowGoodDetails.itemPrice = jiSuanSkuObj.obj.itemSkuPrice;
+          var kuCun = jiSuanSkuObj.obj.stockNum;
+          if(that.goodDefaultNum>=kuCun){
+            that.kuCunBuZu = false;
+            that.goodDefaultNum = kuCun;
+          }else{
+            that.kuCunBuZu = true;
+          }
+        }
       },
       //indexC 子数组第几位 item 数组第几行的数据  indexP  当前数组第几行
       changeAttSty:function(indexC,item,indexP){
@@ -276,7 +249,11 @@ import myAddress from './selectThree'
         }
         for(var i=0;i<that.nowGoodDetails.propertyList.length;i++){
           for(var j=0;j<that.nowGoodDetails.propertyList[i].propertyInfoList.length;j++){
-            that.nowGoodDetails.propertyList[i].propertyInfoList[j].enabled = false
+            if(that.nowGoodDetails.propertyList[i].checkWhich == j) {
+              that.nowGoodDetails.propertyList[i].propertyInfoList[j].enabled = true
+            } else {
+              that.nowGoodDetails.propertyList[i].propertyInfoList[j].enabled = false
+            }
           }
         }
         //propertyList  循环数据 itemValueList 所有属性组合
@@ -284,10 +261,11 @@ import myAddress from './selectThree'
           if(that.nowGoodDetails.itemValueList[j].canUse == 1){
             var tempNum = 0
             var temp = []
+            var temp2 = []
             for(var i=0;i<that.nowGoodDetails.propertyList.length;i++){
               if(that.nowGoodDetails.itemValueList[j][that.itemKey[i][0]] != "") {
                 if(that.nowGoodDetails.propertyList[i].checkWhich == null) {
-                  temp.push(i)
+                  temp2.push(i)
                 }else if(that.nowGoodDetails.propertyList[i].propertyInfoList[that.nowGoodDetails.propertyList[i].checkWhich].data != that.nowGoodDetails.itemValueList[j][that.itemKey[i][1]]) {
                   tempNum++
                   if(tempNum>1){
@@ -297,140 +275,26 @@ import myAddress from './selectThree'
                 }
               }
             }
-            if(tempNum == 1){
+            if(tempNum == 0){
+              for(var i = 0;i<temp2.length;i++){
+                for(var k=0;k<that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList.length;k++){
+                  if(that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList[k].data == that.nowGoodDetails.itemValueList[j][that.itemKey[temp2[i]][1]] ) {
+                    that.nowGoodDetails.propertyList[temp2[i]].propertyInfoList[k].enabled = true
+                  }
+                }
+              }
+            }else if(tempNum == 1){
               for(var i = 0;i<temp.length;i++){
                 for(var k=0;k<that.nowGoodDetails.propertyList[temp[i]].propertyInfoList.length;k++){
                   if(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].data == that.nowGoodDetails.itemValueList[j][that.itemKey[temp[i]][1]] ) {
                     that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k].enabled = true
-                    console.log(that.nowGoodDetails.propertyList[temp[i]].propertyInfoList[k])
                   }
                 }
               }
             }
           }
         }
-
-
-        // var propertyList = that.nowGoodDetails.propertyList;
-        // if(that.attrVal[indexP]){
-        //   that.attrVal.splice(indexP,1)
-        // }else{
-        //   that.attrVal[indexP] = item.propertyInfoList[indexC];//当前选中的属性，
-        // }
-        // for(let i in propertyList){
-        //   if(i==indexP){
-        //     var data = propertyList[i];
-        //     // 属性选择
-        //     if(data.propertyInfoList["checkWhich"] == indexC){
-        //       data.propertyInfoList["checkWhich"] = null;
-        //     }else{
-        //       data.propertyInfoList["checkWhich"] = indexC;
-        //     }
-        //     that.nowGoodDetails.propertyList.splice(indexP,1,data)
-        //   }
-        // }
-        // var arr = ["itemPropertyInfo","itemPropertyTwoValue","itemPropertyThreeValue","itemPropertyFourValue","itemPropertyFiveValue","itemPropertySixValue"];
-        // var itemValueList = that.nowGoodDetails.itemValueList;
-        // var arr1 = [];
-        //   for(let i in itemValueList){
-        //     var arr2 = [];
-        //     if(that.attrVal.length>=1){
-        //       arr2["0"]=itemValueList[i].itemPropertyInfo;
-        //     }
-        //     if(that.attrVal.length>=2){
-        //       arr2["1"]=itemValueList[i].itemPropertyTwoValue;
-        //     }
-        //     if(that.attrVal.length>=3){
-        //       arr2["2"]=itemValueList[i].itemPropertyThreeValue;
-        //     }
-        //     if(that.attrVal.length>=4){
-        //       arr2["3"]=itemValueList[i].itemPropertyFourValue;
-        //     }
-        //     if(that.attrVal.length>=5){
-        //       arr2["4"]=itemValueList[i].itemPropertyFiveValue;
-        //     }
-        //     if(that.attrVal.length>=6){
-        //       arr2["5"]=itemValueList[i].itemPropertySixValue;
-        //     }
-        //     var flag = true;
-        //     for(let n in that.attrVal){
-        //       if(that.attrVal[n]!=arr2[n]){
-        //         flag = false;
-        //       }
-        //     }
-        //     if(flag){
-        //       arr1.push(itemValueList[i])
-        //     }
-        //   }
-        //   console.log("-----------------------")
-        //   for(let i in arr1){
-        //     for(let n in arr1[i]){
-        //       if(arr1[i].canUse==0){
-        //         console.log(arr1[i].itemPropertyInfo,arr1[i].itemPropertyTwoValue,arr1[i].itemPropertyThreeValue,arr1[i].canUse)
-        //       }
-        //     }
-        //   }
-        // var nowPrice;
-        // var nowSku;
-        // that.attrVal[indexP] = item.propertyInfoList[indexC];
-        // this.ite = indexC;
-        // this.sureGoodAttr = item.propertyInfoList[indexC];
-        // var data = that.items[indexP];
-        // data.propertyInfoList.checkWhich = indexC;
-        // that.items.splice(indexP,1,data);
-        // var LIST = that.nowGoodDetails.itemValueList;
-        //   if(that.attrVal.length==1){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else if(that.attrVal.length==2){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==3){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==4){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==5){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }else  if(that.attrVal.length==6){
-        //     for(let i in LIST){
-        //       if(that.attrVal[0]==LIST[i].itemPropertyInfo&&that.attrVal[1]==LIST[i].itemPropertyTwoValue&&that.attrVal[2]==LIST[i].itemPropertyThreeValue&&that.attrVal[3]==LIST[i].itemPropertyFourValue&&that.attrVal[4]==LIST[i].itemPropertyFiveValue&&that.attrVal[5]==LIST[i].itemPropertyFiveValue){
-        //         nowPrice = LIST[i].itemSkuPrice;
-        //         nowSku = LIST[i].itemSKU;
-        //       }
-        //     }
-        //   }
-        //   var data2 = that.nowGoodDetails.itemValueList;
-        //   for(let q in data2){
-        //     if(data2[q].itemSKU==nowSku&&data2[q].canUse==1){
-        //       that.nowGoodDetails.itemPrice = nowPrice;
-        //       that.nowGoodDetails.nowGoodSKU = nowSku;
-        //     }else{
-        //
-        //     }
-        //   }
+        this.jiSuanKuCun();
       },
       enter:function(index){
         this.bigImgUrl = this.goodAllImgs[index];
@@ -448,7 +312,7 @@ import myAddress from './selectThree'
               this.$alert("取消收藏成功！", {confirmButtonText: '确定'});
               this.ifshoucang = 0;
             } else {
-              that.$message.error('网络出错，请稍后再试！');
+              // that.$message.error('网络出错，请稍后再试！');
             }
           });
       },
@@ -468,11 +332,21 @@ import myAddress from './selectThree'
                 that.$alert("收藏成功！", {confirmButtonText: '确定'});
                 that.ifshoucang = 1;
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             });
           }else{
-            this.$alert("请先登录后再收藏！", {confirmButtonText: '确定'});
+            this.$alert("请先登录后再收藏！", {confirmButtonText: '确定',
+            beforeClose:(action, instance, done) => {
+             if (action === 'confirm') {
+               var num = parseInt(Math.random()*1000);
+               that.$emit("goodInfoSay",num);
+               done();
+             } else {
+               done();
+             }
+           }
+          });
           }
         }
         if(arg==2){
@@ -495,63 +369,151 @@ import myAddress from './selectThree'
       },
       addGwcThisGood:function(){
         var that = this;
-        var nowSku;
-        if(that.nowGoodDetails.nowGoodSKU){
-          nowSku =that.nowGoodDetails.nowGoodSKU;
-        }else{
-          nowSku = that.nowGoodSKU;
-        }
-        console.log(nowSku)
+        var nowSku = that.jiSuanSku().sku;
+
         if(that.global.getUser()){
-          var obj = {
-            num:that.goodDefaultNum,
-            itemSKU:nowSku,
-            token:that.global.getToken()
-          };
-          console.log(obj,"addGwcThisGoodObj")
+          if(nowSku){
+            var obj = {
+              num:that.goodDefaultNum,
+              itemSKU:nowSku,
+              token:that.global.getToken()
+            };
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
-              console.log(res)
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                // that.$message.error('网络出错，请稍后再试！');
               }
             });
+          }else{
+            that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});
+          }
         }else{
           var num = Math.random();
-          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay",num);  }});
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',
+           beforeClose:(action, instance, done) => {
+            if (action === 'confirm') {
+              that.$emit("goodInfoSay",num);
+              done();
+            } else {
+              done();
+            }
+          }
+         });
         }
+      },
+      jiSuanSku:function(){
+        var that = this;
+        var returnObj = {};
+        var havaSelectVals = [];
+        var nowGoodValLength = 0;
+        var list2 = that.nowGoodDetails.propertyList;
+        for(let a in list2){
+          if(list2[a].propertyName){
+            nowGoodValLength = parseInt(a) + 1;
+          }
+          if(list2[a].checkWhich>=0 && list2[a].checkWhich!=null){
+            havaSelectVals.push(list2[a].propertyInfoList[list2[a].checkWhich].data);
+          }else{
+            continue;
+          }
+        }
+        var list1 = that.nowGoodDetails.itemValueList;
+        for(let i in list1){
+          var valsArr = [];
+          if(list1[i].itemPropertyInfo){
+            valsArr.push(list1[i].itemPropertyInfo);
+          }
+          if(list1[i].itemPropertyTwoValue){
+            valsArr.push(list1[i].itemPropertyTwoValue);
+          }
+          if(list1[i].itemPropertyThreeValue){
+            valsArr.push(list1[i].itemPropertyThreeValue);
+          }
+          if(list1[i].itemPropertyFourValue){
+            valsArr.push(list1[i].itemPropertyFourValue);
+          }
+          if(list1[i].itemPropertyFiveValue){
+            valsArr.push(list1[i].itemPropertyFiveValue);
+          }
+          if(list1[i].itemPropertySixValue){
+            valsArr.push(list1[i].itemPropertySixValue);
+          }
+          list1.arr = valsArr;
+          if(havaSelectVals.length==nowGoodValLength){
+            var flag = true;
+            for(let c in havaSelectVals){
+              if(havaSelectVals[c]==valsArr[c]){
+
+              }else{
+                flag = false;
+              }
+            }
+            if(flag){
+              returnObj.sku = list1[i].itemSKU;
+              returnObj.obj= list1[i];
+              break;
+            }else{
+              continue;
+            }
+          }else{
+            continue;
+          }
+        }
+        return returnObj;
       },
       nowToBuyThis:function(){
         var that = this;
         var userToken = that.global.getToken();
-        var nowSku;
+        var nowSku = that.jiSuanSku().sku;
         if(userToken){
-          if(that.nowGoodDetails.nowGoodSKU){
-            nowSku =that.nowGoodDetails.nowGoodSKU;
+          if(nowSku){
+            if(that.global.getUser()){
+              var sendData = {};
+              sendData.details = [];
+
+              var obj = {
+                itemId:that.nowGoodDetails.itemId,
+                itemName:that.nowGoodDetails.itemName,
+                picPath:that.itemDetail.itemPica,
+                num:that.goodDefaultNum,
+                itemSKU:nowSku,
+                price:that.nowGoodDetails.itemPrice,
+                goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
+                goodSort:that.nowGoodDetails.itemSort
+              };
+              sendData.allMoney = that.nowGoodDetails.itemPrice * 100 * that.goodDefaultNum / 100;
+              var list = that.nowGoodDetails.itemValueList;
+              for(let i in list){
+                if(nowSku==list[i].itemSKU){
+                  obj.itemPropertyInfo = list[i].itemPropertyInfo;
+                  obj.itemPropertyTwoValue = list[i].itemPropertyTwoValue;
+                  obj.itemPropertyThreeValue = list[i].itemPropertyThreeValue;
+                  obj.itemPropertyFourValue = list[i].itemPropertyFourValue;
+                  obj.itemPropertyFiveValue = list[i].itemPropertyFiveValue;
+                  obj.itemPropertySixValue = list[i].itemPropertySixValue;
+                  break;
+                }
+              }
+              sendData.haveSelectedGoodNum = that.goodDefaultNum;
+              sendData.details.push(obj)
+              window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+              that.$router.push({path: '/suborder'})
+            }
           }else{
-            nowSku = that.nowGoodSKU;
-          }
-          if(that.global.getUser()){
-            var sendData = {};
-            sendData.details = [];
-            sendData.allMoney = that.nowGoodDetails.itemPrice;
-            var obj = {
-              itemId:that.nowGoodDetails.itemId,
-              itemName:that.nowGoodDetails.itemName,
-              picPath:that.itemDetail.itemPica,
-              num:that.goodDefaultNum,
-              itemSKU:nowSku,
-              price:that.nowGoodDetails.itemPrice,
-            };
-            sendData.haveSelectedGoodNum = that.goodDefaultNum;
-            sendData.details.push(obj)
-            window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-            that.$router.push({path: '/suborder'})
+            that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});
           }
         }else{
-          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',callback: action => {  that.$emit("goodInfoSay","sayToLogin");  }});
+          that.$alert('未登录，请先登录！',  {confirmButtonText: '确定',beforeClose:(action, instance, done) => {
+           if (action === 'confirm') {
+             that.$emit("goodInfoSay","sayToLogin");
+             done();
+           } else {
+             done();
+           }
+         }
+       });
         }
       },
     },
@@ -566,6 +528,9 @@ import myAddress from './selectThree'
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.defaultCss{
+  cursor: default!important;
+}
 .priceWrap{
   margin-bottom: 20px;
 }
@@ -608,14 +573,16 @@ import myAddress from './selectThree'
     margin-right: 15px;
     vertical-align: middle;
   }
-
+.goodInfo .infoRight .attSty1{
+  background: none;
+}
   .goodInfo .infoRight .attSty1:hover {
     /*color:#5db7e8;
     border:1px solid #5db7e8;*/
   }
   .goodInfo .infoRight .attSty2 {
-    color:#5db7e8;
-    border:1px solid #5db7e8;
+    color:#005aab;
+    border:1px solid #005aab;
   }
   .details .clearFloat{
     clear:both;
@@ -716,6 +683,13 @@ import myAddress from './selectThree'
     width:92px;
     border:1px solid #e5e5e5;
     height:30px;
+    position: relative;
+  }
+  .calculator .kucunbuzu{
+    position: absolute;
+    right: -90px;
+    cursor: auto;
+    width: 100px;
   }
   .calculator span{
     width:30px;
@@ -731,9 +705,24 @@ import myAddress from './selectThree'
     border-left:1px solid #e5e5e5;
     border-right:1px solid #e5e5e5;
   }
+  .calculator input{
+    float:left;
+    width: 30px;
+    display:inline-block;
+    height: 30px;
+    border:none;
+    text-align: center;
+    border-left: 1px solid #c8c8c8;
+    border-right: 1px solid #c8c8c8;
 
+  }
   .goodBtn{
     padding-left: 102px;
+  }
+
+  .kucunbuzu span{
+    color: #333 !important;
+    background: #ececec !important;
   }
   .goodBtn span{
       display: inline-block;
@@ -746,18 +735,18 @@ import myAddress from './selectThree'
       cursor: pointer;
   }
   .goodBtn span:nth-child(1){
-    background:#5db7e8;
+    background:#005aab;
     color: white;
   }
   .goodBtn span:nth-child(1):hover{
-    background:#57a5cf;
+    opacity: 0.8;
   }
   .goodBtn span:nth-child(2){
     color: white;
-    background:#5ed6dc;
+    background:#329af0;
   }
   .goodBtn span:nth-child(2):hover{
-    background:#54c5cb;
+    opacity: 0.8;
   }
   .goodMore {
     border-bottom: 1px solid #e5e5e5;
@@ -773,7 +762,7 @@ import myAddress from './selectThree'
     cursor: pointer;
   }
   .nowGoodMore{
-    border-bottom: 2px solid #5db7e8;
+    border-bottom: 2px solid #005aab;
   }
 
 </style>
