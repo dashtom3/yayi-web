@@ -29,8 +29,7 @@
       }
     },
     props:["instruction"],
-    created:function(){
-      console.log(this.instruction)
+    created: function() {
     },
     methods: {
 

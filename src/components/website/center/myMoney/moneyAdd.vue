@@ -101,7 +101,6 @@ export default {
         // console.log(res)
         if (res.data.callStatus === 'SUCCEED') {
           // this.getMoneyList = res.data.data;
-          console.log(res.data,'i')
           // that.totalCount=res.data.totalNumber;
           // this.childConfig.pageNum = parseInt(this.getMoneyList.length/this.everyPageShowNum)+1;
         } else {
@@ -112,7 +111,7 @@ export default {
     //充值乾币
     sureExchange: function() {
       var that = this;
-      console.log(that.payMuch)
+      // console.log(that.payMuch)
       if(that.payMuch) {
         if (that.payType == '1') {
           var obj = {
@@ -120,7 +119,6 @@ export default {
             money: parseInt(that.payMuch)
           }
           that.global.axiosGetReq('/pay/recharge',obj).then((res) => {
-            console.log(res,'pay')
             window.location.href = res.request.responseURL
           })
         } else {
@@ -132,7 +130,6 @@ export default {
           that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderCharge' + '?money=' + money + '&token=' + token
           that.kk = 1
           var timer = setInterval(function(){
-            console.log(that.kk,'kkkkk')
               if (that.kk == 600) {
                 clearInterval(timer)
                 return false
@@ -141,7 +138,6 @@ export default {
                 token: that.global.getToken()
               }
               that.global.axiosGetReq('/weixin/checkChargeState',obj).then((res) => {
-                console.log(res.data,'opopopop')
                 if (res.data.num == 2) {
                   clearInterval(timer)
                   that.WxTableVisible = false
@@ -161,7 +157,6 @@ export default {
             },3000);
         }
       } else {
-        console.log("..")
         that.$alert('请填写本次购买金额', {confirmButtonText: '确定',});
       }
     },

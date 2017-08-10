@@ -118,7 +118,6 @@ export default {
           };
           that.global.axiosPostReq('/item/queryItemSearchGet', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              // console.log(res.data.data,'oo')
               if (res.data.data.length == 0) {
                 that.classifyItems[i].kong = 1
                 that.classifyItems[i].items = res.data.data
@@ -129,7 +128,6 @@ export default {
               that.classifyList = that.classifyItems.filter(function(ele,index,arr) {
                 return ele.kong == 2
               })
-              // console.log(that.classifyList,'llllll')
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }
@@ -173,9 +171,8 @@ export default {
         var a = document.documentElement.clientHeight; //网页可见区域高
         var c = document.documentElement.scrollHeight; //网页正文全文高
         // var ispeed = Math.floor(-hei / 6);
-        console.log(total,'hei')
+        // console.log(total,'hei')
         if (osTop + a == c) {
-          // console.log('9999999')
           clearInterval(timer);
           // isTop = false;
         }
@@ -220,9 +217,7 @@ export default {
     },
     getAllBrandList:function(){
       var that = this;
-      that.global.axiosGetReq('/item/brandList')
-      .then((res) => {
-        // console.log(res.data.data)
+      that.global.axiosGetReq('/item/brandList').then((res) => {
         if (res.data.callStatus === 'SUCCEED') {
           that.brandListData = res.data.data;
           that.brandListData1 = res.data.data;

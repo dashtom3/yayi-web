@@ -191,7 +191,6 @@
             if(length>1){
               that.ifHaveData = true;
               that.allGoods = arr.slice(0,length-1);
-              console.log(that.allGoods,"asdf")
             }else{
               that.ifHaveData = false;
             }
@@ -220,7 +219,6 @@
       },
       //监听publicHeader标签
       msgFromHeader: function(data) {
-        console.log(data,"dataFromSearch")
         var that = this;
         that.seachDataFrombRrandLidPage = data;
         that.totalCount = data.totalNumber;
@@ -279,11 +277,9 @@
           obj.currentPage = 1;
         }
         obj.numberPerPage = 12;
-        console.log(obj,"searchDateObj")
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res)
             if(res.data.data.length>0){
               that.ifHaveData = true;
               this.allGoods = res.data.data;
@@ -291,7 +287,6 @@
               that.ifHaveData = false;
             }
             that.totalCount=res.data.totalNumber;
-            console.log(res,"allGood")
           } else {
             // that.$message.error('网络出错，请稍后再试！');
           }
@@ -408,7 +403,6 @@
       },
       goThisBrand:function(arg,index){
         var that = this;
-        console.log(arg)
         // firstClassfy:'',
         // secondClassfy:'',
         // thirdClassfy:'',

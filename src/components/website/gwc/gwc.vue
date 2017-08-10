@@ -227,7 +227,6 @@
         };
         that.global.axiosGetReq('/cart/list', obj)
         .then((res) => {
-          console.log(res,"getGwcList")
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             for(let i in data){
@@ -245,7 +244,7 @@
               if(flag>200){
                 that.jiwsuanbtnFixed = true;
               }
-              console.log(that.jiwsuanbtnFixed)
+              // console.log(that.jiwsuanbtnFixed)
             };
           } else {
             // that.$message.error('网络出错，请稍后再试！');
@@ -379,7 +378,6 @@
         // console.log(obj)
         that.global.axiosPostReq('/cart/updateNum', obj)
         .then((res) => {
-          console.log(res,"updataNum")
           if (res.data.callStatus === 'SUCCEED') {
             // this.gwcGoods.splice(index,1);
             // this.$message({type: 'success',  message: '商品收藏成功!' });
@@ -399,13 +397,13 @@
         var HEIGHT = window.innerHeight;
         HEIGHT = HEIGHT-28-63-50-21-50-21-10;
         var flag = HEIGHT - that.gwcGoods.length*148-127;
-        console.log(flag)
+        // console.log(flag)
         if(flag<0){
           that.jiwsuanbtnFixed = true;
         }else{
           that.jiwsuanbtnFixed = false
         }
-        console.log(HEIGHT)
+        // console.log(HEIGHT)
       },
       saveOne:function(index,good){
         var that = this;
@@ -438,7 +436,6 @@
             itemSKU:good.itemSKU,
             token:that.global.getToken()
           };
-          console.log(obj)
           that.global.axiosPostReq('/cart/delete', obj)
           .then((res) => {
             if (res.data.callStatus === 'SUCCEED') {

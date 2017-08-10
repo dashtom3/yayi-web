@@ -45,7 +45,6 @@
     methods: {
       getGoodInfoSay:function(data){
         var that = this;
-        // console.log(data,"")
         that.msgFromGoodInfoDetails = data;
         // that.$emit("goodInfoSay",data);
       },

@@ -68,14 +68,13 @@
         if (JSON.parse(window.sessionStorage.getItem('order')) == null) {
           that.$router.push({path:'/'})
         }else {
-          console.log('uiuiuiu')
+          // console.log('uiuiuiu')
         }
       })
     },
     created: function() {
       var that = this;
       that.orderDetail = JSON.parse(window.sessionStorage.getItem('order'))
-      console.log(that.orderDetail,'order')
     },
     methods: {
       alipay: function() {
@@ -120,7 +119,6 @@
           that.wxImg = 'http://47.93.48.111:8080/api/weixin/unifiedOrderReturnUrl' + '?orderId=' + that.orderDetail.OrderId
           that.kk = 1
           var timer = setInterval(function(){
-            console.log(that.kk,'kkkkk')
               if (that.kk == 600) {
                 clearInterval(timer)
                 return false
@@ -129,7 +127,6 @@
                 out_trade_no: that.orderDetail.OrderId
               }
               that.global.axiosGetReq('/weixin/checkOrderState',obj).then((res) => {
-                console.log(res.data,'opopopop')
                 if (res.data.num == 2) {
                   clearInterval(timer)
                   that.$router.push({name:'paySuccess', params: { payData: 'success' }})

@@ -222,7 +222,6 @@
         };
         that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data);
             if (res.data.data.length == 0) {
               that.hasAddress = false;
             } else {
@@ -310,7 +309,6 @@
         that.edForm.mobile = add.phone;
         that.edForm.gmobile = add.landlineNumber;
         that.setDefault1 = add.isDefault;
-        console.log(that.editAdd);
         that.editAddVisible = true;
       },
       // 保存修改
@@ -390,7 +388,6 @@
       // 设置默认地址
       setDefaultAdd: function(add) {
         var that = this;
-        console.log(add);
         var obj = {
           token:that.global.getToken(),
           receiverId: add.receiverId,

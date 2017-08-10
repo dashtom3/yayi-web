@@ -50,11 +50,8 @@ import global from '../../global/global'
       }
     },
     props:["comments"],
-    created:function(){
-      // for(let i in ){
-      //
-      // }
-      console.log(this.comments,111111111111)
+    created: function() {
+      // console.log(this.comments,111111111111)
     }
   }
 </script>

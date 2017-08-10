@@ -33,7 +33,6 @@
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.allClassfy = res.data.data;
-            console.log(that.allClassfy,'allClassfy')
           } else {
             // that.$message.error('网络出错，请稍后再试！');
           }
@@ -85,7 +84,7 @@
           for(let th in threeList){
             if(that.fenlei[3]==threeList[th].classifyThreeName){
               that.index3 = th;
-              console.log(th)
+              // console.log(th)
             }
           }
           var str = (parseInt(this.index1)+1)+"-"+(parseInt(this.index2)+1)+"-"+(parseInt(this.index3)+1);

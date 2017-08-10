@@ -220,7 +220,6 @@
         that.global.axiosPostReq('/OrderDetails/show',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"..........")
             that.items = res.data.data;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss');
@@ -252,11 +251,10 @@
           orderId:that.nowToOperateItem.orderId
         };
         that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
-           console.log(res,"sureGetGoodConsole");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
               if(that.items[i].orderId==that.nowToOperateItem.orderId){
-                console.log(that.items[i].orderId,that.nowToOperateItem.orderId,that.items.length)
+                // console.log(that.items[i].orderId,that.nowToOperateItem.orderId,that.items.length)
                 that.items.splice(i,1);
                 that.dialogVisibleGetGood = false;
                 break;
@@ -325,7 +323,6 @@
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "3";
             });
-            console.log(res,"getAllOrder_waitRec");
             that.items = b;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss');

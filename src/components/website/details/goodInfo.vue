@@ -166,7 +166,6 @@ import util from '../../../common/util'
         };
         that.global.axiosPostReq('/item/itemDetailDes',obj)
         .then((res) => {
-          console.log(res.data,"getNowGoodDetail")
           if (res.data.callStatus === 'SUCCEED') {
             that.ifshoucang = res.data.num;
             that.nowGoodSKU = res.data.msg;
@@ -207,7 +206,6 @@ import util from '../../../common/util'
         })
       },
       oneGoodNumChange:function(){
-        console.log(".....")
           this.jiSuanKuCun();
       },
       addGoodNum:function () {
@@ -380,10 +378,8 @@ import util from '../../../common/util'
               itemSKU:nowSku,
               token:that.global.getToken()
             };
-            console.log(obj,"addGwcThisGoodObj")
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
-              console.log(res)
               if (res.data.callStatus === 'SUCCEED') {
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
               } else {

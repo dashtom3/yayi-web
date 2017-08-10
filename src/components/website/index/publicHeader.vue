@@ -835,7 +835,6 @@
           itemSKU: item.itemSKU,
           token: that.global.getToken()
         };
-        console.log(obj,'i');
         that.global.axiosPostReq('/cart/delete', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.global.axiosGetReq('/cart/list', obj).then((res) => {
@@ -902,11 +901,7 @@
         }
         that.global.axiosPostReq('/user/reLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            // if (that.$router.history.current.name == 'center' || that.$router.history.current.name == 'gwc') {
-            //   that.$router.push({ path: '/'})
-            // }
             that.$router.push({ path: '/'})
-            // console.log(res);
             that.global.removeMsg()
             that.$message({
               message: '退出成功！',

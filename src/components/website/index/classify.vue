@@ -63,7 +63,6 @@
       getAllClassfyList:function(){
         var that = this;
         that.global.axiosGetReq('/item/showClassify').then((res) => {
-          // console.log(res)
           if (res.data.callStatus === 'SUCCEED') {
             this.allClassfy = res.data.data;
           } else {

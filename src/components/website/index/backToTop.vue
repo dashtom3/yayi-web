@@ -67,7 +67,6 @@
           that.top = false;
           that.contact = false;
         }
-        //console.log(scroll, 'frisco')
       },
       img_in() {
         var that = this;

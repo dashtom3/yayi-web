@@ -72,7 +72,6 @@
           for(let i in this.numsArr){
             var num = this.numsArr[i].counts;
             var state = this.numsArr[i].state;
-            console.log(num)
             this.all += num;
             if(state==1){
               this.waitpay += num;
@@ -96,7 +95,6 @@
         var that = this;
         that.global.axiosPostReq('/OrderDetails/queryOrderNums')
         .then((res) => {
-          console.log(res,'nums')
           if (res.data.callStatus === 'SUCCEED') {
             this.numsArr = res.data.data;
           } else {

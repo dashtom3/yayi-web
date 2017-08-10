@@ -60,9 +60,7 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-        console.log(obj)
         that.global.axiosPostReq('/mystar/shows', obj).then((res) => {
-          console.log(res,"getMyCollection")
           if (res.data.callStatus === 'SUCCEED') {
             this.allGoods = res.data.data;
           } else {
@@ -78,7 +76,6 @@
           token:that.global.getToken()
         };
         that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
-          console.log(res,"asdfafsf")
           if (res.data.callStatus === 'SUCCEED') {
             that.$alert('删除收藏成功！', {confirmButtonText: '确定',});
             that.allGoods.splice(index,1);

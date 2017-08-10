@@ -159,7 +159,6 @@
         var that = this;
         that.nowOrderDetails = item;
         that.dialogVisibleToOrderDetails = true;
-        console.log(item)
       },
       goToThisDetails:function(item){
         var that = this;
@@ -224,7 +223,6 @@
             }
             that.totalCount=res.data.totalNumber;
             // that.no_order = true;
-            console.log(that.items,"getAllOrder_waitSend");
           } else {
             that.$message.error('网络错误！');
           }

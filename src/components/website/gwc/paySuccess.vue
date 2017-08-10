@@ -38,8 +38,6 @@
         var that = vm;
         if (that.global.getToken() == null) {
           that.$router.push({path:'/'})
-        }else {
-          console.log('uiuiuiu')
         }
         //  that.$route.params.payData !== 'success'
         //console.log(that.$router.history,'222')

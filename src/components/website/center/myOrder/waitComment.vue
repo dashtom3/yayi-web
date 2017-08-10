@@ -259,7 +259,6 @@
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "4";
             });
-            console.log(b,"getAllOrder_waitComment");
             that.items = b;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss' );
@@ -294,7 +293,6 @@
         }
         obj.itemIdList = JSON.stringify(obj.itemIdList);
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
-           console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
             //
             // var data = that.items[that.nowToOperateItemIndex];
@@ -315,7 +313,6 @@
       },
       haveALookAtWuLiu:function(item){
         var that = this;
-        console.log(item)
         var obj = {
           token:that.global.getToken(),
           orderId:item.orderId
@@ -324,7 +321,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             that.wuliuxinxi = JSON.parse(data);
-            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
             for(let i in that.wuliuxinxi.Traces){
               var temp = 25;
               if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){

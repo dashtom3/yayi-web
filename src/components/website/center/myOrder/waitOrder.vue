@@ -196,7 +196,6 @@
         var that = this;
         that.nowOrderDetails = item;
         that.dialogVisibleToOrderDetails = true;
-        console.log(item)
       },
       cancel_order: function(item) {
         var that = this;
@@ -209,9 +208,7 @@
           token:that.global.getToken(),
           itemId:that.cancleOrderItemId
         };
-        console.log(obj)
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
-           console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
               if(that.cancleOrderItemId==that.items[i].orderId){
@@ -269,7 +266,6 @@
             var b = res.data.data.filter(function(ele,index,arr) {
                 return ele.state == "1";
             });
-            console.log(b,"getAllOrder_waitPay");
             that.items = b;
             for(let i in that.items){
               that.items[i].created = util.formatDate.format(new Date(that.items[i].created),'yyyy-MM-dd hh:mm:ss');

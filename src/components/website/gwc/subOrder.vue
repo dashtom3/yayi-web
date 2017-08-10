@@ -697,7 +697,7 @@
       var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
       that.fromGwc = arr;
       that.orderItem = arr.details;
-      console.log(that.fromGwc,'uiuiuiu')
+      // console.log(that.fromGwc,'uiuiuiu')
       that.cargos = arr.details;
       that.gwcTotal = arr.allMoney;
       that.haveSelectedGoodNum = arr.haveSelectedGoodNum
@@ -830,7 +830,7 @@
         that.taxDialogVisible = false
         that.checked2 = false
         if (that.taxType !== '') {
-          console.log('修改')
+          // console.log('修改')
         }else {
           that.ruleForm.taitou = ''
           that.ruleForm.nashui = ''
@@ -887,7 +887,6 @@
           };
           that.global.axiosPostReq('/po/Ded', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              console.log(res.data);
               if (res.data.msg == '余额充足') {
                 that.hasCount = true;
                 that.qbdk = that.qianbi_des;
@@ -948,7 +947,6 @@
         };
         that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data);
             that.items = res.data.data;
             if (res.data.data.length == 0) {
               that.diaTitle = '新增收货信息';
@@ -969,7 +967,6 @@
         };
         that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res.data.data);
             that.items = res.data.data;
             var a = that.items.filter(function(ele,index,arr) {
                 return ele.isDefault == true;
@@ -996,7 +993,7 @@
                   if (that.allQb >= total) {
                     that.nowQb = total
                   }
-                  console.log(that.freight,'无默认地址运费')
+                  // console.log(that.freight,'无默认地址运费')
                 } else {
                   that.$message.error('网络出错，请稍后再试！');
                 }
@@ -1022,7 +1019,7 @@
                   if (that.allQb >= total) {
                     that.nowQb = total
                   }
-                  console.log(that.freight,'运费')
+                  // console.log(that.freight,'运费')
                 } else {
                   // that.$message.error('网络出错，请稍后再试！');
                 }
@@ -1195,9 +1192,7 @@
         that.global.axiosGetReq('/po/upateAddress', freight).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.freight = res.data.data.postFee
-            console.log(that.freight,'选择地址时运费')
-          } else {
-            // that.$message.error('网络出错，请稍后再试！');
+            // console.log(that.freight,'选择地址时运费')
           }
         })
       },
@@ -1264,7 +1259,6 @@
           stickPhone: that.stick_phone,
           stickaddress: that.stick_address,
         }
-        console.log(obj,'opopopp');
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {

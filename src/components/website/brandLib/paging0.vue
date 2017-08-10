@@ -25,7 +25,7 @@
     watch:{
       childmsg: {
         handler: function(){
-          console.log(this.childmsg)
+          // console.log(this.childmsg)
           if(this.childmsg.pageNum == 1){
             this.currentPage = 0;
             this.goIndex();

@@ -339,7 +339,6 @@
           token:that.global.getToken(),
         };
         that.global.axiosPostReq('/OrderDetails/show',obj).then((res) => {
-           console.log(res,"getAllOrder");
           if (res.data.callStatus === 'SUCCEED') {
             that.items = res.data.data;
             for(let i in that.items){
@@ -372,7 +371,6 @@
           orderId:that.nowToOperateItem.orderId
         };
         that.global.axiosPostReq('/OrderDetails/confirmReceipt',obj).then((res) => {
-           console.log(res,"sureGetGood");
           if (res.data.callStatus === 'SUCCEED') {
 
             // for(let i in that.items){
@@ -400,7 +398,6 @@
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
             that.wuliuxinxi = JSON.parse(data);
-            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
             for(let i in that.wuliuxinxi.Traces){
               var temp = 25;
               if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){
@@ -435,7 +432,6 @@
         }
         obj.itemIdList = JSON.stringify(obj.itemIdList);
         that.global.axiosPostReq('/OrderDetails/makeSureCom',obj).then((res) => {
-           console.log(res,"makeSureCom");
           if (res.data.callStatus === 'SUCCEED') {
             that.dialogVisibleComment = false;
             var data = that.items[that.nowToOperateItemIndex];
@@ -455,7 +451,6 @@
           orderId:that.cancleOrderItemId
         };
         that.global.axiosPostReq('/OrderDetails/cancel',obj).then((res) => {
-           console.log(res,"sureCancleOrder");
           if (res.data.callStatus === 'SUCCEED') {
             for(let i in that.items){
               if(that.cancleOrderItemId==that.items[i].orderId){
@@ -485,7 +480,6 @@
         var that = this;
         that.nowToOperateItem = item;
         that.nowToOperateItemIndex = index;
-        console.log(item.state)
         // var obj = {
         //   token:that.global.getToken(),
         //   orderId:item.orderId
