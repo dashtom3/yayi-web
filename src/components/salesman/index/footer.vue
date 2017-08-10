@@ -151,7 +151,7 @@
 
     .copyright:hover, .link:hover {
         cursor: pointer;
-        color: #5DB7E7;
+        color: #005aab;
         transition: all ease 0.5s;
         text-decoration: underline;
     }

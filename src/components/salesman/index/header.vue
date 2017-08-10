@@ -108,7 +108,7 @@
     cursor: pointer;
   }
   .logOut:hover, .alreadyLog:hover{
-    color: #5DB7E7;
+    color: #005aab;
     transition: all ease 0.5s;
   }
 </style>

@@ -652,7 +652,6 @@
       // 短信登录btn
       ms_logIn: function () {
         var that = this;
-        this.userStatus = log;
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (!mb.test(that.ms_mobilephone) || that.ms_mobilephone == '') {
           that.msPhone_alert = true;
@@ -668,7 +667,6 @@
         }
         that.global.axiosPostReq('/saleLog/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res);
             that.global.setSalesToken(res.data.token)
             that.global.setSalesUser(res.data.data)
             that.$message({

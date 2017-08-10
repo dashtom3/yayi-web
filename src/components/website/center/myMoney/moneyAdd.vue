@@ -4,14 +4,14 @@
       <div class="payForm">
         <div class="oneLine">
           <span>购买金额：</span>
-          <span><input  v-model="payMuch" type="text" class="payMuch"></span>
+          <span><input v-model="payMuch" type="text" class="payMuch"></span>
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
-        <div class="">
+        <div>
           <span>可获得乾币数：</span>
           <span class="showPayMuch">{{finalyMoney}}</span>
         </div>
-        <div class="">
+        <div>
           <span>支付方式：</span>
           <span>
             <el-radio class="radio" v-model="payType" label="1">支付宝</el-radio>
@@ -33,7 +33,7 @@
         <p><strong>温馨提示：</strong></p>
         <ul>
           <li>（1）根据国家规定，乾币充值不开发票。</li>
-          <li>（2）购买商品时，发票金额包含使用乾币支付的金额，但不包含运费金额。</li>
+          <li>（2）购买商品时，发票金额包含用户实际支付金额，加上充值乾币的支付金额。</li>
         </ul>
       </div>
     </div>

@@ -129,7 +129,7 @@
     <el-button type="primary" @click="confirm_cancel()">确 定</el-button>
   </span>
 </el-dialog>
-<el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
+<el-dialog :title="wuliuMsg" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
   <div class="wlxxWrap" v-if="wuliuxinxi">
     <div class="wlxxLeft">
       <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
@@ -185,6 +185,7 @@
         dialogVisible:false,
         dialogVisibleHaveALookAtWuLiu:false,
         dialogVisibleGetGood:false,
+        wuliuMsg: ''
       }
     },
     components: {
@@ -270,7 +271,6 @@
       },
       haveALookAtWuLiu:function(item){
         var that = this;
-        console.log(item)
         var obj = {
           token:that.global.getToken(),
           orderId:item.orderId
@@ -278,8 +278,20 @@
         that.global.axiosPostReq('/OrderDetails/seeLog',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
+            var wuliuName = res.data.msg && res.data.msg.split('-')[0]
+            var wuliuCode = res.data.msg && res.data.msg.split('-')[1]
+            switch(wuliuName){
+              case 'STO':
+                wuliuName = '申通快递'
+                break;
+              case 'JD':
+                wuliuName = '京东快递'
+                break;
+              default:
+                wuliuName = '其他快递'
+            }
+            this.wuliuMsg = res.data.msg?'物流信息（'+ wuliuName + '-' + wuliuCode +'）':'物流信息';
             that.wuliuxinxi = JSON.parse(data);
-            console.log(JSON.parse(data),"haveALookAtWuLiu  ");
             for(let i in that.wuliuxinxi.Traces){
               var temp = 25;
               if(that.wuliuxinxi.Traces[i].AcceptStation.length<temp){

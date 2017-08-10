@@ -321,6 +321,9 @@ export default {
     background-color: #329af0!important;
     border-color: #329af0!important;
   }
+  .el-button--default:hover {
+    border-color: #005aab!important;
+  }
 	.brandWarp{
     width: 1200px;
     margin: auto;

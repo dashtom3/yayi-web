@@ -16,11 +16,8 @@
 		    <el-button type="primary" class="tab-btn01" v-show="btn_show" @click="tabTableHandler">切换至表格模式</el-button>
 			</div>
 			<h1 class="title">{{year}}年{{month}}月销售排行榜</h1>
-			<div class="title_info" v-show="!isRanking">
-				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名<!-- ，比上月提升<span class="color-red">5</span>个名次 -->。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，实际销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
-			</div>
-			<div class="title_info" v-show="isRanking">
-				共{{sale_total_num}}名销售员，非常抱歉，您当前未上榜。
+			<div class="title_info">
+				共{{sale_total_num}}名销售员，您当前排名：第<span class="color-red">{{ranking_info.rowNum}}</span>名。其中客户数为<span class="color-red">{{ranking_info.bindUserNum}}</span>，订单数为<span class="color-red">{{ranking_info.orderCount}}</span>，实际销售额为<span class="color-red">{{ranking_info.saleMoney}}</span>元。
 			</div>
 			<el-table :data="tableData" style="width: 100%" v-show="!btn_show">
 				<el-table-column type="index" label="排名" align="center" width="180">
@@ -33,12 +30,11 @@
 	      </el-table-column>
 	      <el-table-column prop="saleMoney" label="实际销售额（元）" align="center">
 	      </el-table-column>
-	      <!-- <el-table-column prop="rowNum" label="排名变化" align="center">
-	      </el-table-column> -->
 	    </el-table>
 	    <el-col :span="24" class="warp-breadcrum" v-show="btn_show">
-	      <div id="saleChart" :style="{width: '1200px', height: '600px', }"></div>
-	      <span class="charts-x-pos">实际销售额（元）</span>
+	      <div id="saleChart" :style="{width: '1200px', height: '600px'}" v-show="sale_total_num !== 0"></div>
+	      <div style="height:85px;" v-show="sale_total_num === 0"></div>
+	      <span class="charts-x-pos" v-show="sale_total_num !== 0">实际销售额（元）</span>
 	    </el-col>
 		</div>
 		
@@ -108,12 +104,9 @@
 	        if (res.data.callStatus === 'SUCCEED') { 
 	          this.sale_total_num = res.data.num
 	          this.ranking_info = res.data.data || {}
-	          if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
+	          if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1 || res.data.msg && res.data.msg === "无该月排行榜数据"){
 	          	this.ranking_info.rowNum = 0
-	        		this.isRanking = true
-	        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
-	        		this.sale_total_num = 0
-		        	this.ranking_info = {
+	        		this.ranking_info = {
 								rowNum: 0,
 								orderCount: 0,
 								bindUserNum: 0,
@@ -144,6 +137,23 @@
 		          	this.data_arr.push(res.data.data[i].saleMoney)
 		          	this.color_arr.push('#005aab')
 		          }
+		          
+		          //少于20个数据全部补0
+		          if(this.ranking_arr.length < 20){
+		          	var zeroArr = [];
+		          	var zeroRank = [];
+		          	var colorArr = [];
+		          	var len = this.ranking_arr.length;
+		          	for(var j=len+1;j<21;j++){
+		          		zeroArr.push(0)
+		          		zeroRank.push(j)
+		          		colorArr.push('#005aab')
+		          	}
+		          	this.ranking_arr = this.ranking_arr.concat(zeroRank)
+		          	this.data_arr = this.data_arr.concat(zeroArr)
+		          	this.color_arr = this.color_arr.concat(colorArr)
+		          }
+
 		          this.color_arr.unshift('#ff0000')
 		          //存在排名的情况下并且在20名之类
 		          if(this.ranking_info.rowNum && this.ranking_info.rowNum<21){
