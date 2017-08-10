@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="品牌名称">
             <el-select v-model="cargo.brand" placeholder="请选择">
-              <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand">
+              <el-option v-for="brand in brandOptions" :key="brand.itemBrandName" :label="brand.itemBrandName" :value="brand.itemBrandName">
               </el-option>
             </el-select>
           </el-form-item>
@@ -411,7 +411,7 @@
             itemId: that.cargo.id,
             itemName: that.cargo.name,
             itemClassify: that.cargo.class[0],
-            itemBrandName: that.cargo.brand.itemBrandName,
+            itemBrandName: that.cargo.brand,
             state: that.stateValue,
             currentPage: that.currentPage,
             numberPerPage: that.pagesize,
@@ -421,7 +421,7 @@
             itemId: that.cargo.id,
             itemName: that.cargo.name,
             itemClassify: that.cargo.class[1],
-            itemBrandName: that.cargo.brand.itemBrandName,
+            itemBrandName: that.cargo.brand,
             state: that.stateValue,
             currentPage: that.currentPage,
             numberPerPage: that.pagesize,
@@ -431,7 +431,7 @@
             itemId: that.cargo.id,
             itemName: that.cargo.name,
             itemClassify: that.cargo.class[2],
-            itemBrandName: that.cargo.brand.itemBrandName,
+            itemBrandName: that.cargo.brand,
             state: that.stateValue,
             currentPage: that.currentPage,
             numberPerPage: that.pagesize,
@@ -441,12 +441,13 @@
             itemId: that.cargo.id,
             itemName: that.cargo.name,
             itemClassify: that.cargo.class[2],
-            itemBrandName: that.cargo.brand.itemBrandName,
+            itemBrandName: that.cargo.brand,
             state: that.stateValue,
             currentPage: that.currentPage,
             numberPerPage: that.pagesize,
           }
         }
+        console.log(that.cargo,'90909090')
         that.global.axiosPostReq('/item/itemInfoList',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;            
