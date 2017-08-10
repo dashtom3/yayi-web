@@ -37,7 +37,7 @@
             <el-input v-model="searchSalePhone"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" v-on:click="search()">查询</el-button>
+            <el-button type="primary" v-on:click="queryHandler()">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -68,8 +68,6 @@
           </template>
         </el-table-column>
       </el-table>
-
-
       <div class="block">
         <!-- 分页 -->
         <el-pagination @current-change="pageHandler" :current-page.sync="currentPage" :page-size="pagesize" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
@@ -78,7 +76,7 @@
       </div>
 
     </el-col>
-    <el-dialog title="绑定销售员" :visible.sync="showBindSalAlert">
+    <el-dialog title="绑定销售员" :visible.sync="showBindSalAlert" @close="closeHandler">
       <el-form :inline="true" >
         <el-form-item>
             <el-select v-model="bindSaleSearchType" placeholder="请选择">
@@ -101,11 +99,12 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination    @current-change="handleCurrentChange"  :current-page.sync="bindSaleCurrentPage"
-      :page-size="10"
-      layout="prev, pager, next, jumper"
-      :total="bindSaleNumTotal">
-    </el-pagination>
+      <el-pagination @current-change="handleCurrentChange"  :current-page.sync="bindSaleCurrentPage"
+        :page-size="10"
+        layout="prev, pager, next, jumper"
+        :total="bindSaleNumTotal"
+        v-show="this.bindSaleNumTotal > this.bindSalePagesize">
+      </el-pagination>
     </el-dialog>
 
     <!-- 用户详情 -->
@@ -167,7 +166,6 @@
   </el-row>
 </template>
 <script>
-  import paging from '../../website/brandLib/paging0'
   export default{
     data(){
       return {
@@ -176,10 +174,10 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
+        bindSalePagesize: 10,
         bindSaleCurrentPage:1,
         bindSaleNumTotal:1,
-        pageProps:{},
         needBindSaleUserIndex:null,
         needBindUserPhone:null,
         showBindSalAlert:false,
@@ -222,13 +220,9 @@
         salesList:[]
       }
     },
-    components: {
-      paging,
-    },
     created:function(){
       var that = this;
-      that.getUserList();
-      that.getSalesList();
+      that.queryHandler();
     },
     filters: {
       calculateUserType:function(data){
@@ -248,157 +242,25 @@
       }
     },
     methods: {
+      closeHandler(){
+        this.bindSaleSearchCont = ''
+      },
       pageHandler(val) {
-        var that = this
-        that.currentPage = val
-        if (val == undefined) {
-          that.currentPage = 1
-        } else {
-          that.currentPage = val
-        }
-        this.fenYeGetData(that.currentPage);
+        this.currentPage = val 
+        this.queryHandler(val)
       },
       handleCurrentChange:function(val) {
-        var that = this;
-        var obj = {
-          salePhone:'',
-          currentPage:val,
-          saleName:'',
-          token:"111"
-        };
-        that.global.axiosGetReq('/userManageList/salelist',obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            console.log("........")
-            that.salesList = res.data.data;
-            that.bindSaleCurrentPage = res.data.currentPage;
-            that.bindSaleNumTotal = res.data.totalNumber;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      pageHandler:function(data){
-        this.fenYeGetData(data);
-      },
-      fenYeGetData:function(data){
-        var that = this;
-        // var obj = {
-        //   // token:that.global.getToken()
-        //   phone:"",
-        //   trueName:"",
-        //   companyName:"",
-        //   isBindSale:"",
-        //   type:"",
-        //   saleName:"",
-        //   token:"111"
-        // };
-        var obj = {
-          saleName:that.searchSaleName,
-          token:"111"
-        };
-        // 收索用户类型
-        if(that.searchUserStyle=="手机号"){
-          obj.phone = that.searchUserContent;
-          obj.trueName = "";
-          obj.companyName = "";
-        }else if(that.searchUserStyle=="单位名称"){
-          obj.phone = "";
-          obj.trueName = "";
-          obj.companyName = that.searchUserContent;
-        }else if(that.searchUserStyle=="真实姓名"){
-          obj.phone = "";
-          obj.trueName = that.searchUserContent;
-          obj.companyName = "";
-        }
-        //类型
-        if(that.searchtype=="全部"){
-          obj.type = "";
-        }else if(that.searchtype=="选项2"){
-          obj.type = 1;
-        }else if(that.searchtype=="选项3"){
-          obj.type = 2;
-        }
-        //是否绑定销售
-        if(that.searchisBindSale=="全部"){
-          obj.isBindSale = "";
-        }else if(that.searchisBindSale=="选项2"){
-          obj.isBindSale = 1;
-        }else if(that.searchisBindSale=="选项3"){
-          obj.isBindSale = 2;
-        }
-        if(!that.searchSaleName){
-          that.searchSaleName = "";
-        }
-        if(that.searchSalePhone){
-          obj.salePhone = that.searchSalePhone;
-        }else{
-          obj.salePhone = "";
-        }
-        obj.currentPage = data;
-        that.global.axiosGetReq('/userManageList/userlist',obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getUserList")
-            that.userList = res.data.data;
-            that.totalCount=res.data.totalNumber;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      getUserList:function(){
-        var that = this;
-        var obj = {
-          // token:that.global.getToken()
-          phone:"",
-          trueName:"",
-          companyName:"",
-          isBindSale:"",
-          type:"",
-          saleName:"",
-          token:"111"
-        };
-        that.global.axiosGetReq('/userManageList/userlist',obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getUserList")
-            that.userList = res.data.data;
-            that.totalCount=res.data.totalNumber;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
-      },
-      getSalesList:function(){
-        var that = this;
-        var obj = {
-          salePhone:'',
-          saleName:'',
-          token:"111"
-        };
-        that.global.axiosGetReq('/userManageList/salelist',obj)
-        .then((res) => {
-          console.log(res,"saleList");
-          if (res.data.callStatus === 'SUCCEED') {
-            that.salesList = res.data.data;
-            that.bindSaleCurrentPage = res.data.currentPage;
-            that.bindSaleNumTotal = res.data.totalNumber;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
+        this.bindSaleCurrentPage = val
+        this.searchSalse(val)
       },
       getOneUserDetails:function(userPhone){
         var that = this;
         var obj = {
-          phone:userPhone,
-          token:"1111"
+          phone:userPhone
         };
         that.global.axiosGetReq('/userManageList/detail',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            console.log(res,"getOneUserDetails")
             that.someOneUserDetails = res.data.data;
             var boj2 = {
               name:that.someOneUserDetails.saleName,
@@ -408,30 +270,28 @@
             };
             that.someOneUserDetails.bindSales = [];
             that.someOneUserDetails.bindSales.push(boj2);
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
       bandThisSale:function(index,one){
         var that = this;
         var obj = {
-          token:"1211",
-          // token:that.global.getToken()
           salePhone:one.phone,
           userPhone:that.needBindUserPhone
         };
         that.global.axiosPostReq('/userManageList/bind',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            this.$message({
+              type: 'success',
+              message: '绑定成功!'
+            });
             var data = that.userList[that.needBindSaleUserIndex];
             data.isBindSale = 1;
             data.saleName = that.salesList[index].trueName;
             data.salePhone = that.salesList[index].phone;
             that.userList.splice(that.needBindSaleUserIndex,1,data);
             that.showBindSalAlert = false;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
@@ -440,44 +300,49 @@
         that.needBindUserPhone = one.phone;
         that.needBindSaleUserIndex = index;
         that.showBindSalAlert = true;
+        this.searchSalse()
       },
       details:function(index,user){
         var that = this;
         that.showUserDetailInfor = true;
         that.getOneUserDetails(user.phone);
       },
-      searchSalse:function(){
+      searchSalse:function(val){
         var that = this;
-        var obj = {
-          token:"111"
-        };
-        if(that.bindSaleSearchCont){
-          if(that.bindSaleSearchType == "手机号"){
-            obj.salePhone = that.bindSaleSearchCont;
-          }else{
-            obj.saleName = that.bindSaleSearchCont;
-          }
-          that.global.axiosGetReq('/userManageList/salelist',obj)
-          .then((res) => {
-            if (res.data.callStatus === 'SUCCEED') {
-              that.salesList = res.data.data;
-              that.bindSaleCurrentPage = res.data.currentPage;
-              that.bindSaleNumTotal = res.data.totalNumber;
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
-            }
-          })
-        }else{
-          this.$alert('请输入查找内容', {confirmButtonText: '确定',});
+        if (val == undefined || typeof(val) == 'object') {
+          this.bindSaleCurrentPage = 1
+        } else {
+          this.bindSaleCurrentPage = val
         }
+        var obj = {};
+        if(that.bindSaleSearchType == "手机号"){
+          obj.salePhone = that.bindSaleSearchCont;
+        }else{
+          obj.saleName = that.bindSaleSearchCont;
+        }
+        obj.currentPage = this.bindSaleCurrentPage;
+        obj.numberPerPage = this.bindSalePagesize;
+
+        that.global.axiosGetReq('/userManageList/salelist',obj)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.salesList = res.data.data;
+            that.bindSaleCurrentPage = res.data.currentPage;
+            that.bindSaleNumTotal = res.data.totalNumber;
+          }
+        })
       },
-      search:function(){
+      queryHandler:function(val){
         var that = this;
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         var obj = {
-          saleName:that.searchSaleName,
-          token:"111"
+          saleName:that.searchSaleName
         };
-        // 收索用户类型
+        // 搜索用户类型
         if(that.searchUserStyle=="手机号"){
           obj.phone = that.searchUserContent;
           obj.trueName = "";
@@ -515,16 +380,14 @@
         }else{
           obj.salePhone = "";
         }
-        // console.log(obj,"headSearchObj")
-          that.global.axiosGetReq('/userManageList/userlist',obj)
+        obj.currentPage = this.currentPage;
+        obj.numberPerPage = this.pagesize;
+
+        that.global.axiosGetReq('/userManageList/userlist',obj)
           .then((res) => {
-            console.log(res,"headSearchResult")
             if (res.data.callStatus === 'SUCCEED') {
               that.userList = res.data.data;
               that.totalCount=res.data.totalNumber;
-              //清空搜寻项目
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
             }
           })
       },
@@ -534,7 +397,6 @@
           type: 'warning'
         }).then(() => {
           var obj = {
-            token:"1211",
             salePhone:one.salePhone,
             userPhone:one.phone
           };
@@ -547,12 +409,10 @@
               data.salePhone = "";
               that.userList.splice(index,1,data)
               that.$message({type: 'success',message: '解除成功!'});
-            } else {
-              that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {
-          that.$message({  type: 'info',  message: '已取消解除'  });
+
         });
       },
     },

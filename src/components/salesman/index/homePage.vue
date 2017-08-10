@@ -14,13 +14,15 @@
           <span>{{phone}}</span>
         </div>
         <div class="oneInfor">
-          <span v-if="this.trueName">真实姓名：</span>
-          <span>{{trueName}}</span>
+          <span>真实姓名：</span>
+          <span v-if="this.trueName">{{trueName}}</span>
+          <a href="javascript:;" v-else class="noInfo" v-on:click="immediateDoIt()">立即完善</a>
         </div>
         <div class="oneInfor">
-          <span v-if="this.postalType === '支付宝'">支付宝账户：</span>
           <span v-if="this.postalType === '银行卡'">银行账户：</span>
-          <span>{{accountNumber}}</span>
+          <span v-else>支付宝账户：</span>
+          <span v-if="this.postalType">{{accountNumber}}</span>
+          <a href="javascript:;" v-else class="noInfo" v-on:click="immediateDoIt()">立即完善</a>
         </div>
         <div class="btnWrap">
           <el-button class="cashBtn" type="primary" v-on:click="immediateDoIt()">立即完善</el-button>
@@ -39,7 +41,7 @@
       </div>
     </div>
     <div class="clearFloat"></div>
-    <div class="curOrder">本月订单</div>
+    <div class="curOrder">本月业绩</div>
     <dataTable :orderInfo="orderInfo" :echartData="echartData" :monthX="monthX" :maxEchartVal="maxEchartVal" v-if="orderInfo.myOrderVoList"></dataTable>
     <div class="clearfix"></div>
     <div class="block" style="margin-bottom:20px;" v-show="this.totalCount > this.pagesize">
@@ -265,6 +267,13 @@
   background-color: #329af0!important;
   border-color: #329af0!important;
 }
+.noInfo{
+  color: #005aab;
+}
+.noInfo:hover{
+  color: #329af0;
+  text-decoration: underline;
+}
 .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
   color: #bfcbd9;
   cursor: not-allowed;
@@ -301,11 +310,14 @@
   line-height: 10px;
 }
 .personal_right{
-  /*float: right;*/
+  position: relative;
+  height: 206px;
   margin-left: 270px;
 }
 .personal_right .btnWrap{
+  position: absolute;
   text-align: center;
+  bottom: 1px;
 }
 .personal_left{
   width: 270px;

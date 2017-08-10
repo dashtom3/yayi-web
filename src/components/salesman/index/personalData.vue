@@ -57,7 +57,7 @@
               :on-success="uploadFile"
               :data="qiNiuToken">
               <img v-if="personalData.salePic" :src="personalData.salePic" class="avatar defaultCss">
-              <img src="../../../images/center/loadUserImg.png" class="defaultCss" v-if="!personalData.salePic">
+              <img src="../../../images/center/loadUserImg3.png" class="defaultCss" v-if="!personalData.salePic">
               <div class="clearfix"></div>
               <span style="margin-top:4px;" v-if="!personalData.salePic">上传头像</span>
               <span style="margin-top:4px;" v-if="personalData.salePic">更改头像</span>
@@ -187,7 +187,7 @@
         typeValue: '支付宝',
         lablePosi:"right",
         showPane:1,
-        showDefaultData:true,
+        showDefaultData:false,
         getMoneySet:false,
         imageUrl: '',
         qiNiuToken: null,
@@ -287,10 +287,13 @@
             this.personalData = res.data.data
             this.personalData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
             this.personalData.birthday = res.data.data.birthday && res.data.data.birthday || new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
-            this.personalData.sex = res.data.data.sex || 1
-            this.personalData.postalType = res.data.data.postalType && res.data.data.postalType
+            this.personalData.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
+            this.personalData.postalType = res.data.data.postalType
             if(this.personalData.postalType){
               this.getMoneySet = true
+            }
+            if(this.personalData.trueName){
+              this.showDefaultData = true
             }
           }
         })
@@ -387,7 +390,6 @@
               }
             })
           } else {
-            this.$alert('请填写完整的个人信息');
             return false;
           }
         });

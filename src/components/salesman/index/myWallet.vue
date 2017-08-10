@@ -1,9 +1,9 @@
 <template>
 	<el-row class="brandWarp">
     <el-col :span="24" class="warp-breadcrum1">
-      <div class="grid-content bg-purple-dark">
+      <div class="grid-content bg-purple-dark" style="position:relative;height:36px;line-height:36px;">
         <span>钱包余额：<i class="i_col_red">￥{{withTotalAmt}}</i></span>
-        <el-button class="margin_l withBtn" type="primary" @click="withDrawHandler" :disabled="withDrawState">提现</el-button>
+        <el-button class="margin_l withBtn" style="position:absolute;left:131px;" type="primary" @click="withDrawHandler" :disabled="withDrawState">提现</el-button>
         <span class="infoColor" v-show="withDrawState">正在审核中，请耐心等待...</span>
       </div>
       <div class="curOrder">钱包明细</div>

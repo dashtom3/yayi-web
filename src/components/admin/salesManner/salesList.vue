@@ -28,7 +28,7 @@
       </el-form>
     </el-col>
     <!-- 绑定弹窗 -->
-    <el-dialog :visible.sync="bindSalseAlert">
+    <el-dialog :visible.sync="bindSalseAlert" @close="closeHandler">
       <h4>当前已绑定人数（人）：<span>{{totalCount}}</span></h4>
       <el-tabs v-model="activeName2" type="card" @tab-click="tabHandler">
         <el-tab-pane label="未绑定" name="first">
@@ -379,6 +379,10 @@
       this.queryHandler()
     },
     methods: {
+      closeHandler(){
+        this.BindSearchContent = ""
+        this.noBindSearchContent = ""
+      },
       //改变类型
       changeRadioHandler(){
         this.changeNumHandler()

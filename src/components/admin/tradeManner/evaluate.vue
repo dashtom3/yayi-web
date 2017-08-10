@@ -28,17 +28,17 @@
 
 	    <!--回复列表-->
       <el-table :data="replayLists" border>
-        <el-table-column label="sku代码" :span="3" align="center">
+        <el-table-column label="sku代码" width="160" align="center">
           <template scope="scope" >
             <span>{{scope.row.sku}}</span>
           </template> 
         </el-table-column>
-        <el-table-column label="商品名称+属性" width="170" align="center" >
+        <el-table-column label="商品名称+属性" width="180" align="center" >
           <template scope="scope">
             <span>{{scope.row.describey}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="评论内容" :span="3" align="center">
+        <el-table-column label="评论内容" width="200" align="center">
           <template scope="scope">
             <span>{{scope.row.commentContent}}</span>
           </template>
@@ -48,23 +48,23 @@
             <span>{{scope.row.commentGrade}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="订单编号" width="170" align="center" >
+        <el-table-column label="订单编号" width="330" align="center" >
           <template scope="scope">
             <span>{{scope.row.orderId}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="回复状态" :span="3" align="center" >
+        <el-table-column label="回复状态" width="120" align="center" >
           <template scope="scope">
             <span v-if="scope.row.state == 1">未回复</span>
             <span v-if="scope.row.state == 2">已回复</span>
           </template>  
         </el-table-column>
-        <el-table-column label="回复内容" :span="3" align="center" >
+        <el-table-column label="回复内容" align="center" >
           <template scope="scope">
             <span>{{scope.row.replyContent}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :span="3" align="center" >
+        <el-table-column label="操作" width="200" align="center" >
           <template scope="scope">
             <el-button
               size="small"

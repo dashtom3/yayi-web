@@ -29,6 +29,13 @@
           <li>(4) 单次购买金额≥10000元，可获得乾币数量=当次实际购买金额*125%。</li>
         </ul>
       </div>
+      <div class="tips">
+        <p><strong>温馨提示：</strong></p>
+        <ul>
+          <li>（1）根据国家规定，乾币充值不开发票。</li>
+          <li>（2）购买商品时，发票金额包含使用乾币支付的金额，但不包含运费金额。</li>
+        </ul>
+      </div>
     </div>
     <el-dialog :visible.sync="WxTableVisible" :before-close="handleClose" size="small">
       <div style="margin-bottom:30px;">
@@ -172,6 +179,12 @@ export default {
 </script>
 
 <style scoped>
+.tips{
+  width: 522px;
+  margin:20px auto;
+  text-align: left;
+  color: #005aab;
+}
 .myMoneyAddWrap .contentWrap{
   width: 592px;
   margin: auto;

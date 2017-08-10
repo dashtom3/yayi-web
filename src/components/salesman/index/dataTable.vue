@@ -72,7 +72,7 @@
           <th>商品名称+属性</th>
           <th>价格（元）</th>
           <th>数量</th>
-          <th>小计</th>
+          <th>小计（元）</th>
         </tr>
         <tr class="trs" v-for="(item, index) in infoList" :key="index">
           <td>
@@ -94,7 +94,7 @@
           <td>{{sumAmt}}</td>
         </tr>
       </table>
-      <div class="custInfo" style="margin-top:20px;">订单详细</div>
+      <div class="custInfo" style="margin-top:20px;">订单明细</div>
        <table class="datail_tb">
         <tr class="trs tr_title">
           <th>商品类型</th>

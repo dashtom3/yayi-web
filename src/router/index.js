@@ -337,7 +337,7 @@ let router = new Router({
       protocolShow: true,
       children: [
         {path: '/protocols/currencyService', component: Protocols_currencyService, name: '乾币服务与管理协议',protocolShow: true},
-        {path: '/protocols/daobangStandard', component: Protocols_daobangStandard, name: '道邦品牌促销乾币赠予标准',protocolShow: true},
+        {path: '/protocols/daobangStandard', component: Protocols_daobangStandard, name: '道邦品牌乾币赠予标准',protocolShow: true},
         {path: '/protocols/currencyGift', component: Protocols_currencyGift, name: '乾币赠予标准',protocolShow: true},
         {path: '/protocols/currencyExchange', component: Protocols_currencyExchange, name: '乾币兑换标准',protocolShow: true}
       ]

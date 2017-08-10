@@ -51,7 +51,7 @@
               message: '您已成功兑换'+ res.data.num +'乾币',
               type: 'success'
             });
-            
+            this.benefitCode = ''
 	        }else if(res.data.callStatus === 'FAILED'){
 	        	this.errMsg = res.data.msg
 	        	this.error = true

@@ -58,7 +58,7 @@
           <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item">
             <span style="float:left">{{item.propertyName}}：</span>
             <div class="shuxing">
-              <button :class="{ attSty2: index2 == item.checkWhich}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal"  :disabled = "!oneAttrVal.enabled">
+              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal" :disabled = "!oneAttrVal.enabled">
                 {{oneAttrVal.data}}
               </button>
               <div class="clearFloat"></div>
@@ -532,6 +532,9 @@ import util from '../../../common/util'
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.defaultCss{
+  cursor: default!important;
+}
 .priceWrap{
   margin-bottom: 20px;
 }

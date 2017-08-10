@@ -7,7 +7,7 @@
           <el-breadcrumb-item>运费设置</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-<el-col>
+  <el-col>
     <el-tabs v-model="activeName2" type="card">
       <el-tab-pane label="自定义邮费" name="first">
         <el-table  :data="tab1_tableData"  stripe  style="width: 100%">
@@ -148,13 +148,11 @@
         var that = this;
         that.global.axiosPostReq('/freightManage/show')
         .then((res) => {
-          // console.log(res.data.data,"showFreeShipp")
           if (res.data.callStatus === 'SUCCEED') {
             that.tab1_tableData = res.data.data;
             for(let i in that.tab1_tableData){
               that.tab1_tableData[i].changeState = false;
             }
-            console.log(that.tab1_tableData)
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -184,7 +182,7 @@
         this.state = false;
       },
       handleClick(tab, event) {
-        console.log(tab, event);
+        // console.log(tab, event);
       },
       tab1_saveOne:function(index,one){
         var that = this;
@@ -221,16 +219,12 @@
         }else{
           if(one.postFeeId){
             obj.postFeeId=one.postFeeId;
-            // console.log(one.postCity)
             that.global.axiosPostReq('/freightManage/customFreight',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 var data = that.tab1_tableData[index];
                 data.changeState = false;
                 that.tab1_tableData.splice(index,1,data);
-                // that.tab1_tableData.splice()[index].changeState = false;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
               }
             })
           }else{
@@ -238,8 +232,7 @@
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
                 that.tab1_tableData[index].changeState = false;
-              } else {
-                that.$message.error('网络出错，请稍后再试！');
+                that.getFreeFreightList();
               }
             })
           }
@@ -261,6 +254,7 @@
         var that = this;
         that.$confirm('此操作将删除该自定义邮费, 是否继续?', '提示', {  confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
+          console.log(one)
           if(one.postFeeId){
             var obj = {
               postFeeId:one.postFeeId
@@ -276,11 +270,7 @@
             })
           }
         }).catch(() => {
-          that.$message({  type: 'info',  message: '已取消删除'});
         });
-        // else{
-        //   that.tab1_tableData.splice(index,1);
-        // }
       },
       tab1_editThis:function(index,row){
         console.log(row)
@@ -328,12 +318,10 @@
         if(str){
           that.$alert(str, {confirmButtonText: '确定'});
         }else{
-          console.log(obj)
           that.global.axiosPostReq('/freightManage/updateFreeShipp',obj)
           .then((res) => {
             console.log(res.data.data,"tab2_save")
             if (res.data.callStatus === 'SUCCEED') {
-
             } else {
               that.$message.error('网络出错，请稍后再试！');
             }

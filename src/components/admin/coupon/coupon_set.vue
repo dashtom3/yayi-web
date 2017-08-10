@@ -70,7 +70,7 @@
     </div>
 
     <!-- 新增优惠码 -->		 
-    <el-dialog title="添加优惠码" size="tiny" v-model="couponVisible" :close-on-click-modal="true">
+    <el-dialog title="添加优惠码" size="500" v-model="couponVisible" :close-on-click-modal="true">
 	    <ul class="coupon_wrap">
 		    <li class="clearfix">
 		    	<span class="fl"><span class="fr" style="padding-left:20px;"><i class="i_col_red">*</i>优惠码名称：</span></span>
@@ -89,13 +89,14 @@
 		      <el-date-picker
 			      v-model="benefit_updated"
 			      type="datetime"
+			      style="width:200px"
 			      placeholder="选择日期时间">
 			    </el-date-picker>
 		    </li>
 		  </ul>
-	    <div style="margin-top:30px;">
-	      <el-button class="btn_" type="primary" @click="saveHandler()">确定</el-button>
-	      <el-button class="btn_" @click="couponVisible=false">取消</el-button>
+	    <div style="margin:30px auto;width:500px;text-align:center;">
+	      <el-button type="primary" @click="saveHandler()">确定</el-button>
+	      <el-button  class="btn_" @click="couponVisible=false">取消</el-button>
 	    </div>
     </el-dialog>
 
@@ -287,32 +288,12 @@
         })
 				this.couponDetail = true
 			},
-			downFile(blob, fileName) {
-		    if (window.navigator.msSaveOrOpenBlob) {
-		        navigator.msSaveBlob(blob, fileName);
-		    } else {
-		        var link = document.createElement('a');
-		        link.href = window.URL.createObjectURL(blob);
-		        link.download = fileName;
-		        link.click();
-		        window.URL.revokeObjectURL(link.href);
-		    }
-			},
 			//下载
 			handleDownLoad(index, row){
 				var that = this
 				if(row){
 	        this.benefitIdSpan = row.benefitId
 				}			
-				// var params = {
-				// 	benefitId: this.benefitIdSpan
-				// }
-
-				// that.global.axiosGetReq('/benefit/downLoad',params).then((res) => {
-    //         var blob = new Blob([res.data], {type: "application/vnd.ms-excel;charset=utf-8"}), 
-				// 		fileName = '优惠码';
-				//     that.downFile(blob, fileName);
-    //     })
         window.open('http://47.93.48.111:8080/api/benefit/downLoad?benefitId='+ this.benefitIdSpan)
 			}
 		}
@@ -336,6 +317,10 @@
 	.i_col_red{
 	  color: red;
 	  font-style: normal;
+	}
+	.coupon_wrap{
+		width: 400px;
+		margin: auto;
 	}
 	.coupon_wrap li{
 		height: 50px;

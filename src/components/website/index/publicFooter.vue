@@ -9,7 +9,7 @@
       <ul>
         <li class="foot-title icon02">乾币规则</li>
         <li><span @click="jumpHandler3">乾币服务与管理协议</span></li>
-        <li><span @click="jumpHandler4">道邦品牌促销乾币赠予标准</span></li>
+        <li><span @click="jumpHandler4">道邦品牌乾币赠予标准</span></li>
         <li><span @click="jumpHandler5">乾币赠予标准</span></li>
         <li><span @click="jumpHandler6">乾币兑换标准</span></li>
       </ul>

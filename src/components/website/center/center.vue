@@ -171,6 +171,7 @@
       changeActive4: function(tabText) {
         // this.currentView = tabText;
         this.$router.push({path: '/center/personalData'});
+        this.message = 4;
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = false;
