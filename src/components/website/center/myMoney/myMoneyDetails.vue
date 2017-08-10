@@ -19,6 +19,7 @@
   import myMoney from './myMoney'
   import moneyExchange from './moneyExchange'
   import util from '../../../../common/util'
+  import Bus from '../../../global/bus.js'
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
   });
@@ -43,7 +44,14 @@
       tab03: moneyExchange
     },
     created:function(){
-      this.getMoneyListFn();
+      var that = this
+      that.getMoneyListFn();
+      Bus.$on('getTarget', target => { 
+        if (target == 'succeedChange') {
+          that.getMoneyListFn()
+        }
+        // console.log(target);  
+      });  
     },
     methods: {
       msgtoparent:function(data){

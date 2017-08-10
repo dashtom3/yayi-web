@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import Bus from '../../../global/bus.js'
 	export default{
 		data(){
 			return {
@@ -51,6 +52,7 @@
               message: '您已成功兑换'+ res.data.num +'乾币',
               type: 'success'
             });
+	        Bus.$emit('getTarget', 'succeedChange');
             this.benefitCode = ''
 	        }else if(res.data.callStatus === 'FAILED'){
 	        	this.errMsg = res.data.msg

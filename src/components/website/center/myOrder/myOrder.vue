@@ -23,6 +23,7 @@
   import waitRec from './waitRec'
   import waitComment from './waitComment'
   import returnSales from './returnSales'
+  import Bus from '../../../global/bus.js'
   var tab03 = Vue.extend({
     template: '<div>this is 待评价03</div>',
   });
@@ -58,6 +59,16 @@
       tab04: waitRec,
       tab05: waitComment,
       tab06: returnSales,
+    },
+    created: function () {
+      var that = this;
+      Bus.$on('getTarget', target => { 
+        if (target == 'succeed') {
+          that.waitrec--
+          that.waitcomment++
+        }
+        // console.log(target);  
+      });  
     },
     mounted: function() {
       var that = this;

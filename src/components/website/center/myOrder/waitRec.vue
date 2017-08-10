@@ -163,6 +163,7 @@
 <script>
   import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
+  import Bus from '../../../global/bus.js'
   export default {
     name: 'waitRec',
     data () {
@@ -257,6 +258,7 @@
                 // console.log(that.items[i].orderId,that.nowToOperateItem.orderId,that.items.length)
                 that.items.splice(i,1);
                 that.dialogVisibleGetGood = false;
+                 Bus.$emit('getTarget', 'succeed');
                 break;
               }else{
                 continue;

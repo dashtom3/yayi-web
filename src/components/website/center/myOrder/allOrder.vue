@@ -223,6 +223,7 @@
 <script>
   import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
+  import Bus from '../../../global/bus.js' 
   export default {
     name: 'allOrder',
     data () {
@@ -377,6 +378,7 @@
             //   if(that.items.orderId==that.nowToOperateItem.orderId){
                 that.items.splice(that.nowToOperateItemIndex,1);
                 that.dialogVisibleGetGood = false;
+                Bus.$emit('getTarget', 'succeed');
               //   break;
               // }else{
               //   continue;
