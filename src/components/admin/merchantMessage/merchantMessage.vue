@@ -591,7 +591,8 @@
           }
           that.global.axiosPostReq('/item/up',obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.getItemInfo();
+              // that.getItemInfo();
+              that.search();
               that.$message({
                 type: 'success',
                 message: '上架成功!'
@@ -621,8 +622,9 @@
           that.global.axiosPostReq('/item/down',obj).then((res) => {
             console.log(res,'xiajia')
             if (res.data.callStatus === 'SUCCEED') {
-              that.getItemInfo();
-              that.clearWord();
+              that.search();
+              // that.getItemInfo();
+              // that.clearWord();
               that.$message({
                 type: 'success',
                 message: '下架成功!'

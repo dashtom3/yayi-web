@@ -4,7 +4,7 @@
     <div v-show="isActive" class="sidebar">
       <div class="sideBtn" :class="{spe: 0==yayi}" @click="jump(0)">品牌库</div>
       <div class="sideBtn" :class="{spe: 1==yayi}" @click="jump(1)">本期主推</div>
-      <div class="sideBtn" v-for="(sideItem,index) in classifyItems" v-if="sideItem.oneClassify" :key="sideItem.oneId" :class="{spe: (index+2)==yayi}" @click="jump(index+2)">{{sideItem.oneClassify}}</div>
+      <div class="sideBtn" v-for="(sideItem,index) in classifyList" v-if="sideItem.oneClassify" :key="sideItem.oneId" :class="{spe: (index+2)==yayi}" @click="jump(index+2)">{{sideItem.oneClassify}}</div>
     </div>
     <!--  锚点侧边栏 结束 -->
     <!--  品牌库页面 开始 -->
@@ -55,7 +55,7 @@
     </div>
     <!--  本期主推页面 结束 -->
     <!--  一级分类页面 开始 -->
-    <div class="preventive_box d_jump" :style="{backgroundImage: 'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
+    <div class="preventive_box d_jump" :style="{backgroundImage: 'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}"  v-for="(classifyItem,index) in classifyList" :key="classifyItem.oneClassify">
       <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
         <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
@@ -123,20 +123,18 @@ export default {
                 that.classifyItems[i].kong = 1
                 that.classifyItems[i].items = res.data.data
               } else {
+                that.classifyItems[i].kong = 2
                 that.classifyItems[i].items = res.data.data
               }
+              that.classifyList = that.classifyItems.filter(function(ele,index,arr) {
+                return ele.kong == 2
+              })
+              // console.log(that.classifyList,'llllll')
             } else {
-              that.$message.error('网络出错，请稍后再试1！');
+              that.$message.error('网络出错，请稍后再试！');
             }
           })
         }
-        that.classifyList = that.classifyItems.filter(function(ele,index,arr) {
-          console.log(ele.kong,'00')
-          return ele.items !== []
-        })
-        console.log(that.classifyList,'llllll')
-      } else {
-        that.$message.error('网络出错，请稍后再试2！');
       }
     })
   },
@@ -144,7 +142,6 @@ export default {
     menu: function() {
       var that = this;
       var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-      console.log(scroll)
       if(scroll >= 636) {
         that.isActive = true;
       } else {
@@ -178,22 +175,24 @@ export default {
         // var ispeed = Math.floor(-hei / 6);
         console.log(total,'hei')
         if (osTop + a == c) {
-          console.log('9999999')
+          // console.log('9999999')
           clearInterval(timer);
           // isTop = false;
         }
         if( hei > 0) {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop + 20;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop + 25;
           isTop = true;
           if (document.body.scrollTop >= total || document.documentElement.scrollTop >= total || window.pageYOffset >= total){
             clearInterval(timer);
           }
         } else {
-          document.documentElement.scrollTop = document.body.scrollTop = osTop - 20;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop - 25;
           isTop = true;
-          if (document.body.scrollTop <= total || window.pageYOffset <= total){
-            console.log(document.body.scrollTop,document.documentElement.scrollTop,window.pageYOffset)
-            // console.log(document.body.scrollTop,document.documentElement.scrollTop,window.pageYOffset)
+          if (document.body.scrollTop !== 0 && document.body.scrollTop <= total) {
+            clearInterval(timer);
+          } else if (document.documentElement.scrollTop !== 0 && document.documentElement.scrollTop <= total) {
+            clearInterval(timer);
+          } else if (window.pageYOffset !== 0 && window.pageYOffset <= total) {
             clearInterval(timer);
           }
         }
@@ -202,8 +201,8 @@ export default {
     toBrand: function(index) {
       var that = this;
       var kk = index + 1
-      var classfyArg = kk +"-0-0AND0";
-      that.$router.push({path: '/brandLib/'+classfyArg})
+      var classfyArg = kk + "-0-0AND0";
+      that.$router.push({path: '/brandLib/'+ classfyArg})
       window.scroll(0,0);
     },
     toDetail: function(item) {

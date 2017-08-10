@@ -6,7 +6,7 @@
         <div class="yayi left" @click="salesEntry">绑定客户代表</div>
         <div class="yayi left" @click="gotoSales">创客系统入口</div>
         <div v-if="hasLogin" class="log right">
-          <span class="logIn" @click="logIn" v-bind:style="{ color: activeInColor }">登录</span>/<span class="register" @click="register" v-bind:style="{ color: activeOutColor }">注册</span>
+          <span class="logIn" @click="logIn" v-bind:style="{ color: activeInColor }">登录</span>/<span class="register" @click="register" v-bind:style="{ color: activeOutColor }">注册</span><span class="giveQb_word">（注册即赠60乾币）</span>
         </div>
         <div v-else class="log right">
           <span class="alreadyLog" @click="alreadyLog">{{username}}</span><span class="logOut" @click="logOut">退出</span>
@@ -42,6 +42,10 @@
           <div class="car_hover1" v-else>
             暂无选购商品
           </div>
+        </div>
+        <div class="qbCharge right" @click="qbCharge">
+        <img class="left" style="transform:translateY(5px);margin-right:8px;" src="../../../images/index/qianB.png" alt="img">
+        <p class="left">乾币充值</p>
         </div>
         <div class="clearfix"></div>
       </div>
@@ -216,10 +220,9 @@
           <span class="historySearch" v-for="(item,index) in filteredHrecord" @click="search_cargo(item,index)">{{item}}</span>
         </div>
       </div>
-      <img src="../../../images/index/first.png" style="float: left; margin-right: 50px;" alt="img">
-      <img src="../../../images/index/second.png" style="float: left; margin-right: 50px;" alt="img">
-      <img src="../../../images/index/third.png" style="float: left; margin-right: 50px;" alt="img">
-      <img src="../../../images/index/fouth.png" style="float: left;" alt="img">
+      <img src="../../../images/index/first.png" style="float: left; margin-right: 60px;" alt="img">
+      <img src="../../../images/index/second.png" style="float: left; margin-right: 60px;" alt="img">
+      <img src="../../../images/index/third.png" style="float: left;" alt="img">
     </div>
     <div class="clearfix"></div>
   </div>
@@ -372,7 +375,7 @@
     data () {
       return {
         bindBanner: '',
-        car_num: '',
+        car_num: 0,
         arrowChange: true,
         hasLogin: true,
         username: '',
@@ -673,6 +676,18 @@
         if (that.global.getToken() !== null) {
           that.$router.push({ name: '个人资料', params: {currentView: 'tab04'}});
           // this.$router.push({path: '/center/personalData'});
+        } else {
+          that.changeForget1 = true;
+          that.changeForget2 = false;
+          that.changeForget3 = false;
+          that.showLogin1 = true;
+        }
+      },
+      //乾币充值
+      qbCharge: function() {
+        var that = this;
+        if (that.global.getToken() !== null) {
+          that.$router.push({path: '/center/myMoney'});
         } else {
           that.changeForget1 = true;
           that.changeForget2 = false;
@@ -1335,20 +1350,21 @@
     z-index: 1000;
   }
   .log {
-    margin-left: 60px;
+    margin-left: 40px;
     position: relative;
   }
   .my_order {
-    margin-left: 60px;
+    margin-left: 35px;
   }
   .shopping_car {
-    width: 100px;
+    width: 80px;
     height: 26px;
     position: relative;
     cursor: pointer;
     border: 1px solid #fff;
     padding-left: 5px;
     padding-right: 5px;
+    margin-left: 35px;
     z-index: 1000;
   }
   .shopping_car .car_img {
@@ -1361,7 +1377,7 @@
     margin-left: 10px;
   }
   .gwcHeader {
-    margin-left: 30px;
+    margin-left: 27px;
     width: 71px;
     z-index: 1000;
   }
@@ -1378,7 +1394,7 @@
     top: 28px;
   }
   .yayi {
-    margin-left: 60px;
+    margin-left: 40px;
   }
   .yayi:hover {
     color: #005aab;
@@ -1389,9 +1405,9 @@
   .whiteLine {
     display: block;
     position: absolute;
-    top: 26px;
-    left: 110px;
-    width: 268px;
+    top: 27px;
+    left: 90px;
+    width: 288px;
     height: 1px;
     background-color: #e9e9e9;
     z-index: 9999;
@@ -1400,8 +1416,8 @@
     display: none;
     position: absolute;
     top: 26px;
-    left: 110px;
-    width: 239px;
+    left: 90px;
+    width: 259px;
     height: 1px;
     background-color: #e9e9e9;
     z-index: 9999;
@@ -1547,7 +1563,8 @@
     background-position: center;
 /*    background: url(../../../images/index/logBg.jpg) center no-repeat;*/
     text-align: center;
-    box-shadow: 3px 3px 15px #999999;
+    box-shadow: 0 6px 5px -2px #999999;
+/*    box-shadow: 0px 1px 0px #999999;*/
   }
   .transition-box .logIn_container {
     width: 1200px;
@@ -1867,11 +1884,11 @@
   .logOut {
     color: #000;
     font-size: 12px;
-    margin-left: 60px;
+    margin-left: 40px;
     float: right;
     transform: translateY(-5%);
   }
-  .logOut:hover {
+  .logOut:hover, .qbCharge:hover{
     color: #005aab;
     cursor: pointer;
     transition: all ease 0.5s;
@@ -1904,7 +1921,7 @@
   }
   .headerSecond .search_box {
     margin-top: 3px;
-    margin-right: 83px;
+    margin-right: 80px;
     position: relative;
   }
   .headerSecond .search_word {
@@ -1927,7 +1944,7 @@
     cursor: pointer;
   }
   .headerSecond .logo_img {
-    margin-right: 103px;
+    margin-right: 80px;
   }
   .headerSecond .logo_img:hover {
     cursor: pointer;
@@ -1964,5 +1981,13 @@
     cursor: pointer;
     color: #329af0;
     transition: all ease 0.5s;
+  }
+  .giveQb_word {
+    display: inline-block;
+    font-size: 12px;
+    color: #d81e06;
+    -webkit-transform-origin-x: 0;
+    -webkit-transform: scale(0.85);
+    transform: scale(0.85);
   }
 </style>

@@ -136,7 +136,7 @@
     left: 5px;
   }
   .myCollection .myDele:hover{
-    color: #5DB7E7;
+    color: #005aab;
   }
   .myCollection li:hover .myDele{
     cursor: pointer;
