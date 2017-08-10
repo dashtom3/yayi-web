@@ -916,6 +916,12 @@
       addNew: function() {
         var that = this;
         that.diaTitle = '新增收货信息';
+        that.xRegion = [];
+        that.form.name = '';
+        that.form.address = '';
+        that.form.gmobile = '';
+        that.form.mobile = '';
+        that.setDefault = false;
         that.editAddVisible = true;
       },
       // 修改收货地址按钮
@@ -934,6 +940,26 @@
         that.form.gmobile = item.landlineNumber;
         that.setDefault = item.isDefault;
         that.editAddVisible = true;
+      },
+      getAdd: function() {
+        var that = this;
+        var obj = {
+          token:that.global.getToken(),
+        };
+        that.global.axiosGetReq('/shoppingAdress/showShippingAddress', obj).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            console.log(res.data.data);
+            that.items = res.data.data;
+            if (res.data.data.length == 0) {
+              that.diaTitle = '新增收货信息';
+              that.editAddVisible = true;
+              return false
+            }
+            //this.getData = res.data.data;
+          } else {
+            // that.$message.error('网络出错，请稍后再试！');
+          }
+        })
       },
       // 获取我的地址
       getMyAdd: function() {
@@ -1033,7 +1059,8 @@
           }
           that.global.axiosGetReq('/shoppingAdress/deleteShippingAddress', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.getMyAdd();
+              //that.getMyAdd();
+              that.getAdd();
               that.freight = 0;
               that.$message(res.data.msg);
             } else {
@@ -1094,7 +1121,8 @@
               that.form.mobile = '';
               that.setDefault = false;
               that.$message('保存地址成功！');
-              that.getMyAdd();
+             // that.getMyAdd();
+               that.getAdd();
               that.editAddVisible = false;
             } else {
               that.$message.error('保存地址失败！');
@@ -1139,7 +1167,8 @@
               that.form.mobile = '';
               that.setDefault = false;
               that.$message('修改地址成功！');
-              that.getMyAdd();
+              //that.getMyAdd();
+              that.getAdd();
               that.editAddVisible = false;
             } else {
               that.$message.error('保存地址失败！');

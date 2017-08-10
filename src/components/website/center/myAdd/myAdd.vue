@@ -45,7 +45,7 @@
             <div class="left add_mobile">手机号</div>
             <div class="left add_operate">操作</div>
           </div>
-          <table class="table_address_header" border="1">
+          <table class="table_address_header">
             <tr class="address_des" v-for="add in address" :key="add">
               <td class="des_people">{{add.receiverName}}</td>
               <td class="des_place">{{add.province}}{{add.city}}{{add.county}}</td>
@@ -421,9 +421,11 @@
 table {
   border-collapse:collapse;
   border-spacing:0;
+  border: 1px solid #e9e9e9;
 }
 th,td {
  padding: 0;
+ border: 1px solid #e9e9e9;
 }
 .error {
   position: absolute; 

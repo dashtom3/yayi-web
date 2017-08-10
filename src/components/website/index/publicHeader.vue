@@ -1354,6 +1354,7 @@
   .shopping_car .car_img {
     position: absolute;
     top: 4px;
+    left: 3px;
   }
   .shopping_car .car_num {
     color: #D81E06;

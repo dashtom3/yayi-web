@@ -4,7 +4,7 @@
     <div v-show="isActive" class="sidebar">
       <div class="sideBtn" :class="{spe: 0==yayi}" @click="jump(0)">品牌库</div>
       <div class="sideBtn" :class="{spe: 1==yayi}" @click="jump(1)">本期主推</div>
-      <div class="sideBtn" v-for="(sideItem,index) in classifyItems" :key="sideItem.oneClassify" :class="{spe: (index+2)==yayi}" @click="jump(index+2)">{{sideItem.oneClassify}}</div>
+      <div class="sideBtn" v-for="(sideItem,index) in classifyItems" v-if="sideItem.oneClassify" :key="sideItem.oneId" :class="{spe: (index+2)==yayi}" @click="jump(index+2)">{{sideItem.oneClassify}}</div>
     </div>
     <!--  锚点侧边栏 结束 -->
     <!--  品牌库页面 开始 -->
@@ -55,7 +55,7 @@
     </div>
     <!--  本期主推页面 结束 -->
     <!--  一级分类页面 开始 -->
-    <div class="preventive_box d_jump" :style="{backgroundImage:  'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}" v-if="index<9"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
+    <div class="preventive_box d_jump" :style="{backgroundImage: 'url('+backgroundImgs[index%2==0?index/2:'']+')'}" :class="{active:index%2==1}"  v-for="(classifyItem,index) in classifyItems" :key="classifyItem.oneClassify">
       <div class="img_box_change" @mouseover="img_in(classifyItem)" @mouseout="img_out(classifyItem)" @click="toBrand(index)">
         <img class="brand_img" v-if="img_change!==classifyItem.oneId" src="../../../images/index/yayi.png" alt="img">
         <img class="brand_img" v-else src="../../../images/index/yayi_hover.png" alt="img">
@@ -82,12 +82,12 @@ export default {
   name: 'medical',
   data () {
     return {
-
       backgroundImgs:["http://oqhy88nu6.bkt.clouddn.com/WechatIMG235.jpeg","http://orl5769dk.bkt.clouddn.com/yaYiBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_3_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_4.jpg"],
       img_change: true,
       yayi: null,
       isActive: false,
       classifyItems: [],
+      classifyList: [],
       // items: [],
       sideItems: [],
       brandListData:[],
@@ -118,13 +118,23 @@ export default {
           };
           that.global.axiosPostReq('/item/queryItemSearchGet', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
-              that.classifyItems[i].items = res.data.data
+              // console.log(res.data.data,'oo')
+              if (res.data.data.length == 0) {
+                that.classifyItems[i].kong = 1
+                that.classifyItems[i].items = res.data.data
+              } else {
+                that.classifyItems[i].items = res.data.data
+              }
             } else {
               that.$message.error('网络出错，请稍后再试1！');
             }
           })
         }
-        // console.log(that.classifyItems,'llllll')
+        that.classifyList = that.classifyItems.filter(function(ele,index,arr) {
+          console.log(ele.kong,'00')
+          return ele.items !== []
+        })
+        console.log(that.classifyList,'llllll')
       } else {
         that.$message.error('网络出错，请稍后再试2！');
       }
@@ -134,12 +144,13 @@ export default {
     menu: function() {
       var that = this;
       var scroll = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+      console.log(scroll)
       if(scroll >= 636) {
         that.isActive = true;
       } else {
         that.isActive = false;
       }
-      var num = parseInt((scroll-592)/636);
+      var num = parseInt((scroll-560)/636);
       that.yayi = num;
       // console.log(scroll);
     },
@@ -166,20 +177,22 @@ export default {
         var c = document.documentElement.scrollHeight; //网页正文全文高
         // var ispeed = Math.floor(-hei / 6);
         console.log(total,'hei')
-        if (osTop+a == c) {
+        if (osTop + a == c) {
+          console.log('9999999')
           clearInterval(timer);
-          //isTop = false;
+          // isTop = false;
         }
         if( hei > 0) {
-          document.documentElement.scrollTop = document.body.scrollTop = window.pageYOffset = osTop + 30;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop + 20;
           isTop = true;
           if (document.body.scrollTop >= total || document.documentElement.scrollTop >= total || window.pageYOffset >= total){
             clearInterval(timer);
           }
         } else {
-          document.documentElement.scrollTop = document.body.scrollTop = window.pageYOffset = osTop - 30;
+          document.documentElement.scrollTop = document.body.scrollTop = osTop - 20;
           isTop = true;
-          if (document.documentElement.scrollTop <= total || window.pageYOffset <= total){
+          if (document.body.scrollTop <= total || window.pageYOffset <= total){
+            console.log(document.body.scrollTop,document.documentElement.scrollTop,window.pageYOffset)
             // console.log(document.body.scrollTop,document.documentElement.scrollTop,window.pageYOffset)
             clearInterval(timer);
           }

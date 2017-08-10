@@ -334,13 +334,13 @@
             that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
             that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
           } else if (that.thirdForm.date1 == '' && that.thirdForm.date2 == '') {
-            that.thirdForm.registerDate = '暂无' + '/' + '暂无'
+            that.thirdForm.registerDate = '暂无' + '／' + '暂无'
           } else if (that.thirdForm.date1 !== '' && that.thirdForm.date2 == '') {
             that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
-            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + '暂无'
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + '暂无'
           } else if (that.thirdForm.registerDate == '' && that.thirdForm.date2 !== '') {
             that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
-            that.thirdForm.registerDate = '暂无' + '/' + that.thirdForm.date2
+            that.thirdForm.registerDate = '暂无' + '／' + that.thirdForm.date2
           }
           for (var i = 0; i < that.thirdForm.itemValueList.length; i++) {
             that.thirdForm.itemValueList[i].tiChen = parseInt(that.thirdForm.itemValueList[i].tiChen)
@@ -396,10 +396,10 @@
             that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
           } else if (typeof(that.thirdForm.date1) == 'object' && typeof(that.thirdForm.date2) == 'string') {
             that.thirdForm.date1 = util.formatDate.format(that.thirdForm.date1)
-            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + that.thirdForm.date2
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
           } else if (typeof(that.thirdForm.date1) == 'string' && typeof(that.thirdForm.date2) == 'object') {
             that.thirdForm.date2 = util.formatDate.format(that.thirdForm.date2)
-            that.thirdForm.registerDate = that.thirdForm.date1 + '/' + that.thirdForm.date2
+            that.thirdForm.registerDate = that.thirdForm.date1 + '／' + that.thirdForm.date2
           }
           for (var i = 0; i < that.thirdForm.itemValueList.length; i++) {
             that.thirdForm.itemValueList[i].tiChen = parseInt(that.thirdForm.itemValueList[i].tiChen)

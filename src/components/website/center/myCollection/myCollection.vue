@@ -20,9 +20,12 @@
               <img :src="good.item_pica+'?imageView2/1/w/140/h/140'" >
               <span></span>
             </div>
-            <div class="title">
+            <p v-if="good.item_name.length < 9" class="title">
               {{good.item_name}}
-            </div>
+            </p>
+            <p v-else class="title2">
+              {{good.item_name}}
+            </p>
             <div class="goodFooter">
               <span class="colorRed">￥{{good.item_price}}</span>
               <!-- <img src="../../../../images/center/gwc.png" alt=""> -->
@@ -111,104 +114,119 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.myCollection{
-  font-size: 14px;
-  min-height: 440px;
-}
-.myCollection .colorRed{
-color:  #D81E06;
-}
-.myCollection .colorBlue{
-color:  #005aab;
-}
-.head{
-  padding-left: 38px;
+  .myCollection{
+    font-size: 14px;
+    min-height: 440px;
+  }
+  .myCollection .colorRed{
+    color:  #D81E06;
+  }
+  .myCollection .colorBlue{
+    color:  #005aab;
+  }
+  .head{
+    padding-left: 38px;
     line-height: 40px;
-  border-bottom: 1px solid #eeeeee;
-}
-.myCollection .myDele{
-  display: none;
-  position: absolute;
-  top: 5px;
-  left: 5px;
-}
-.myCollection .myDele:hover{
-  color: #5DB7E7;
-}
-.myCollection li:hover .myDele{
-  cursor: pointer;
-  display: block;
-}
-.head .clearAll{
-  float: right;
-  cursor: pointer;
-}
-.goodDetail{
-  margin-left: 38px;
-  margin-top: 29px;
-  min-height: 590px;
-  margin-bottom: 30px;
-}
-.goodDetail li{
-  width: 148px;
-  height: 208px;
-  border: 1px solid #eeeeee;
-  margin-right: 19px;
-  margin-bottom: 19px;
-  display: inline-block;
-  position: relative;
-  float: left;
-}
-.goodDetail li:hover{
-  box-shadow: 7px 7px 28px #bcbcbc;
-  transition: all 0.5s ease;
-  border-color:white;
-  cursor: pointer;
-}
-.goodDetail .gold{
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 999;
-}
-.goodDetail .title{
-  word-break: break-all;
-text-overflow: ellipsis;
-display: -webkit-box;
--webkit-box-orient: vertical;
--webkit-line-clamp: 1;
-overflow: hidden;
-}
-
-.goodDetail .imgwrap img{
-max-width: 100%;
-max-height: 100%;
-display: inline-block;
-vertical-align: middle;
-}
-.goodDetail .imgwrap span{
-height: 100%;
-display: inline-block;
-vertical-align: middle;
-}
-.goodDetail .title{
-  padding-left: 8px;
-  padding-right: 10px;
-}
-.goodDetail li:hover .title{
-  color: #005aab;
-}
-.goodDetail .goodFooter{
-margin-top: 18px;
-padding-left: 8px;
-padding-right: 10px;
-}
-.goodDetail .goodFooter img{
-  float: right;
-  cursor: pointer;
-}
-
-.nogood{
-  margin: 128px 0 138px 496px;
-}
+    border-bottom: 1px solid #eeeeee;
+  }
+  .myCollection .myDele{
+    display: none;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  .myCollection .myDele:hover{
+    color: #5DB7E7;
+  }
+  .myCollection li:hover .myDele{
+    cursor: pointer;
+    display: block;
+  }
+  .head .clearAll{
+    float: right;
+    cursor: pointer;
+  }
+  .goodDetail{
+    margin-left: 38px;
+    margin-top: 29px;
+    min-height: 590px;
+    margin-bottom: 30px;
+  }
+  .goodDetail li{
+    width: 148px;
+    height: 208px;
+    border: 1px solid #eeeeee;
+    margin-right: 19px;
+    margin-bottom: 19px;
+    display: inline-block;
+    position: relative;
+    float: left;
+  }
+  .goodDetail li:hover{
+    box-shadow: 7px 7px 28px #bcbcbc;
+    transition: all 0.5s ease;
+    border-color:white;
+    cursor: pointer;
+  }
+  .goodDetail .gold{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 999;
+  }
+  .goodDetail .title {
+    height: 20px;
+    overflow: hidden;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis; 
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  .title2 {
+    max-width:160px;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+  .title2:after {
+    content: "...";
+  }
+  .goodDetail .imgwrap img{
+    max-width: 100%;
+    max-height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .goodDetail .imgwrap span{
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .goodDetail .title{
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+  .goodDetail li:hover .title{
+    color: #005aab;
+  }
+  .goodDetail li:hover .title2{
+    color: #005aab;
+  }
+  .goodDetail .goodFooter{
+    margin-top: 18px;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+  .goodDetail .goodFooter img{
+    float: right;
+    cursor: pointer;
+  }
+  .nogood{
+    margin: 128px 0 138px 496px;
+  }
 </style>

@@ -116,15 +116,14 @@
     cursor: default;
   }
   .el-radio__input.is-checked .el-radio__inner, .el-button--primary, .el-checkbox__input.is-checked .el-checkbox__inner{
-    border-color: #005aab;
-    background-color: #005aab;
+    border-color: #005aab !important;
+    background-color: #005aab !important;
   }
   .el-button--primary:hover {
-    background: #329af0;
-    border-color: #329af0;
+    background: #329af0 !important;
+    border-color: #329af0 !important;
   }
   .el-input__inner:focus {
-    outline: 0;
     border-color: #329af0;
   }
   .el-submenu .el-menu-item.is-active, .el-menu-item.is-active, .el-submenu .el-menu-item.is-active:hover, .el-menu-item.is-active:hover {

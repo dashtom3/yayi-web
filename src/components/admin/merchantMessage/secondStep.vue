@@ -97,7 +97,8 @@
         that.registerDate.date2 = k[1]
         if (that.registerDate.date1 == '暂无') {
           that.registerDate.date1 = ''
-        } else if(that.registerDate.date2 == '暂无') {
+        }
+        if(that.registerDate.date2 == '暂无') {
           that.registerDate.date2 = ''
         }
         console.log(that.registerDate,'o9999')
