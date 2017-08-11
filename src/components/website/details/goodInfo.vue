@@ -112,6 +112,7 @@ import goodComment from './goodComment'
 import instructions from './instructions'
 import myAddress from './selectThree'
 import util from '../../../common/util'
+import Bus from '../../global/bus.js'
   export default {
     name: 'goodInfo',
     data () {
@@ -383,6 +384,7 @@ import util from '../../../common/util'
             that.global.axiosPostReq('/cart/add',obj)
             .then((res) => {
               if (res.data.callStatus === 'SUCCEED') {
+                Bus.$emit('getTarget', 'addGoodNum');
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
               } else {
                 // that.$message.error('网络出错，请稍后再试！');

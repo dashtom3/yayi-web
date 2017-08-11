@@ -230,6 +230,7 @@
 
 <script>
   var crypto = require('crypto');
+  import Bus from '../../global/bus.js'
 //   !(function(window, document) {
 //   function GVerify(options) { //创建一个图形验证码对象，接收options对象为参数
 //     this.options = { //默认options参数值
@@ -443,6 +444,21 @@
     },
     created: function() {
       var that = this;
+      Bus.$on('getTarget', target => {
+        if (target == 'addGoodNum') {
+          var obj = {
+            token:that.global.getToken()
+          };
+          that.global.axiosGetReq('/cart/list', obj)
+          .then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.car_num = res.data.data.length;
+            } else {
+              that.$message.error('登录过期，请重新登录！');
+            }
+          })
+        }
+      });
       if (that.msgFromIndex == 'RE_LOGIN') {
         that.global.removeMsg()
         that.hasLogin = true

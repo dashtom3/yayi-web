@@ -306,7 +306,7 @@ a {
     cursor: pointer;
   }
   .brand_box .brandd_img {
-    margin-top: 60px;
+    margin-top: 40px;
   }
   .brand_container {
     width: 800px;
@@ -343,7 +343,7 @@ a {
 /*-------------品牌库页面 结束-------------*/
 .preventive_box {
   width: 100%;
-  height: 671px;
+  height: 681px;
   margin: 0 auto;
   position: relative;
   text-align: center;

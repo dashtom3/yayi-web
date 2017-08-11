@@ -70,25 +70,26 @@
   /*padding: 0 20px;*/
   padding-left: 50px;
   padding-top: 35px;
-  padding-bottom: 38px;
+  padding-bottom: 18px;
   margin-left: 37px;
   margin-right: 46px;
 }
 
 .goodIntroduce div li{
-  line-height: 45px;
+/*  line-height: 45px;*/
   text-decoration: none;
+  margin-bottom: 20px;
 }
 .goodIntroduce div {
   float: left;
   /*display:inline-block;*/
 }
 .goodIntroduce div:nth-child(1){
-  width:47%;
+  width:35%;
   padding-right: 20px;
 }
 .goodIntroduce div:nth-child(2){
-  width:33%;
+  width:35%;
 }
 .goodIntroduce div:nth-child(3){
   width:18%;
