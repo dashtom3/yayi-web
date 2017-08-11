@@ -751,6 +751,23 @@
         that.isActive2 = true;
         that.normal_tax = false;
       },
+      // 历史写发票
+      // historyTax: function() {
+      //   var that = this;
+      //   that.global.axiosGetReq('/userMyQb/query', obj).then((res) => {
+      //     if (res.data.callStatus === 'SUCCEED') {
+      //       if(res.data.data.length>0){
+      //         that.allQb = res.data.data[0].user.qbBalance;
+      //         that.nowQb = res.data.data[0].user.qbBalance;
+      //       } else {
+      //         that.nowQb = 0
+      //         that.allQb = 0
+      //       }
+      //     } else {
+      //       // that.$message.error('网络出错，请稍后再试！');
+      //     }
+      //   })
+      // },
       // 普通发票公司
       saveComTax: function(formName) {
         var that = this

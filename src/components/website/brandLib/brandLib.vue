@@ -293,9 +293,10 @@
         })
       },
       goToThisDetail:function(index,id){
-        this.$router.push({
-          path:"/details/"+id,
-        });
+        window.open('/details/' + id)
+        // this.$router.push({
+        //   path:"/details/"+id,
+        // });
       },
       selectClassfy1:function(index,item){
         var that = this;
@@ -756,6 +757,7 @@ transition: all 0.5s ease;*/
   height:60px;
   width: 220px;
   padding: 0 10px;
+  text-align: center;
     word-break: break-all;
     text-overflow: ellipsis;
     display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/

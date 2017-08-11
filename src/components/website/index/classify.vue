@@ -244,7 +244,7 @@
     margin-top: 3px;
   }
   .details .title:hover{
-    color: #90cbee;
+    color: #005aab;
   }
   .details .detail{
     margin-left: 150px;
@@ -261,7 +261,7 @@
     cursor: pointer;
   }
   .details .detail li:hover{
-    color: #90cbee;
+    color: #005aab;
   }
   .classfyDetail .oneHover{
     background: #329af0;
@@ -270,7 +270,7 @@
     color: #5db8e8;
   }
   .classfyDetail .threeHover{
-    color: #90cbee;
+    color: #005aab;
   }
 
   /*-------------------------*/

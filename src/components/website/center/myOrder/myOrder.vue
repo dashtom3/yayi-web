@@ -6,7 +6,6 @@
       <div class="tab_item" :class="{spe: isActive3}" @click="changeActive3(tab03Text);">待发货({{waitsend}})</div>
       <div class="tab_item" :class="{spe: isActive4}" @click="changeActive4(tab04Text);">待收货({{waitrec}})</div>
       <div class="tab_item" :class="{spe: isActive5}" @click="changeActive5(tab05Text);">待评价({{waitcomment}})</div>
-<!--       <div class="tab_item" :class="{spe: isActive6}" @click="changeActive6(tab06Text);">退款／退货／换货中</div> -->
     </div>
     <!-- 点击导航后要切换的内容 -->
     <transition name="component-fade" mode="out-in">
@@ -22,11 +21,10 @@
   import waitSend from './waitSend'
   import waitRec from './waitRec'
   import waitComment from './waitComment'
-  import returnSales from './returnSales'
   import Bus from '../../../global/bus.js'
-  var tab03 = Vue.extend({
-    template: '<div>this is 待评价03</div>',
-  });
+  // var tab03 = Vue.extend({
+  //   template: '<div>this is 待评价03</div>',
+  // });
   export default {
     name: 'myOrder',
     data () {
@@ -48,7 +46,6 @@
         tab03Text: "tab03",
         tab04Text: "tab04",
         tab05Text: "tab05",
-        tab06Text: "tab06",
         currentView: 'tab01', //默认选中的导航栏
       }
     },
@@ -58,16 +55,16 @@
       tab03: waitSend,
       tab04: waitRec,
       tab05: waitComment,
-      tab06: returnSales,
     },
     created: function () {
       var that = this;
-      Bus.$on('getTarget', target => { 
+      Bus.$on('getTarget', target => {
         if (target == 'succeed') {
           that.waitrec--
           that.waitcomment++
-        }
-        // console.log(target);  
+        } else if (target == 'succeedComment') {
+          that.waitcomment--
+        } 
       });  
     },
     mounted: function() {
@@ -77,37 +74,53 @@
       }
       that.getOrdersNums();
     },
-    watch:{
-      numsArr:{
-        handler:function(){
-          for(let i in this.numsArr){
-            var num = this.numsArr[i].counts;
-            var state = this.numsArr[i].state;
-            this.all += num;
-            if(state==1){
-              this.waitpay += num;
-            }
-            if(state==4){
-              this.waitcomment += num;
-            }
-            if(state==3){
-              this.waitrec += num;
-            }
-            if(state==2 || state==5){
-              this.waitsend += num;
-            }
-          }
-        },
-        deep:true
-      }
-    },
+    // watch:{
+    //   numsArr:{
+    //     handler:function() {
+    //       var that = this
+    //       for(let i in that.numsArr) {
+    //         var num = that.numsArr[i].counts;
+    //         var state = that.numsArr[i].state;
+    //         if(state == 1) {
+    //           that.waitpay = num;
+    //         }
+    //         if(state == 4) {
+    //           that.waitcomment = num;
+    //         }
+    //         if(state == 3) {
+    //           that.waitrec = num;
+    //         }
+    //         if(state == 2 || state == 5) {
+    //           that.waitsend = num;
+    //         }
+    //       }
+    //     },
+    //     deep:true
+    //   }
+    // },
     methods: {
       getOrdersNums:function(){
         var that = this;
-        that.global.axiosPostReq('/OrderDetails/queryOrderNums')
-        .then((res) => {
+        that.global.axiosPostReq('/OrderDetails/queryOrderNums').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
-            this.numsArr = res.data.data;
+            that.numsArr = res.data.data;
+            that.all = res.data.msg;
+            that.waitsend = 0
+            for(let i in that.numsArr) {
+              var state = that.numsArr[i].state;
+              if(state == 1) {
+                that.waitpay = that.numsArr[i].counts;
+              }
+              if(state == 4) {
+                that.waitcomment = that.numsArr[i].counts;
+              }
+              if(state == 3) {
+                that.waitrec = that.numsArr[i].counts;
+              }
+              if(state == 2 || state == 5) {
+                that.waitsend = that.numsArr[i].counts;
+              }
+            }
           } else {
             that.$message.error('网络出错，请稍后再试！');
           }
@@ -115,58 +128,49 @@
 
       },
       changeActive1: function(tabText) {
+        this.getOrdersNums();
         this.currentView = tabText;
         this.isActive1 = true;
         this.isActive2 = false;
         this.isActive3 = false;
         this.isActive4 = false;
         this.isActive5 = false;
-        this.isActive6 = false;
       },
       changeActive2: function(tabText) {
+        this.getOrdersNums();
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = true;
         this.isActive3 = false;
         this.isActive4 = false;
         this.isActive5 = false;
-        this.isActive6 = false;
       },
       changeActive3: function(tabText) {
+        this.getOrdersNums();
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = true;
         this.isActive4 = false;
         this.isActive5 = false;
-        this.isActive6 = false;
       },
       changeActive4: function(tabText) {
+        this.getOrdersNums();
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = false;
         this.isActive4 = true;
         this.isActive5 = false;
-        this.isActive6 = false;
       },
       changeActive5: function(tabText) {
+        this.getOrdersNums();
         this.currentView = tabText;
         this.isActive1 = false;
         this.isActive2 = false;
         this.isActive3 = false;
         this.isActive4 = false;
         this.isActive5 = true;
-        this.isActive6 = false;
-      },
-      changeActive6: function(tabText) {
-        this.currentView = tabText;
-        this.isActive1 = false;
-        this.isActive2 = false;
-        this.isActive3 = false;
-        this.isActive4 = false;
-        this.isActive5 = false;
-        this.isActive6 = true;
       },
     }
   }

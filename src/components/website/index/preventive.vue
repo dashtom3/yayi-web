@@ -82,7 +82,7 @@ export default {
   name: 'medical',
   data () {
     return {
-      backgroundImgs:["http://oqhy88nu6.bkt.clouddn.com/WechatIMG235.jpeg","http://orl5769dk.bkt.clouddn.com/yaYiBack_2.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_3_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_4.jpg"],
+      backgroundImgs:["http://oqhy88nu6.bkt.clouddn.com/%E9%A2%84%E9%98%B2%E6%8A%A4%E7%90%86.png","http://oqhy88nu6.bkt.clouddn.com/%E9%A2%84%E5%A4%87%E5%88%87%E7%A3%A8.png","http://orl5769dk.bkt.clouddn.com/yaYiBack_3_3.jpg","http://orl5769dk.bkt.clouddn.com/yaYiBack_4.jpg"],
       img_change: true,
       yayi: null,
       isActive: false,
@@ -204,7 +204,8 @@ export default {
     },
     toDetail: function(item) {
       var that = this;
-      that.$router.push({path: '/details/' + item.itemId})
+      window.open('/details/' + item.itemId)
+      // that.$router.push({path: '/details/' + item.itemId})
       window.scroll(0,0);
     },
     img_in(classifyItem) {
@@ -258,14 +259,14 @@ a {
   color: #fff;
 }
 .sidebar {
-  width: 145px;
+  width: 135px;
   height: 246px;
   position: fixed;
   z-index: 100;
   top: 139px;
 }
 .sideBtn {
-  width: 145px;
+  width: 135px;
   height: 40px;
   line-height: 40px;
   text-align: center;

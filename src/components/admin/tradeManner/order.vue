@@ -167,14 +167,14 @@
         <div class="pay_info clearfix">
 
           <ul class="fl" style="width:130px;">
-            <li v-if="nowOrderDetails.payType">支付方式</li>
+            <li v-if="nowOrderDetails.payType!==null">支付方式</li>
             <li>发票</li>
             <li>产品注册证</li>
             <li>订单留言</li>
             <li>赠送乾币</li>
           </ul>
           <ul class="fl">
-            <li v-if="nowOrderDetails.payType">
+            <li v-if="nowOrderDetails.payType!==null">
               <div v-if="nowOrderDetails.payType==1"> 微信支付 </div>
               <div v-else-if="nowOrderDetails.payType==0">支付宝支付</div>
             </li>
@@ -625,6 +625,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             this.detailVisible = true;
             this.nowOrderDetails = res.data.data;
+            console.log(res.data.data)
             var num = 0;
             var allMoney = 0;
             var arr = [];

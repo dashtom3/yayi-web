@@ -439,6 +439,7 @@
             var data = that.items[that.nowToOperateItemIndex];
             data.state = 9;
             that.items.splice(that.nowToOperateItemIndex,1,data);
+            Bus.$emit('getTarget', 'succeedComment');
             that.$alert('评论成功！',  {confirmButtonText: '确定',});
           } else {
             that.$message.error('网络错误！');

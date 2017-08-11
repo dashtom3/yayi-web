@@ -59,7 +59,7 @@
       <!-- 分页 -->
     </div>
 <el-dialog title="评价" :visible.sync="dialogVisibleComment" size="tiny">
-  <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList" :key="item.itemInfo">
+  <div v-if="nowToOperateItem.orderitemList"  class="comment_box" v-for="(item,index) in nowToOperateItem.orderitemList" :key="item.itemInfo.itemName">
     <div class="commentImgWrap">
       <img class="comment_img" :src="item.picPath+'?imageView2/1/w/80/h/80'" alt="img">
     </div>
@@ -176,6 +176,7 @@
 <script>
   import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
+  import Bus from '../../../global/bus.js'
   export default {
     name: 'waitComment',
     data () {
@@ -299,6 +300,7 @@
             // data.state = 9;
             that.items.splice(that.nowToOperateItemIndex,1);
             that.dialogVisibleComment = false;
+            Bus.$emit('getTarget', 'succeedComment');
             // that.$alert('评论成功！',  {confirmButtonText: '确定',});
           } else {
             that.$message.error('网络错误！');

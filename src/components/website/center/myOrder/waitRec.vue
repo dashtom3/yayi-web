@@ -15,7 +15,7 @@
       <div><img src="../../../../images/center/noOrderWord.png" alt="img"></div>
     </div>
     <!--  暂无订单结束 -->
-    <div class="order_item" v-for="item in items" :key="item" v-show="order_list">
+    <div class="order_item" v-for="item in items" :key="item.orderId" v-show="order_list">
       <div class="order_title">
         <span class="order_date">{{item.created.split(" ")[0]}}</span>
         <span class="order_num">订单号: {{item.orderId}}</span>
@@ -258,7 +258,7 @@
                 // console.log(that.items[i].orderId,that.nowToOperateItem.orderId,that.items.length)
                 that.items.splice(i,1);
                 that.dialogVisibleGetGood = false;
-                 Bus.$emit('getTarget', 'succeed');
+                Bus.$emit('getTarget', 'succeed');
                 break;
               }else{
                 continue;
