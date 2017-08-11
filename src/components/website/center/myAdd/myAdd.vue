@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="固定电话" :label-width="formLabelWidth" class="item">
             <el-input v-model="form.gmobile" auto-complete="off" style="width:260px;"></el-input>
-            <span style="color: #D0011B;">（选填）</span>
+            <span style="color: #cb1700;">（选填）</span>
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth" class="item">
             <el-input v-model="form.address" auto-complete="off" style="width:720px;"></el-input>

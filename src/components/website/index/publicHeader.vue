@@ -34,8 +34,8 @@
               <div class="cargo_rm" @click.stop="delete_cargo(item)">删除</div>
             </div>
             <div class="total_box">
-              <p class="fir left">共<span style="color: #D81E06;">{{car_num}}</span>件商品</p>
-              <p class="sec left">总计: <span style="color: #D81E06;">￥{{total_price}}</span></p>
+              <p class="fir left">共<span style="color: #cb1700;">{{car_num}}</span>件商品</p>
+              <p class="sec left">总计: <span style="color: #cb1700;">￥{{total_price}}</span></p>
               <div class="gotocar right" @click="gotocar">去购物车</div>
             </div>
           </div>
@@ -1312,7 +1312,7 @@
     position: absolute;
     left: 90px;
     font-size: 12px;
-    color: #D81E06;
+    color: #cb1700;
   }
   .speH {
     width: 100%;
@@ -1368,7 +1368,7 @@
     left: 3px;
   }
   .shopping_car .car_num {
-    color: #D81E06;
+    color: #cb1700;
     margin-left: 10px;
   }
   .gwcHeader {
@@ -1501,7 +1501,7 @@
     position: absolute;
     top: 3px;
     right: 0px;
-    color: #D81E06;
+    color: #cb1700;
   }
   .cargo_num {
     position: absolute;
@@ -1694,7 +1694,7 @@
   }
   .logIn_error {
     font-size: 12px;
-    color: #D81E06;
+    color: #cb1700;
     margin-top: 5px;
   }
   .forgetPwd {
@@ -1903,7 +1903,7 @@
   }
   .rg_choose_error {
     font-size: 12px;
-    color: #D81E06;
+    color: #cb1700;
     margin-top: 2px;
   }
 /*-------------------注册页 end----------------------*/
@@ -1980,7 +1980,7 @@
   .giveQb_word {
     display: inline-block;
     font-size: 12px;
-    color: #d81e06;
+    color: #cb1700;
     -webkit-transform-origin-x: 0;
     -webkit-transform: scale(0.85);
     transform: scale(0.85);

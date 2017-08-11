@@ -319,7 +319,7 @@
     position: absolute;
     left: 20px;
     font-size: 14px;
-    color: #D81E06;
+    color: #cb1700;
   }
   .adopt{
     position: absolute;

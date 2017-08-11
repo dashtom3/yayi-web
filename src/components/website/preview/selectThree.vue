@@ -3689,7 +3689,7 @@ export default {
   text-overflow: clip;
 }
 .childrenSelectedThree .red{
-  color: red ;
+  color: #cb1700 ;
 }
 .childrenSelectedThree .provinceDetail{
   width: 500px;

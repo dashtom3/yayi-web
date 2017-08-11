@@ -477,7 +477,7 @@ top: 3px;
   color: #005aab;
 }
 .gwcWrap .colorRed{
-  color:#e0645b;
+  color:#cb1700;
 }
 .gwcWrap{
   width: 1200px;
@@ -736,7 +736,7 @@ margin-right: 16px;
   border-radius: 2px;
   text-align: center;
   color: white;
-  background: #d81e06;
+  background: #cb1700;
   margin-top: -10px;
   cursor: pointer;
 }

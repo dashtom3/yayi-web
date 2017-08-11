@@ -90,6 +90,7 @@
 			      v-model="benefit_updated"
 			      type="datetime"
 			      style="width:200px"
+			      :picker-options="pickerBeginDateAfter"
 			      placeholder="选择日期时间">
 			    </el-date-picker>
 		    </li>
@@ -164,6 +165,11 @@
 	export default {
 		data(){
 			return {
+				pickerBeginDateAfter: {
+					disabledDate(time) {
+	            return time.getTime() < Date.now();
+	        }
+				},
 				//默认每页数据量
         pagesize: 10,
         //当前页码
@@ -224,6 +230,30 @@
 					benefitQb: this.benefit_qb,
 					benefitNum: this.benefit_num,
 					updated: new Date(this.benefit_updated).getFullYear() + '-' + this.fillZero((new Date(this.benefit_updated).getMonth() + 1)) + '-' + this.fillZero(new Date(this.benefit_updated).getDate())+' '+this.fillZero(new Date(this.benefit_updated).getHours())+":"+this.fillZero(new Date(this.benefit_updated).getMinutes())+":"+this.fillZero(new Date(this.benefit_updated).getSeconds()) 
+				}
+				
+				//验证
+				if(this.coupon_name === ''){
+					this.$message.error('请输入优惠码名称！');
+					return;
+				}
+				if(this.benefit_qb === ''){
+					this.$message.error('请输入可兑换乾币数！');
+					return;
+				}else if(!(/^[1-9][0-9]*$/.test(Number(this.benefit_qb)))){
+					this.$message.error('可兑换乾币数只能为数字！');
+					return;
+				}
+				if(this.benefit_num === ''){
+					this.$message.error('请输入优惠码总数！');
+					return;
+				}else if(!(/^[1-9][0-9]*$/.test(Number(this.benefit_num)))){
+					this.$message.error('优惠码总数只能为数字！');
+					return;
+				}
+				if(this.benefit_updated === ''){
+					this.$message.error('请输入有效期！');
+					return;
 				}
 				that.global.axiosPostReq('/benefit/add',params).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -299,7 +329,11 @@
 		}
 	}
 </script>
-
+<style>
+	.el-picker-panel__link-btn{
+		display: none;
+	}
+</style>
 <style scoped>
   .fl{
 	  float:left;
@@ -315,7 +349,7 @@
 		margin: 40px 118px 20px 0;
 	}
 	.i_col_red{
-	  color: red;
+	  color: #cb1700;
 	  font-style: normal;
 	}
 	.coupon_wrap{

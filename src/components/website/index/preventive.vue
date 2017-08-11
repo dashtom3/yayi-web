@@ -397,7 +397,7 @@ a {
 }
 .item_price {
   font-size: 18px;
-  color: #D81E06;
+  color: #cb1700;
   position: absolute;
   bottom: 10px;
   right: 15px;

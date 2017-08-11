@@ -7,7 +7,7 @@
             <div class="text-container">
                 <slot></slot>
             </div>
-            <div class="close-btn" @click="closeMessage">关  闭</div>
+            <el-button class="close-btn" type="primary" @click="closeMessage">关  闭</el-button>
         </div>
     </div>
 </template>
@@ -82,19 +82,9 @@
     }
 
     .close-btn {
-        position: relative;
-        width: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 40px;
-        line-height: 40px;
-        background-color: #20a0ff;
-        border-radius: 10px;
-        color: #fff;
-        margin: 30px 0;
-        text-align: center;
-        cursor: pointer;
-        font-weight: 900;
+       width: 100px;
+       height: 40px;
+       margin: 30px auto;
     }
 
     .close-btn:hover {

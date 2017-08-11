@@ -5,9 +5,9 @@
       <img class="pay_img" src="../../../images/gwc/pay1.png" alt="img">
       <div class="pay_des">
         <p class="first_p">订单提交成功，请您尽快付款。</p>
-        <p class="second_p">未成功支付订单将在 <span style="color:#D81E06; font-weight: bold;">{{time}}分钟</span> 后自动取消，请及时付款</p>
+        <p class="second_p">未成功支付订单将在 <span style="color:#cb1700; font-weight: bold;">{{time}}分钟</span> 后自动取消，请及时付款</p>
       </div>
-      <p class="pay_price">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
+      <p class="pay_price">应付金额：<span style="color:#cb1700; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
     </div>
     <div class="pay_container">
       <div class="pay_header">支付方式</div>
@@ -25,7 +25,7 @@
       <div style="margin-bottom:30px;">
         <img class="WePayLogo" src="../../../images/gwc/WePayLogo.png" alt="img">
         <img class="wxR" src="../../../images/gwc/wxR.png" alt="img">
-        <p class="wxRealPay">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
+        <p class="wxRealPay">应付金额：<span style="color:#cb1700; font-weight: bold;">¥{{orderDetail.actualPay}}</span></p>
       </div>
       <div style="text-align:center;margin-bottom:10px;">
         <img style="width:260px;height:260px;" :src="wxImg" alt="img">
@@ -194,7 +194,7 @@
   font-size: 18px;
   color: #000;
   background-color: rgba(93,183,231,0.15);
-  border-bottom: 3px solid #D81E06;
+  border-bottom: 3px solid #cb1700;
   margin-bottom: 50px;
 }
 .pay_box {

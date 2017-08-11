@@ -49,8 +49,7 @@
       Bus.$on('getTarget', target => { 
         if (target == 'succeedChange') {
           that.getMoneyListFn()
-        }
-        // console.log(target);  
+        } 
       });  
     },
     methods: {

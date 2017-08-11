@@ -73,7 +73,7 @@
     position: absolute;
     left: 127px;
     font-size: 12px;
-    color: #D81E06;
+    color: #cb1700;
   }
   .salesHead {
     width: 100%;

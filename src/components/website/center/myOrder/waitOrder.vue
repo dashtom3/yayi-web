@@ -453,7 +453,7 @@
     font-size: 14px;
   }
   .spe_p {
-    color: #D81E06 !important;
+    color: #cb1700 !important;
   }
   .wait_pay_des {
     width: 100px;
@@ -486,7 +486,7 @@
   }
   .cancelBtn:hover {
     cursor: pointer;
-    color: #D81E06;
+    color: #cb1700;
     transition: all ease 0.2s;
   }
 /* 暂无订单,没有符合条件的订单*/

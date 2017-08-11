@@ -185,7 +185,7 @@
 	display:block;
 }
 .i_col_red{
-  color: red;
+  color: #cb1700;
   font-style: normal;
 }
 .margin_l_30{

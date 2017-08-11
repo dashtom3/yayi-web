@@ -70,7 +70,7 @@
     <div class="score_box">
       <div class="score_word">评分：</div>
       <el-rate   v-model="commentScores[index].score" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" class="score_des"></el-rate>
-      <div class="getScore"><span style="color: #D81E06">{{commentScores[index].score}}</span>分</div>
+      <div class="getScore"><span style="color: #cb1700">{{commentScores[index].score}}</span>分</div>
     </div>
     <div class="clearfix"></div>
     <div class="comment_word_box">
@@ -524,7 +524,7 @@
     font-size: 14px;
   }
   .spe_p {
-    color: #D81E06 !important;
+    color: #cb1700 !important;
   }
   .wait_pay_des {
     width: 100px;
@@ -556,7 +556,7 @@
   }
   .cancelBtn:hover {
     cursor: pointer;
-    color: #D81E06;
+    color: #cb1700;
     transition: all ease 0.2s;
   }
 /* 暂无订单,没有符合条件的订单*/

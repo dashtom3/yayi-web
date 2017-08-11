@@ -774,7 +774,7 @@ transition: all 0.5s ease;*/
   transition: all 0.5s ease;
 }
 .goodBottom{
-  color: #D81E06;
+  color: #cb1700;
   padding: 10px;
 }
 .goodBottom span:nth-child(2){

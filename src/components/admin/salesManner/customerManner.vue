@@ -275,7 +275,7 @@
 		margin: 20px 118px 20px 0;
 	}
 	.i_col_red{
-	  color: red;
+	  color: #cb1700;
 	  font-style: normal;
 	}
 	.customer_wrap li{

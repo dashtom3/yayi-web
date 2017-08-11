@@ -589,7 +589,7 @@ import util from '../../../common/util'
     height: 0px;
   }
   .fontRed{
-    color:#e0645b;
+    color:#cb1700;
   }
   .goodInfo{
   	width: 1200px;

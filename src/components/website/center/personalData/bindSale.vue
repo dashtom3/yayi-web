@@ -11,7 +11,7 @@
             <span>真实姓名：{{findSaleName}}</span>
           </div>
           <div v-show="noSearchSale" class="showSearchInfoClass">
-            <span style="color:#D81E06;">非常抱歉，未找到该客户代表</span>
+            <span style="color:#cb1700;">非常抱歉，未找到该客户代表</span>
           </div>
         </el-col>
         <el-col>
@@ -185,7 +185,7 @@
   margin-bottom : 170px;
 }
 .colorRed{
-  color:#D81E06;
+  color:#cb1700;
 }
 </style>
 <style>

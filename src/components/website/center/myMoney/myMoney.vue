@@ -152,7 +152,7 @@ import util from '../../../../common/util'
   color: #005aab;
 }
 .colorRed{
-  color: #D81E06;
+  color: #cb1700;
 }
 .fenyeWrap{
   padding-top: 40px;

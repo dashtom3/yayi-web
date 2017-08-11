@@ -56,8 +56,8 @@
         <div class="qianbi_title">乾币抵扣</div>
         <div class="qianbi_des">
           <el-checkbox v-model="checked1">使用乾币（1乾币=1元）</el-checkbox>
-          <span style="margin-left: 10px;font-size:14px;">（您有<span style="color:#D81E06;">{{allQb}}</span>个乾币,</span>
-          <span style="margin-left: 0px;font-size:14px;">本单最多可使用<span style="color:#D81E06;">{{nowQb}}</span>乾币）</span>
+          <span style="margin-left: 10px;font-size:14px;">（您有<span style="color:#cb1700;">{{allQb}}</span>个乾币,</span>
+          <span style="margin-left: 0px;font-size:14px;">本单最多可使用<span style="color:#cb1700;">{{nowQb}}</span>乾币）</span>
           <div style="margin-left:24px;">
             <input type="text" class="qianbi_word" v-show="qianbi_word" @input="changeQb" @blur="qbDed" v-model="qianbi_des" placeholder="请输入乾币数（单位为整数）"><span v-show="hasCount" style="font-size:14px;">已抵扣<span style="color: rgb(216, 30, 6);">{{qianbi_des}}</span>元</span>
           </div>
@@ -92,7 +92,7 @@
         <p class="first_p"><span style="margin-right: 50px;">共{{haveSelectedGoodNum}}件商品</span><span>商品总额：¥{{gwcTotal}}</span></p>
         <p class="second_p">运费：¥{{freight}}</p>
         <p class="third_p">乾币抵扣：¥{{qbdk}}</p>
-        <p class="fouth_p"><b>合计：</b><span style="color: #D81E06;">¥{{gwcTotal+freight-qbdk}}</span></p>
+        <p class="fouth_p"><b>合计：</b><span style="color: #cb1700;">¥{{gwcTotal+freight-qbdk}}</span></p>
         <p class="fifth_p">本次可获得乾币：{{canHasCoin}}</p>
         <p class="sixth_p"><b>收货人：</b>{{name}} {{phone}}</p>
         <p class="seventh_p"><b>寄送至：</b>{{province}} {{city}} {{county}} {{receiverDetail}} </p>
@@ -1496,7 +1496,7 @@ input:focus {
   width: 120px;
   margin-top: 26px;
   text-align: center;
-  color: #D81E06;
+  color: #cb1700;
 }
 .qianbi_box {
   width: 1200px;

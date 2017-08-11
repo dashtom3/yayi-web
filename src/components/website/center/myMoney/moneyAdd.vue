@@ -41,7 +41,7 @@
       <div style="margin-bottom:30px;">
         <img class="WePayLogo" src="../../../../images/gwc/WePayLogo.png" alt="img">
         <img class="wxR" src="../../../../images/gwc/wxR.png" alt="img">
-        <p class="wxRealPay">应付金额：<span style="color:#D81E06; font-weight: bold;">¥{{payMuch}}</span></p>
+        <p class="wxRealPay">应付金额：<span style="color:#cb1700; font-weight: bold;">¥{{payMuch}}</span></p>
       </div>
       <div style="text-align:center;margin-bottom:10px;">
         <img style="width:260px;height:260px;" :src="wxImg" alt="img">
@@ -207,7 +207,7 @@ margin: auto;
   position: absolute;
   top: 10px;
   left:390px;
-  color: #d81e06;
+  color: #cb1700;
   width: 200px;
 }
 .myMoneyAddWrap .payForm div{
@@ -224,7 +224,7 @@ margin: auto;
   height: 38px;
 }
 .myMoneyAddWrap .payForm div  .showPayMuch{
-  color: #d81e06;
+  color: #cb1700;
 }
 .myMoneyAddWrap .payForm div span .payMuch:focus{
   outline: none;

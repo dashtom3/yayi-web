@@ -857,7 +857,7 @@
         position: absolute;
         left: 127px;
         font-size: 12px;
-        color: #D81E06;
+        color: #cb1700;
     }
 
     /*----------------公共样式 end-------------------*/
@@ -1062,7 +1062,7 @@
 
     .logIn_error {
         font-size: 12px;
-        color: #D81E06;
+        color: #cb1700;
         margin-top: 5px;
     }
 
@@ -1306,7 +1306,7 @@
 
     .rg_choose_error {
         font-size: 12px;
-        color: #D81E06;
+        color: #cb1700;
         margin-top: 2px;
     }
 

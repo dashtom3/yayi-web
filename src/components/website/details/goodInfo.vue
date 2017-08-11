@@ -535,7 +535,7 @@ import util from '../../../common/util'
   margin-bottom: 20px;
 }
 .fontColorRed{
-  color: red !important;
+  color: #cb1700 !important;
 }
   .onePxLine{
     border: none;border-top: 1px solid #e5e5e5;background:#e5e5e5;border-color:#e5e5e5;margin-bottom: 20px;
@@ -589,7 +589,7 @@ import util from '../../../common/util'
     height: 0px;
   }
   .fontRed{
-    color:#e0645b;
+    color:#cb1700;
   }
   .goodInfo{
   	width: 1200px;

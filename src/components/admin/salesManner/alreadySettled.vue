@@ -380,7 +380,7 @@
     text-align: center;
   }
   .incomeWrap .asgagewgf .ordertable .lastTr{
-    color: red;
+    color: #cb1700;
   }
   .incomeWrap .asgagewgf .ordertable .lastTr td:nth-child(2){
     text-align: right;

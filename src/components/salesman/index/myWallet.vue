@@ -545,12 +545,12 @@
     display:block;
   }
   .i_col_red{
-    color: red;
+    color: #cb1700;
     font-weight: bold;
     font-style: normal;
   }
   .col_red{
-    color: red;
+    color: #cb1700;
   }
   .i_col_blue{
     color: #005aab;
@@ -630,7 +630,7 @@
     margin-right: 20px;
   }
   .i_red{
-    color: red;
+    color: #cb1700;
   }
   .i_title{
     height: 30px;

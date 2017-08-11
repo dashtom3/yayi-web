@@ -343,7 +343,7 @@ export default {
     display:block;
   }
   .i_col_red{
-    color: red;
+    color: #cb1700;
     font-weight: bold;
     font-style: normal;
   }

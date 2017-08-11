@@ -358,7 +358,7 @@
   margin-bottom: 70px;
 }
 .userLeaveMoney span{
-  color: #d81e06;
+  color: #cb1700;
   font-size: 16px;
   font-weight: 600;
 

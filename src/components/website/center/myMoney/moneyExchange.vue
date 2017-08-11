@@ -67,11 +67,11 @@ import Bus from '../../../global/bus.js'
 <style scoped>
   .moneyPos{
   	padding-left: 12px;
-  	color: red;
+  	color: #cb1700;
   }
 	.i_color_red{
 		font-weight: normal;
-		color: red;
+		color: #cb1700;
 		font-style: normal;
 		margin-left: 20px;
 	}

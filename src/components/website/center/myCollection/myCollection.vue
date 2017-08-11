@@ -116,7 +116,7 @@
     min-height: 440px;
   }
   .myCollection .colorRed{
-    color:  #D81E06;
+    color:  #cb1700;
   }
   .myCollection .colorBlue{
     color:  #005aab;

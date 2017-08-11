@@ -6,7 +6,7 @@
         <img class="special_img" src="../../../images/gwc/pay1.png" alt="img">
         <span class="special_word">恭喜您，付款成功！</span>
       </div>
-      <div class="timer_word"><span style="color: #D81E06">{{timer}}</span>秒后自动跳转订单页</div>
+      <div class="timer_word"><span style="color: #cb1700">{{timer}}</span>秒后自动跳转首页</div>
       <div class="paySuccess_btn">
         <div class="seeOrder" @click="see">查看订单</div>
         <div class="keepShop" @click="keep">继续购物</div>
