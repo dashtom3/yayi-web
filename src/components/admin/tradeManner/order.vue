@@ -25,7 +25,7 @@
 				  </el-select>
         </el-form-item>
         <el-form-item label="下单时间" class="fl" style="width:300px;margin-right:12px;">
-	          <el-date-picker  v-model="value3"  type="daterange"  placeholder="选择时间范围">  </el-date-picker>
+	          <el-date-picker  v-model="value3"  type="daterange"  placeholder="选择时间范围" @change="selectDateHandler">  </el-date-picker>
         </el-form-item>
         <el-button type="primary" class="fl" @click="search()">查询</el-button>
       </el-form>
@@ -344,7 +344,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
         // wuliu:[
         //   {value:"申通快递",label:"申通快递"}
         // ],
@@ -379,6 +379,8 @@
         value: '全部',//订单状态的value
         value1: '全部',//是否退款的value
         value3:[],
+        orderCTime: '',
+        orderETime: '',
         // value3: [new Date(2017, 10, 10, 10, 10), new Date(2017, 10, 11, 10, 10)],//下单时间
         //订单列表
         orderList: [],
@@ -434,8 +436,7 @@
       }
     },
     created:function(){
-      var that = this;
-      that.getOrderList();
+      this.search();
     },
     watch:{
       wacthTuiKuanList:{
@@ -475,6 +476,15 @@
 
     },
     methods: {
+      selectDateHandler(val){
+        if(val){
+          this.orderCTime = val.split(' - ')[0]
+          this.orderETime = val.split(' - ')[1]
+        }else{
+          this.orderCTime = ''
+          this.orderETime = ''
+        }
+      },
       lookAtFaPiaoFun:function(order){
         var that = this;
         var obj = {
@@ -541,66 +551,8 @@
         })
       },
       handleCurrentChange(val) {
-        var that = this
-        that.currentPage = val
-        if (val == undefined) {
-          that.currentPage = 1
-        } else {
-          that.currentPage = val
-        }
-        this.fenYeGetData(that.currentPage);
-      },
-      fenYeGetData:function(data){
-        var that = this;
-        var obj = {};
-        if(that.orderCode){
-          obj.orderId = that.orderCode;
-        }
-        if(that.buyerInfo){
-          obj.buyerInfo = that.buyerInfo;
-        }
-        if(that.value){
-          // 订单状态
-          // {value: '0',label: '全部'},
-              // for(let b in that.state){
-              //   if(that.state[b].label==that.value&&that.state[b].value!="0"){
-              //     obj.state = that.state[b].value;
-              //   }
-              // }
-              if(that.value!="全部"){
-                obj.orderState = that.value;
-              }
-        }
-        if(that.value3.length!=0){
-          var date1,date2;
-          date1 = that.value3[0].toLocaleString();
-          date2 = that.value3[1].toLocaleString();
-          date1 = date1.split(" ");
-          date2 = date2.split(" ");
-          date1 = date1[0].split("/").join("-");
-          date2 = date2[0].split("/").join("-");
-          obj.orderCTime = date1;
-          obj.orderETime = date2;
-        }
-        // if(that.value1){
-        //   // 退款状态
-        //     for(let a in that.drawback){
-        //       if(that.value1 == that.drawback[a].label1){
-        //         obj.isRefund = that.drawback[a].value1;
-        //       }
-        //     }
-        // }
-        obj.currentPage = data;
-        obj.numberPerpage = 10;
-        that.global.axiosGetReq('/showUserOrderManage/showOrder',obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            that.orderList = res.data.data;
-            that.totalCount=res.data.totalNumber;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
-          }
-        })
+        this.currentPage = val
+        this.search(val)
       },
       sureFaHuo:function(){
         var that = this;
@@ -627,52 +579,39 @@
           that.$alert('请填写物流编号！', {confirmButtonText: '确定',});
         }
       },
-      search:function(){
+      search:function(val){
         var that = this;
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
         var obj = {};
-        if(that.orderCode){
-          obj.orderId = that.orderCode;
+        obj.orderId = that.orderCode;
+        obj.buyerInfo = that.buyerInfo;
+        if(that.value === '全部'){
+          that.value = ''
         }
-        if(that.buyerInfo){
-          obj.buyerInfo = that.buyerInfo;
+        obj.orderState = that.value;
+        if(this.orderCTime !== ''){
+          obj.orderCTime = this.orderCTime;
+          obj.orderETime = this.orderETime;
         }
-        if(that.value){
-          // 订单状态
-              if(that.value!="全部"){
-                obj.orderState = that.value;
-              }
+        // 退款状态
+        if(that.value1=="全部"){
+          obj.isRefund = "";
+        }else if(that.value1==1){
+          obj.isRefund = "是";
+        }else if(that.value1==2){
+          obj.isRefund = "否";
         }
-        if(that.value3.length!=0){
-          var date1,date2;
-          if(that.value3[0]){
-            date1 = that.value3[0].toLocaleString();
-            date2 = that.value3[1].toLocaleString();
-          }
-          date1 = date1.split(" ");
-          date2 = date2.split(" ");
-          date1 = date1[0].split("/").join("-");
-          date2 = date2[0].split("/").join("-");
-          obj.orderCTime = date1;
-          obj.orderETime = date2;
-        }
-        if(that.value1){
-          // 退款状态
-          if(that.value1=="全部"){
-            obj.isRefund = "";
-          }else if(that.value1==1){
-            obj.isRefund = "是";
-          }else if(that.value1==2){
-            obj.isRefund = "否";
-          }
-        }
+        obj.currentPage = this.currentPage
+        obj.numberPerpage = this.pagesize
         that.global.axiosPostReq('/showUserOrderManage/showOrder',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.orderList = res.data.data;
             that.totalCount=res.data.totalNumber;
-            that.currentPage = 1;
-          } else {
-            that.$message.error('网络出错，请稍后再试！');
           }
         })
       },
