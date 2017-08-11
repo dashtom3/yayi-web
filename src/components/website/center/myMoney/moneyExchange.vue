@@ -76,7 +76,7 @@ import Bus from '../../../global/bus.js'
 		margin-left: 20px;
 	}
 	.btnBox{
-		margin: 44px 253px 0;
+		margin: 44px 312px 0;
 		width: 100px;
 		height: 38px;
 		border-radius: 4px;
@@ -88,7 +88,7 @@ import Bus from '../../../global/bus.js'
   	padding-left: 11px;
   }
   .benefitpbox{
-  	width: 600px;
+  	width: 480px;
   	margin: 0 auto;
   	margin-bottom: 20px;
   }

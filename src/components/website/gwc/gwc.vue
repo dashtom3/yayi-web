@@ -654,7 +654,7 @@ top: 5px;
       line-height: 78px;
       width: 100px;
       text-align: center;
-      color: #e0645b;
+      color: #cb1700;
       font-weight: 600;
     }
     .gwcWrap .oneGood  .operas{

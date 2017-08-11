@@ -1,7 +1,7 @@
 <template>
   <div class="tableBoard">
     <el-dialog title="选择区域" :visible.sync="state2" :before-close="handleClose" :show-close="false">
-      <div class="allChoose_bigbox" v-for="item in items" :key="item.allcheck">
+      <div class="allChoose_bigbox" v-for="item in items" :key="item">
         <div class="allChoose_box">
           <el-checkbox :indeterminate="isIndeterminate" v-model="item.allcheck" @change="handleCheckAllChange(item)" class="allchecked">{{item.area}}</el-checkbox>
             <el-checkbox v-for="cities in item.place" :label="cities.city" :key="cities.city" v-model="cities.checked" @change="handleCheckedCitiesChange(cities,item)">{{cities.city}}</el-checkbox>
