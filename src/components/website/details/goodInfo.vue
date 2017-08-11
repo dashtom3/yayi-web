@@ -631,8 +631,6 @@ import util from '../../../common/util'
     margin-top: 50%;
     transform: translateY(-50%);
   }
-
-
   .infoLeft_2{
     width:400px;
     margin:10px 0;
@@ -712,8 +710,8 @@ import util from '../../../common/util'
     height: 30px;
     border:none;
     text-align: center;
-    border-left: 1px solid #c8c8c8;
-    border-right: 1px solid #c8c8c8;
+    border-left: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
 
   }
   .goodBtn{
