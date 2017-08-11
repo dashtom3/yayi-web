@@ -559,6 +559,7 @@
         stick_phone: '',
         stick_address: '',
         taxType: '',
+        historyState: '',
       }
     },
     //*******导航钩子*********//
@@ -625,7 +626,9 @@
           that.taxDialogVisible = true
           that.tax_word = true
           that.invoiceHand = 1
-        } else {
+          return false
+        } 
+        if (that.checked2 !== true && that.taxType !== '')  {
           that.tax_word = false
           that.tax_des = ''
           that.invoiceHand = 0
@@ -645,6 +648,16 @@
           that.taxType = ''
           that.invoice_style = ''
           that.invoice_state = ''
+          that.isActive1 = true;
+          that.isActive2 = false;
+          that.normal_tax = true;
+          return false
+        }
+        if (that.historyState == 1 && that.taxType !== '') {
+          that.taxDialogVisible = false
+          that.tax_word = true
+          that.invoiceHand = 1
+          return false
         }
       },
       checked3: function() {
@@ -680,8 +693,6 @@
         let total = that.gwcTotal + that.freight
         if (that.allQb >= total) {
           that.nowQb = total
-        }else {
-        
         }
       }
     },
@@ -694,6 +705,7 @@
     created: function () {
       var that = this;
       that.getMyAdd();
+      that.historyTax();
       var arr = JSON.parse(window.sessionStorage.getItem('suborderData'))
       that.fromGwc = arr;
       that.orderItem = arr.details;
@@ -714,8 +726,6 @@
             that.nowQb = 0
             that.allQb = 0
           }
-        } else {
-          // that.$message.error('网络出错，请稍后再试！');
         }
       })
     },
@@ -752,22 +762,106 @@
         that.normal_tax = false;
       },
       // 历史写发票
-      // historyTax: function() {
-      //   var that = this;
-      //   that.global.axiosGetReq('/userMyQb/query', obj).then((res) => {
-      //     if (res.data.callStatus === 'SUCCEED') {
-      //       if(res.data.data.length>0){
-      //         that.allQb = res.data.data[0].user.qbBalance;
-      //         that.nowQb = res.data.data[0].user.qbBalance;
-      //       } else {
-      //         that.nowQb = 0
-      //         that.allQb = 0
-      //       }
-      //     } else {
-      //       // that.$message.error('网络出错，请稍后再试！');
-      //     }
-      //   })
-      // },
+      historyTax: function() {
+        var that = this;
+        that.global.axiosGetReq('/po/queryLastInvoice').then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            that.checked2 = true
+            that.tax_word_des = true
+            that.taxType == ''
+            that.historyState = 1
+            var Tax = res.data.data
+            if (Tax.invoiceStyle == '0') {
+              that.taxType = '普通发票'
+              that.isActive1 = true;
+              that.isActive2 = false;
+              that.normal_tax = true;
+              if (Tax.invoiceState == '0') {
+                that.taxRadio = '2'
+                that.ruleForm1.personal = Tax.companyName
+                that.company_name = Tax.companyName
+                that.taxpayer_num = Tax.taxpayerNum
+                that.registered_address = Tax.registeredAddress
+                that.registered_phone = Tax.registeredPhone
+                that.open_bank = Tax.opneBank
+                that.bank_number = Tax.bankNumber
+                that.stick_name = Tax.stickNanme
+                that.stick_phone = Tax.stickPhone
+                that.stick_address = Tax.stickaddress
+                // console.log('个人发票')
+                that.company_name = Tax.companyName
+                that.taxpayer_num = Tax.taxpayerNum
+                that.registered_address = Tax.registeredAddress
+                that.registered_phone = Tax.registeredPhone
+                that.open_bank = Tax.opneBank
+                that.bank_number = Tax.bankNumber
+                that.stick_name = Tax.stickNanme
+                that.stick_phone = Tax.stickPhone
+                that.stick_address = Tax.stickaddress
+                that.invoice_style =  Tax.invoiceStyle
+                that.invoice_state =  Tax.invoiceState
+                that.invoiceHand = Tax.invoiceHead
+                // 个人发票
+              } else {
+                that.ruleForm.taitou = Tax.companyName
+                that.ruleForm.nashui = Tax.taxpayerNum
+                that.company_name = Tax.companyName
+                that.taxpayer_num = Tax.taxpayerNum
+                that.registered_address = Tax.registeredAddress
+                that.registered_phone = Tax.registeredPhone
+                that.open_bank = Tax.opneBank
+                that.bank_number = Tax.bankNumber
+                that.stick_name = Tax.stickNanme
+                that.stick_phone = Tax.stickPhone
+                that.stick_address = Tax.stickaddress
+                // console.log('公司发票')
+                that.company_name = Tax.companyName
+                that.taxpayer_num = Tax.taxpayerNum
+                that.registered_address = Tax.registeredAddress
+                that.registered_phone = Tax.registeredPhone
+                that.open_bank = Tax.opneBank
+                that.bank_number = Tax.bankNumber
+                that.stick_name = Tax.stickNanme
+                that.stick_phone = Tax.stickPhone
+                that.stick_address = Tax.stickaddress
+                that.invoice_style =  Tax.invoiceStyle
+                that.invoice_state =  Tax.invoiceState
+                that.invoiceHand = Tax.invoiceHead
+                // 公司发票
+              }
+            } else {
+              that.taxType = '增值税发票'
+              that.isActive1 = false;
+              that.isActive2 = true;
+              that.normal_tax = false;
+              that.ruleForm2.companyName = Tax.companyName
+              that.ruleForm2.payTax = Tax.taxpayerNum
+              that.ruleForm2.registerAdd = Tax.registeredAddress
+              that.ruleForm2.registerPhone = Tax.registeredPhone
+              that.ruleForm2.bank = Tax.opneBank
+              that.ruleForm2.bankAccount = Tax.bankNumber
+              that.ruleForm2.stickName = Tax.stickNanme
+              that.ruleForm2.stickPhone = Tax.stickPhone
+              that.ruleForm2.stickAdd = Tax.stickaddress
+              // console.log('增值税发票')
+              that.company_name = Tax.companyName
+              that.taxpayer_num = Tax.taxpayerNum
+              that.registered_address = Tax.registeredAddress
+              that.registered_phone = Tax.registeredPhone
+              that.open_bank = Tax.opneBank
+              that.bank_number = Tax.bankNumber
+              that.stick_name = Tax.stickNanme
+              that.stick_phone = Tax.stickPhone
+              that.stick_address = Tax.stickaddress
+              that.invoice_style =  Tax.invoiceStyle
+              that.invoice_state =  Tax.invoiceState
+              that.invoiceHand = Tax.invoiceHead
+            }
+          } else {
+            that.historyState = 0
+          }
+        })
+      },
       // 普通发票公司
       saveComTax: function(formName) {
         var that = this
@@ -1249,7 +1343,6 @@
           delete that.orderItem[i].itemPropertySixName
           delete that.orderItem[i].itemPropertySixValue
         }
-        // console.log(that.orderItem,'ll')
         var orderItem = JSON.stringify(that.orderItem)
         var obj = {
           // totalFee: that.gwcTotal, //总价
@@ -1276,6 +1369,7 @@
           stickPhone: that.stick_phone,
           stickaddress: that.stick_address,
         }
+        // console.log(obj,'90')
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {

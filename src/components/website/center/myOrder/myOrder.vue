@@ -103,6 +103,8 @@
         var that = this;
         that.global.axiosPostReq('/OrderDetails/queryOrderNums').then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            var a = 0
+            var b = 0
             that.numsArr = res.data.data;
             that.all = res.data.msg;
             that.waitsend = 0
@@ -117,9 +119,20 @@
               if(state == 3) {
                 that.waitrec = that.numsArr[i].counts;
               }
-              if(state == 2 || state == 5) {
-                that.waitsend = that.numsArr[i].counts;
+              // if(state == 2 || state == 5) {
+              //   that.waitsend = that.numsArr[i].counts;
+              // }
+              if (state == 2) {
+                //console.log(that.numsArr[i].counts,'lllll')
+                // if (that.numsArr[i].counts) {
+                //   expression
+                // }
+                a = that.numsArr[i].counts;
               }
+              if (state == 5) {
+                b = that.numsArr[i].counts;
+              }
+              that.waitsend = a + b
             }
           } else {
             that.$message.error('网络出错，请稍后再试！');

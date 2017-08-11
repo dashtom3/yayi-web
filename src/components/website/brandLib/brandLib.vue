@@ -4,6 +4,7 @@
     <classify></classify>
     <div class="brandLibWrap">
       <div style="padding-top:30px;border-top:1px solid #e5e5e5;">
+        <span>当前位置：</span>
         <span @click="goThisBrand('首页')" class="showBlueColor">首页</span>
         <span v-if="firstClassfy">></span>
         <span @click="goThisBrand(firstClassfy,1)" class="showBlueColor" :class="{indexLine:!secondClassfy&&!thirdClassfy&&!haveBrand&&!searchWordFromIndex}" v-if="firstClassfy">{{firstClassfy}}</span>
