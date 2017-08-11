@@ -47,9 +47,7 @@
               <input @change="oneGoodNumChange(index,good)" type="text" v-model="good.num">
               <span :class="{colorBlue:good.num<good.goodLeaveNum-1}" v-on:click="addGood(index,good)">+</span>
             </div>
-            <div class=""  v-show="good.num>=good.goodLeaveNum">
-              （库存不足）
-            </div>
+            <div class="" v-show="good.num>=good.goodLeaveNum">(库存{{good.goodLeaveNum}}件)</div>
           </div>
           <div class="thisPrice">
               ￥{{good.price*good.num}}
@@ -238,10 +236,10 @@
             window.onscroll = function(){
               var HEIGHT = window.innerHeight; //网页的高度
               var flag = document.body.scrollHeight - document.body.scrollTop - HEIGHT;
-              if(flag<100){
+              if(flag < 275){
                 that.jiwsuanbtnFixed = false;
               }
-              if(flag>200){
+              if(flag > 375){
                 that.jiwsuanbtnFixed = true;
               }
               // console.log(that.jiwsuanbtnFixed)
@@ -448,7 +446,8 @@
       },
       goToThisDetail:function(good){
         var that = this;
-        that.$router.push({path:"/details/"+good.itemId});
+        window.open('/details/' + good.itemId)
+        // that.$router.push({path:"/details/"+good.itemId});
       },
     }
   }

@@ -58,7 +58,7 @@
           <div class="" v-for="(item, index1) in items" v-if="item.propertyName" :key="item.propertyName">
             <span style="float:left">{{item.propertyName}}：</span>
             <div class="shuxing">
-              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal.data" :disabled = "!oneAttrVal.enabled">
+              <button :class="{ attSty2: index2 == item.checkWhich , defaultCss: !oneAttrVal.enabled}"  class="attSty1" v-on:click="changeAttSty(index2,item,index1)" v-for="(oneAttrVal,index2) in item.propertyInfoList" :key="oneAttrVal.data" :disabled= "!oneAttrVal.enabled">
                 {{oneAttrVal.data}}
               </button>
               <div class="clearFloat"></div>
@@ -69,23 +69,23 @@
         <div class="priceWrap">
           数量：
           <div class="calculator">
-            <span :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</span>
+            <button class="addBtn" :class="{btnDef:goodDefaultNum===1}" v-on:click="reduceGoodNum()">-</button>
             <!-- <span>{{goodDefaultNum}}</span> -->
             <input @input="oneGoodNumChange()" type="text" v-model="goodDefaultNum">
-             <span v-if="nowGoodDetails.itemValueList" :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()">+</span>
-            <span v-if="!kuCunBuZu" class="kucunbuzu">(缺货)</span>
+            <button v-if="nowGoodDetails.itemValueList" class="addBtn" :class="{btnDef:goodDefaultNum==nowGoodDetails.itemValueList[0].stockNum}" v-on:click="addGoodNum()" :disabled="noStock">+</button>
+            <span v-if="!kuCunBuZu" class="kucunbuzu">(库存{{nowStock}}件)</span>
             <div class="clearFloat"></div>
           </div>
           <div style="clear:both"></div>
         </div>
-        <div v-if="kuCunBuZu" class="goodBtn">
+        <div class="goodBtn">
           <span @click="addGwcThisGood()">加入购物车</span>
           <span @click="nowToBuyThis()">立即购买</span>
         </div>
-        <div v-else class="goodBtn kucunbuzu">
+<!--         <div v-else class="goodBtn kucunbuzu">
           <span >加入购物车</span>
-          <span >立即购买</span>
-        </div>
+          <span >立即购买</span> v-if="kuCunBuZu"
+        </div> -->
       </div>
 
     </div>
@@ -135,7 +135,8 @@ import util from '../../../common/util'
         ite: 0,
         items: [],
         goodAllImgs:[],
-        itemKey:[["itemPropertyName","itemPropertyInfo"],["itemPropertyNameTwo","itemPropertyTwoValue"],["itemPropertyNameThree","itemPropertyThreeValue"],["itemPropertyFourName","itemPropertyFourValue"],["itemPropertyFiveName","itemPropertyFiveValue"],["itemPropertySixName","itemPropertySixValue"]]
+        itemKey:[["itemPropertyName","itemPropertyInfo"],["itemPropertyNameTwo","itemPropertyTwoValue"],["itemPropertyNameThree","itemPropertyThreeValue"],["itemPropertyFourName","itemPropertyFourValue"],["itemPropertyFiveName","itemPropertyFiveValue"],["itemPropertySixName","itemPropertySixValue"]],
+        noStock: false,
       }
     },
     created:function(){
@@ -164,8 +165,7 @@ import util from '../../../common/util'
           itemId:that.$route.params.goodId,
           token:userToken
         };
-        that.global.axiosPostReq('/item/itemDetailDes',obj)
-        .then((res) => {
+        that.global.axiosPostReq('/item/itemDetailDes',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.ifshoucang = res.data.num;
             that.nowGoodSKU = res.data.msg;
@@ -181,6 +181,7 @@ import util from '../../../common/util'
             that.goodAllImgs[4] = that.nowGoodDetails.itemDetail.itemPice;
             that.bigImgUrl = that.goodAllImgs[0];
             that.items = that.nowGoodDetails.propertyList;
+            that.nowStock = that.nowGoodDetails.itemValueList[0].stockNum
             for(let i in that.nowGoodDetails.commentList){
               that.nowGoodDetails.commentList[i].created = util.formatDate.format(new Date( that.nowGoodDetails.commentList[i].created),'yyyy-MM-dd hh:mm:ss' );
             }
@@ -231,9 +232,10 @@ import util from '../../../common/util'
         if(jiSuanSkuObj.sku){
           that.nowGoodDetails.itemPrice = jiSuanSkuObj.obj.itemSkuPrice;
           var kuCun = jiSuanSkuObj.obj.stockNum;
-          if(that.goodDefaultNum>=kuCun){
+          if(that.goodDefaultNum >= kuCun) {
             that.kuCunBuZu = false;
             that.goodDefaultNum = kuCun;
+            that.noStock = false;
           }else{
             that.kuCunBuZu = true;
           }
@@ -528,20 +530,17 @@ import util from '../../../common/util'
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.defaultCss{
-  cursor: default!important;
-}
-.priceWrap{
-  margin-bottom: 20px;
-}
-.fontColorRed{
-  color: #cb1700 !important;
-}
+  .defaultCss{
+    cursor: default!important;
+  }
+  .priceWrap{
+    margin-bottom: 20px;
+  }
+  .fontColorRed{
+    color: #cb1700 !important;
+  }
   .onePxLine{
     border: none;border-top: 1px solid #efefef;background:#e5e5e5;border-color:#e5e5e5;margin-bottom: 20px;
-  }
-  .btnDef{
-    background: #e5e5e5;
   }
   .goodInfo *{
   }
@@ -561,21 +560,21 @@ import util from '../../../common/util'
     margin-bottom: 20px;
   }
   .infoRight h3 .ifdikou{
-  position: absolute;
-  top: -5px;
-  right: 20%;
-  height: 30px;
-  vertical-align: middle;
-  font-weight: normal;
-  font-size: 14px;
+    position: absolute;
+    top: -5px;
+    right: 20%;
+    height: 30px;
+    vertical-align: middle;
+    font-weight: normal;
+    font-size: 14px;
   }
   .infoRight h3 .ifdikou img{
     margin-right: 15px;
     vertical-align: middle;
   }
-.goodInfo .infoRight .attSty1{
-  background: none;
-}
+  .goodInfo .infoRight .attSty1{
+    background: none;
+  }
   .goodInfo .infoRight .attSty1:hover {
     /*color:#5db7e8;
     border:1px solid #5db7e8;*/
@@ -593,8 +592,8 @@ import util from '../../../common/util'
   }
   .goodInfo{
   	width: 1200px;
-      margin: 0 auto;
-      margin-bottom:50px;
+    margin: 0 auto;
+    margin-bottom:50px;
   }
   .goodInfo .infoLeft{
   	width:400px;
@@ -609,7 +608,7 @@ import util from '../../../common/util'
     margin-bottom: 20px;
   }
   .infoRight .attSty1{
-  display:inline-block;
+    display:inline-block;
     width:92px;
     line-height:28px;
     text-align: center;
@@ -635,7 +634,7 @@ import util from '../../../common/util'
 
 
   .infoLeft_2{
-  width:400px;
+    width:400px;
     margin:10px 0;
   }
   .infoLeft_2 ul li:nth-child(1){
@@ -655,12 +654,12 @@ import util from '../../../common/util'
 
 
   .infoLeft_2 li img{
-  display: block;
-  margin: auto;
-  margin-top: 50%;
-  transform: translateY(-50%);
-  max-width: 100%;
-  max-height: 100%;
+    display: block;
+    margin: auto;
+    margin-top: 50%;
+    transform: translateY(-50%);
+    max-width: 100%;
+    max-height: 100%;
   }
   .infoLeft_3{
     text-align: right;
@@ -688,6 +687,7 @@ import util from '../../../common/util'
   .calculator .kucunbuzu{
     position: absolute;
     right: -90px;
+    top: 0;
     cursor: auto;
     width: 100px;
   }
@@ -697,9 +697,9 @@ import util from '../../../common/util'
     display:inline-block;
     float:left;
     /*font-size:20px;*/
-        text-align: center;
-        cursor: pointer;
-        line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 30px;
   }
   .calculator span:nth-child(2){
     border-left:1px solid #efefef;
@@ -725,14 +725,14 @@ import util from '../../../common/util'
     background: #ececec !important;
   }
   .goodBtn span{
-      display: inline-block;
-      width: 160px;
-      text-align: center;
-      border-radius: 3px;
-      line-height: 40px;
-      margin-right: 20px;
-      font-size: 14px;
-      cursor: pointer;
+    display: inline-block;
+    width: 160px;
+    text-align: center;
+    border-radius: 3px;
+    line-height: 40px;
+    margin-right: 20px;
+    font-size: 14px;
+    cursor: pointer;
   }
   .goodBtn span:nth-child(1){
     background:#005aab;
@@ -764,5 +764,15 @@ import util from '../../../common/util'
   .nowGoodMore{
     border-bottom: 2px solid #005aab;
   }
-
+  .addBtn {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    float: left;
+  }
+  .btnDef{
+    background: #e5e5e5 !important;
+    cursor: default;
+  }
 </style>
