@@ -55,7 +55,6 @@
 				btn_show: false,
 				tableData: [],
 				sale_total_num: 0,
-				isRanking: false,
 				ranking_info: {
 					rowNum: 1,
 					orderCount: 0,
@@ -169,7 +168,6 @@
 
 	          }else{
 	          	if(res.data.msg && res.data.msg.indexOf("未上榜") !== -1){
-		        		this.isRanking = true
 			        	this.ranking_info.rowNum = 0
 		        	}else if(res.data.msg && res.data.msg === "无该月排行榜数据"){
 		        		this.tableData = []

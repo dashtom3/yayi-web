@@ -558,6 +558,9 @@
     font-style: normal;
   }
   .infoColor{
+    position: absolute;
+    top: 0;
+    left: 320px;
     color: #005aab;
     margin-left: 30px;
   }

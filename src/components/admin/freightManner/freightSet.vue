@@ -14,7 +14,6 @@
           <el-table-column  prop="postCity" align="center"  label="运送到" >
             <template scope="scope">
               <span>{{scope.row.postCity}}</span>
-              <!-- <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span> -->
               <el-button type="text" v-if="scope.row.changeState" @click="tab1_editThis(scope.$index,scope.row)">编辑</el-button>
             </template>
           </el-table-column>
@@ -57,7 +56,6 @@
           <el-table-column  prop="postCity" align="center"  label="选择地区" >
             <template scope="scope">
               <span>{{scope.row.postCity}}</span>
-              <!-- <span v-for="place in scope.row.postCity">{{place}}&nbsp;</span> -->
             </template>
           </el-table-column>
           <el-table-column  prop="postCity" align="center"  width="100">

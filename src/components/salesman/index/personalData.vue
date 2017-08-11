@@ -485,6 +485,9 @@ background: #329af0;
   color: white;
   background: #005aab;
 }
+.goToEditData span:hover{
+  background: #329af0;
+}
 .setBtnWrap span{
   display: block;
   margin: auto;
@@ -496,6 +499,9 @@ background: #329af0;
   border-radius: 2px;
   color: white;
   background: #005aab;
+}
+.setBtnWrap span:hover{
+  background: #329af0;
 }
 .baseInfo{
   margin-top: 40px;
