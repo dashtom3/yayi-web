@@ -152,7 +152,7 @@
   .goodDetail li{
     width: 148px;
     height: 208px;
-    border: 1px solid #eeeeee;
+    border: 1px solid #efefef;
     margin-right: 19px;
     margin-bottom: 19px;
     display: inline-block;

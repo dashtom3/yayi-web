@@ -284,8 +284,11 @@
               case 'STO':
                 wuliuName = '申通快递'
                 break;
-              case 'JD':
-                wuliuName = '京东快递'
+              case 'SF':
+                wuliuName = '顺丰快递'
+                break;
+              case 'DB':
+                wuliuName = '德邦快递'
                 break;
               default:
                 wuliuName = '其他快递'

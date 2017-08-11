@@ -119,7 +119,7 @@
     text-align: center;
   }
   .contact_box:hover {
-    opacity: 0.8;
+    opacity: 1;
     cursor: pointer;
   }
   .contact_title {

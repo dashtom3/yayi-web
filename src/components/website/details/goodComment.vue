@@ -1,7 +1,7 @@
 <template>
   <div class="goodComment">
     <div v-if="comments.length==0" class="noComment">
-      <img src="../../../images/details/noComment.png" alt="">
+      <img src="../../../images/brandLib/noComment.png" alt="暂无评论">
     </div>
     <ul v-else>
       <li v-for="comment in comments" :key="comment.userPhone">
@@ -81,7 +81,7 @@ import global from '../../global/global'
 .noComment img{
   display: block;
   margin: auto;
-  margin-top:86px;
+  margin-top:80px;
   margin-bottom: 100px;
   /*line-height: 150px;
   text-align: center;

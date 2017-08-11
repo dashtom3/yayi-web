@@ -83,11 +83,11 @@
 
           </div>
         </ul>
-        <div v-else style="text-align:center;margin-top:100px;">
-          <h4>{{noGoods}}</h4>
+        <div v-else style="text-align:center;margin-top:80px;">
+          <img src="../../../images/brandLib/noFindGoods.png" alt="未能找到您想要的商品，请重新搜索~">
         </div>
       </div>
-      <div class="block" style="margin-bottom:40px;">
+      <div class="block" style="margin-bottom:20px;">
         <!-- 分页 -->
         <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="12" layout="prev, pager, next, jumper" :total="totalCount" v-show="this.totalCount > this.pagesize">
         </el-pagination>
@@ -139,7 +139,6 @@
         orderArr:[{orderName:"最新商品",orderSort:false},{orderName:"销量",orderSort:false},{orderName:"价格",orderSort:false},{orderName:"价格",orderSort:false}],
         fenlie2:[],
         fenlie3:[],
-        noGoods:"未能找到您想要的商品，请重新搜索~",
         brandIndex:null,
         haveSelectedBrands:[],
         brandClassfy:[],
@@ -688,12 +687,11 @@ margin: 0 auto;
   right: 0;
 }
 .allGoods{
-  min-height: 300px;
+  min-height: 200px;
 }
 .allGoods ul  {
   padding-top: 50px;
   width: 1200px;
-
 }
 .allGoods li {
   width: 279px;
@@ -703,7 +701,7 @@ margin: 0 auto;
   display: inline-block;
   cursor: pointer;
   margin-right: 19px;
-overflow: hidden;
+  overflow: hidden;
 }
 
 .allGoods li .ifGold{

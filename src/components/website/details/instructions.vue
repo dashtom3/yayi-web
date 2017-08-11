@@ -1,20 +1,18 @@
 <template>
   <div class="instructions" >
-    <div class="videoWrap" v-if="instruction.video">
-      <div class="contentTitleWrap">
-        <span></span>
-        <span>视频说明</span>
-        <span></span>
+    <div class="videoWrap">
+      <div class="contentTitleWrap" v-if="!instruction.video">
+        <div class="contentTitleWrap">
+          <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
+        </div>
       </div>
-      <video :src="instruction.video" controls autoplay></video>
+      <video :src="instruction.video" v-if="instruction.video" controls autoplay style="margin-top:20px;"></video>
     </div>
-    <div class="imgAndTextWrap" v-if="instruction.itemUse">
-      <div class="contentTitleWrap">
-        <span></span>
-        <span>图文说明</span>
-        <span></span>
+    <div class="imgAndTextWrap">
+      <div class="contentTitleWrap" v-if="!instruction.itemUse">
+        <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
       </div>
-      <div v-html="instruction.itemUse"></div>
+      <div v-html="instruction.itemUse" v-if="instruction.itemUse"></div>
     </div>
   </div>
 </template>
@@ -51,30 +49,32 @@
   margin: auto;
   position: relative;
   text-align: center;
-  line-height: 40px;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 80px;
+  margin-bottom: 30px;
   color: #333333;
 }
 .contentTitleWrap span:nth-child(1){
-float: left;
-display: inline-block;
-width: 300px;
-height: 1px;
-background: #e5e5e5;
-margin-top: 19px;
-margin-left: 100px;
+  float: left;
+  display: inline-block;
+  width: 300px;
+  height: 1px;
+  background: #e5e5e5;
+  margin-top: 19px;
+  margin-left: 100px;
 }
 .contentTitleWrap span:nth-child(2){
-font-size: 20px;
+  font-size: 20px;
+}
+.contentTitleWrap img{
+  width: 340px!important;
 }
 .contentTitleWrap span:nth-child(3){
-float: right;
-display: inline-block;
-width: 300px;
-height: 1px;
-background: #e5e5e5;
-margin-top: 19px;
-margin-right: 100px;
+  float: right;
+  display: inline-block;
+  width: 300px;
+  height: 1px;
+  background: #e5e5e5;
+  margin-top: 19px;
+  margin-right: 100px;
 }
 </style>

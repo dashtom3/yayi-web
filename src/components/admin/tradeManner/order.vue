@@ -151,7 +151,7 @@
           <el-col :span="7"><div class="grid-content bg-purple"></div></el-col>
         </div>
         <div class="order_box clearfix">
-          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item">
+          <div class="order_content fl" v-for="item in nowOrderDetails.orderitemList" :key="item.itemSKU">
             <el-col :span="4" align="center"><div class="grid-content bg-purple"><img style="width:50px;" :src="item.picPath" alt="图片无法显示"></div></el-col>
             <el-col :span="5" align="center">{{item.itemInfo.itemName}}<br />{{item.itemPropertyNamea}}<span v-if="item.itemPropertyNameb">;</span>{{item.itemPropertyNameb}}<span v-if="item.itemPropertyNamec">;</span>{{item.itemPropertyNamec}}<div class="grid-content bg-purple"></div></el-col>
             <el-col :span="5" align="center">{{item.itemSKU}}<div class="grid-content bg-purple"></div></el-col>
@@ -234,17 +234,22 @@
           <i class="i_col_red">*</i>
           <span>物流公司：</span>
           <template>
-            <el-select v-model="wuliu" size="small"></el-select>
+            <el-select v-model="wuliu" placeholder="请选择">
+              <el-option
+                v-for="item in wuliuList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </template>
         </div>
-        <div style="height:40px;padding-left:60px;">
+        <div style="height:40px;line-height:40px;padding-left:60px;">
           <i class="i_col_red">*</i>
           <span>快递单号：</span>
-          <template>
-            <el-input v-model="wuLiuBianHao" style="width:215px;" size="small"></el-input>
-          </template>
+          <el-input v-model="wuLiuBianHao" style="width:215px;"></el-input>
         </div>
-        <div>
+        <div style="margin-top:20px;">
           <el-button class="btn_" @click="sureFaHuo()">确定</el-button>
           <el-button type="primary" @click="deliveryVisible = false" style="margin-left:60px;">取消</el-button>
         </div>
@@ -345,9 +350,11 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 1,
-        // wuliu:[
-        //   {value:"申通快递",label:"申通快递"}
-        // ],
+        wuliuList:[
+          {value:"STO",label:"申通快递"},
+          {value:"SF",label:"顺丰快递"},
+          {value:"DB",label:"德邦快递"}
+        ],
         wacthTuiKuanList:[],
         pageProps:null,
         nowOrderDetails:null,

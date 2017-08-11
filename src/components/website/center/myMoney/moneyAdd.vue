@@ -20,21 +20,23 @@
         </div>
         <div @click="sureExchange()" class="sureBtn">支付</div>
       </div>
-      <div class="exchangeRule">
+      <div class="bg_col">
+        <div class="exchangeRule">
         <p>乾币充值标准</p>
-        <ul>
-          <li>(1) 1000元≤单次购买金额<2000元，可获得乾币数量=当次实际购买金额*110%；</li>
-          <li>(2) 2000元≤单次购买金额<5000元，可获得乾币数量=当次实际购买金额*115%；</li>
-          <li>(3) 5000元≤单次购买金额<10000元，可获得乾币数量=当次实际购买金额*120%；</li>
-          <li>(4) 单次购买金额≥10000元，可获得乾币数量=当次实际购买金额*125%。</li>
-        </ul>
-      </div>
-      <div class="tips">
-        <p><strong>温馨提示：</strong></p>
-        <ul>
-          <li>（1）根据国家规定，乾币充值不开发票。</li>
-          <li>（2）购买商品时，发票金额包含用户实际支付金额，加上充值乾币的支付金额。</li>
-        </ul>
+          <ul>
+            <li>(1) 1000元≤单次购买金额<2000元，可获得乾币数量=当次实际购买金额*110%；</li>
+            <li>(2) 2000元≤单次购买金额<5000元，可获得乾币数量=当次实际购买金额*115%；</li>
+            <li>(3) 5000元≤单次购买金额<10000元，可获得乾币数量=当次实际购买金额*120%；</li>
+            <li>(4) 单次购买金额≥10000元，可获得乾币数量=当次实际购买金额*125%。</li>
+          </ul>
+        </div>
+        <div class="tips">
+          <p><strong>温馨提示：</strong></p>
+          <ul>
+            <li>（1）根据国家规定，乾币充值不开发票。</li>
+            <li>（2）购买商品时，发票金额包含用户实际支付金额，加上充值乾币的支付金额。</li>
+          </ul>
+        </div>
       </div>
     </div>
     <el-dialog :visible.sync="WxTableVisible" :before-close="handleClose" size="small">
@@ -174,14 +176,23 @@ export default {
 </script>
 
 <style scoped>
+.bg_col{
+  background: #f7f7f7;
+  padding: 20px 0;
+}
 .tips{
   width: 522px;
-  margin:20px auto;
+  margin:0 auto;
+  margin-top:28px;
   text-align: left;
-  color: #005aab;
+  color: #cb1700;
+}
+.tips li{
+  height: 22px;
+  line-height: 22px;
 }
 .myMoneyAddWrap .contentWrap{
-  width: 592px;
+  width: 675px;
   margin: auto;
   margin-top: 40px;
   border: 1px solid #eeeeee;
@@ -198,7 +209,7 @@ margin: auto;
 }
 .myMoneyAddWrap .payForm{
   width: 402px;
-      margin: auto;
+  margin: auto;
 }
 .oneLine{
   position: relative;
@@ -235,7 +246,7 @@ margin: auto;
 }
 .myMoneyAddWrap .exchangeRule li{
   margin-top: 20px;
-  color: #666;
+  color: #333;
 }
 .sureBtn{
     text-align: center;

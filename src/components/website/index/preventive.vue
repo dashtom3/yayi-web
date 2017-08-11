@@ -321,7 +321,7 @@ a {
     margin-top: 70px;
     margin-left: 17.5px;
     margin-right: 17.5px;
-    border: 1px #e9e9e9 solid;
+    border: 1px #efefef solid;
     border-radius: 50%;
     display:flex;
     justify-content: center;
@@ -361,7 +361,7 @@ a {
 .preventive_item {
   width: 220px;
   height: 241px;
-  border: 1px #bcbcbc solid;
+  border: 1px #efefef solid;
   float: left;
   padding: 5px 5px 0 5px;
   margin-right: 10px;

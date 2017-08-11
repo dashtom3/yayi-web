@@ -538,7 +538,7 @@ import util from '../../../common/util'
   color: #cb1700 !important;
 }
   .onePxLine{
-    border: none;border-top: 1px solid #e5e5e5;background:#e5e5e5;border-color:#e5e5e5;margin-bottom: 20px;
+    border: none;border-top: 1px solid #efefef;background:#e5e5e5;border-color:#e5e5e5;margin-bottom: 20px;
   }
   .btnDef{
     background: #e5e5e5;
@@ -620,7 +620,7 @@ import util from '../../../common/util'
   .infoLeft_1{
     width:400px;
     height:400px;
-    border:1px solid #e5e5e5;
+    border:1px solid #efefef;
     text-align: center;
   }
   .infoLeft_1 img{
@@ -644,10 +644,10 @@ import util from '../../../common/util'
   .infoLeft_2 li{
     width: 62px;
     height:62px;
-      border: 1px solid #e5e5e5;
-      float: left;
-      margin-left: 20px;
-      text-align: center;
+    border: 1px solid #efefef;
+    float: left;
+    margin-left: 20px;
+    text-align: center;
   }
   .infoLeft_2 li:hover{
     cursor: pointer;
@@ -681,7 +681,7 @@ import util from '../../../common/util'
     /*margin-left: 50px;*/
     margin-right:74.1%;
     width:92px;
-    border:1px solid #e5e5e5;
+    border:1px solid #efefef;
     height:30px;
     position: relative;
   }
@@ -702,8 +702,8 @@ import util from '../../../common/util'
         line-height: 30px;
   }
   .calculator span:nth-child(2){
-    border-left:1px solid #e5e5e5;
-    border-right:1px solid #e5e5e5;
+    border-left:1px solid #efefef;
+    border-right:1px solid #efefef;
   }
   .calculator input{
     float:left;
@@ -749,7 +749,7 @@ import util from '../../../common/util'
     opacity: 0.8;
   }
   .goodMore {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #efefef;
     margin-top: 30px;
 
   }

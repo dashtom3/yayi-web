@@ -1,20 +1,18 @@
 <template>
   <div class="instructions" >
-    <div class="videoWrap" v-if="instruction.video">
-      <div class="contentTitleWrap">
-        <span></span>
-        <span>视频说明</span>
-        <span></span>
+    <div class="videoWrap">
+      <div class="contentTitleWrap" v-if="!instruction.video">
+        <div class="contentTitleWrap">
+          <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
+        </div>
       </div>
-      <video :src="instruction.video" controls autoplay></video>
+      <video :src="instruction.video" v-if="instruction.video" controls autoplay style="margin-top:20px;"></video>
     </div>
-    <div class="imgAndTextWrap" v-if="instruction.itemUse">
-      <div class="contentTitleWrap">
-        <span></span>
-        <span>图文说明</span>
-        <span></span>
+    <div class="imgAndTextWrap">
+      <div class="contentTitleWrap" v-if="!instruction.itemUse">
+        <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
       </div>
-      <div v-html="instruction.itemUse"></div>
+      <div v-html="instruction.itemUse" v-if="instruction.itemUse"></div>
     </div>
   </div>
 </template>

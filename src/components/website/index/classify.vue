@@ -27,11 +27,11 @@
       <span class="cargo_word">品牌库</span>
 <!--       <img v-if="!change2" src="../../../images/index/up.png" alt="img">
       <img v-else src="../../../images/index/down.png" alt="img"> -->
-      <div class="brandLib"  v-if="!change2">
+      <div class="brandLib" style="display:block;"  v-if="!change2">
         <div class="imgWrap" v-for="oneBrand in brandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
           <img :src="oneBrand.itemBrandLogo" alt="img">
           <span></span>
-          <div class=""></div>
+          <div></div>
         </div>
     </div>
   </div>
@@ -195,7 +195,7 @@
     vertical-align: middle;
   }
   .imgWrap{
-    border: 1px solid #cccccc;
+    border: 1px solid #efefef;
     position: relative;
     float: left;
     margin-left: 28px;

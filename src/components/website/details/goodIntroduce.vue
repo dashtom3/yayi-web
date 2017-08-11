@@ -65,7 +65,7 @@
 <style scoped>
 .goodIntroduce{
   margin-top:20px;
-  border:1px solid #dcdcdc;
+  border:1px solid #efefef;
   border-radius: 2px;
   /*padding: 0 20px;*/
   padding-left: 50px;
