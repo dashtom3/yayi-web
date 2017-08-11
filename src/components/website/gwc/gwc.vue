@@ -396,7 +396,7 @@
         var that = this;
         var HEIGHT = window.innerHeight;
         HEIGHT = HEIGHT-28-63-50-21-50-21-10;
-        var flag = HEIGHT - that.gwcGoods.length*148-127;
+        var flag = HEIGHT - that.gwcGoods.length*148-375;
         // console.log(flag)
         if(flag<0){
           that.jiwsuanbtnFixed = true;
