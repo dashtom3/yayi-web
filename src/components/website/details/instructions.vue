@@ -1,18 +1,11 @@
 <template>
   <div class="instructions" >
     <div class="videoWrap">
-      <div class="contentTitleWrap" v-if="!instruction.video">
-        <div class="contentTitleWrap">
-          <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
-        </div>
-      </div>
-      <video :src="instruction.video" v-if="instruction.video" controls autoplay style="margin-top:20px;"></video>
-    </div>
-    <div class="imgAndTextWrap">
-      <div class="contentTitleWrap" v-if="!instruction.itemUse">
+      <div class="contentTitleWrap" v-if="imgShow">
         <img src="../../../images/brandLib/nouserInfo.png" alt="使用说明">
       </div>
-      <div v-html="instruction.itemUse" v-if="instruction.itemUse"></div>
+      <video :src="instruction.video" v-if="instruction.video !== ''" controls autoplay style="margin-top:20px;"></video>
+      <div v-html="instruction.itemUse" v-if="instruction.itemUse !== '<p><br></p>'" style="width:640px;margin-top:20px;"></div>
     </div>
   </div>
 </template>
@@ -23,11 +16,15 @@
     name: 'instructions',
     data () {
       return {
-
+        imgShow: false
       }
     },
     props:["instruction"],
     created: function() {
+      console.log(this.instruction)
+      if(this.instruction.itemUse === '<p><br></p>' && this.instruction.video === ''){
+        this.imgShow = true
+      }
     },
     methods: {
 
@@ -50,7 +47,7 @@
   position: relative;
   text-align: center;
   margin-top: 80px;
-  margin-bottom: 30px;
+  margin-bottom: 97px;
   color: #333333;
 }
 .contentTitleWrap span:nth-child(1){

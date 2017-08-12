@@ -32,7 +32,7 @@
 	      </el-table-column>
 	    </el-table>
 	    <el-col :span="24" class="warp-breadcrum" v-show="btn_show">
-	      <div id="saleChart" :style="{width: '1200px', height: '600px'}" v-show="sale_total_num !== 0"></div>
+	      <div id="saleChart" :style="{width: '1150px', height: '600px'}" v-show="sale_total_num !== 0"></div>
 	      <div style="height:85px;" v-show="sale_total_num === 0"></div>
 	      <span class="charts-x-pos" v-show="sale_total_num !== 0">实际销售额（元）</span>
 	    </el-col>
@@ -310,7 +310,7 @@
 	}
 	.charts-x-pos{
 		position: absolute;
-		right: -100px;
+		right: -58px;
 		top: 844px;
 	}
 </style>

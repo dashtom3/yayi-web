@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="block" style="position:absolute;top:650px;right:0;" v-show="this.totalCount > this.pagesize">
+    <div class="block" style="position:absolute;top:700px;right:0;" v-show="this.totalCount > this.pagesize">
       <el-pagination
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"

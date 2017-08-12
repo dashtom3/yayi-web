@@ -113,6 +113,8 @@
             this.personData.birthday = res.data.data.birthday && util.formatDate.format(new Date(res.data.data.birthday))
             this.personData.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
             this.personData.qq = res.data.data.qq
+            this.personData.userPic = res.data.data.userPic
+            this.imageUrl = res.data.data.userPic
           }
         })
       },

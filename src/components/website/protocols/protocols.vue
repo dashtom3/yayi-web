@@ -140,7 +140,8 @@
     text-align: center;
     background-color: #005aab;
   }
-  #main .el-submenu .el-menu-item {
+  #main .el-menu-item {
+    width: 180px!important;
     background-color: #005aab;
   }
   #main .el-submenu .el-submenu__title:hover, #main .el-menu-item:hover{
