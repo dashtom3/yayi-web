@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column prop="sales" label="销量" sortable="sales" align="center" >
       </el-table-column>
-      <el-table-column prop="salesMoney" label="销售额（元）" width="160"  align="center" >
+      <el-table-column prop="salesMoney" label="销售额（元）" sortable="salesMoney" width="160"  align="center" >
       </el-table-column>
       <el-table-column prop="refundNum" label="累计退款次数" sortable="refundNum" align="center">
       </el-table-column>
@@ -109,6 +109,9 @@
           this.queryHandler()
         }else if(prop === "refundNum"){
           this.state = "2"
+          this.queryHandler()
+        }else if(prop === "salesMoney"){
+          this.state = "3"
           this.queryHandler()
         }
       },

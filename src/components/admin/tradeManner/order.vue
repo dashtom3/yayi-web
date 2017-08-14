@@ -438,7 +438,8 @@
               goodsNum: 1,
               checked: false,
               count: 1//退款数量
-          }]
+          }],
+          itemIdList: []
         }
       }
     },
@@ -747,10 +748,13 @@
         that.global.axiosPostReq('/showUserOrderManage/showRefundProcessing',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
+            var itemIdArr = []
             for(let i in res.data.data.orderitemList){
               res.data.data.orderitemList[i].count = 1;
               res.data.data.orderitemList[i].checked= false;
+              itemIdArr.push(res.data.data.orderitemList[i].itemId)
             }
+            that.itemIdList = itemIdArr;
             res.data.data.refundAmt = 0;//退金额
             res.data.data.untread = 0;//返回钱币
             res.data.data.outCoins = 0;//扣除钱币
@@ -794,6 +798,7 @@
         for(let i in data){
           if(data[i].checked){
             var obj = {
+              itemId: that.itemIdList[i],
               orderId:that.orderInfo.orderId,
               refunNum:data[i].count,
               itemSKU:data[i].itemSKU

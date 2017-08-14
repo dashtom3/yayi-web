@@ -69,14 +69,13 @@ import global from '../../global/global'
 .commentReplay .sjhf{
   display: block;
   float: left;
-  margin-right: 18px;
+  margin-right: 12px;
   font-size: 14px;
 }
 .commentReplay .sjhfnr{
   display: inline-block;
-       margin-left: 80px; 
-      margin-top: -30px;
-      margin-right: 0;
+  margin-top: -30px;
+  margin-right: 0;
 }
 .noComment img{
   display: block;

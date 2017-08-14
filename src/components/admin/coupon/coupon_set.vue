@@ -59,6 +59,7 @@
             <el-button
             size="small"
             type="danger"
+            v-if="scope.row.enable === 2"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>

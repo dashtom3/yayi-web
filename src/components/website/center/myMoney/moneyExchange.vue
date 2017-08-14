@@ -88,7 +88,7 @@ import Bus from '../../../global/bus.js'
   	padding-left: 11px;
   }
   .benefitpbox{
-  	width: 480px;
+  	width: 600px;
   	margin: 0 auto;
   	margin-bottom: 20px;
   }

@@ -665,8 +665,7 @@ margin: 0 auto;
   width: 93px;
 }
 .brandLine{
-  border-bottom: 1px solid #e5e5e5;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .brandLine span {
   float: left;

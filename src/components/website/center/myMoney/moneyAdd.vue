@@ -3,7 +3,7 @@
     <div class="contentWrap">
       <div class="payForm">
         <div class="oneLine">
-          <span>购买金额：</span>
+          <span>充值金额：</span>
           <span><input v-model="payMuch" type="text" class="payMuch"></span>
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
@@ -24,10 +24,10 @@
         <div class="exchangeRule">
         <p><strong>乾币充值标准</strong></p>
           <ul>
-            <li>(1) 1000元≤单次购买金额<2000元，可获得乾币数量=当次实际购买金额*110%；</li>
-            <li>(2) 2000元≤单次购买金额<5000元，可获得乾币数量=当次实际购买金额*115%；</li>
-            <li>(3) 5000元≤单次购买金额<10000元，可获得乾币数量=当次实际购买金额*120%；</li>
-            <li>(4) 单次购买金额≥10000元，可获得乾币数量=当次实际购买金额*125%。</li>
+            <li>(1) 1000元≤单次充值金额<2000元，可获得乾币数量=当次实际充值金额*110%；</li>
+            <li>(2) 2000元≤单次充值金额<5000元，可获得乾币数量=当次实际充值金额*115%；</li>
+            <li>(3) 5000元≤单次充值金额<10000元，可获得乾币数量=当次实际充值金额*120%；</li>
+            <li>(4) 单次充值金额≥10000元，可获得乾币数量=当次实际充值金额*125%。</li>
           </ul>
         </div>
         <div class="tips">

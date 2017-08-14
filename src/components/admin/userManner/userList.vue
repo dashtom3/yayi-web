@@ -60,6 +60,7 @@
         </el-table-column>
         <el-table-column  prop="salePhone" align="center"  label="销售员手机号">  </el-table-column>
         <el-table-column  prop="saleName" align="center"  label="销售员名称">  </el-table-column>
+        <el-table-column  prop="userCreated" align="center"  label="注册时间">  </el-table-column>
         <el-table-column  label="操作" align="center">
           <template scope="scope">
             <el-button v-if="scope.row.isBindSale==1"  type="text"  v-on:click="cancelBindSale(scope.$index,scope.row)">取消绑定</el-button>

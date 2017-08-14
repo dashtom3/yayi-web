@@ -130,7 +130,7 @@
   </span>
 </el-dialog>
 <el-dialog :title="wuliuMsg" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
-  <div class="wlxxWrap" v-if="wuliuxinxi">
+  <div class="wlxxWrap" v-if="wuliuxinxi && wuliuxinxi.Traces.length">
     <div class="wlxxLeft">
       <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces"><span class="circle"></span></span>
       <span class="lastCircle"></span>
@@ -145,6 +145,9 @@
         </li>
       </ul>
     </div>
+  </div>
+  <div class="wlxxWrap" v-else>
+    <span>该单号暂无物流进展，请稍后再试~</span>
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>

@@ -124,6 +124,9 @@
     border-color: #005aab !important;
     background-color: #005aab !important;
   }
+  .el-button{
+    font-family: "Microsoft YaHei"!important;
+  }
   .el-button--primary:hover {
     background: #329af0 !important;
     border-color: #329af0 !important;

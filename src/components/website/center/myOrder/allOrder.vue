@@ -147,6 +147,7 @@
           <span class="tipsTitle">支付方式</span>
           <span class="tipsContent" v-if="nowOrderDetails.payType === 0">支付宝方式</span>
           <span class="tipsContent" v-else-if="nowOrderDetails.payType === 1">微信方式</span>
+          <span class="tipsContent" v-else-if="nowOrderDetails.payType === 2">乾币抵扣</span>
           <span class="tipsContent" v-else>无</span>
         </p>
       </div>
@@ -208,8 +209,8 @@
       </span>
     </el-dialog>
     <!-- 物流信息 -->
-    <el-dialog title="物流信息" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
-      <div class="wlxxWrap" v-if="wuliuxinxi">
+    <el-dialog :title="wuliuMsg" :visible.sync="dialogVisibleHaveALookAtWuLiu" custom-class="wlxxWrapWrap">
+      <div class="wlxxWrap" v-if="wuliuxinxi && wuliuxinxi.Traces.length">
         <div class="wlxxLeft">
           <span v-if="index!==wuliuxinxi.Traces.length-1" :style="{height:one.height}" class="line" v-for="(one,index) in wuliuxinxi.Traces" :key="one.AcceptStation"><span class="circle"></span></span>
           <span class="lastCircle"></span>
@@ -224,6 +225,9 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="wlxxWrap" v-else>
+        <span>该单号暂无物流进展，请稍后再试~</span>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisibleHaveALookAtWuLiu=false">确 定</el-button>
@@ -282,7 +286,7 @@
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
         commentScores:[],
         wuliuxinxi:null,
         pageProps:null,
@@ -304,7 +308,8 @@
         // score : '',
         getScore: false,
         dialogVisibleGetGood:false,
-        dialogVisibleHaveALookAtWuLiu:false
+        dialogVisibleHaveALookAtWuLiu:false,
+        wuliuMsg: ''
       }
     },
     created: function() {
@@ -453,11 +458,26 @@
         var obj = {
           token:that.global.getToken(),
           orderId:item.orderId
-          // orderId:"3334140532021"
         };
         that.global.axiosPostReq('/Exp/queryExp',obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             var data = res.data.data;
+            var wuliuName = res.data.msg && res.data.msg.split('-')[0]
+            var wuliuCode = res.data.msg && res.data.msg.split('-')[1]
+            switch(wuliuName){
+              case 'STO':
+                wuliuName = '申通快递'
+                break;
+              case 'SF':
+                wuliuName = '顺丰快递'
+                break;
+              case 'DB':
+                wuliuName = '德邦快递'
+                break;
+              default:
+                wuliuName = '其他快递'
+            }
+            this.wuliuMsg = res.data.msg?'物流信息（'+ wuliuName + '-' + wuliuCode +'）':'物流信息';
             that.wuliuxinxi = JSON.parse(data);
             for(let i in that.wuliuxinxi.Traces){
               var temp = 25;

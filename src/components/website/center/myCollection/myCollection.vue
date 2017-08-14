@@ -75,14 +75,18 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-        that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            that.$alert('删除收藏成功！', {confirmButtonText: '确定',});
-            that.allGoods.splice(index,1);
-          } else {
-            // that.$message.error('网络出错，请稍后再试！');
-          }
-        })
+        that.$confirm('确定取消收藏该商品吗？', '取消收藏商品', {
+          confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
+        }).then(() => {
+          that.global.axiosPostReq('/mystar/deleteOne', obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.$alert('取消收藏成功！', {confirmButtonText: '确定',});
+              that.allGoods.splice(index,1);
+            }
+          })
+        }).catch(() => {
+          
+        });
       },
       clearAllCollection:function(){
         var that = this;
@@ -90,19 +94,17 @@
           phone:that.global.getUser().phone,
           token:that.global.getToken()
         };
-        that.$confirm('此操作将移除所有收藏商品, 是否继续?', '清除收藏商品', {
+        that.$confirm('此操作将移除所有收藏商品，是否继续?', '清除收藏商品', {
           confirmButtonText: '确定',cancelButtonText: '取消',type: 'warning'
         }).then(() => {
           that.global.axiosPostReq('/mystar/deleteAll', obj).then((res) => {
             if (res.data.callStatus === 'SUCCEED') {
               this.$alert('删除全部收藏成功！', {confirmButtonText: '确定',});
               that.allGoods = [];
-            } else {
-              // that.$message.error('网络出错，请稍后再试！');
             }
           })
         }).catch(() => {
-          that.$message({type: 'info',message: '已取消'});
+          
         });
       }
     }
