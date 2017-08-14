@@ -623,15 +623,15 @@ import Bus from '../../global/bus.js'
     height:400px;
     border:1px solid #efefef;
     text-align: center;
+    position:relative;
   }
-  .infoLeft_1 img{
+  .infoLeft_1 >img{
     display: block;
-    vertical-align: middle;
     max-width: 100%;
     max-height: 100%;
-    margin: auto;
-    margin-top: 50%;
-    transform: translateY(-50%);
+    position: absolute;
+    left: 0;
+    top: 0;
   }
   .infoLeft_2{
     width:400px;
