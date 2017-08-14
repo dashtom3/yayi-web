@@ -56,6 +56,10 @@
             <el-button
             size="small"
             @click="handleDownLoad(scope.$index, scope.row)">下载</el-button>
+            <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -216,6 +220,21 @@
       handleCurrentChangeDetail(val){
       	this.currentPageDetail = val 
       	this.handleView()
+      },
+      handleDelete(index, row){
+      	var that = this	
+				var params = {
+					benefitId: row.benefitId
+				}
+				that.global.axiosGetReq('/benefit/delete',params).then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.queryHandler()
+          }
+        })
       },
       //关闭详情
       closeHandler(){

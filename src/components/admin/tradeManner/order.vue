@@ -183,8 +183,8 @@
               <div v-else><el-button class="_btn" @click="lookAtFaPiaoFun(nowOrderDetails)">查看发票详情</el-button></div>
             </li>
             <li>
-              <div v-if="nowOrderDetails.isRegister==0">不需要产品认证</div>
-              <div v-else>需要产品认证</div>
+              <div v-if="nowOrderDetails.isRegister==0">不需要产品注册证</div>
+              <div v-else>需要产品注册证</div>
             </li>
             <li>
               <div v-if="!nowOrderDetails.buyerMessage"> 留言为空 </div>

@@ -142,24 +142,26 @@
           </div>
         </div>
       </div>
-      <div v-if="nowOrderDetails.payType">
+      <div>
         <p>
           <span class="tipsTitle">支付方式</span>
           <span class="tipsContent" v-if="nowOrderDetails.payType === 0">支付宝方式</span>
-          <span class="tipsContent" v-if="nowOrderDetails.payType === 1">微信方式</span>
+          <span class="tipsContent" v-else-if="nowOrderDetails.payType === 1">微信方式</span>
+          <span class="tipsContent" v-else>无</span>
         </p>
       </div>
       <div>
         <p>
           <span class="tipsTitle">发票</span>
-          <el-button @click="lookInvoiceHandler(nowOrderDetails.orderId)">查看发票信息</el-button>
+          <el-button @click="lookInvoiceHandler(nowOrderDetails.orderId)" v-if="nowOrderDetails.invoiceHand === '1'">查看发票信息</el-button>
+          <span class="tipsContent" v-if="nowOrderDetails.invoiceHand === '0'">不申请发票</span>
         </p>
       </div>
       <div>
         <p>
           <span class="tipsTitle">产品注册证</span>
-          <span class="tipsContent" v-if="nowOrderDetails.isRegister === 0">不需要产品认证</span>
-          <span class="tipsContent" v-if="nowOrderDetails.isRegister === 1">需要产品认证</span>
+          <span class="tipsContent" v-if="nowOrderDetails.isRegister === 0">不需要产品注册证</span>
+          <span class="tipsContent" v-if="nowOrderDetails.isRegister === 1">需要产品注册证</span>
         </p>
       </div>
       <div>
@@ -267,7 +269,6 @@
 </template>
 
 <script>
-  import paging from '../../brandLib/paging0'
   import util from '../../../../common/util'
   import Bus from '../../../global/bus.js' 
   export default {
@@ -305,9 +306,6 @@
         dialogVisibleGetGood:false,
         dialogVisibleHaveALookAtWuLiu:false
       }
-    },
-    components: {
-      paging,
     },
     created: function() {
       var that = this;

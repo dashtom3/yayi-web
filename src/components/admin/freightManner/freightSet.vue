@@ -22,7 +22,7 @@
               <el-input v-model="scope.row.firstNum" :disabled="!scope.row.changeState"></el-input>
             </template>
           </el-table-column>
-          <el-table-column  prop="firstMoney" align="center"  label="首费（元）"  width="200">
+          <el-table-column  prop="firstMoney" align="center"  label="首费（元/kg）"  width="200">
             <template scope="scope">
               <el-input v-model="scope.row.firstMoney" :disabled="!scope.row.changeState"></el-input>
             </template>
