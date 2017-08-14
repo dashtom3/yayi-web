@@ -307,7 +307,7 @@ a {
     cursor: pointer;
   }
   .brand_box .brandd_img {
-    margin-top: 40px;
+    margin-top: 60px;
   }
   .brand_container {
     width: 800px;

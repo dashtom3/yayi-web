@@ -16,7 +16,7 @@
     margin: 0;
   }
   #app {
-    font-family: "Microsoft YaHei";
+    font-family: "Microsoft YaHei" !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #333;
@@ -39,6 +39,7 @@
     outline: none;
     border: none;
     list-style-type:none;
+    font-family: "Microsoft YaHei" !important;
   }
   /*过渡动画开始*/
   .component-fade-enter-active, .component-fade-leave-active {

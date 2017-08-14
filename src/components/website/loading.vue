@@ -34,8 +34,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #000;  
-  opacity: 0.5;
+  background-color: #fff;  
+  opacity: 0.8;
   position: absolute;
 } 
 
@@ -94,7 +94,7 @@
   height: 300px;
   position: absolute;
   top: 50%;
-  background-color: #fff;
+/*  background-color: #fff;*/
   transform: translateY(-50%);
 }
 .loading .loading-img1 {

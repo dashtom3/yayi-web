@@ -110,7 +110,7 @@
           }
           that.global.axiosGetReq('/pay/payParames',obj).then((res) => {
             //console.log(res.request.responseURL,'pay')
-            window.location.href=res.request.responseURL
+            window.location.href = res.request.responseURL
           })
           return false
         } 
