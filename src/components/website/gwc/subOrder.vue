@@ -659,6 +659,11 @@
           that.invoiceHand = 1
           return false
         }
+        if (that.historyState == 0) {
+          that.taxDialogVisible = false
+          that.tax_word = false
+          return false
+        }
       },
       checked3: function() {
         var that = this;
@@ -765,7 +770,7 @@
       historyTax: function() {
         var that = this;
         that.global.axiosGetReq('/po/queryLastInvoice').then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
+          if (res.data.data !== null) {
             that.checked2 = true
             that.tax_word_des = true
             that.taxType == ''

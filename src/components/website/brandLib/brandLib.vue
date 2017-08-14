@@ -1,5 +1,6 @@
 <template>
   <div class="brandLib">
+    <loading v-show="myLoading"></loading>
     <publicHeader v-on:listenToBrand="msgFromHeader"></publicHeader>
     <classify></classify>
     <div class="brandLibWrap">
@@ -105,6 +106,7 @@
   import classify from '../index/classify'
   import publicFooter from '../index/publicFooter'
   import checkBox from './checkBox'
+  import loading from '../loading'
   export default {
     name: 'brandLib',
     data () {
@@ -150,7 +152,8 @@
         allGoods:[],
         aaaaa1:null,
         aaaaa2:null,
-        pageProps:null
+        pageProps:null,
+        myLoading: true,
       }
     },
     components: {
@@ -159,6 +162,7 @@
       backToTop,
       publicFooter,
       checkBox,
+      loading,
     },
     created: function() {
       var that = this;
@@ -225,10 +229,12 @@
       },
       getClassfytAndBrandList:function(){
         var that = this;
+        that.myLoading = true;
         that.global.axiosGetReq('/item/getAllClassifyAndBrand')
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.brandClassfy = res.data.data.classifyList;
+            that.myLoading = false;
             for(var i in that.brandClassfy){
                 that.brandClassfy[i].classifyTwoList.unshift({classifyTwoName:"不限",classifyThreeList:[]});
                 for(var m in that.brandClassfy[i].classifyTwoList){
@@ -276,7 +282,7 @@
         }else{
           obj.currentPage = 1;
         }
-        obj.numberPerPage = 12;
+        obj.numberPerPage = 10;
         that.global.axiosPostReq('/item/queryItemSearch',obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
@@ -694,13 +700,14 @@ margin: 0 auto;
   width: 1200px;
 }
 .allGoods li {
-  width: 279px;
-  border: 1px solid #bcbcbc;
-  margin-bottom: 19px;
+  width: 228px;
+  height: 328px;
+  border: 1px solid #efefef;
+  margin-bottom: 10px;
   position: relative;
   display: inline-block;
   cursor: pointer;
-  margin-right: 19px;
+  margin-right: 10px;
   overflow: hidden;
 }
 
@@ -737,11 +744,11 @@ transition: all 0.5s ease;*/
   background: #005aab;
 }
 .allGoods li .imgWrap{
-  width: 270px;
+  width: 230px;
+  height: 230px;
   margin: auto;
-  height: 255px;
   text-align: center;
-  margin-top: 4px;
+/*  margin-top: 4px;*/
 }
 .allGoods li .imgWrap span{
   display: inline-block;
@@ -753,7 +760,7 @@ transition: all 0.5s ease;*/
   display: block;
   margin: 10px auto;
   line-height: 30px;
-  height:60px;
+  height: 40px;
   width: 220px;
   padding: 0 10px;
   text-align: center;

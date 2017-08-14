@@ -18,7 +18,7 @@
       <div class="next" @click="next()">
         <img src="../../../images/index/next.png" alt="img">
       </div>
-      <el-carousel :autoplay="true" :interval="5000" height="500px" trigger="click" arrow="never" indicator-position="none" ref="carousel">
+      <el-carousel :autoplay="true" :interval="3500" height="500px" trigger="click" arrow="never" indicator-position="none" ref="carousel">
         <el-carousel-item>
           <div class="brand_container">
             <div class="brand_item" v-for="oneBrand in filteredBrandListData" @click="goToThisBrand(oneBrand.itemBrandId)">
@@ -63,6 +63,7 @@
       </div>
       <div class="preventive_container">
         <div class="preventive_item" v-if="index<10" v-for="(item,index) in classifyItem.items" :key="item.itemName" @click="toDetail(item)">
+        <!--     <router-link :to="{ name: 'details', params: { goodId: item.itemId }}" target="_blank"></router-link> -->
           <div class="item_img_box">
             <img class="item_img" :src="item.itemDetail.itemPica+'?imageView2/1/w/200/h/200'" alt="img">
             <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
@@ -206,7 +207,7 @@ export default {
       var that = this;
       window.open('/details/' + item.itemId)
       // that.$router.push({path: '/details/' + item.itemId})
-      window.scroll(0,0);
+      // window.scroll(0,0);
     },
     img_in(classifyItem) {
       var that = this;
@@ -428,5 +429,4 @@ a {
   margin-top: 20px;
   margin-bottom: 30px;
 }
-
 </style>

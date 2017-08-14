@@ -39,48 +39,50 @@ export default {
     return formData
   },
   setToken (token) {
-    sessionStorage.setItem('adverToken', token)
+    localStorage.setItem('adverToken', token)
   },
   setSalesToken (token) {
-    sessionStorage.setItem('salesToken', token)
+    localStorage.setItem('salesToken', token)
   },
   // yayiAbcToken
   removeMsg () {
-    sessionStorage.removeItem('adverToken')
-    sessionStorage.removeItem('adverUser')
+    localStorage.removeItem('adverToken')
+    localStorage.removeItem('adverUser')
   },
   getToken () {
-    return sessionStorage.getItem('adverToken')
+    //console.log(localStorage.getItem('adverToken'))
+    //console.log(JSON.parse(localStorage.getItem('adverUser')))
+    return localStorage.getItem('adverToken')
   },
   setUser (data) {
-    sessionStorage.setItem('adverUser', JSON.stringify(data))
+    localStorage.setItem('adverUser', JSON.stringify(data))
   },
   getUser () {
-    return JSON.parse(sessionStorage.getItem('adverUser'))
+    return JSON.parse(localStorage.getItem('adverUser'))
   },
   // 创客系统token
   getSalesToken () {
-    return sessionStorage.getItem('salesToken')
+    return localStorage.getItem('salesToken')
   },
   removeSalesMsg () {
-    sessionStorage.removeItem('salesToken')
-    sessionStorage.removeItem('salesUser')
+    localStorage.removeItem('salesToken')
+    localStorage.removeItem('salesUser')
   },
   setSalesUser (data) {
-    sessionStorage.setItem('salesUser', JSON.stringify(data))
+    localStorage.setItem('salesUser', JSON.stringify(data))
   },
   getSalesUser () {
-    return JSON.parse(sessionStorage.getItem('salesUser'))
+    return JSON.parse(localStorage.getItem('salesUser'))
   },
   // 后台系统token
   getAdminToken () {
-    return sessionStorage.getItem('adminToken')
+    return localStorage.getItem('adminToken')
   },
   removeAdminMsg () {
-    sessionStorage.removeItem('adminToken')
+    localStorage.removeItem('adminToken')
   },
   setAdminToken (data) {
-    sessionStorage.setItem('adminToken',data)
+    localStorage.setItem('adminToken',data)
   },
   // 历史记录存储
   getHistory () {
@@ -128,6 +130,14 @@ export default {
               return false
             });
           }
+          if(res.data.errorCode === 'RE_LOGIN_ADMIN') {
+            Promise.reject("登录过期，请重新登录！").then(function(reason) {
+              // 未被调用
+            }, function(reason) {
+              router.push({path: '/admin/login'})
+              return false
+            });
+          }
           if (res.data.callStatus === 'SUCCEED') {
             resolve(res);
           } else {
@@ -171,6 +181,14 @@ export default {
               }
               router.push({name:'index', params: { data: 'RE_LOGIN'}})
               console.log(reason); 
+              return false
+            });
+          }
+          if(res.data.errorCode === 'RE_LOGIN_ADMIN') {
+            Promise.reject("登录过期，请重新登录！").then(function(reason) {
+              // 未被调用
+            }, function(reason) {
+              router.push({path: '/admin/login'})
               return false
             });
           }

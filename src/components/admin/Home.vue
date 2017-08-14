@@ -99,11 +99,9 @@
       // 通过 `vm` 访问组件实例
       next(vm => {
         var that = vm;
-        let admin = window.sessionStorage.getItem('adminToken')
-        that.accountType = window.sessionStorage.getItem('accountType')
-        if(admin){
-          
-        }else{
+        let admin = window.localStorage.getItem('adminToken')
+        that.accountType = window.localStorage.getItem('accountType')
+        if(admin){}else{
           that.$router.push('/admin/login');
         }
       })

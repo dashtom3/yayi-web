@@ -21,7 +21,6 @@
     },
     props:["instruction"],
     created: function() {
-      console.log(this.instruction)
       if(this.instruction.itemUse === '<p><br></p>' && this.instruction.video === ''){
         this.imgShow = true
       }
