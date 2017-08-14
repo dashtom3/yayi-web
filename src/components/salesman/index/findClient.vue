@@ -22,7 +22,7 @@
               <span v-if="scope.row.certification">{{scope.row.certification.companyName}}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center"  label="单位地址" >
+          <el-table-column align="center"  label="单位地址" width="400" >
             <template scope='scope'>
               <span v-if="scope.row.certification">{{scope.row.certification.workAddress}}</span>
             </template>
@@ -38,6 +38,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="block" v-show="this.totalCounted > this.pagesizeed">
+          <el-pagination
+            @current-change="handleCurrentedChange"
+            :current-page.sync="currentPageed"
+            :page-size="pagesizeed"
+            layout="prev, pager, next, jumper"
+            :total="totalCounted">
+          </el-pagination>
+        </div>
       </div>
       <div v-else>
         <el-table  :data="tableDataNoRegist" border style="width: 100%;text-align:center">
@@ -45,7 +54,7 @@
             <template scope='scope'>
               <span>{{scope.row.unitName}}</span>
             </template></el-table-column>
-          <el-table-column align="center"  label="单位地址" >
+          <el-table-column align="center"  label="单位地址" width="400" >
             <template scope='scope'>
               <span>{{scope.row.unitAddress}}</span>
             </template></el-table-column>
@@ -61,6 +70,15 @@
             </template></el-table-column>
           </el-table-column>
         </el-table>
+        <div class="block" v-show="this.totalCount > this.pagesize">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pagesize"
+            layout="prev, pager, next, jumper"
+            :total="totalCount">
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -75,11 +93,14 @@
         nowBtn:1,
         searchData:null,
         tableDataNoRegist:[],
-        tableData:[]
+        tableData:[],
+        pagesize: 10,
+        currentPage: 1,
+        totalCount: 1,
+        pagesizeed: 10,
+        currentPageed: 1,
+        totalCounted: 1,
       }
-    },
-    components: {
-
     },
     created: function() {
       var that = this;
@@ -87,21 +108,53 @@
       that.getNoRegistUserList();
     },
     methods: {
-      getNoRegistUserList:function(){
+      handleCurrentChange(val) {
+        this.currentPage = val 
+        this.getNoRegistUserList(val)
+      },
+      handleCurrentedChange(val) {
+        this.currentPageed = val 
+        this.getWaitBindUserList(val)
+      },
+      //未注册的
+      getNoRegistUserList(val){
         var that =this;
-        that.global.axiosPostReq('/findCus/unregistered')
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPage = 1
+        } else {
+          this.currentPage = val
+        }
+        var obj = {
+          state: this.searchData,
+          currentPage: this.currentPage,
+          numberPerPage: this.pagesize
+        };
+        that.global.axiosPostReq('/findCus/unregistered', obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableDataNoRegist = res.data.data;
+            this.totalCount = res.data.totalNumber;
           }
         })
       },
-      getWaitBindUserList:function(){
+      //已注册
+      getWaitBindUserList(val){
         var that =this;
-        that.global.axiosPostReq('/findCus/registered')
+        if (val == undefined || typeof(val) == 'object') {
+          this.currentPageed = 1
+        } else {
+          this.currentPageed = val
+        }
+        var obj = {
+          state: this.searchData,
+          currentPage: this.currentPageed,
+          numberPerPage: this.pagesizeed
+        };
+        that.global.axiosPostReq('/findCus/registered', obj)
         .then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.tableData = res.data.data;
+            this.totalCounted = res.data.totalNumber;
           }
         })
       },
@@ -109,48 +162,24 @@
         var that = this;
         if(arg==1){
           that.nowBtn = true;
+          that.searchData = "";
           that.getWaitBindUserList();
           that.showBindOrNoBindList = true;
         }else{
           that.nowBtn = false;
+          that.searchData = "";
           that.getNoRegistUserList();
           that.showBindOrNoBindList = false;
-        }
-        that.searchData = "";
+        } 
       },
       goToMyClient:function(){
         var that = this;
         that.$emit('msgFromChild', 'goToMyClient' )
       },
-      searchUserBySearchConet:function(content){
-        var that = this;
-        var searchUrl ;
-        var obj = {
-          state:content
-        };
-        if(that.nowBtn){
-          searchUrl = '/findCus/registered';
-        }else{
-          searchUrl = '/findCus/unregistered';
-        }
-        that.global.axiosPostReq(searchUrl, obj)
-        .then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            if(that.nowBtn){
-              that.tableData = res.data.data;
-            }else{
-              that.tableDataNoRegist = res.data.data;
-            }
-          }
-        })
-      },
       search:function(){
         var that = this;
-        // if(that.searchData){
-          that.searchUserBySearchConet(that.searchData);
-        // }else{
-        //   that.$alert('请输入搜索内容',  {confirmButtonText: '确定',});
-        // }
+        that.getNoRegistUserList();
+        that.getWaitBindUserList();
       }
     }
   }
@@ -163,7 +192,7 @@
   min-height: 676px;
 }
 .clientList{
-  margin-bottom: 100px;
+  margin-bottom: 60px;
 }
 .bindedClient{
   text-align: right;
