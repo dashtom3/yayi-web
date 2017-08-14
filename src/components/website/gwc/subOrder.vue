@@ -108,7 +108,7 @@
         <div class="normalTaxBox" v-if="normal_tax">
           <div class="tax_detail_box">
             <p>选择发票性质为"个人"时，发票抬头为"个人"两字与姓名，如需开具诊所名，请选择发票性质为"公司"</p>
-            <p>发票信息相关问题</p>
+            <p>查看<span @click="seeTax" style="color: #005aab; cursor: pointer;">发票说明</span></p>
           </div>
           <div>
             <div style="display:inline-block;font-size:13px;margin-right:45px;">发票性质</div>
@@ -153,7 +153,7 @@
           <!-- 公司发票开票 开始-->
           <div class="tax_detail_box">
             <p>必须提供一般纳税人资格证明或相关资料能证明贵司是一般纳税人17个点的，否则不能开具专票</p>
-            <p>发票信息相关问题</p>
+            <p>查看<span @click="seeTax" style="color: #005aab; cursor: pointer;">发票说明</span></p>
           </div>
           <span style="font-size:13px; margin-right: 43px;">发票内容</span>
           <div class="mingxi">发票明细</div>
@@ -738,6 +738,11 @@
       var that = this;
     },
     methods: {
+      // 查看发票说明
+      seeTax: function() {
+        var that = this
+        window.open('/protocols/invoiceDes')
+      },
       // 修改发票信息
       editTax: function() {
         var that = this

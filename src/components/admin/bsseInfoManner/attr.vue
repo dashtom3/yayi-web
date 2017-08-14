@@ -293,7 +293,7 @@
                 that.formData.addGoodAttrName= null;
                 that.showAddGoodAttr  = false;
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                that.$message.error(res.data.msg);
               }
             })
           }else{
@@ -317,7 +317,7 @@
                 that.showAddGoodAttr = false;
                 that.getGoodAttrList();
               } else {
-                that.$message.error('网络出错，请稍后再试！');
+                that.$message.error(res.data.msg);
               }
             })
           }else{

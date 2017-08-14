@@ -115,7 +115,11 @@
     color: #fff;
     cursor: default;
   }
-  .el-radio__input.is-checked .el-radio__inner, .el-button--primary, .el-checkbox__input.is-checked .el-checkbox__inner{
+  .el-button--primary {
+    border-color: #005aab;
+    background-color: #005aab;
+  }
+  .el-radio__input.is-checked .el-radio__inner, .el-checkbox__input.is-checked .el-checkbox__inner{
     border-color: #005aab !important;
     background-color: #005aab !important;
   }

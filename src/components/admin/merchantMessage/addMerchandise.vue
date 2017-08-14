@@ -48,7 +48,7 @@
         <el-button v-if="chooseShopType" type="primary" @click="chooseType()" :disabled='true'>选择属性</el-button>
         <el-button v-else type="primary" @click="chooseType()">选择属性</el-button>
       </el-form-item>
-      <div class="active_box" v-for="(item,index) in items" :key="item.itemPropertyName">
+      <div class="active_box" v-for="(item,index) in items" :key="item.itemPropertyName" v-show="activeBox">
         <span class="choose_title">{{item.itemPropertyName}}</span>
         <el-button type="primary" @click="removeDes(index)">删除</el-button>
         <div style="margin-top: 15px;">
@@ -125,8 +125,8 @@
         <el-button type="primary" @click="nextToFirst('ruleForm')">下一步</el-button>
       </el-form-item>
       <!-- 选择属性弹出框 开始 -->
-      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible">
-        <el-table ref="multipleTable" :data="tableData2" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-dialog title="选择商品属性" :visible.sync="dialogTableVisible" :before-close="handleClose">
+        <el-table ref="multipleTable" :data="tableData3" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column prop="itemPropertyName" label="属性名称">
@@ -207,6 +207,7 @@
           // ]
         }, //验证规则
         tableData2: [],
+        tableData3: [],
         multipleSelection: [],
         dialogTableVisible: false,
         items: [],
@@ -229,6 +230,7 @@
         currentPage: 1,
         //默认数据总数
         totalCount: 0,
+        activeBox: true,
       }
     },
     components: {
@@ -251,6 +253,7 @@
           that.chooseShopType = true;
           that.active = false;
           that.no_active = true;
+          that.activeBox = false;
         }
       },
       ruleForm: {
@@ -324,7 +327,6 @@
           for (var i = 0; i < that.items.length; i++) {
             that.items[i].itemPropertyName = that.items[i].propertyName
             that.items[i].hasItem = true 
-            //b[i].itempropertydList = b[i].propertyInfoList
             var obj = {
               itemPropertyName: that.items[i].propertyName
             }
@@ -381,11 +383,16 @@
       }
     },
     methods: {
+      // 分页触发
       handleCurrentChange(val) {
         var that = this
         that.currentPage = val
-        that.getAllProperty()
-        // that.search(val)
+        that.getAllProperty(val)
+      },
+      handleClose: function() {
+        var that = this
+        window.sessionStorage.removeItem('chooseItem')
+        that.dialogTableVisible = false
       },
       //获取获取商品编号
       getItemId: function() {
@@ -423,26 +430,42 @@
         })
       },
       //获取商品属性列表
-      getAllProperty: function() {
+      getAllProperty: function(val) {
         var that = this;
-        var obj = {
-          currentPage: that.currentPage,
-          numberPerPage: that.pagesize,
-          // numberPerPage: 500,
-        }
-        that.global.axiosGetReq('/item/queryProperty',obj).then((res) => {
-          if (res.data.callStatus === 'SUCCEED') {
-            that.tableData2 = res.data.data
-            that.totalCount = res.data.totalNumber;
-            for (var i = 0; i < that.tableData2.length; i++) {
-              for(var k in that.tableData2[i].itempropertydList) {
-                that.tableData2[i].itempropertydList[k].checked = false;
-              }
-            }
+        if (val) {
+          if (val == 1) {
+            that.tableData3 = that.tableData2.slice(0,10)
+            window.sessionStorage.setItem('chooseItem', JSON.stringify(that.multipleSelection))
+            // that.multipleSelection.forEach(row => {
+            //   console.log(row,'232323')
+            //   this.$refs.multipleTable.toggleRowSelection(row);
+            // })
           } else {
-            that.$message.error('网络出错，请稍后再试！');
+            let n = val*10 - 10
+            that.tableData3 = that.tableData2.slice(n,n+10)
+            window.sessionStorage.setItem('chooseItem', JSON.stringify(that.multipleSelection))
           }
-        })
+        } else {
+          var obj = {
+            currentPage: that.currentPage,
+            numberPerPage: that.pagesize,
+            numberPerPage: 500,
+          }
+          that.global.axiosGetReq('/item/queryProperty',obj).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') {
+              that.tableData2 = res.data.data
+              that.totalCount = res.data.totalNumber;
+              for (var i = 0; i < that.tableData2.length; i++) {
+                for(var k in that.tableData2[i].itempropertydList) {
+                  that.tableData2[i].itempropertydList[k].checked = false;
+                }
+              }
+              that.tableData3 = that.tableData2.slice(0,10)
+            } else {
+              that.$message.error('网络出错，请稍后再试！');
+            }
+          })
+        }
       },
       //返回商品列表
       retrunList: function() {
@@ -459,18 +482,29 @@
       chooseType: function() {
         var that = this
         that.dialogTableVisible = true
+        that.multipleSelection = []
+        that.currentPage = 1
       },
       //选择属性详细
       handleSelectionChange(val) {
         var that = this
-        that.multipleSelection = val
+        if (JSON.parse(window.sessionStorage.getItem('chooseItem')) !== null) {
+          that.multipleSelection = JSON.parse(window.sessionStorage.getItem('chooseItem'))
+          that.multipleSelection = that.multipleSelection.concat(val)
+        } else {
+          that.multipleSelection = val
+        }
+        // console.log(JSON.parse(window.localStorage.getItem('chooseItem')),'888888')
+        // console.log(that.multipleSelection ,'999999')
       },
       //确定商品属性
       confirm_type: function() {
         var that = this
+        window.sessionStorage.removeItem('chooseItem')
         that.items = that.multipleSelection.slice(0)
         that.multipleSelection.splice(0, that.multipleSelection.length)
         that.dialogTableVisible = false
+        that.activeBox = true
         that.checkAllActive()
       },
       //删除已选属性

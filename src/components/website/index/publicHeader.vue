@@ -1376,7 +1376,7 @@
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 35px;
-    z-index: 1000;
+    z-index: 998;
   }
   .shopping_car .car_img {
     position: absolute;

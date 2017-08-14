@@ -1,10 +1,12 @@
 <template>
   <div class="loading">
-    <div class="container">
+    <div class="container"></div>
+    <div class="container_in">
       <div class="loading">
-        <img class="loading-img" src="../../images/loading/loading1.png"></img>
+        <img class="loading_img" src="../../images/loading/loading1.png"></img>
       </div>
-      <p class="loading-word">拼命加载中......</p>
+      <p class="loading_word">拼命加载中......</p>
+      <div class="loading_container"></div>
     </div>
   </div>
 </template>
@@ -32,9 +34,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #fff;  
-  opacity: 0.8;
+  background-color: #000;  
+  opacity: 0.5;
+  position: absolute;
 } 
+
+.container_in {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  position: relative;
+}
 
 .loading {
   /*background-color: white;*/
@@ -45,7 +58,7 @@
   z-index: 999;
 }
 
-.loading .loading-img {
+.loading_img {
   z-index: 999;
   width: 100px;
   height: 100px;
@@ -61,7 +74,7 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
-.loading-word {
+.loading_word {
   z-index: 999;
   width: 100px;
   height: 20px;
@@ -75,6 +88,14 @@
   margin: auto;
   transform: translateY(50px);
   font-size: 14px;
+}
+.loading_container {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  background-color: #fff;
+  transform: translateY(-50%);
 }
 .loading .loading-img1 {
   z-index: 999;
