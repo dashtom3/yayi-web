@@ -508,7 +508,7 @@
         if (that.showLogin1 == true) {
           that.activeInColor = '#005aab'
         } else {
-          that.activeInColor = '#333'
+          that.activeInColor = '#333333'
         }
       },
       // 注册变色
@@ -517,7 +517,7 @@
         if (that.showLogin3 == true) {
           that.activeOutColor = '#005aab'
         } else {
-          that.activeOutColor = '#333'
+          that.activeOutColor = '#333333'
         }
       },
       msgFromGoodInfo() {
@@ -1357,7 +1357,6 @@
     margin: 0 auto;
     margin-bottom: 22px;
     font-size: 12px;
-    color: #000;
     z-index: 1000;
   }
   .log {
@@ -1393,7 +1392,7 @@
     z-index: 1000;
   }
   .logIn:hover, .register:hover, .my_order:hover, .yayi:hover, .system_enter:hover{
-    color: #005aab;
+    color: #005aab !important;
     cursor: pointer;
     transition: all ease 0.5s;
   }
