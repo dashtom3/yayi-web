@@ -46,7 +46,7 @@
     created:function(){
       var that = this
       that.getMoneyListFn();
-      Bus.$on('getTarget', target => { 
+      Bus.$on('getTarget', target => {
         if (target == 'succeedChange') {
           that.getMoneyListFn()
         } 
