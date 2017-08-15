@@ -8,10 +8,10 @@
             <input class="inputClass" v-model="willBindSale" />
           </div>
           <div v-show="showSearchInfo" class="showSearchInfoClass">
-            <span>真实姓名：{{findSaleName}}</span>
+            <span style="padding-left:14px;">真实姓名：{{findSaleName}}</span>
           </div>
           <div v-show="noSearchSale" class="showSearchInfoClass">
-            <span style="color:#cb1700;">非常抱歉，未找到该客户代表</span>
+            <span style="color:#cb1700;padding-left:14px;">非常抱歉，未找到该客户代表</span>
           </div>
         </el-col>
         <el-col>
@@ -29,7 +29,7 @@
         </p>
         <p class="colorRed">
           <span class="left">温馨提示：</span>
-          <span class="right ">若想重新绑定客户代表，可联系客服021-66065505。</span>
+          <span class="right ">若想重新绑定客户代表，可联系客服400-001-4980。</span>
         </p>
       </div>
     </div>
@@ -140,6 +140,15 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+  .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
+    color: #bfcbd9!important;
+    cursor: not-allowed!important;
+    background-image: none!important;
+    background-color: #eef1f6!important;
+    border-color: #d1dbe5!important;
+  }
+</style>
 <style scoped>
 .searchWrap{
   margin-top:20px;

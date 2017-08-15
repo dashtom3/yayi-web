@@ -22,7 +22,7 @@
           <span v-if="this.postalType === '银行卡'">银行账户：</span>
           <span v-else>支付宝账户：</span>
           <span v-if="this.postalType">{{accountNumber}}</span>
-          <a href="javascript:;" v-else class="noInfo" v-on:click="immediateDoIt()">立即完善</a>
+          <a href="javascript:;" v-else class="noInfo" v-on:click="immediateDoItPay()">立即完善</a>
         </div>
         <div class="btnWrap">
           <el-button class="cashBtn" type="primary" v-on:click="immediateDoIt()">立即完善</el-button>
@@ -235,6 +235,14 @@
       immediateDoIt:function(){
         var that = this;
         that.$emit('msgFromChild','editMyPersData');
+      },
+      immediateDoItPay:function(){
+        var that = this;
+        var editMyPersPay = {
+          isActive: true,
+          flag: 'editMyPersPay',
+        }
+        that.$emit('msgFromChild',editMyPersPay);
       },
       cash:function(){
         var that = this;

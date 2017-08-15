@@ -174,7 +174,7 @@
   import util from '../../../common/util'
   export default {
     name: 'personalData',
-    props: ['toEditDraw'],
+    props: ['toEditDraw','toEditPay'],
     data () {
       return {
         options: [{
@@ -237,7 +237,7 @@
         return this.personalData.part && this.personalData.part.join('/')
       },
       sexShow: function(){
-        return this.personalData.sex === 2 ? '女' : '男'
+        return this.personalData.sex && this.personalData.sex.toString() === '2' ? '女' : '男'
       },
       birthDay: function(){
         return new Date(this.personalData.birthday).getFullYear() + '-' + this.fillZero((new Date(this.personalData.birthday).getMonth() + 1)) + '-' + this.fillZero(new Date(this.personalData.birthday).getDate())
@@ -257,6 +257,9 @@
       })
       //钱包未设置提现方式跳转过来的状态
       if(this.toEditDraw && this.toEditDraw.isActive){
+        this.changShowPane(2)
+      }
+      if(this.toEditPay && this.toEditPay.isActive){
         this.changShowPane(2)
       }
       this.queryPersonInfo()
@@ -290,11 +293,11 @@
             this.personalData.birthday = res.data.data.birthday && res.data.data.birthday || new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
             this.personalData.sex = res.data.data.sex && res.data.data.sex.toString() || '1'
             this.personalData.postalType = res.data.data.postalType
-            if(this.personalData.postalType){
-              this.getMoneySet = true
-            }
             if(this.personalData.trueName){
               this.showDefaultData = true
+            }
+            if(this.personalData.postalType){
+              this.getMoneySet = true
             }
           }
         })
@@ -331,7 +334,6 @@
               }
             }) 
           } else {
-            this.$alert('请填写完整的信息');
             return false;
           }
         });

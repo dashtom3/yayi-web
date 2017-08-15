@@ -16,7 +16,7 @@
         </div>
         <!-- 点击导航后要切换的内容 -->
         <transition name="component-fade" mode="out-in">
-            <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :toEditDraw="dataValue1" :is="currentView"
+            <component v-on:msgFromChild="getMsg" :toMySon="dataValue" :toEditPay="dataValue2" :toEditDraw="dataValue1" :is="currentView"
                        keep-alive></component>
         </transition>
         <div class="clearfix"></div>
@@ -58,7 +58,8 @@
         tab07Text: "tab07",
         currentView: 'tab01', //默认选中的导航栏
         dataValue: null,
-        dataValue1: null
+        dataValue1: null,
+        dataValue2: null
       }
     },
     components: {
@@ -104,6 +105,9 @@
         } else if (data == "editMyPersData") {
           that.changeActive6(that.tab06Text);
           that.dataValue = '';
+        } else if (data.flag == "editMyPersPay") {
+          that.changeActive6(that.tab06Text);
+          that.dataValue2 = data;
         } else if (data.myMoney == 'getMyMoney') {
           that.changeActive5(that.tab05Text);
           that.dataValue = data;
