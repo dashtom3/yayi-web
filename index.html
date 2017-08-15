@@ -6,57 +6,10 @@
     <meta name="viewport" content="width=1200"/>
     <link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.2.6/quill.js"></script>
-<!--   <script src=https://cdn.bootcss.com/jquery/2.0.0/jquery.js></script>
-  <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script> -->
     <title>牙医abc</title>
   </head>
   <body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-<!-- <script>
-    $.ajax({
-        url: 'http://47.93.48.111:8080/api/weixin/share',// 此处url请求地址需要替换成你自己实际项目中服务器数字签名服务地址
-        type: 'post',
-        data: {
-            url: location.href.split('#')[0] // 将当前URL地址上传至服务器用于产生数字签名
-        }
-    }).done(function (res) {
-      console.log(location.href.split('#')[0],'url')
-      var r = res.data
-        // 开始配置微信JS-SDK
-        wx.config({
-            debug: true,
-            appId: r.appId,
-            timestamp: r.timestamp,
-            nonceStr: r.nonceStr,
-            signature: r.signature,
-            jsApiList: [
-                'checkJsApi',
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'hideMenuItems',
-                'chooseImage'
-            ]
-        });
-        wx.ready(function () {
-            var sdata = {
-                title: '绑定客户',
-                desc: '牙医ABC客户绑定',
-                link: 'http://www.yayiabc.com',
-                imgUrl: 'http://orl5769dk.bkt.clouddn.com/Ftxjpn0G0EHfTqYn8mtsZ_JSoSoz?imageView2/1/w/200/h/200',
-                success: function () {
-                    alert('分享成功 :)');
-                },
-                cancel: function () {
-                    alert('分享出错 :(');
-                }
-            };
-            wx.onMenuShareTimeline(sdata);
-            wx.onMenuShareAppMessage(sdata);
-        });
-    })
-</script> -->
   </body>
 </html>
