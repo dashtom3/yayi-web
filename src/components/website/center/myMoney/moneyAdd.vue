@@ -4,7 +4,9 @@
       <div class="payForm">
         <div class="oneLine">
           <span>充值金额：</span>
-          <span><input v-model="payMuch" type="text" class="payMuch"></span>
+          <span>
+            <el-input v-model="payMuch" class="payMuch"></el-input>
+          </span>
           <span v-if="payMuchErrMsg" class="errMsg">{{payMuchErrMsg}}</span>
         </div>
         <div>
@@ -222,7 +224,9 @@ margin: auto;
   width: 200px;
 }
 .myMoneyAddWrap .payForm div{
-  margin-bottom: 40px;
+  height: 36px;
+  line-height: 36px;
+  margin-bottom: 36px;
 }
 .myMoneyAddWrap .payForm div span:nth-child(1){
   margin-right: 18px;

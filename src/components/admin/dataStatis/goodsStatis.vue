@@ -29,6 +29,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="下单时间" class="fl">
+          <el-date-picker
+            v-model="dateVal"
+            type="daterange"
+            @change="dateHandler"
+            placeholder="选择日期范围">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item class="fl">
           <el-button type="primary" @click="queryHandler">查询</el-button>
         </el-form-item>
@@ -68,6 +76,7 @@
 
 <script>
   import global from '../../global/global'
+  import util from '../../../common/util'
   export default {
     data() {
       return {
@@ -95,14 +104,31 @@
           label1: '全部'
         }],
         sel_input: '',
-        goodsList: []
+        goodsList: [],
+        dateVal: [new Date(new Date().setDate(1)), new Date()],
+        startDate: '',
+        endDate: ''
       }
     },
     created(){
-      this.queryHandler()
+      this.startDate = util.formatDate.format(new Date(this.dateVal[0]));
+      this.endDate = util.formatDate.format(new Date(this.dateVal[1].getTime() + 3600 * 1000 * 24));
       this.queryBrand()//查询所有品牌
+      this.queryHandler()
     },
     methods: {
+      dateHandler(val){
+        var that = this
+        //时间查询条件
+        if(that.dateVal && that.dateVal[0]){
+          this.startDate = util.formatDate.format(new Date(that.dateVal[0]));
+          //结束时间默认为当日0点，往后推迟24小时
+          this.endDate = util.formatDate.format(new Date(that.dateVal[1].getTime() + 3600 * 1000 * 24)); 
+        }else{
+          this.startDate = '';
+          this.endDate = '';  
+        }
+      },
       sortRefundHandler({ prop }){
         if(prop === "sales"){
           this.state = "1"
@@ -152,6 +178,8 @@
             itemName: this.sel_input,
             itemId: '',
             itemSKU: '',
+            startDate: this.startDate,
+            endDate: this.endDate,
             itemBrandName: this.brandName,
             currentPage: this.currentPage,
             numberPerPage: this.pagesize,
@@ -163,6 +191,8 @@
             itemName: '',
             itemId: this.sel_input,
             itemSKU: '',
+            startDate: this.startDate,
+            endDate: this.endDate,
             itemBrandName: this.brandName,
             currentPage: this.currentPage,
             numberPerPage: this.pagesize,
@@ -173,6 +203,8 @@
             state: this.state,
             itemName: '',
             itemId: '',
+            startDate: this.startDate,
+            endDate: this.endDate,
             itemSKU: this.sel_input,
             itemBrandName: this.brandName,
             currentPage: this.currentPage,
