@@ -1,5 +1,5 @@
 <template>
-	<el-row class="warp">
+	<el-row class="warp" v-if="accountP">
 		<el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><b>操作日志</b></el-breadcrumb-item>
@@ -53,6 +53,14 @@
       </el-pagination>
     </div>
 	</el-row>
+  <el-row class="warp" v-else>
+    <el-col :span="24" class="warp-breadcrum">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item><b>操作日志</b></el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-col>
+    <div>权限不足</div>
+  </el-row>
 </template>
 
 <script>
@@ -78,10 +86,18 @@
         systemName: '1',
         phone: '',
         optContent: '',
-        optList: []
+        optList: [],
+        accountP: false
       }
     },
     created(){
+      var that = this
+      let accountType = window.sessionStorage.getItem('accountType')
+      if( accountType == 2 ){
+        that.accountP = true
+      } else {
+        that.accountP = false
+      }
       this.queryHandler()
     },
     methods: {
