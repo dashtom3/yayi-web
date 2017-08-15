@@ -218,7 +218,7 @@
         }
       },
       ert:function(msg){
-        if(this.certificateState==1 && this.certiData.judge===0){
+        if(this.certificateState==1 && (this.certiData.judge===0 || this.certiData.judge===null)){
           this.$confirm('您的认证信息我们会尽快审核，请耐心等待~',{
             confirmButtonText: '确定',
             type: 'warning',
