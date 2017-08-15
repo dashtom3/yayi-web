@@ -36,6 +36,7 @@
   import myWallet from "./myWallet"
   import saleCharts from "./saleCharts"
   import messafe from "./saleCharts"
+  import Bus from '../../global/bus.js'
 
   export default {
     name: 'salesIndex',
@@ -77,15 +78,20 @@
     //   // 通过 `vm` 访问组件实例
     //   next(vm => {
     //     var that = vm;
-    //     that.global.axiosPostReq('/findCus/registered').then((res) => {
-    //       if(res.data.errorCode === 'RE_LOGIN'){
-    //         that.$router.push({path:'/salesLog'})
-    //         that.$message.error('登陆过期，请重新登录！')
-    //         return false;
-    //       }
-    //     })
+    //     console.log(that,'0000')
     //   })
     // },
+    created: function() {
+      var that = this
+      Bus.$on('getTarget', target => { 
+        console.log(target)
+        if (target == 'noSee') {
+          that.changeActive1(that.tab01Text);
+        }else if (target == 'nowComplete') {
+          that.changeActive6(that.tab06Text);
+        }
+      });  
+    },
     methods: {
       getMsg: function (data) {
         var that = this;

@@ -176,12 +176,20 @@
           </div>
       </div>
     </el-dialog>
+  <el-dialog title="" :visible.sync="dialogVisibleInit" size="tiny" :before-close="handleClose">
+    <span>您好，您查看的相关个人销售数据需要完善个人资料～</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="nowComplete">立即完善</el-button>
+      <el-button @click="noSee">暂时不看</el-button>
+    </span>
+  </el-dialog>
 	</el-row> 
 </template>
 
 <script>
   import global from '../../global/global'
   import util from '../../../common/util'
+  import Bus from '../../global/bus.js'
   export default {
     data(){
       var checkAmt = (rule, value, callback) => {
@@ -258,12 +266,21 @@
           actualAmt: 0,
           income: 0
         }],
-        outDetail: []
+        outDetail: [],
+        dialogVisibleInit: false
       }
     },
     props: ['toMySon'],
     created: function() {
-      var that = this;
+      var that = this
+      var getSalesUser = that.global.getSalesUser()
+      var trueName = getSalesUser.trueName
+      var sex = getSalesUser.sex
+      var idCard = getSalesUser.idCard
+      var weChar = getSalesUser.weChar
+      if (trueName==null||sex==null||idCard==null||weChar==null) {
+        that.dialogVisibleInit = true
+      }
       if (that.toMySon.isActive == true) {
         that.withDrawBank = that.toMySon.isActive
       }
@@ -272,6 +289,22 @@
       this.getBalance();
     },
     methods: {
+      // dialog关闭
+      handleClose: function() {
+        var that = this
+        that.dialogVisibleInit = false
+        Bus.$emit('getTarget', 'noSee');
+      },
+      // 立即完善
+      nowComplete: function() {
+        var that = this
+        Bus.$emit('getTarget', 'nowComplete');
+      },
+      // 暂时不看
+      noSee: function() {
+        var that = this
+        Bus.$emit('getTarget', 'noSee');
+      },
       // 检查提现金额是否合法
       isAmt: function(str) {
         var reg = /^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/;

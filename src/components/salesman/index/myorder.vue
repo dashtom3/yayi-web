@@ -26,12 +26,20 @@
         :total="totalCount">
       </el-pagination>
     </div>
+  <el-dialog title="" :visible.sync="dialogVisibleInit" size="tiny" :before-close="handleClose">
+    <span>您好，您查看的相关个人销售数据需要完善个人资料～</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="nowComplete">立即完善</el-button>
+      <el-button @click="noSee">暂时不看</el-button>
+    </span>
+  </el-dialog>
 	</el-row> 
 </template>
 
 <script>
 import dataTable from './dataTable'
 import global from '../../global/global'
+import Bus from '../../global/bus.js'
 export default {
   data() {
     return {
@@ -61,10 +69,19 @@ export default {
         orderNum: 0,
         myOrderVoList: []
       },
-      echartData: []
+      echartData: [],
+      dialogVisibleInit: false
     }
   },
   created(){
+    var that = this
+    var trueName = that.global.getSalesUser().trueName
+    var sex = that.global.getSalesUser().sex
+    var idCard = that.global.getSalesUser().idCard
+    var weChar = that.global.getSalesUser().weChar
+    if (trueName==null||sex==null||idCard==null||weChar==null) {
+      that.dialogVisibleInit = true
+    }
     this.init()
     this.echartPic()
     this.queryOrderList()
@@ -79,6 +96,22 @@ export default {
     dataTable
   },
   methods: {
+    // dialog关闭
+    handleClose: function() {
+      var that = this
+      that.dialogVisibleInit = false
+      Bus.$emit('getTarget', 'noSee');
+    },
+    // 立即完善
+    nowComplete: function() {
+      var that = this
+      Bus.$emit('getTarget', 'nowComplete');
+    },
+    // 暂时不看
+    noSee: function() {
+      var that = this
+      Bus.$emit('getTarget', 'noSee');
+    },
     handleCurrentChange(val) {
       this.currentPage = val 
       this.init(val)

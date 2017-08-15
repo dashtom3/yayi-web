@@ -81,10 +81,18 @@
         </div>
       </div>
     </div>
+    <el-dialog title="" :visible.sync="dialogVisibleInit" size="tiny" :before-close="handleClose">
+      <span>您好，您查看的相关个人销售数据需要完善个人资料～</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="nowComplete">立即完善</el-button>
+        <el-button @click="noSee">暂时不看</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import Bus from '../../global/bus.js'
   export default {
     name: 'findClient',
     data () {
@@ -100,14 +108,38 @@
         pagesizeed: 10,
         currentPageed: 1,
         totalCounted: 1,
+        dialogVisibleInit: false,
       }
     },
     created: function() {
       var that = this;
+      var trueName = that.global.getSalesUser().trueName
+      var sex = that.global.getSalesUser().sex
+      var idCard = that.global.getSalesUser().idCard
+      var weChar = that.global.getSalesUser().weChar
+      if (trueName==null||sex==null||idCard==null||weChar==null) {
+        that.dialogVisibleInit = true
+      }
       that.getWaitBindUserList();
       that.getNoRegistUserList();
     },
     methods: {
+      // dialog关闭
+      handleClose: function() {
+        var that = this
+        that.dialogVisibleInit = false
+        Bus.$emit('getTarget', 'noSee');
+      },
+      // 立即完善
+      nowComplete: function() {
+        var that = this
+        Bus.$emit('getTarget', 'nowComplete');
+      },
+      // 暂时不看
+      noSee: function() {
+        var that = this
+        Bus.$emit('getTarget', 'noSee');
+      },
       handleCurrentChange(val) {
         this.currentPage = val 
         this.getNoRegistUserList(val)

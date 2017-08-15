@@ -284,6 +284,7 @@
         }
         global.axiosGetReq('/saleInfo/query',params).then((res) => {
           if(res.data.callStatus === 'SUCCEED'){
+            this.global.setSalesUser(res.data.data)
             this.personalData = res.data.data
             this.personalData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
             this.personalData.birthday = res.data.data.birthday && res.data.data.birthday || new Date().getFullYear()+ '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()

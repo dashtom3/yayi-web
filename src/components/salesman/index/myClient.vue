@@ -28,10 +28,18 @@
         <el-table-column align="center"  prop="bindSaleTime" label="绑定时间" sortable  width="200"></el-table-column>
       </el-table>
     </div>
+  <el-dialog title="" :visible.sync="dialogVisibleInit" size="tiny" :before-close="handleClose">
+    <span>您好，您查看的相关个人销售数据需要完善个人资料～</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="nowComplete">立即完善</el-button>
+      <el-button @click="noSee">暂时不看</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
 <script>
+  import Bus from '../../global/bus.js'
   export default {
     name: 'myClient',
     data () {
@@ -40,17 +48,41 @@
         searchData:null,
         tableData:[
           // {userName:"dfaf",userPhone:'213414',company:"123553",place:"25235",orderCount:'143',spendMoney:'121',orderTime:'2017-11-11 1:00',bindTime:'2017-11-16 2:00'},
-        ]
+        ],
+        dialogVisibleInit: false
       }
     },
     components: {
 
     },
     created: function() {
-      var that = this;
+      var that = this
+      var trueName = that.global.getSalesUser().trueName
+      var sex = that.global.getSalesUser().sex
+      var idCard = that.global.getSalesUser().idCard
+      var weChar = that.global.getSalesUser().weChar
+      if (trueName==null||sex==null||idCard==null||weChar==null) {
+        that.dialogVisibleInit = true
+      }
       that.getMyClientList();
     },
     methods: {
+      // dialog关闭
+      handleClose: function() {
+        var that = this
+        that.dialogVisibleInit = false
+        Bus.$emit('getTarget', 'noSee');
+      },
+      // 立即完善
+      nowComplete: function() {
+        var that = this
+        Bus.$emit('getTarget', 'nowComplete');
+      },
+      // 暂时不看
+      noSee: function() {
+        var that = this
+        Bus.$emit('getTarget', 'noSee');
+      },
       getMyClientList:function(){
         var that = this;
         var obj = {
