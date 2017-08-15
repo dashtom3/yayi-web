@@ -14,6 +14,7 @@
   * {
     padding: 0;
     margin: 0;
+    font-family: "Microsoft YaHei" !important;
   }
   #app {
     font-family: "Microsoft YaHei" !important;
@@ -21,16 +22,13 @@
     -moz-osx-font-smoothing: grayscale;
     color: #333;
   }
-
   .clearfix {
     clear: both;
   }
-
   a {
     text-decoration: none;
     color: #83868E;
   }
-
   ul {
     list-style-type: none;
   }
@@ -39,6 +37,9 @@
     outline: none;
     border: none;
     list-style-type:none;
+    font-family: "Microsoft YaHei" !important;
+  }
+  input,p{
     font-family: "Microsoft YaHei" !important;
   }
   /*过渡动画开始*/
@@ -123,9 +124,6 @@
   .el-radio__input.is-checked .el-radio__inner, .el-checkbox__input.is-checked .el-checkbox__inner{
     border-color: #005aab !important;
     background-color: #005aab !important;
-  }
-  .el-button{
-    font-family: "Microsoft YaHei"!important;
   }
   .el-button--primary:hover {
     background: #329af0 !important;
