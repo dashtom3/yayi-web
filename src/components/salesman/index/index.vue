@@ -84,11 +84,12 @@
     // },
     created: function() {
       var that = this
-      Bus.$on('getTarget', target => { 
+      Bus.$on('getTarget', target => {
         if (target == 'noSee') {
           that.changeActive1(that.tab01Text);
         }else if (target == 'nowComplete') {
           that.changeActive6(that.tab06Text);
+          that.dataValue = '';
         }
       });  
     },

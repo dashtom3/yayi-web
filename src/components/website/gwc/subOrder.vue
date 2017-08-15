@@ -1240,7 +1240,8 @@
               that.setDefault = false;
               that.$message('保存地址成功！');
              // that.getMyAdd();
-               that.getAdd();
+              that.getAdd();
+              that.getMyAdd();
               that.editAddVisible = false;
             } else {
               that.$message.error('保存地址失败！');
@@ -1285,7 +1286,7 @@
               that.form.mobile = '';
               that.setDefault = false;
               that.$message('修改地址成功！');
-              //that.getMyAdd();
+              that.getMyAdd();
               that.getAdd();
               that.editAddVisible = false;
             } else {

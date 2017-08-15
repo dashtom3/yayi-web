@@ -699,13 +699,13 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.global.setSalesToken(res.data.token)
             that.global.setSalesUser(res.data.data)
+            that.$router.push({path: '/salesIndex'});
             that.$message({
               message: '登录成功！',
               type: 'success'
             });
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
-            that.$router.push({path: '/salesIndex'});
           } else {
             that.$message.error(res.data.msg);
           }
@@ -798,6 +798,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.global.setSalesToken(res.data.token)
             that.global.setSalesUser(res.data.data)
+            that.$router.push({path: '/salesIndex'});
             that.$message({
               message: '注册成功！',
               type: 'success'
@@ -809,7 +810,6 @@
             that.rg_code = '';
             that.rg_confirmPwd = '';
             that.agree = false;
-            that.$router.push({path: '/salesIndex'});
           } else {
             that.$message.error(res.data.msg);
           }

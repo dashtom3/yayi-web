@@ -348,6 +348,10 @@
       },
       changShowPane:function(arg){
         this.showPane = arg;
+        this.toEditPay.flag = ''
+        this.toEditPay.isActive = false
+        this.toEditDraw.flag = ''
+        this.toEditDraw.isActive = false
       },
       positionFromPicker:function(data){
         var that = this;
