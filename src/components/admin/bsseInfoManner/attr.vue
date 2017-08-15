@@ -292,6 +292,8 @@
                 that.addGoodAttrValues = [];
                 that.formData.addGoodAttrName= null;
                 that.showAddGoodAttr  = false;
+                that.getGoodAttrList();
+                that.currentPage = 1
               } else {
                 that.$message.error(res.data.msg);
               }
