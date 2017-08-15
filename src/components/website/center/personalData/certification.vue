@@ -133,7 +133,7 @@
         global.axiosGetReq('/userPersonalInfo/detail', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') { 
             this.certiData.companyName = res.data.data.companyName
-            this.certiData.type = res.data.data.type && res.data.data.type.toString()
+            this.certiData.type = res.data.data.type && res.data.data.type.toString() || '1'
             this.certiData.part = res.data.data.part && res.data.data.part.split(',') || ['北京','北京市','东城区']
             this.certiData.workAddress = res.data.data.workAddress
             this.certiData.doctorPic = res.data.data.doctorPic

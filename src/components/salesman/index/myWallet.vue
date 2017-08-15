@@ -281,12 +281,10 @@
       if (trueName==null||sex==null||idCard==null||weChar==null) {
         that.dialogVisibleInit = true
       }
-      if (that.toMySon.isActive == true) {
-        that.withDrawBank = that.toMySon.isActive
-      }
       that.queryInfo();
       that.getMyWallet();
       this.getBalance();
+      
     },
     methods: {
       // dialog关闭
@@ -383,6 +381,9 @@
             this.trueName = res.data.data.trueName
             this.bankName = res.data.data.bankName
             this.bankNo = res.data.data.accountNumber
+          }
+          if(this.toMySon.isActive == true){
+            this.withDrawHandler()
           }
         })
       },
@@ -494,7 +495,8 @@
           this.withDrawBank = true
         }else if(this.postalType === null){
           this.withDrawSets = true
-        }       
+          this.withDrawBank = false
+        }      
       },
       //申请提现
       applyHandler(formName){

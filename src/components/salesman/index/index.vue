@@ -85,7 +85,6 @@
     created: function() {
       var that = this
       Bus.$on('getTarget', target => { 
-        console.log(target)
         if (target == 'noSee') {
           that.changeActive1(that.tab01Text);
         }else if (target == 'nowComplete') {
