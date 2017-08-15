@@ -58,7 +58,26 @@
       </el-pagination>
       <!-- 分页 -->
     </div>
+    <!-- 发票详情 -->
+      <el-dialog  title="发票详情" :visible.sync="lookAtFaPiaoWrap" size="tiny" >
+        <ul v-if="thisOrderInvoice" class="invoiceDetails">
+          <li v-if="thisOrderInvoice.invoiceStyle"><span>发票类型：</span><span>{{thisOrderInvoice.invoiceStyle==1?"增值税发票":"普通发票"}}</span></li>
+          <li v-if="thisOrderInvoice.invoiceState"><span>发票性质：</span><span>{{thisOrderInvoice.invoiceState==0?"个人":"公司"}}</span></li>
+          <li v-if="thisOrderInvoice.companyName"><span>{{thisOrderInvoice.invoiceState==0?"发票抬头":"发票抬头"}}：</span><span>{{thisOrderInvoice.companyName}}</span></li>
+          <li v-if="thisOrderInvoice.taxpayerNum"><span>纳税人识别号：</span><span>{{thisOrderInvoice.taxpayerNum}}</span></li>
 
+          <li v-if="thisOrderInvoice.registeredAddress"><span>注册地址：</span><span>{{thisOrderInvoice.registeredAddress}}</span></li>
+          <li v-if="thisOrderInvoice.registeredPhone"><span>注册电话：</span><span>{{thisOrderInvoice.registeredPhone}}</span></li>
+          <li v-if="thisOrderInvoice.opneBank"><span>开户银行：</span><span>{{thisOrderInvoice.opneBank}}</span></li>
+          <li v-if="thisOrderInvoice.bankNumber"><span>银行帐号：</span><span>{{thisOrderInvoice.bankNumber}}</span></li>
+          <li v-if="thisOrderInvoice.stickNanme"><span>收票人姓名：</span><span>{{thisOrderInvoice.stickNanme}}</span></li>
+          <li v-if="thisOrderInvoice.stickPhone"><span>收票人手机号：</span><span>{{thisOrderInvoice.stickPhone}}</span></li>
+          <li v-if="thisOrderInvoice.stickaddress"><span>收票人地址：</span><span>{{thisOrderInvoice.stickaddress}}</span></li>
+        </ul>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="lookAtFaPiaoWrap = false">关 闭</el-button>
+        </span>
+      </el-dialog>
 <el-dialog title="订单详情" :visible.sync="dialogVisibleToOrderDetails" size="tiny" custom-class="orderDetails" >
   <div v-if="nowOrderDetails.receiver">
     <p>收货信息</p>
@@ -113,12 +132,41 @@
       </div>
     </div>
   </div>
-  <div class="" v-if="nowOrderDetails.buyerMessage">
-    <p>订单留言：</p>
-    <p>{{nowOrderDetails.buyerMessage}}</p>
+  <div>
+    <p>
+      <span class="tipsTitle">支付方式</span>
+      <span class="tipsContent" v-if="nowOrderDetails.payType === 0">支付宝方式</span>
+      <span class="tipsContent" v-else-if="nowOrderDetails.payType === 1">微信方式</span>
+      <span class="tipsContent" v-else-if="nowOrderDetails.payType === 3">乾币支付</span>
+      <span class="tipsContent" v-else>无</span>
+    </p>
   </div>
-  <div class="">
-    <p>本单赠送乾币：<span style="color:#d8qe06;font-weight:600">{{nowOrderDetails.giveQb?nowOrderDetails.giveQb:0}}</span></p>
+  <div>
+    <p>
+      <span class="tipsTitle">发票</span>
+      <el-button @click="lookInvoiceHandler(nowOrderDetails.orderId)" v-if="nowOrderDetails.invoiceHand === '1'">查看发票信息</el-button>
+      <span class="tipsContent" v-if="nowOrderDetails.invoiceHand === '0'">不申请发票</span>
+    </p>
+  </div>
+  <div>
+    <p>
+      <span class="tipsTitle">产品注册证</span>
+      <span class="tipsContent" v-if="nowOrderDetails.isRegister === 0">不需要产品注册证</span>
+      <span class="tipsContent" v-if="nowOrderDetails.isRegister === 1">需要产品注册证</span>
+    </p>
+  </div>
+  <div>
+    <p>
+      <span class="tipsTitle">订单留言</span>
+      <span class="tipsContent" v-if="nowOrderDetails.buyerMessage">{{nowOrderDetails.buyerMessage}}</span>
+      <span class="tipsContent" v-else>无</span>
+    </p>
+  </div>
+  <div>
+    <p>
+      <span class="tipsTitle">本单赠送乾币</span>
+      <span class="tipsContent">{{nowOrderDetails.giveQb?nowOrderDetails.giveQb:0}}</span>
+    </p>
   </div>
   <div class="closeBtn" @click="dialogVisibleToOrderDetails=false">关闭</div>
 </el-dialog>
@@ -171,12 +219,14 @@
     name: 'waitRec',
     data () {
       return {
+        thisOrderInvoice: {},
+        lookAtFaPiaoWrap: false,
         //默认每页数据量
         pagesize: 10,
         //当前页码
         currentPage: 1,
         //默认数据总数
-        totalCount: 1000,
+        totalCount: 1,
         wuliuxinxi:false,
         pageProps:null,
         items: [],
@@ -200,6 +250,19 @@
       that.getAllOrder();
     },
     methods: {
+      lookInvoiceHandler(data){
+        var that = this
+        var params = {
+          orderId: data
+        }
+        that.global.axiosPostReq('/OrderDetails/queryOrderInvoice',params)
+        .then((res) => {
+          if (res.data.callStatus === 'SUCCEED') {
+            this.thisOrderInvoice = res.data.data
+            this.lookAtFaPiaoWrap = true
+          }
+        })
+      },
       handleCurrentChange(val) {
         var that = this
         that.currentPage = val
@@ -359,6 +422,13 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.tipsTitle{
+  display: inline-block;
+  width: 100px;
+}
+.tipsContent{
+  font-weight: normal;
+}
 .waitRec{
   margin-top: 30px;
 }

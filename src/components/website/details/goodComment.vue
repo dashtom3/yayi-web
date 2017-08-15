@@ -65,6 +65,7 @@ import global from '../../global/global'
   width:1200px;
   word-break: break-all;
   margin-top: 10px;
+  box-sizing: border-box;
 }
 .commentReplay .sjhf{
   display: block;

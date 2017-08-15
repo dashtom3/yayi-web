@@ -147,7 +147,7 @@
           <span class="tipsTitle">支付方式</span>
           <span class="tipsContent" v-if="nowOrderDetails.payType === 0">支付宝方式</span>
           <span class="tipsContent" v-else-if="nowOrderDetails.payType === 1">微信方式</span>
-          <span class="tipsContent" v-else-if="nowOrderDetails.payType === 2">乾币抵扣</span>
+          <span class="tipsContent" v-else-if="nowOrderDetails.payType === 3">乾币支付</span>
           <span class="tipsContent" v-else>无</span>
         </p>
       </div>
