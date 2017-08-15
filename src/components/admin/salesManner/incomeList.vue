@@ -68,7 +68,7 @@
   border-top: 1px solid #eaeaea;
   border-right: 1px solid #eaeaea;
   border-left: 1px solid #eaeaea;
-  color: #5DB7E7 !important;
+  color: #005aab !important;
 }
 .tab_box {
   width: 100%;
@@ -89,6 +89,6 @@
   cursor: pointer;
   background-color: #fff;
   transition: all ease 0.5s;
-  color: #5DB7E7;
+  color: #005aab;
 }
 </style>

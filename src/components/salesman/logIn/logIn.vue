@@ -1254,7 +1254,7 @@
 
     .rg_alrHave:hover {
         cursor: pointer;
-        color: #5DB7E7;
+        color: #005aab;
         transition: all ease 0.5s;
     }
 
@@ -1263,13 +1263,13 @@
     }
 
     .rg_logIn:hover {
-        color: #5DB7E7;
+        color: #005aab;
         cursor: pointer;
         /*    transition: all ease 0.5s;*/
     }
 
     .alreadyLog:hover {
-        color: #5DB7E7;
+        color: #005aab;
         cursor: pointer;
         transition: all ease 0.5s;
     }
@@ -1283,7 +1283,7 @@
     }
 
     .logOut:hover {
-        color: #5DB7E7;
+        color: #005aab;
         cursor: pointer;
         transition: all ease 0.5s;
     }
