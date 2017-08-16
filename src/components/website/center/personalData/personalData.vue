@@ -19,7 +19,7 @@
             <el-input :disabled="true" v-model="personData.phone"></el-input>
           </el-form-item>
           <el-form-item label="真实姓名：">
-            <el-input v-model="personData.trueName"></el-input>
+            <el-input v-model.trim="personData.trueName"></el-input>
             <transition name="shake">
               <p v-show="trueName_validate" class="error">请输入真实的姓名</p>
             </transition>
@@ -40,8 +40,11 @@
               <p v-show="birthDay_validate" class="error">请选择您的生日</p>
             </transition>
           </el-form-item>
-          <el-form-item label="qq：">
-            <el-input v-model="personData.qq"></el-input>
+          <el-form-item label="QQ：">
+            <el-input v-model.trim="personData.qq"></el-input>
+            <transition name="shake">
+              <p v-show="qq_validate" class="error">请输入正确的QQ号</p>
+            </transition>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="savePerInfo">保存</el-button>
@@ -61,6 +64,7 @@
         currentTabs:1,
         trueName_validate: false,
         birthDay_validate: false,
+        qq_validate: false,
         imageUrl: '',
         qiNiuToken: null,
         qiNiuUrl: global.qiNiuUrl,
@@ -94,6 +98,9 @@
           }
           if(this.personData.birthday){
             this.birthDay_validate = false
+          }
+          if(this.personData.qq){
+            this.qq_validate = false
           }
         },
         deep: true
@@ -138,6 +145,11 @@
         //验证生日必输
         if(!this.personData.birthday){
           this.birthDay_validate = true;
+          return false;
+        }
+        //验证QQ
+        if(!/^[1-9][0-9]{4,10}$/.test(this.personData.qq)){
+          this.qq_validate = true;
           return false;
         }
         //保存个人信息

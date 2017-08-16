@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="单位名称：">
-          <el-input v-model="certiData.companyName" :disabled="ifPass"></el-input>
+          <el-input v-model.trim="certiData.companyName" :disabled="ifPass"></el-input>
           <transition name="shake">
             <p v-show="companyName_validate" class="error">请输入真实的单位名称</p>
           </transition>
@@ -21,7 +21,7 @@
           </template>
         </el-form-item>
         <el-form-item label="详细地址：">
-          <el-input v-model="certiData.workAddress" :disabled="ifPass"></el-input>
+          <el-input v-model.trim="certiData.workAddress" :disabled="ifPass"></el-input>
         </el-form-item>
         <el-form-item :label="sczgz">
           <el-upload

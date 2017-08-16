@@ -69,7 +69,7 @@
                 <el-input v-model="personalData.phone" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item label="真实姓名：" prop="trueName">
-                <el-input v-model="personalData.trueName"></el-input>
+                <el-input v-model.trim="personalData.trueName"></el-input>
               </el-form-item>
               <el-form-item label="性别：" prop="sex">
                 <el-radio-group v-model="personalData.sex">
@@ -78,31 +78,31 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="身份证号：" prop="idCard">
-                <el-input v-model="personalData.idCard"></el-input>
+                <el-input v-model.trim="personalData.idCard"></el-input>
               </el-form-item>
               <el-form-item label="微信号：" prop="weChar">
-                <el-input v-model="personalData.weChar"></el-input>
+                <el-input v-model.trim="personalData.weChar"></el-input>
               </el-form-item>
               <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="personalData.email"></el-input>
+                <el-input v-model.trim="personalData.email"></el-input>
               </el-form-item>
               <el-form-item label="出生日期：" prop="birthday">
                 <el-date-picker type="date" placeholder="选择日期" v-model="personalData.birthday" style="width: 100%;"></el-date-picker>
               </el-form-item>
               <el-form-item label="学历：" prop="education">
-                <el-input v-model="personalData.education"></el-input>
+                <el-input v-model.trim="personalData.education"></el-input>
               </el-form-item>
               <el-form-item label="工作单位：" prop="workUnit">
-                <el-input v-model="personalData.workUnit"></el-input>
+                <el-input v-model.trim="personalData.workUnit"></el-input>
               </el-form-item>
               <el-form-item label="工作职位：" prop="position">
-                <el-input v-model="personalData.workPosition"></el-input>
+                <el-input v-model.trim="personalData.workPosition"></el-input>
               </el-form-item>
               <el-form-item label="所在地省市区：" prop="part">
                 <positionPicker v-on:getMsgFromChildren="positionFromPicker" :selected="this.personalData.part"></positionPicker>
               </el-form-item>
               <el-form-item label="详细地址：" prop="address">
-                <el-input v-model="personalData.address"></el-input>
+                <el-input v-model.trim="personalData.address"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="saveEditPersData('personalData')">保存</el-button>
@@ -146,16 +146,16 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item v-if="typeValue!=='支付宝'" label="银行：" prop="bankName">
-                  <el-input v-model="personalData.bankName"></el-input>
+                  <el-input v-model.trim="personalData.bankName"></el-input>
                 </el-form-item>
                 <el-form-item label="开户者：" prop="openName">
-                  <el-input v-model="personalData.openName"></el-input>
+                  <el-input v-model.trim="personalData.openName"></el-input>
                 </el-form-item>
                 <el-form-item v-if="typeValue!=='支付宝'" label="银行卡账号：" prop="accountNumber">
-                  <el-input v-model="personalData.accountNumber"></el-input>
+                  <el-input v-model.trim="personalData.accountNumber"></el-input>
                 </el-form-item>
                 <el-form-item v-else label="支付宝账号：" prop="accountNumber">
-                  <el-input v-model="personalData.accountNumber"></el-input>
+                  <el-input v-model.trim="personalData.accountNumber"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="saveEditGetMoeny('personalData')">保存</el-button>
@@ -209,22 +209,29 @@
         },
         personalDataRule:{
           trueName: [
-            { required: true, message: '请填写真实姓名', trigger: 'change' }
+            { required: true, message: '请填写真实姓名', trigger: 'change' },
+            // { pattern: /^[\u4E00-\u9FA5]+$/, message: '真实姓名只能为中文' }
           ],
           sex: [
             { required: true, message: '请选择性别', trigger: 'change' }
           ],
           idCard: [
-            { required: true, message: '请输入身份证号', trigger: 'change' }
+            { required: true, message: '请输入身份证号', trigger: 'change' },
+            { pattern: /^(\d{15}|\d{17}[\dxX])$/, message: '请输入正确的身份证号码' }
           ],
           weChar: [
-            { required: true, message: '请填写微信号', trigger: 'change' }
+            { required: true, message: '请填写微信号', trigger: 'change' },
+            { pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/, message: '请输入正确的微信号' }
+          ],
+          email: [
+            { pattern: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/, message: '请输入正确的邮箱' }
           ],
           openName:[
             { required: true, message: '请填写真实姓名', trigger: 'change' }
           ],
           accountNumber:[
-            { required: true, message: '请填写账号信息', trigger: 'change'}
+            { required: true, message: '请填写账号信息', trigger: 'change'},
+            // { pattern: /(\d{15}|\d{19})|(1[34578]\d{9})/, message: '请输入正确的账号' }
           ],
           bankName:[
             { required: true, message: '请填写银行名称', trigger: 'change'}
@@ -348,10 +355,10 @@
       },
       changShowPane:function(arg){
         this.showPane = arg;
-        this.toEditPay.flag = ''
-        this.toEditPay.isActive = false
-        this.toEditDraw.flag = ''
-        this.toEditDraw.isActive = false
+        // this.toEditPay.flag = ''
+        // this.toEditPay.isActive = false
+        // this.toEditDraw.flag = ''
+        // this.toEditDraw.isActive = false
       },
       positionFromPicker:function(data){
         var that = this;

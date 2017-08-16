@@ -90,6 +90,8 @@
         }else if (target == 'nowComplete') {
           that.changeActive6(that.tab06Text);
           that.dataValue = '';
+          that.dataValue1 = '';
+          that.dataValue2 = '';
         }
       });  
     },
