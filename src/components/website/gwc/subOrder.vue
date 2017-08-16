@@ -66,7 +66,7 @@
       <div class="qianbi_box">
         <div class="qianbi_title">发票</div>
         <div class="qianbi_des">
-          <el-checkbox v-model="checked2">申请发票（发票5%）</el-checkbox>
+          <el-checkbox v-model="checked2">申请发票</el-checkbox>
           <div class="tax_word_des" v-show="tax_word_des">
             <span style="margin-right: 10px;">{{taxType}}</span>
             <span style="margin-right: 10px;">{{company_name}}</span>
