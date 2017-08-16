@@ -158,7 +158,7 @@
         </el-row>
         <el-form style="padding-top:10px;margin:0 auto;width:380px;" :model="WithDrawForm" :rules="rulesWithDraw" id="WithDrawForm" ref="WithDrawForm">
           <el-form-item label="提现金额：" prop="withDrawAccount">
-            <el-input v-model.number="WithDrawForm.withDrawAccount" class="item_w_input fl"></el-input>
+            <el-input v-model="WithDrawForm.withDrawAccount" class="item_w_input fl"></el-input>
           </el-form-item>
           <el-form-item label="手机号：" style="padding-left:14px;">
             <el-input v-model="WithDrawForm.withDrawPhone" class="item_w_input fl" :disabled="true"></el-input>
@@ -200,7 +200,7 @@
           if (!this.isAmt(value)) {
             callback(new Error('金额只能是有两位小数的正数'));
           } else {
-            if (value > this.withTotalAmt) {
+            if (value - this.withTotalAmt > 0) {
               callback(new Error('当前金额已超出提现总额'));
             } else {
               callback()

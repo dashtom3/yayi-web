@@ -221,7 +221,7 @@
           ],
           weChar: [
             { required: true, message: '请填写微信号', trigger: 'change' },
-            { pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/, message: '请输入正确的微信号' }
+            // { pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/, message: '请输入正确的微信号' }
           ],
           email: [
             { pattern: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/, message: '请输入正确的邮箱' }
@@ -230,7 +230,7 @@
             { required: true, message: '请填写真实姓名', trigger: 'change' }
           ],
           accountNumber:[
-            { required: true, message: '请填写账号信息', trigger: 'change'},
+            { required: true, message: '请填写账号信息', trigger: 'change'}
             // { pattern: /(\d{15}|\d{19})|(1[34578]\d{9})/, message: '请输入正确的账号' }
           ],
           bankName:[
