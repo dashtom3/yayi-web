@@ -186,6 +186,7 @@
         <!--     注册页 end    -->
         <salesFoot></salesFoot>
         <message :title="title" v-show="messageShow" @messageshow="messageChange">{{content}}</message>
+        <loading v-show="myLoading"></loading>
     </div>
 </template>
 
@@ -193,8 +194,7 @@
   var crypto = require('crypto');
   import salesFoot from "../index/footer"
   import message from "../index/message"
-
-
+  import loading from '../../website/loading'
   export default {
     name: 'logIn',
     data() {
@@ -262,11 +262,13 @@
         messageShow: false,
         title: '',
         content: '',
+        myLoading: false,
       }
     },
     components: {
       salesFoot,
-      message
+      message,
+      loading
     },
     //*******导航钩子*********//
     // beforeRouteEnter (to, from, next) {
@@ -452,11 +454,6 @@
       },
       messageChange(e) {
         this.messageShow = e;
-      },
-      // 登录成功后
-      alreadyLog: function () {
-        var that = this;
-        that.$router.push({name: 'center', params: {current: false}});
       },
       // 箭头变色
       arrow_in: function () {
@@ -659,6 +656,7 @@
           phone: that.ms_mobilephone,
           code: that.ms_yzm,
         }
+        that.myLoading = true
         that.global.axiosPostReq('/saleLog/noteLogin', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             that.global.setSalesToken(res.data.token)
@@ -669,16 +667,19 @@
             });
             that.ms_mobilephone = '';
             that.ms_yzm = '';
+            that.myLoading = false
             that.$router.push({path: '/salesIndex'});
             return false
           } else {
             that.$message.error(res.data.msg);
+            that.myLoading = false
           }
         })
       },
       // 密码登录btn
       pwd_logIn: function () {
         var that = this;
+        that.myLoading = true
         var mb = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if (!mb.test(that.pwd_mobilephone) || that.pwd_mobilephone == '') {
           that.pwdPhone_alert = true;
@@ -699,6 +700,7 @@
           if (res.data.callStatus === 'SUCCEED') {
             that.global.setSalesToken(res.data.token)
             that.global.setSalesUser(res.data.data)
+            that.myLoading = false
             that.$router.push({path: '/salesIndex'});
             that.$message({
               message: '登录成功！',
@@ -707,6 +709,7 @@
             that.pwd_mobilephone = '';
             that.pwd_pwd = '';
           } else {
+            that.myLoading = false
             that.$message.error(res.data.msg);
           }
         })
@@ -1266,12 +1269,6 @@
         color: #005aab;
         cursor: pointer;
         /*    transition: all ease 0.5s;*/
-    }
-
-    .alreadyLog:hover {
-        color: #005aab;
-        cursor: pointer;
-        transition: all ease 0.5s;
     }
 
     .logOut {
