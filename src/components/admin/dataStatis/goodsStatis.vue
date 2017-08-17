@@ -32,6 +32,7 @@
         <el-form-item label="下单时间" class="fl">
           <el-date-picker
             v-model="dateVal"
+            style="width:230px;"
             type="daterange"
             @change="dateHandler"
             placeholder="选择日期范围">
@@ -112,7 +113,7 @@
     },
     created(){
       this.startDate = util.formatDate.format(new Date(this.dateVal[0]));
-      this.endDate = util.formatDate.format(new Date(this.dateVal[1].getTime() + 3600 * 1000 * 24));
+      this.endDate = util.formatDate.format(new Date(this.dateVal[1].getTime()));
       this.queryBrand()//查询所有品牌
       this.queryHandler()
     },
@@ -123,7 +124,7 @@
         if(that.dateVal && that.dateVal[0]){
           this.startDate = util.formatDate.format(new Date(that.dateVal[0]));
           //结束时间默认为当日0点，往后推迟24小时
-          this.endDate = util.formatDate.format(new Date(that.dateVal[1].getTime() + 3600 * 1000 * 24)); 
+          this.endDate = util.formatDate.format(new Date(that.dateVal[1].getTime())); 
         }else{
           this.startDate = '';
           this.endDate = '';  

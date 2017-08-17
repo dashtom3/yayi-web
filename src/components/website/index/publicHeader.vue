@@ -168,6 +168,11 @@
                       <p v-show="rgPhone_alert" class="error">请输入正确的手机号!</p>
                     </transition>
                   </div>
+                  <!-- <div style="position:relative;height:65px;">
+                    <input type="text" id="code_input" value="" style="position:absolute;left:80px;top:18px;width: 100px;height:40px;border-color:#005aab;"/>
+                    <div id="v_container" style="width: 120px;height: 50px;position:absolute;left:250px;top:18px;display:inline-block;"></div>
+                  </div>
+                  <div style="text-align:left;margin-left:82px;color:red;">请输入正确的图片验证码</div> -->
                   <div>
                     <span>验证码：</span>
                     <input class="rg_rightCode" type="text" v-model="rg_code">
@@ -191,10 +196,7 @@
                     <transition name="shake">
                       <p v-show="rgConfirmPwd_alert" class="error">设置密码与确认密码不一致!</p>
                     </transition>
-                  </div>
-                  <!-- <input type="text" id="code_input" value="" style="width: 100px;height:40px;"/>
-                  <div id="v_container" style="width: 120px;height: 50px;margin-left:30px;margin-top:20px;display:inline-block;"></div> -->
-                  
+                  </div>              
 <!--                   <p class="rg_alrHave" @click="rg_alrHave">已有账号</p> -->
                   <div class="rg_confirm_btn" @click="rg_register">注册</div>
                   <div class="rg_choose_box">
@@ -291,7 +293,8 @@
       
 //       ctx.textBaseline = "middle";
 
-//       ctx.fillStyle = randomColor(180, 240);
+//       // ctx.fillStyle = randomColor(180, 240);
+//       ctx.fillStyle = "#fff";
 //       ctx.fillRect(0, 0, this.options.width, this.options.height);
 
 //       if(this.options.type == "blend") { //判断验证码类型
@@ -306,7 +309,8 @@
 //         var txt = txtArr[randomNum(0, txtArr.length)];
 //         this.options.code += txt;
 //         ctx.font = randomNum(this.options.height/2, this.options.height) + 'px SimHei'; //随机生成字体大小
-//         ctx.fillStyle = randomColor(50, 160); //随机生成字体颜色    
+//         // ctx.fillStyle = randomColor(50, 160); //随机生成字体颜色 
+//         ctx.fillStyle = "#000";    
 //         ctx.shadowOffsetX = randomNum(-3, 3);
 //         ctx.shadowOffsetY = randomNum(-3, 3);
 //         ctx.shadowBlur = randomNum(-3, 3);
@@ -323,20 +327,22 @@
 //         ctx.translate(-x, -y);
 //       }
 //       /**绘制干扰线**/
-//       for(var i = 0; i < 4; i++) {
-//         ctx.strokeStyle = randomColor(40, 180);
+//       for(var i = 0; i < 1; i++) {
+//         // ctx.strokeStyle = randomColor(40, 180);
+//         ctx.strokeStyle = "#000";
+//         ctx.lineWidth = 4;
 //         ctx.beginPath();
 //         ctx.moveTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
 //         ctx.lineTo(randomNum(0, this.options.width), randomNum(0, this.options.height));
 //         ctx.stroke();
 //       }
 //       /**绘制干扰点**/
-//       for(var i = 0; i < this.options.width/4; i++) {
-//         ctx.fillStyle = randomColor(0, 255);
-//         ctx.beginPath();
-//         ctx.arc(randomNum(0, this.options.width), randomNum(0, this.options.height), 1, 0, 2 * Math.PI);
-//         ctx.fill();
-//       }
+//       // for(var i = 0; i < this.options.width/4; i++) {
+//       //   ctx.fillStyle = randomColor(0, 255);
+//       //   ctx.beginPath();
+//       //   ctx.arc(randomNum(0, this.options.width), randomNum(0, this.options.height), 1, 0, 2 * Math.PI);
+//       //   ctx.fill();
+//       // }
 //     },
     
 //     /**验证验证码**/
@@ -490,9 +496,9 @@
       that.showCargo();
       // console.log(that.global.getToken());
     },
-    // mounted(){
-    //   var verifyCode = new GVerify("v_container");
-    // },
+    mounted(){
+      // var verifyCode = new GVerify("v_container");
+    },
     computed: {
       filteredHrecord: function () {
         return this.Hrecord.slice(0, 6)

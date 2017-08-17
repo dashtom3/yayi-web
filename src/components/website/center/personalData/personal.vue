@@ -29,11 +29,12 @@
     created: function() {
       var that = this
       that.currentTabs = that.salesman;
-      if(that.currentTabs == 3){
+      if(that.currentTabs == 3 && this.$route.params.message !== 4){
         that.changeTabs(that.currentTabs)
       }else{
         that.changeTabs(1)
       }
+
     },
     mounted: function() {
       var that = this;

@@ -476,33 +476,52 @@ import Bus from '../../global/bus.js'
             if(that.global.getUser()){
               var sendData = {};
               sendData.details = [];
-              var obj = {
-                itemId:that.nowGoodDetails.itemId,
-                itemName:that.nowGoodDetails.itemName,
-                picPath:that.itemDetail.itemPica,
-                num:that.goodDefaultNum,
-                itemSKU:nowSku,
-                price:that.nowGoodDetails.itemPrice,
-                goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
-                goodSort:that.nowGoodDetails.itemSort
-              };
-              sendData.allMoney = that.nowGoodDetails.itemPrice * 100 * that.goodDefaultNum / 100;
-              var list = that.nowGoodDetails.itemValueList;
-              for(let i in list){
-                if(nowSku==list[i].itemSKU){
-                  obj.itemPropertyInfo = list[i].itemPropertyInfo;
-                  obj.itemPropertyTwoValue = list[i].itemPropertyTwoValue;
-                  obj.itemPropertyThreeValue = list[i].itemPropertyThreeValue;
-                  obj.itemPropertyFourValue = list[i].itemPropertyFourValue;
-                  obj.itemPropertyFiveValue = list[i].itemPropertyFiveValue;
-                  obj.itemPropertySixValue = list[i].itemPropertySixValue;
-                  break;
-                }
+              //验证该用户有无完善个人资料
+              var params = {
+                phone: that.global.getUser().phone,
+                token: that.global.getToken()
               }
-              sendData.haveSelectedGoodNum = that.goodDefaultNum;
-              sendData.details.push(obj)
-              window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
-              that.$router.push({path: '/suborder'})
+              //查询个人信息
+              that.global.axiosGetReq('/userPersonalInfo/detail', params).then((res) => {
+                if (res.data.callStatus === 'SUCCEED') { 
+                  if(res.data.data && res.data.data.trueName === '' || res.data.data.trueName === null){
+                    this.$alert('请先完善个人信息', '提示', {
+                      confirmButtonText: '确定',
+                      callback: action => {
+                        this.$router.push({name: '个人资料', params: {message: 4}});
+                      }
+                    });
+                  }else{
+                    var obj = {
+                      itemId:that.nowGoodDetails.itemId,
+                      itemName:that.nowGoodDetails.itemName,
+                      picPath:that.itemDetail.itemPica,
+                      num:that.goodDefaultNum,
+                      itemSKU:nowSku,
+                      price:that.nowGoodDetails.itemPrice,
+                      goodBrandName:that.nowGoodDetails.itemBrand.itemBrandName,
+                      goodSort:that.nowGoodDetails.itemSort
+                    };
+                    sendData.allMoney = that.nowGoodDetails.itemPrice * 100 * that.goodDefaultNum / 100;
+                    var list = that.nowGoodDetails.itemValueList;
+                    for(let i in list){
+                      if(nowSku==list[i].itemSKU){
+                        obj.itemPropertyInfo = list[i].itemPropertyInfo;
+                        obj.itemPropertyTwoValue = list[i].itemPropertyTwoValue;
+                        obj.itemPropertyThreeValue = list[i].itemPropertyThreeValue;
+                        obj.itemPropertyFourValue = list[i].itemPropertyFourValue;
+                        obj.itemPropertyFiveValue = list[i].itemPropertyFiveValue;
+                        obj.itemPropertySixValue = list[i].itemPropertySixValue;
+                        break;
+                      }
+                    }
+                    sendData.haveSelectedGoodNum = that.goodDefaultNum;
+                    sendData.details.push(obj)
+                    window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
+                    that.$router.push({path: '/suborder'})
+                  }
+                }
+              })    
             }
           }else{
             that.$alert('请选择正确的商品属性！',  {confirmButtonText: '确定',});

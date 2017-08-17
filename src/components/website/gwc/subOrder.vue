@@ -1380,7 +1380,7 @@
           stickPhone: that.stick_phone,
           stickaddress: that.stick_address,
         }
-        // console.log(obj,'90')
+        
         that.global.axiosPostReq('/po/generaOrder', obj).then((res) => {
           if (res.data.callStatus === 'SUCCEED') {
             if (res.data.data == null) {

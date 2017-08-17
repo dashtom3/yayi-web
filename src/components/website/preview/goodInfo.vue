@@ -472,7 +472,6 @@ import util from '../../../common/util'
             if(that.global.getUser()){
               var sendData = {};
               sendData.details = [];
-
               var obj = {
                 itemId:that.nowGoodDetails.itemId,
                 itemName:that.nowGoodDetails.itemName,
