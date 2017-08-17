@@ -175,6 +175,7 @@
   } 
   .publicFooter {
     width: 100%;
+    min-width: 1200px;
     background-color: #F2F2F2;
     padding-top: 30px;
   }

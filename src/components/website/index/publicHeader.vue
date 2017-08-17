@@ -1344,6 +1344,7 @@
   }
   .headerBox {
     width: 100%;
+    min-width: 1200px;
     height: 28px;
     border-bottom: 1px #eee solid;
     box-shadow: 1px 1px 5px #eee;

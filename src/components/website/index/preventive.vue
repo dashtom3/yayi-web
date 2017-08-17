@@ -89,7 +89,6 @@ export default {
       isActive: false,
       classifyItems: [],
       classifyList: [],
-      // items: [],
       sideItems: [],
       brandListData:[],
       brandListData1: [],
@@ -344,6 +343,7 @@ a {
 /*-------------品牌库页面 结束-------------*/
 .preventive_box {
   width: 100%;
+  min-width: 1200px;
   height: 681px;
   margin: 0 auto;
   position: relative;

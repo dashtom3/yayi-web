@@ -1,5 +1,5 @@
 <template>
-<div style="width:100%; background-color:#005aab;">
+<div style="min-width:1200px; background-color:#005aab;">
   <div class="classify">
     <div class="cargo" v-on:mouseenter="cargo" v-on:mouseleave="hideCargo">
       <span class="cargo_word">商品分类</span>
