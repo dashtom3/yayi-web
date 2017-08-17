@@ -5,7 +5,7 @@
       <span @click='changBtn(2)' :class="{sapnActive:nowBtn==false}">未注册</span>
     </div>
     <div class="searchWrap" >
-      <input type="text" v-model="searchData" placeholder="输入客户姓名，手机号或单位名称查询">
+      <input type="text" v-model="searchData" placeholder="输入联系人，手机号或单位名称查询">
       <div class="imgWrap" @click="search()">
         <img src="../../../images/salesMan/search.png" alt="">
       </div>
