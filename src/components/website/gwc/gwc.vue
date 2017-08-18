@@ -252,23 +252,40 @@
       goToSuborder:function(){
         var that = this;
         var sendData = {};
-              sendData.allMoney = that.allMoeny;
-              if(sendData.allMoney>0){
+        sendData.allMoney = that.allMoeny;
+        if(sendData.allMoney>0){
+          //验证该用户有无完善个人资料
+          var params = {
+            phone: that.global.getUser().phone,
+            token: that.global.getToken()
+          }
+          that.global.axiosGetReq('/userPersonalInfo/detail', params).then((res) => {
+            if (res.data.callStatus === 'SUCCEED') { 
+              if(res.data.data && res.data.data.trueName === '' || res.data.data.trueName === null){
+                this.$alert('请先完善个人信息', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push({name: '个人资料', params: {message: 4}});
+                  }
+                });
+              }else{
                 for(let i in that.sendDataList){
-                    that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
-                    that.sendDataList[i].itemName = that.sendDataList[i].name;
-                    that.sendDataList[i].picPath = that.sendDataList[i].pic;
-
-                    that.sendDataList[i].goodBrandName = that.sendDataList[i].itemBrandName;
-                    that.sendDataList[i].goodSort = that.sendDataList[i].itemSort;
+                  that.sendDataList[i].totalMoney = that.sendDataList[i].price*that.sendDataList[i].num;
+                  that.sendDataList[i].itemName = that.sendDataList[i].name;
+                  that.sendDataList[i].picPath = that.sendDataList[i].pic;
+                  that.sendDataList[i].goodBrandName = that.sendDataList[i].itemBrandName;
+                  that.sendDataList[i].goodSort = that.sendDataList[i].itemSort;
                 }
                 sendData.details = that.sendDataList;
                 sendData.haveSelectedGoodNum = that.haveSelectedGoodNum;
                 window.sessionStorage.setItem("suborderData",JSON.stringify(sendData));
                 that.$router.push({path: '/suborder'})
-              }else{
-                that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
               }
+            }
+          })
+        }else{
+          that.$alert("请至少选择一件商品！", {confirmButtonText: '确定'});
+        }
       },
       deleteAll:function(){
         var that = this;

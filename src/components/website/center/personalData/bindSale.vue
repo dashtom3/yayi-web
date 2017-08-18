@@ -4,14 +4,14 @@
       <el-row v-if="!saleData.saleName">
         <el-col>
           <div class="searchWrap">
-            <span>客户代表手机号：</span>
+            <span>客服代表手机号：</span>
             <input class="inputClass" v-model="willBindSale" />
           </div>
           <div v-show="showSearchInfo" class="showSearchInfoClass">
             <span style="padding-left:14px;">真实姓名：{{findSaleName}}</span>
           </div>
           <div v-show="noSearchSale" class="showSearchInfoClass">
-            <span style="color:#cb1700;padding-left:14px;">非常抱歉，未找到该客户代表</span>
+            <span style="color:#cb1700;padding-left:14px;">非常抱歉，未找到该客服代表</span>
           </div>
         </el-col>
         <el-col>
@@ -20,7 +20,7 @@
       </el-row>
       <div v-else class="binded">
         <p>
-          <span class="left">客户代表手机号：</span>
+          <span class="left">客服代表手机号：</span>
           <span class="right">{{saleData.salePhone}}</span>
         </p>
         <p>
@@ -29,7 +29,7 @@
         </p>
         <p class="colorRed">
           <span class="left">温馨提示：</span>
-          <span class="right ">若想重新绑定客户代表，可联系客服400-001-4980。</span>
+          <span class="right ">若想重新绑定客服代表，可联系客服400-001-4980。</span>
         </p>
       </div>
     </div>
@@ -91,7 +91,7 @@
           }
         })
       },
-      //绑定客户代表
+      //绑定客服代表
       bindHandler(){
         let params = {
           salePhone: this.willBindSale,

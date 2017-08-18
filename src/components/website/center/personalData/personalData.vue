@@ -148,7 +148,7 @@
           return false;
         }
         //验证QQ
-        if(!/^[1-9][0-9]{4,10}$/.test(this.personData.qq)){
+        if(this.personData.qq && (!/^[1-9][0-9]{4,10}$/.test(this.personData.qq))){
           this.qq_validate = true;
           return false;
         }
