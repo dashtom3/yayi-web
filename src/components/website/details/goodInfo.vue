@@ -82,12 +82,7 @@
           <span @click="addGwcThisGood()">加入购物车</span>
           <span @click="nowToBuyThis()">立即购买</span>
         </div>
-<!--         <div v-else class="goodBtn kucunbuzu">
-          <span >加入购物车</span>
-          <span >立即购买</span> v-if="kuCunBuZu"
-        </div> -->
       </div>
-
     </div>
     <div class="clearFloat"></div>
     <div>
@@ -386,8 +381,6 @@ import Bus from '../../global/bus.js'
               if (res.data.callStatus === 'SUCCEED') {
                 Bus.$emit('getTarget', 'addGoodNum');
                 that.$alert("商品成功加入购物车！", {confirmButtonText: '确定'});
-              } else {
-                // that.$message.error('网络出错，请稍后再试！');
               }
             });
           }else{

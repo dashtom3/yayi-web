@@ -483,7 +483,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.hidden{
+  visibility: hidden;
+}
 .classifyLine .defaultClassfy{
   display: inline-block;
   width: 52px;
@@ -700,13 +702,12 @@ margin: 0 auto;
 }
 .allGoods li {
   width: 228px;
-  height: 328px;
+  height: 246px;
   border: 1px solid #efefef;
-  margin-bottom: 10px;
   position: relative;
   display: inline-block;
   cursor: pointer;
-  margin-right: 10px;
+  margin: 0 5px 10px 5px;
   overflow: hidden;
 }
 
@@ -744,7 +745,7 @@ transition: all 0.5s ease;*/
 }
 .allGoods li .imgWrap{
   width: 230px;
-  height: 230px;
+  height: 147px;
   margin: auto;
   text-align: center;
 /*  margin-top: 4px;*/
@@ -780,7 +781,7 @@ transition: all 0.5s ease;*/
 }
 .goodBottom{
   color: #cb1700;
-  padding: 10px;
+  padding: 10px 20px;
 }
 .goodBottom span:nth-child(2){
   float: right;

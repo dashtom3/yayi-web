@@ -53,7 +53,7 @@
         tab04Text: "tab04",
         tab05Text: "tab05",
         // currentView: 'tab01', //默认选中的导航栏
-        message: 3,
+        message: 2,
       }
     },
     components: {
