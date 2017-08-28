@@ -23,6 +23,9 @@
 			<el-table-column type="index" label="排名" align="center" width="180">
 			</el-table-column>
 			<el-table-column prop="phone" label="销售员" align="center" width="180">
+				<template scope="scope">
+					<span>{{phoneFormate(scope.row.phone)}}</span>
+				</template>
 			</el-table-column>
 			<el-table-column prop="bindUserNum" label="客户数" align="center" width="180">
 			</el-table-column>
@@ -113,6 +116,10 @@
 			noSee: function() {
 				var that = this
 				Bus.$emit('getTarget', 'noSee');
+			},
+			//手机号中间四位替换为****
+			phoneFormate(str){
+				return str.substr(0,3) + '****' + str.substr(7)
 			},
 			//查询banner
 			queryBanner(){

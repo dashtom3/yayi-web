@@ -17,21 +17,21 @@
       <el-table :data="tableData.myOrderVoList" align="center" border style="width: 100%">
         <el-table-column type="index" align="center" label="序号" width="70">
         </el-table-column>
-        <el-table-column prop="orderCreated" align="center" label="下单时间" width="180">
+        <el-table-column prop="orderCreated" align="center" label="下单时间" width="170">
         </el-table-column>
-        <el-table-column prop="userName" align="center" label="客户姓名">
+        <el-table-column prop="userName" align="center" label="客户姓名" width="110">
         </el-table-column>
-        <el-table-column prop="userPhone" align="center" label="客户手机号" width="150">
+        <el-table-column prop="userPhone" align="center" label="客户手机号" width="130">
         </el-table-column>
-        <el-table-column prop="allMoney" align="center" label="销售总额（元）">
+        <el-table-column prop="allMoney" align="center" label="销售总额(元)" width="96">
         </el-table-column>
-        <el-table-column prop="refundMoney" align="center" label="已退款总额（元）">
+        <el-table-column prop="refundMoney" align="center" label="已退款总额(元)" width="108">
         </el-table-column>
-        <el-table-column prop="actualMoney" align="center" label="实际销售总额（元）">
+        <el-table-column prop="actualMoney" align="center" label="实际销售总额(元)" width="126">
         </el-table-column>
-        <el-table-column prop="haocaiMoney"  align="center"label="实际销售总额-耗材类（元）">
+        <el-table-column prop="haocaiMoney"  align="center"label="实际销售总额-耗材类(元)" width="130">
         </el-table-column>
-        <el-table-column prop="gongjuMoney" align="center" label="实际销售总额-工具设备类（元）">
+        <el-table-column prop="gongjuMoney" align="center" label="实际销售总额-工具设备类(元)" width="134">
         </el-table-column>
         <el-table-column prop="handler" align="center" label="操作">
           <template scope="scope">
