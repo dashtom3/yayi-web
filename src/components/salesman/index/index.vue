@@ -84,6 +84,10 @@
     // },
     created: function() {
       var that = this
+      if (!that.global.getSalesToken()) {
+        that.$router.push({path: '/salesLog'});
+        return false
+      }
       Bus.$on('getTarget', target => {
         if (target == 'noSee') {
           that.changeActive1(that.tab01Text);
